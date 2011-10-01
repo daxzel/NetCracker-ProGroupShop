@@ -15,6 +15,10 @@
                     <file>${reference.ProjectShop-ejb.dist-ear}</file>
                     <path-in-war>/</path-in-war>
                 </library>
+                <library>
+                    <file>${file.reference.ojdbc14-9.2.0.5.jar}</file>
+                    <path-in-war>/</path-in-war>
+                </library>
             </web-module-additional-libraries>
         </data>
         <references xmlns="http://www.netbeans.org/ns/ant-project-references/1">
