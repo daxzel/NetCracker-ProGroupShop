@@ -10,35 +10,18 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Интернет-магазин</title>
     </head>
     <body>
-        <p align="center">
-            <%
-               DataSource ds = GetConnect.getDataSource();
-               Connection conn = ds.getConnection();
-               Statement statS = conn.createStatement();
-               ResultSet rs = statS.executeQuery("SELECT * FROM ROLE");
-                 //ResultSet rs = statS.getResultSet();
-               int id;
-               String name;
-            %>
-        <table align="center" title="Full list of users" border="1" width="80%">
-            <tr>
-                <td width="15%">id</td>
-                <td width="30%">name</td>
-            </tr>
-            <%
-              while (rs.next()) {%>
-              <tr>
-              <td><%= rs.getInt(1)%></td>
-              <td><%= rs.getString(2)%></td>
-              </tr>
-                               <%}%>
-        </table>
-            <%
-                conn.close();
-            %>
+        
+         <p align="center"><a href ="user.jsp">Пользователи</a><br></p>
+            <p align="center"><a href ="image.jsp">Изображения продуктов</a><br></p>
+            <p align="center"><a href ="catalog.jsp">Каталог</a><br></p>
+            <p align="center"><a href ="opinion.jsp">Комментарии пользователей</a><br></p>
+            <p align="center"><a href ="order.jsp">Заказ</a><br></p>
+            <p align="center"><a href ="product.jsp">Продукт</a><br></p>
+            <p align="center"><a href ="role.jsp">Роль пользователей</a><br></p>
+         
 
     </body>
 </html>

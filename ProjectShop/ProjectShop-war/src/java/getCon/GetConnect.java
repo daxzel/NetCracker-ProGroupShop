@@ -16,8 +16,8 @@ import java.util.*;
 import javax.sql.DataSource;
 import com.sun.jndi.cosnaming.*;
 public class GetConnect  {
-    static private String user= "JURA";
-    static private String password = "12zxfg54";
+    static private String user= "USER";
+    static private String password = "0000";
     static private String drivType = "thin";
     static private String serverName = "localhost";
     static private String serviceName = "XE";
