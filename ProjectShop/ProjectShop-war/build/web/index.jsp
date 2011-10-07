@@ -5,7 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="java.sql.*,javax.sql.*,javax.naming.*,getCon.*,javax.sql.DataSource;" %>
+<%@page import="java.sql.*,javax.sql.*,javax.naming.*,javax.sql.DataSource;" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -21,7 +21,7 @@
             <p align="center"><a href ="order.jsp">Заказ</a><br></p>
             <p align="center"><a href ="product.jsp">Продукт</a><br></p>
             <p align="center"><a href ="role.jsp">Роль пользователей</a><br></p>
-         
+            <p align="center"><a href="registration.jsp">Регистрация</a></p>
 
     </body>
 </html>
