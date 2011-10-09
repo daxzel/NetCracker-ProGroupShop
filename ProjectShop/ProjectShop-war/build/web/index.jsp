@@ -22,6 +22,7 @@
             <p align="center"><a href ="product.jsp">Продукт</a><br></p>
             <p align="center"><a href ="role.jsp">Роль пользователей</a><br></p>
             <p align="center"><a href="registration.jsp">Регистрация</a></p>
+            <p align="center"><a href="updateUser.jsp">Редактирование пользователя</a></p>
 
     </body>
 </html>

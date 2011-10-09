@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package servlets;
 
 import java.io.IOException;
@@ -21,14 +20,17 @@ import javax.servlet.RequestDispatcher;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import exceptions.*;
+import javax.servlet.http.HttpSession;
+import DBClasses.User;
+import DBManager.DBManager;
 
 /**
  *
  * @author Yra
  */
-@WebServlet(name="ExecServlet", urlPatterns={"/ExecServlet"})
+@WebServlet(name = "ExecServlet", urlPatterns = {"/ExecServlet"})
 public class ExecServlet extends HttpServlet {
-   
+
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -37,50 +39,110 @@ public class ExecServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         try {
+            HttpSession session = request.getSession();
             RequestDispatcher rd;
-            String result;
+            String result, homepage;
             response.setContentType("text/html;charset=UTF-8");
-            String name = request.getParameter("NAME");
-            String surname = request.getParameter("SURNAME");
-            String otchestvo = request.getParameter("OTCHESTVO");
-            String nik = request.getParameter("NIK");
-            String password = request.getParameter("PASSWORD");
-            String password2 = request.getParameter("PASSWORD2");
-            try{
-                if(!password.equals(password2)){
-                    throw new PasswordException();}
-            String brn = request.getParameter("BORN");
-            String phone = request.getParameter("PHONE");
-            String email = request.getParameter("EMAIL");
-            SimpleDateFormat formt = new SimpleDateFormat("dd MM yyyy");
-            Date born = formt.parse(brn);
-            DBManager.DBManager.addUser(name, surname, otchestvo, nik, password, born, phone, email, 1);
-            result ="uspeh";
-            request.setAttribute("result",result);
-            rd = request.getRequestDispatcher("index.jsp");
-            rd.forward(request, response);
-            } catch (NikNameException ex) {
-                request.setAttribute("result",ex);
-                rd = request.getRequestDispatcher("registration.jsp");
-                rd.forward(request, response);
+            String str = request.getRequestURI();
+            if (request.getRequestURI().equals("/ProjectShop-war/registration")) {
+                String name = request.getParameter("NAME");
+                String surname = request.getParameter("SURNAME");
+                String otchestvo = request.getParameter("OTCHESTVO");
+                String nik = request.getParameter("NIK");
+                String password = request.getParameter("PASSWORD");
+                String password2 = request.getParameter("PASSWORD2");
+                try {
+                    if (!password.equals(password2)) {
+                        throw new PasswordException();
+                    }
+                    String brn = request.getParameter("BORN");
+                    String phone = request.getParameter("PHONE");
+                    String email = request.getParameter("EMAIL");
+                    SimpleDateFormat formt = new SimpleDateFormat("dd MM yyyy");
+                    Date born = formt.parse(brn);
+                    DBManager.addUser(name, surname, otchestvo, nik, password, born, phone, email, 1);
+                    result = "uspeh";
+                    request.setAttribute("result", result);
+                    rd = request.getRequestDispatcher("index.jsp");
+                    rd.forward(request, response);
+                } catch (NikNameException ex) {
+                    request.setAttribute("result", ex);
+                    rd = request.getRequestDispatcher("registration.jsp");
+                    rd.forward(request, response);
+                } catch (SQLException ex) {
+                    Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (NamingException ex) {
+                    Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (PasswordException ex) {
+                    request.setAttribute("result", ex);
+                    rd = request.getRequestDispatcher("registration.jsp");
+                    rd.forward(request, response);
+                }
             }
-            catch (SQLException ex) {
-                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (NamingException ex) {
-                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+            if (request.getRequestURI().equals("/ProjectShop-war/selectByNik")) {
+                homepage = session.getAttribute("homepage").toString();
+                String nik = request.getParameter("NIK");
+                try {
+                    User usr = DBManager.findUserByNik(nik);
+                    request.setAttribute("result", usr);
+                    rd = request.getRequestDispatcher(homepage);
+                    rd.forward(request, response);
+                } catch (SQLException ex) {
+                    result = "запись не найдена";
+                    request.setAttribute("result", result);
+                    rd = request.getRequestDispatcher(homepage);
+                    rd.forward(request, response);
+                } catch (NamingException ex) {
+                    result = "неведомая ошибка";
+                    request.setAttribute("result", result);
+                    rd = request.getRequestDispatcher(homepage);
+                    rd.forward(request, response);
+                }
+
             }
-            catch (PasswordException ex) {
-                request.setAttribute("result",ex);
-                rd = request.getRequestDispatcher("registration.jsp");
-                rd.forward(request, response);
+             if (request.getRequestURI().equals("/ProjectShop-war/updateUser")) {
+                String name = request.getParameter("NAME");
+                String surname = request.getParameter("SURNAME");
+                String otchestvo = request.getParameter("OTCHESTVO");
+                String nik = request.getParameter("NIK");
+                String password = request.getParameter("PASSWORD");
+                String password2 = request.getParameter("PASSWORD2");
+                try {
+                    if (!password.equals(password2)) {
+                        throw new PasswordException();
+                    }
+                    String brn = request.getParameter("BORN");
+                    String phone = request.getParameter("PHONE");
+                    String email = request.getParameter("EMAIL");
+                    SimpleDateFormat formt = new SimpleDateFormat("dd MM yyyy");
+                    Date born = formt.parse(brn);
+                    DBManager.addUser(name, surname, otchestvo, nik, password, born, phone, email, 1);
+                    result = "uspeh";
+                    request.setAttribute("result", result);
+                    rd = request.getRequestDispatcher("index.jsp");
+                    rd.forward(request, response);
+                } catch (NikNameException ex) {
+                    request.setAttribute("result", ex);
+                    rd = request.getRequestDispatcher("registration.jsp");
+                    rd.forward(request, response);
+                } catch (SQLException ex) {
+                    Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (NamingException ex) {
+                    Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (PasswordException ex) {
+                    request.setAttribute("result", ex);
+                    rd = request.getRequestDispatcher("registration.jsp");
+                    rd.forward(request, response);
+                }
             }
-            } catch (ParseException ex) {
-                 Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-            }
-     
-} 
+
+        } catch (ParseException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /** 
@@ -92,9 +154,9 @@ public class ExecServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException  {
+            throws ServletException, IOException {
         processRequest(request, response);
-    } 
+    }
 
     /** 
      * Handles the HTTP <code>POST</code> method.
@@ -105,7 +167,7 @@ public class ExecServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         processRequest(request, response);
     }
 
@@ -117,5 +179,4 @@ public class ExecServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
 }

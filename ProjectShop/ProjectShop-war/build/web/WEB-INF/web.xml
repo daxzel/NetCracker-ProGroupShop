@@ -1,8 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<<<<<<< HEAD
 <web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
     <session-config>
         <session-timeout>
             30
         </session-timeout>
     </session-config>
+=======
+<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+    <servlet>
+        <servlet-name>ExecServlet</servlet-name>
+        <servlet-class>servlets.ExecServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ExecServlet</servlet-name>
+        <url-pattern>/registration</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ExecServlet</servlet-name>
+        <url-pattern>/selectByNik</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ExecServlet</servlet-name>
+        <url-pattern>/updateUser</url-pattern>
+    </servlet-mapping>
+>>>>>>> 790fc38a36c44496fe952c0ca7cae898617aafa0
 </web-app>

@@ -15,8 +15,9 @@
         <title>Регистрация пользователя</title>
     </head>
     <body>
+       
         <H2>Регистрация</H2>
-        <form name="myForm" action="ExecServlet">
+        <form name="myForm" action="registration">
             <table>
                 <tr><td>Имя</td><td></td></tr>
                 <tr><td><input type="text" name="NAME" value="" size="20" /></td><td></td></tr>
@@ -37,6 +38,8 @@
                 <tr><td><input type="submit" value="Input" /></td><td></td></tr>
              </table>
         </form>
+
+        
         <%if(request.getAttribute("result")!=null){
             if (request.getAttribute("result") instanceof PasswordException){
                 %><br>Пароль повторен не верно<%
