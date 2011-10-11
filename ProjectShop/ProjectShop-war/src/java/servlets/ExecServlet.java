@@ -22,7 +22,7 @@ import java.util.Date;
 import exceptions.*;
 import javax.servlet.http.HttpSession;
 import DBClasses.User;
-import DBManager.DBManager;
+import DBManager.*;
 
 /**
  *
@@ -117,7 +117,34 @@ public class ExecServlet extends HttpServlet {
      protected void addProduct(HttpServletRequest request,
             HttpServletResponse response) throws ServletException,ParseException,IOException
     {
-         
+        String result;
+        RequestDispatcher rd;
+
+        String name = request.getParameter("NAME");
+        String description = request.getParameter("DESCRIPTION");
+        double price = Double.parseDouble(request.getParameter("PRICE")) ;
+        int id_catalog = Integer.parseInt(request.getParameter("ID_CATALOG"));
+
+        try
+        {
+            
+            ProductDAL.addProduct(name, description, id_catalog, price);
+
+
+            result = "uspeh";
+            request.setAttribute("result", result);
+            rd = request.getRequestDispatcher("index.jsp");
+            rd.forward(request, response);
+
+        }
+        catch (SQLException ex)
+        {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (NamingException ex)
+        {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
        protected void updateUser(HttpServletRequest request,

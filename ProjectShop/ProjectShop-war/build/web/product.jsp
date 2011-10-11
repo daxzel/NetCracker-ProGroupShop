@@ -45,8 +45,10 @@
                 <tr><td><input type="text" name="NAME" value="" size="20" /></td><td></td></tr>
                 <tr><td>Описание</td><td></td></tr>
                 <tr><td><input type="text" name="DESCRIPTION" value="" size="100" /></td><td></td></tr>
-                <tr><td>Отчество</td><td></td></tr>
+                <tr><td>Цена</td><td></td></tr>
                 <tr><td><input type="text" name="PRICE" value="" size="20" /></td><td></td></tr>
+                <tr><td>Номер каталога</td><td></td></tr>
+                <tr><td><input type="text" name="ID_CATALOG" value="" size="10" /></td><td></td></tr>
                 <tr><td><input type="submit" value="Input" /></td><td></td></tr>
              </table>
         </form>

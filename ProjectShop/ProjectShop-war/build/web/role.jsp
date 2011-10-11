@@ -15,7 +15,7 @@
     <body>
         <p align="center">
             <%
-               Connection conn = DBManager.
+               Connection conn = DBManager.DBManager.getConnection();
                Statement statS = conn.createStatement();
                ResultSet rs = statS.executeQuery("SELECT * FROM ROLE");
                  //ResultSet rs = statS.getResultSet();

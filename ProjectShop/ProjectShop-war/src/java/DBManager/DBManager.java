@@ -29,10 +29,9 @@ public class DBManager {
         }
         else
         {
-
-        DataSource ds = (DataSource) new InitialContext().lookup("jdbc/InternetShop");
-        _conn =  ds.getConnection();
-        return _conn;
+            DataSource ds = (DataSource) new InitialContext().lookup("jdbc/InternetShop");
+            _conn =  ds.getConnection();
+            return _conn;
         }
     }
 
