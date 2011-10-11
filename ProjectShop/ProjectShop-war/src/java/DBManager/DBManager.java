@@ -20,9 +20,24 @@ import DBClasses.User;
 
 public class DBManager {
 
+    private static Connection _conn;
+
     public static Connection getConnection() throws SQLException, NamingException {
+        if (_conn !=null)
+        {
+            return _conn;
+        }
+        else
+        {
+
         DataSource ds = (DataSource) new InitialContext().lookup("jdbc/InternetShop");
-        return ds.getConnection();
+        _conn =  ds.getConnection();
+        return _conn;
+        }
+    }
+
+    public DBManager()
+    {
     }
 
     public static User findUserByNik(String nik) throws SQLException, NamingException {
@@ -78,4 +93,5 @@ public class DBManager {
         conn.commit();
         conn.close();
     }
+
 }
