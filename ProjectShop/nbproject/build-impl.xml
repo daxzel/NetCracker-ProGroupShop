@@ -533,7 +533,7 @@ exists or setup the property manually. For example like this:
     </target>
     <target depends="init" name="do-clean">
         <delete dir="${build.dir}"/>
-        <delete dir="${dist.dir}"/>
+      
         <delete dir="${build.dir}"/>
     </target>
     <target depends="init" if="netbeans.home" name="undeploy-clean">
