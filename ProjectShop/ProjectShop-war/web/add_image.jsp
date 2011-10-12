@@ -14,14 +14,14 @@
         <title>add_image</title>
     </head>
     <body>
-        <form action="AddImageServlet">
+        <form action="addImage">
             
             <table border="0">
 
                 <tbody>
                     <tr>
                         <td>ПК продукта</td>
-                        <td><input type="text" name="ID_PRODUCT" value=""/> </td>
+                        <td><input type="text" name="ID_PRODUCT" value=""/></td>
                     </tr>
                     <tr>
                         <td>Название изображения</td>

@@ -23,6 +23,12 @@
             <p align="center"><a href ="role.jsp">Роль пользователей</a><br></p>
             <p align="center"><a href="registration.jsp">Регистрация</a></p>
             <p align="center"><a href="updateUser.jsp">Редактирование пользователя</a></p>
+            <p align="center"><a href="add_comment.jsp">addcomment</a></p>
+            <p align="center"><a href="del_comment.jsp">delcomment</a></p>
+            <p align="center"><a href="SELECT_PARAM.jsp">SELECT</a></p>
+
+
+
 
     </body>
 </html>

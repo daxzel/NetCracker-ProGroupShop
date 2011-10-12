@@ -4,11 +4,15 @@
   <context-root>/ProjectShop-war</context-root>
   <servlet>
     <servlet-name>ExecServlet</servlet-name>
-    <principal-name class-name="servlets.ExecServlet">ExecServlet</principal-name>
     <servlet-mapping>
-        <servlet-name>ExecServlet</servlet-name>
-        <url-pattern>/registration.html</url-pattern>
+      <servlet-name>ExecServlet</servlet-name>
+      <url-pattern>/registration.html</url-pattern>
     </servlet-mapping>
+    <principal-name class-name="servlets.ExecServlet">ExecServlet</principal-name>
+  </servlet>
+  <servlet>
+    <servlet-name>AddImageServlet</servlet-name>
+    <principal-name class-name="servlets.AddImageServlet">AddImageServlet</principal-name>
   </servlet>
   <class-loader delegate="true"/>
   <jsp-config>
