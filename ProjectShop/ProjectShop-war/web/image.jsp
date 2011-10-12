@@ -5,7 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="java.sql.*,javax.sql.*,javax.naming.*,javax.sql.DataSource, DBManager.*;" %>
+<%@page import="java.sql.*,javax.sql.*,javax.naming.*,javax.sql.DataSource;" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -15,7 +15,7 @@
     <body>
         <p align="center">
             <%
-               DBManager.getConnection();
+               
                
                
                Connection conn = DBManager.getConnection();
