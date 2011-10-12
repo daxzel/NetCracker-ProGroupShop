@@ -44,20 +44,4 @@
         <servlet-name>ZHServlet</servlet-name>
         <url-pattern>/addImage</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ExecServlet</servlet-name>
-        <url-pattern>/getUsersByRole</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ExecServlet</servlet-name>
-        <url-pattern>/deleteUser</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ExecServlet</servlet-name>
-        <url-pattern>/getFullUserList</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ExecServlet</servlet-name>
-        <url-pattern>/getFullRoleList</url-pattern>
-    </servlet-mapping>
 </web-app>

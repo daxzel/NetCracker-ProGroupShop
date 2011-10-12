@@ -10,21 +10,27 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>РРЅС‚РµСЂРЅРµС‚-РјР°РіР°Р·РёРЅ</title>
+        <title>Интернет-магазин</title>
     </head>
     <body>
-            <p align="center"><a href ="user.jsp">РџРѕР»СЊР·РѕРІР°С‚РµР»Рё</a><br></p>
-            <p align="center"><a href ="image.jsp">РР·РѕР±СЂР°Р¶РµРЅРёСЏ РїСЂРѕРґСѓРєС‚РѕРІ</a><br></p>
-            <p align="center"><a href ="catalog.jsp">РљР°С‚Р°Р»РѕРі</a><br></p>
-            <p align="center"><a href ="opinion.jsp">РљРѕРјРјРµРЅС‚Р°СЂРёРё РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№</a><br></p>
-            <p align="center"><a href ="order.jsp">Р—Р°РєР°Р·</a><br></p>
-            <p align="center"><a href ="product.jsp">РџСЂРѕРґСѓРєС‚</a><br></p>
-            <p align="center"><a href ="role.jsp">РџРѕРёСЃРє РїРѕ СЂРѕР»СЏРј РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№</a><br></p>
-            <p align="center"><a href="registration.jsp">Р РµРіРёСЃС‚СЂР°С†РёСЏ</a></p>
-            <p align="center"><a href="updateUser.jsp">Р РµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ</a></p>
-            <p align="center"><a href="getUsersByRole.jsp">РџРѕРёСЃРє РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ РїРѕ СЂРѕР»Рµ</a></p>
-            <p align="center"><a href="deleteUser.jsp">РЈРґР°Р»РµРЅРёРµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ</a></p>
-            <p align="center"><a href="getFullList.jsp">Р’С‹РІРѕРґ РІСЃРµРіРѕ</a></p>
+        
+         <p align="center"><a href ="user.jsp">Пользователи</a><br></p>
+            <p align="center"><a href ="image.jsp">Изображения продуктов</a><br></p>
+            <p align="center"><a href ="catalog.jsp">Каталог</a><br></p>
+            <p align="center"><a href ="opinion.jsp">Комментарии пользователей</a><br></p>
+            <p align="center"><a href ="order.jsp">Заказ</a><br></p>
+            <p align="center"><a href ="product.jsp">Продукт</a><br></p>
+            <p align="center"><a href ="role.jsp">Роль пользователей</a><br></p>
+            <p align="center"><a href="registration.jsp">Регистрация</a></p>
+            <p align="center"><a href="updateUser.jsp">Редактирование пользователя</a></p>
+            <p align="center"><a href="add_comment.jsp">addcomment</a></p>
+            <p align="center"><a href="del_comment.jsp">delcomment</a></p>
+            <p align="center"><a href="SELECT_PARAM.jsp">SELECT</a></p>
+            <p align="center"><a href="getUsersByRole.jsp">Поиск пользователей по роле</a></p>
+            <p align="center"><a href="deleteUser.jsp">Удаление пользователя</a></p>
+            <p align="center"><a href="getFullList.jsp">Вывод всего</a></p>
+
+
 
     </body>
 </html>

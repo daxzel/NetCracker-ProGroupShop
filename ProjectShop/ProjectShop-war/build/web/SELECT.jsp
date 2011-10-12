@@ -1,6 +1,6 @@
-<%--
-    Document   : user
-    Created on : 06.10.2011, 20:35:21
+<%-- 
+    Document   : SELECT
+    Created on : 11.10.2011, 19:28:41
     Author     : ололо
 --%>
 
