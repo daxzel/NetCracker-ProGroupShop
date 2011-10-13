@@ -18,6 +18,8 @@ public class ProductDAL {
     public static ResultSet getAllProducts() throws SQLException,NamingException
     {
         Connection conn = DBManager.getConnection();
+
+
         PreparedStatement pst = conn.prepareStatement("SELECT * FROM IMAGE");
 
         return pst.executeQuery();
