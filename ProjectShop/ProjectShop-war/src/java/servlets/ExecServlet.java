@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.RequestDispatcher;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.*;
 import exceptions.*;
 import javax.servlet.http.HttpSession;
 import DBClasses.User;
@@ -101,12 +102,12 @@ public class ExecServlet extends HttpServlet {
             rd = request.getRequestDispatcher(homepage);
             rd.forward(request, response);
         } catch (SQLException ex) {
-            result = "запись не найдена";
+            result = "пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
             request.setAttribute("result", result);
             rd = request.getRequestDispatcher(homepage);
             rd.forward(request, response);
         } catch (NamingException ex) {
-            result = "неведомая ошибка";
+            result = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ";
             request.setAttribute("result", result);
             rd = request.getRequestDispatcher(homepage);
             rd.forward(request, response);
@@ -295,12 +296,12 @@ public class ExecServlet extends HttpServlet {
                     rd = request.getRequestDispatcher(homepage);
                     rd.forward(request, response);
                 } catch (SQLException ex) {
-                    result = "запись не найдена";
+                    result = "пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
                     request.setAttribute("result", result);
                     rd = request.getRequestDispatcher(homepage);
                     rd.forward(request, response);
                 } catch (NamingException ex) {
-                    result = "неведомая ошибка";
+                    result = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ";
                     request.setAttribute("result", result);
                     rd = request.getRequestDispatcher(homepage);
                     rd.forward(request, response);
@@ -333,7 +334,7 @@ public class ExecServlet extends HttpServlet {
                     rd = request.getRequestDispatcher("index.jsp");
                     rd.forward(request, response);
                 } catch (NikNameException ex) {
-                    result="Пользователь с таким ником существует";
+                    result="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
                     request.setAttribute("result", result);
                     rd = request.getRequestDispatcher("updateUser.jsp");
                     rd.forward(request, response);
@@ -342,7 +343,7 @@ public class ExecServlet extends HttpServlet {
                 } catch (NamingException ex) {
                     Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (PasswordException ex) {
-                    result="Пароль введен не верно";
+                    result="пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ";
                     request.setAttribute("result", result);
                     rd = request.getRequestDispatcher("updateUser.jsp");
                     rd.forward(request, response);

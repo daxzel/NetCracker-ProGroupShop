@@ -2,7 +2,7 @@
 <%-- 
     Document   : product
     Created on : 06.10.2011, 20:35:21
-    Author     : ололо
+    Author     : пїЅпїЅпїЅпїЅпїЅ
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -41,13 +41,13 @@
 
         <form name="addProductForm" action="olololo">
             <table>
-                <tr><td>Название</td><td></td></tr>
+                <tr><td>РРјСЏ</td><td></td></tr>
                 <tr><td><input type="text" name="NAME" value="" size="20" /></td><td></td></tr>
-                <tr><td>Описание</td><td></td></tr>
+                <tr><td>РћРїРёСЃР°РЅРёРµ</td><td></td></tr>
                 <tr><td><input type="text" name="DESCRIPTION" value="" size="100" /></td><td></td></tr>
-                <tr><td>Цена</td><td></td></tr>
+                <tr><td>Р¦РµРЅР°</td><td></td></tr>
                 <tr><td><input type="text" name="PRICE" value="" size="20" /></td><td></td></tr>
-                <tr><td>Номер каталога</td><td></td></tr>
+                <tr><td>РРґ РєР°С‚Р°Р»РѕРіР°</td><td></td></tr>
                 <tr><td><input type="text" name="ID_CATALOG" value="" size="10" /></td><td></td></tr>
                 <tr><td><input type="submit" value="Input" /></td><td></td></tr>
              </table>

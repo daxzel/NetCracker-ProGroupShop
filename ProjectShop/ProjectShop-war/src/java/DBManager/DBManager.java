@@ -38,7 +38,7 @@ public class DBManager {
         Connection conn = getConnection();
         PreparedStatement pst = conn.prepareStatement("SELECT * FROM \"USER\" WHERE NIK = ? AND ID_USER=?");
         pst.setString(1, usr.getNik());
-        pst.setInt(2, usr.getId_user());
+        pst.setInt(2, usr.getId());
         ResultSet rs = pst.executeQuery();
         //rs.next();
         if (rs.next()) {

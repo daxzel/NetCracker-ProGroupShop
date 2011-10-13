@@ -10,8 +10,7 @@ import java.util.Date;
  *
  * @author Yra
  */
-public interface UserInterface {
-public int getId_user();
+public interface UserInterface extends DBClassInterface {
 
 public String getName();
 
