@@ -26,8 +26,11 @@ public class ProductDAL {
     public static void addProduct(String name, String description, int it_catalog, double price) throws SQLException,NamingException
     {
         Connection conn = DBManager.getConnection();
+
+
         PreparedStatement pst = conn.prepareStatement("INSERT INTO PRODUCT " + "(NAME,DESCRIPTION,ID_CATALOG,PRICE)" + "VALUES(?,?,?,?)");
         pst.setString(1, name);
+
         pst.setString(2, description);
         pst.setInt(3, it_catalog);
         pst.setDouble(4, price);
