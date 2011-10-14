@@ -25,6 +25,7 @@ public class AbstractManager {
     }
 
     public static Object getById(String table, int id) throws SQLException, NamingException {
+
         Connection conn = getConnection();
         Object obj = null;
         try {
@@ -67,7 +68,7 @@ public static List getFullList(String table) throws SQLException, NamingExceptio
                 if(table.equals("ROLE")){
                 list.add(i,new Role(rs));
                 }
-              i=i+1;
+            i=i+1;
             }
         } finally {
             conn.close();

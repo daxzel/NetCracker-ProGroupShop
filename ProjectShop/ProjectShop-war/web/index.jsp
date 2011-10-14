@@ -13,8 +13,7 @@
         <title>Интернет-магазин</title>
     </head>
     <body>
-        
-         <p align="center"><a href ="user.jsp">Пользователи</a><br></p>
+            <p align="center"><a href ="user.jsp">Пользователи</a><br></p>
             <p align="center"><a href ="image.jsp">����������� ���������</a><br></p>
             <p align="center"><a href ="catalog.jsp">Каталог</a><br></p>
             <p align="center"><a href ="opinion.jsp">����������� �������������</a><br></p>
@@ -29,9 +28,5 @@
             <p align="center"><a href="getUsersByRole.jsp">Вывод пользователей по их ролям</a></p>
             <p align="center"><a href="deleteUser.jsp">Удалить пользователя</a></p>
             <p align="center"><a href="getFullList.jsp">Вывод всего</a></p>
-
-
-
-
     </body>
 </html>
