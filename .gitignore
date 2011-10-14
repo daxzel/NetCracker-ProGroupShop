@@ -7,3 +7,5 @@
 build/*
 
 /ProjectShop/dist
+
+/ProjectShop/ProjectShop-war/build
