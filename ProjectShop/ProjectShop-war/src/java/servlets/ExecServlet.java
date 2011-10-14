@@ -151,45 +151,98 @@ public class ExecServlet extends HttpServlet {
        protected void updateUser(HttpServletRequest request,
             HttpServletResponse response) throws ServletException,ParseException,IOException
     {
-        String result, homepage;
+        String result;
+        HttpSession session = request.getSession();
         RequestDispatcher rd;
 
-        String name = request.getParameter("NAME");
-        String surname = request.getParameter("SURNAME");
-        String otchestvo = request.getParameter("OTCHESTVO");
-        String nik = request.getParameter("NIK");
-        String password = request.getParameter("PASSWORD");
-        String password2 = request.getParameter("PASSWORD2");
-
-        try {
-            if (!password.equals(password2)) {
-                throw new PasswordException();
+        User usrOld= (User)session.getAttribute("usrOld");
+                String nikOld= usrOld.getNik();
+                String name = request.getParameter("NAME");
+                String surname = request.getParameter("SURNAME");
+                String otchestvo = request.getParameter("OTCHESTVO");
+                String nik = request.getParameter("NIK");
+                String password = request.getParameter("PASSWORD");
+                String password2 = request.getParameter("PASSWORD2");
+                try {
+                    if (password.equals("")){
+                        throw new PasswordException();
+                    }
+                    if (!password.equals(password2)) {
+                        throw new PasswordException();
+                    }
+                    String brn = request.getParameter("BORN");
+                    String phone = request.getParameter("PHONE");
+                    String email = request.getParameter("EMAIL");
+                    String roleName = request.getParameter("ID_ROLE");
+                    DBManager.updateUserbyNik(new User(name, surname, otchestvo, nik, password, brn, phone, email, roleName),nikOld);
+                    result = "uspeh";
+                    request.setAttribute("result", result);
+                    rd = request.getRequestDispatcher("index.jsp");
+                    rd.forward(request, response);
+                } catch (NikNameException ex) {
+                    result="Пользователь с таким ником существует";
+                    request.setAttribute("result", result);
+                    rd = request.getRequestDispatcher("updateUser.jsp");
+                    rd.forward(request, response);
+                } catch (SQLException ex) {
+                    Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (NamingException ex) {
+                    Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (PasswordException ex) {
+                    result="Пароль введен не верно";
+                    request.setAttribute("result", result);
+                    rd = request.getRequestDispatcher("updateUser.jsp");
+                    rd.forward(request, response);
+                }
             }
-            String brn = request.getParameter("BORN");
-            String phone = request.getParameter("PHONE");
-            String email = request.getParameter("EMAIL");
-            SimpleDateFormat formt = new SimpleDateFormat("dd MM yyyy");
-            Date born = formt.parse(brn);
-            DBManager.addUser(name, surname, otchestvo, nik, password, born, phone, email, 1);
-            result = "uspeh";
-            request.setAttribute("result", result);
-            rd = request.getRequestDispatcher("index.jsp");
-            rd.forward(request, response);
-        } catch (NikNameException ex) {
-            request.setAttribute("result", ex);
-            rd = request.getRequestDispatcher("registration.jsp");
-            rd.forward(request, response);
-        } catch (SQLException ex) {
-            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NamingException ex) {
-            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (PasswordException ex) {
-            request.setAttribute("result", ex);
-            rd = request.getRequestDispatcher("registration.jsp");
-            rd.forward(request, response);
-        }
 
+
+
+    protected void getUserByRole(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException{
+
+     RequestDispatcher rd;
+String rolename = request.getParameter("ROLE");
+                try {
+                    List<User> list = DBManager.findUsersByRole(rolename);
+                    request.setAttribute("result", list);
+                    rd = request.getRequestDispatcher("getUsersByRole.jsp");
+                    rd.forward(request, response);
+                } catch (SQLException ex) {
+                    Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (NamingException ex) {
+                    Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+                }
     }
+    protected void deleteUser(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException{
+         String nik = request.getParameter("NIK");
+          RequestDispatcher rd;
+                try {
+                    int numDelete = DBManager.deleteUser(nik);
+                    request.setAttribute("result", numDelete);
+                    rd = request.getRequestDispatcher("deleteUser.jsp");
+                    rd.forward(request, response);
+                } catch (SQLException ex) {
+                    Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (NamingException ex) {
+                    Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+                }
+    }
+     protected void getFullList (HttpServletRequest request,
+            HttpServletResponse response, String table) throws ServletException, IOException{
+                RequestDispatcher rd;
+          try {
+                    request.setAttribute("result", DBManager.getFullList(table));
+                    rd = request.getRequestDispatcher("getFullList.jsp");
+                    rd.forward(request, response);
+                } catch (SQLException ex) {
+                    Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (NamingException ex) {
+                    Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+                }
+     }
+
 
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -200,6 +253,9 @@ public class ExecServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+            
+            RequestDispatcher rd;
+            String result, homepage;
         try
         {
             response.setContentType("text/html;charset=UTF-8");
@@ -224,6 +280,23 @@ public class ExecServlet extends HttpServlet {
             if (request.getRequestURI().equals("/ProjectShop-war/updateUser"))
             {
                 updateUser(request,response);
+                return;
+            }
+            if (request.getRequestURI().equals("/ProjectShop-war/getUsersByRole")) 
+            {
+                getUserByRole(request,response);
+                return;
+            }
+            if (request.getRequestURI().equals("/ProjectShop-war/deleteUser")) {
+              deleteUser(request,response);
+              return;
+            }
+            if (request.getRequestURI().equals("/ProjectShop-war/getFullRoleList")) {
+ getFullList(request,response,"ROLE");
+              return;
+            }
+            if (request.getRequestURI().equals("/ProjectShop-war/getFullUserList")) {
+                getFullList(request,response,"USER");
                 return;
             }
 

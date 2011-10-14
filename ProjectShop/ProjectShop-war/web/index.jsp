@@ -22,13 +22,13 @@
             <p align="center"><a href ="product.jsp">Продукты</a><br></p>
             <p align="center"><a href ="role.jsp">���� �������������</a><br></p>
             <p align="center"><a href="registration.jsp">Регистрация</a></p>
-            <p align="center"><a href="updateUser.jsp">�������������� ������������</a></p>
+            <p align="center"><a href="updateUser.jsp">update user</a></p>
             <p align="center"><a href="add_comment.jsp">addcomment</a></p>
             <p align="center"><a href="del_comment.jsp">delcomment</a></p>
             <p align="center"><a href="SELECT_PARAM.jsp">SELECT</a></p>
-            <p align="center"><a href="getUsersByRole.jsp">����� ������������� �� ����</a></p>
+            <p align="center"><a href="getUsersByRole.jsp">Вывод пользователей по их ролям</a></p>
             <p align="center"><a href="deleteUser.jsp">Удалить пользователя</a></p>
-            <p align="center"><a href="getFullList.jsp">����� �����</a></p>
+            <p align="center"><a href="getFullList.jsp">Вывод всего</a></p>
 
 
 

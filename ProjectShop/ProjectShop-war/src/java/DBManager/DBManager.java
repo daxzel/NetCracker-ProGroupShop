@@ -10,12 +10,12 @@ import exceptions.NikNameException;
 import DBClasses.User;
 import DBClasses.Role;
 
-public class DBManager {
+public class DBManager extends AbstractManager {
 
-    public static Connection getConnection() throws SQLException, NamingException {
+    /*public static Connection getConnection() throws SQLException, NamingException {
         DataSource ds = (DataSource) new InitialContext().lookup("jdbc/InternetShop");
         return ds.getConnection();
-    }
+    }*/
 
     public static User findUserByNik(String nik) throws SQLException, NamingException {
         Connection conn = getConnection();
@@ -82,7 +82,7 @@ public class DBManager {
         conn.commit();
         conn.close();
     }
-    public static Role findRoleById(int id_role) throws SQLException,NamingException{
+    /*public static Role findRoleById(int id_role) throws SQLException,NamingException{
          Connection conn = getConnection();
          Role role = null;
         try {
@@ -98,7 +98,7 @@ public class DBManager {
             conn.close();
         }
         return role;
-    }
+    }*/
     public static Role findRoleByName(String name) throws SQLException,NamingException{
          Connection conn = getConnection();
          Role role = null;

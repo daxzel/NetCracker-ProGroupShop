@@ -128,7 +128,7 @@ public int getRoleId(){
     return role.getId_role();
     }
 public void setRole(int nid_role) throws SQLException, NamingException{
-    role = DBManager.findRoleById(nid_role);
+    role = (Role) DBManager.getById("ROLE", nid_role);
 }
 public void setRole(String roleName) throws SQLException, NamingException{
     role = DBManager.findRoleByName(roleName);
