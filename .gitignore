@@ -4,11 +4,6 @@
 *.jar
 *.war
 *.ear
-build\*
-/ProjectShop/nbproject
-/ProjectShop/dist
-/ProjectShop/dist/ProjectShop.ear
-/ProjectShop/ProjectShop-war/nbproject/private
-/ProjectShop/ProjectShop-war/nbproject/project.properties
+build/*
 
-/ProjectShop/ProjectShop-war/nbproject
+/ProjectShop/dist
