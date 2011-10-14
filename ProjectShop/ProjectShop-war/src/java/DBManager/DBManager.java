@@ -124,7 +124,7 @@ public class DBManager extends AbstractManager {
         role = findRoleByName(roleName);
          try {
             PreparedStatement pst = conn.prepareStatement("SELECT * FROM \"USER\" WHERE ID_ROLE = ?");
-            pst.setInt(1, role.getId_role());
+            pst.setInt(1, role.getId());
             ResultSet rs = pst.executeQuery();
             int i =0;
             while (rs.next()) {

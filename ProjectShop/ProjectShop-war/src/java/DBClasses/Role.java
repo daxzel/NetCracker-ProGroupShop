@@ -11,10 +11,10 @@ import java.sql.SQLException;
  *
  * @author Yra
  */
-public class Role {
+public class Role implements DBClassInterface {
 private int id_role;
 private String name;
-public int getId_role(){
+public int getId(){
     return id_role;
 }
 public void setId_role(int nId_role){

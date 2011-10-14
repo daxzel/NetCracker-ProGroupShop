@@ -83,7 +83,7 @@
             </tr>
             <% for (int i = 0; i <= (list.size() - 1); i++) {%>
             <tr align="center">
-                <td><%= list.get(i).getId_role() %></td>
+                <td><%= list.get(i).getId() %></td>
                 <td><%= list.get(i).getName()  %></td>
             </tr>
             <%}%>
