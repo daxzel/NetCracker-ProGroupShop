@@ -6,16 +6,4 @@
             <line>21</line>
         </file>
     </editor-bookmarks>
-    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/1">
-        <file>file:/C:/Users/Yra/Shop/ProjectShop/ProjectShop-war/src/java/servlets/ExecServlet.java</file>
-        <file>file:/C:/Users/Yra/Shop/ProjectShop/ProjectShop-war/src/java/DBManager/AbstractManager.java</file>
-        <file>file:/C:/Users/Yra/Shop/ProjectShop/ProjectShop-war/src/java/DBClasses/DBClassInterface.java</file>
-        <file>file:/C:/Users/Yra/Shop/ProjectShop/ProjectShop-war/src/java/DBManager/DBManager.java</file>
-        <file>file:/C:/Users/Yra/Shop/ProjectShop/ProjectShop-war/src/java/DBClasses/UserInterface.java</file>
-        <file>file:/C:/Users/Yra/Shop/ProjectShop/ProjectShop-war/web/getFullList.jsp</file>
-        <file>file:/C:/Users/Yra/Shop/ProjectShop/ProjectShop-war/src/java/DBClasses/User.java</file>
-        <file>file:/C:/Users/Yra/Shop/ProjectShop/ProjectShop-war/web/getUsersByRole.jsp</file>
-        <file>file:/C:/Users/Yra/Shop/ProjectShop/ProjectShop-war/src/java/DBClasses/Role.java</file>
-        <file>file:/C:/Users/Yra/Shop/ProjectShop/ProjectShop-war/web/index.jsp</file>
-    </open-files>
 </project-private>

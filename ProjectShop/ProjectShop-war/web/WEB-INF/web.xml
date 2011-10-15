@@ -60,4 +60,8 @@
         <servlet-name>ExecServlet</servlet-name>
         <url-pattern>/getFullRoleList</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ExecServlet</servlet-name>
+        <url-pattern>/login</url-pattern>
+    </servlet-mapping>
 </web-app>

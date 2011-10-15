@@ -12,10 +12,7 @@ import DBClasses.Role;
 
 public class DBManager extends AbstractManager {
 
-    /*public static Connection getConnection() throws SQLException, NamingException {
-        DataSource ds = (DataSource) new InitialContext().lookup("jdbc/InternetShop");
-        return ds.getConnection();
-    }*/
+   
 
     public static User findUserByNik(String nik) throws SQLException, NamingException {
         Connection conn = getConnection();
@@ -36,7 +33,7 @@ public class DBManager extends AbstractManager {
     }
     public static void updateUserbyNik(User usr,String nikOld) throws SQLException, NamingException, NikNameException{
         Connection conn = getConnection();
-        PreparedStatement pst = conn.prepareStatement("SELECT * FROM \"USER\" WHERE NIK = ? AND ID_USER=?");
+        PreparedStatement pst = conn.prepareStatement("SELECT * FROM \"USER\" WHERE NIK = ? AND ID_USER<>?");
         pst.setString(1, usr.getNik());
         pst.setInt(2, usr.getId());
         ResultSet rs = pst.executeQuery();
@@ -82,23 +79,6 @@ public class DBManager extends AbstractManager {
         conn.commit();
         conn.close();
     }
-    /*public static Role findRoleById(int id_role) throws SQLException,NamingException{
-         Connection conn = getConnection();
-         Role role = null;
-        try {
-            PreparedStatement pst = conn.prepareStatement("SELECT * FROM \"ROLE\" WHERE ID_ROLE = ?");
-            pst.setInt(1, id_role);
-            ResultSet rs = pst.executeQuery();
-            if (rs.next()) {
-                role = new Role(rs);
-            }else{
-                throw new SQLException();
-            }
-        } finally {
-            conn.close();
-        }
-        return role;
-    }*/
     public static Role findRoleByName(String name) throws SQLException,NamingException{
          Connection conn = getConnection();
          Role role = null;
@@ -147,42 +127,5 @@ public class DBManager extends AbstractManager {
         conn.close();
         return numDelete;
     }
-    public static List getFullListUsers() throws SQLException, NamingException{
-        List<User> list = new ArrayList();
-        Connection conn = getConnection();
-        User usr = null;
-         try {
-            PreparedStatement pst = conn.prepareStatement("SELECT * FROM \"USER\"");
-            ResultSet rs = pst.executeQuery();
-            int i =0;
-            while (rs.next()) {
-              usr= new User(rs);
-              //list.add(usr);
-              list.add(i, usr);
-              i=i+1;
-            }
-        } finally {
-            conn.close();
-        }
-        return list;
-    }
-    public static List getFullListRole() throws SQLException, NamingException{
-        List<Role> list = new ArrayList();
-        Connection conn = getConnection();
-        Role role = null;
-         try {
-            PreparedStatement pst = conn.prepareStatement("SELECT * FROM \"ROLE\"");
-            ResultSet rs = pst.executeQuery();
-            int i =0;
-            while (rs.next()) {
-              role= new Role(rs);
-              //list.add(usr);
-              list.add(i, role);
-              i=i+1;
-            }
-        } finally {
-            conn.close();
-        }
-        return list;
-    }
+    
 }

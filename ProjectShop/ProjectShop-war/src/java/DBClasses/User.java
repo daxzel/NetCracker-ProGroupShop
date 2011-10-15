@@ -28,6 +28,7 @@ private String password;
 private Date born;
 private String phone;
 private String email;
+private boolean login=false;
 
 private Role role;
 
@@ -46,9 +47,10 @@ public User(ResultSet rs) throws SQLException, NamingException{
      setEmail(rs.getString(9));
      setRole(rs.getInt(10));
 }
-public User(String name, String surname, String otchestvo,String nik,String password,String brn, String phone, String email, String role) throws SQLException, NamingException{
+public User(int id_user, String name, String surname, String otchestvo,String nik,String password,String brn, String phone, String email, String role) throws SQLException, NamingException{
       //SimpleDateFormat formt = new SimpleDateFormat("dd MM yyyy");
       // Date born = formt.parse(brn);
+       setId(id_user);
         SimpleDateFormat formt = new SimpleDateFormat("dd MM yyyy");
         Date born=null;
         try {
@@ -133,6 +135,15 @@ public void setRole(int nid_role) throws SQLException, NamingException{
 public void setRole(String roleName) throws SQLException, NamingException{
     role = DBManager.findRoleByName(roleName);
 }
+public void setLogin(){
+    login=true;
+}
+public void setLogout(){
+    login=false;
+}
+public boolean getLogin(){
+    return login;
+    }
 public String toString(){
     return surname+" "+name+" "+otchestvo;
 }

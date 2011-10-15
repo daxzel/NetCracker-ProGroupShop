@@ -30,4 +30,6 @@ public String getRoleName();
 
 public int getRoleId();
 
+public boolean getLogin();
+
 }
