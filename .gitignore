@@ -1,13 +1,10 @@
 *.class
-
 # Package Files #
 *.jar
 *.war
 *.ear
 build/*
-
 /ProjectShop/dist
-
 /ProjectShop/ProjectShop-war/build
 /ProjectShop/ProjectShop-war/nbproject/private/private.properties
 /ProjectShop/ProjectShop-war/nbproject/private/private.xml
