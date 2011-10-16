@@ -4,6 +4,8 @@
  */
 
 package DBManager;
+import DBClasses.Opinion;
+import DBClasses.Product;
 import java.util.List;
 import java.sql.*;
 import javax.naming.*;
@@ -36,6 +38,12 @@ public class AbstractManager {
             if (table.equals("USER")) {
                 pst = conn.prepareStatement("SELECT * FROM \"USER\" WHERE ID_USER = ?");
             }
+            if (table.equals("PRODUCT")) {
+                pst = conn.prepareStatement("SELECT * FROM PRODUCT WHERE ID_PRODUCT = ?");
+            }
+            if (table.equals("OPINION")) {
+                pst = conn.prepareStatement("SELECT * FROM OPINION WHERE ID_OPINION = ?");
+            }
             pst.setInt(1, id);
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
@@ -44,6 +52,12 @@ public class AbstractManager {
                 }
                 if (table.equals("USER")) {
                     obj = new User(rs);
+                }
+                if (table.equals("PRODUCT")) {
+                    obj = new Product(rs);
+                }
+                if (table.equals("OPINION")) {
+                    obj = new Opinion(rs);
                 }
 
             } else {
