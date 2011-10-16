@@ -1,5 +1,7 @@
 package DBManager;
 
+import DBClasses.Opinion;
+import DBClasses.Product;
 import java.util.List;
 import java.sql.*;
 import javax.naming.*;
@@ -155,5 +157,26 @@ public class DBManager extends AbstractManager {
         stmt.executeUpdate();
         conn.commit();
         conn.close();
+    }
+    
+    public static List findOpinionByProduct(int id_pr) throws SQLException, NamingException{
+        List<Opinion> list = new ArrayList();
+        Connection conn = getConnection();
+        //Product product = null;
+        Opinion opn = null;
+        try {
+            PreparedStatement pst = conn.prepareStatement("SELECT * FROM OPINION WHERE ID_PRODUCT = ?");
+            pst.setInt(1, id_pr);
+            ResultSet rs = pst.executeQuery();
+            int i = 0;
+            while (rs.next()) {
+                opn = new Opinion(rs);
+                list.add(i, opn);
+                i = i + 1;
+            }
+        } finally {
+            conn.close();
+        }
+        return list;
     }
 }

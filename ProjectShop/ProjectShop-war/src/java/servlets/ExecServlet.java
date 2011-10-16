@@ -4,6 +4,7 @@
  */
 package servlets;
 
+import DBClasses.Opinion;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -360,6 +361,37 @@ public class ExecServlet extends HttpServlet {
         }
 
      }
+      protected void getOpinionByProduct(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException,IOException{
+
+                  RequestDispatcher rd;
+            HttpSession session = request.getSession();
+         if (session.getAttribute("user") != null && session.getAttribute("user") instanceof User) {
+        try {
+
+            String id_product = request.getParameter("ID_PRODUCT");
+            int id_pr = Integer.parseInt(id_product);
+            List<Opinion> list = DBManager.findOpinionByProduct(id_pr);
+            request.setAttribute("result", list);
+            rd = request.getRequestDispatcher("getOpinion.jsp");
+            rd.forward(request, response);
+        } catch (ServletException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NamingException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        }else {
+            rd = request.getRequestDispatcher("login.jsp");
+            rd.forward(request, response);
+        }
+
+      }
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -414,6 +446,10 @@ public class ExecServlet extends HttpServlet {
             }
             if (request.getRequestURI().equals("/ProjectShop-war/delComment")) {
                  delComment(request,response);
+                 return;
+            }
+                        if (request.getRequestURI().equals("/ProjectShop-war/getOpinion")) {
+                 getOpinionByProduct(request,response);
                  return;
             }
 
