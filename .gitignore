@@ -9,3 +9,8 @@ build/*
 /ProjectShop/dist
 
 /ProjectShop/ProjectShop-war/build
+/ProjectShop/ProjectShop-war/nbproject/private/private.properties
+/ProjectShop/ProjectShop-war/nbproject/private/private.xml
+/ProjectShop/ProjectShop-war/nbproject/project.properties
+/ProjectShop/nbproject
+/ProjectShop/ProjectShop-war/nbproject/private
