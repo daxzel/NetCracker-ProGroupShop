@@ -11,7 +11,7 @@ import java.sql.SQLException;
  *
  * @author Yra
  */
-public class Role implements DBClassInterface {
+public class Role implements RoleInterface {
 private int id_role;
 private String name;
 public int getId(){

@@ -25,11 +25,11 @@
         <url-pattern>/ZHServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>ZHServlet</servlet-name>
+        <servlet-name>ExecServlet</servlet-name>
         <url-pattern>/delComment</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>ZHServlet</servlet-name>
+        <servlet-name>ExecServlet</servlet-name>
         <url-pattern>/addComment</url-pattern>
     </servlet-mapping>
     <servlet-mapping>

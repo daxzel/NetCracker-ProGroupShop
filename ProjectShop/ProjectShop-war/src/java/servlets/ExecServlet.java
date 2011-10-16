@@ -4,6 +4,7 @@
  */
 package servlets;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -249,6 +250,8 @@ public class ExecServlet extends HttpServlet {
     protected void getFullList(HttpServletRequest request,
             HttpServletResponse response, String table) throws ServletException, IOException {
         RequestDispatcher rd;
+        HttpSession session = request.getSession();
+        if (session.getAttribute("user") != null && session.getAttribute("user") instanceof User) {
         try {
             request.setAttribute("result", DBManager.getFullList(table));
             rd = request.getRequestDispatcher("getFullList.jsp");
@@ -258,7 +261,11 @@ public class ExecServlet extends HttpServlet {
         } catch (NamingException ex) {
             Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+     }else {
+            rd = request.getRequestDispatcher("login.jsp");
+            rd.forward(request, response);
+        }
+        }
 
     protected void login(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
@@ -292,6 +299,67 @@ public class ExecServlet extends HttpServlet {
             Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+     protected void addComment(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException{
+           RequestDispatcher rd;
+            HttpSession session = request.getSession();
+        if (session.getAttribute("user") != null && session.getAttribute("user") instanceof User) {
+        try {
+          
+            String id_product = request.getParameter("ID_PRODUCT");
+            int id_pr = Integer.parseInt(id_product);
+            String id_user = request.getParameter("ID_USER");
+            int id_usr = Integer.parseInt(id_user);
+            String text = request.getParameter("TEXT");
+            DBManager.addComment(id_pr, id_usr, text);
+            rd = request.getRequestDispatcher("opinion.jsp");
+            rd.forward(request, response);
+        } catch (ServletException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NamingException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+         }else {
+            rd = request.getRequestDispatcher("login.jsp");
+            rd.forward(request, response);
+        }
+     }
+     protected void delComment(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException,IOException{
+
+        RequestDispatcher rd;
+            HttpSession session = request.getSession();
+         if (session.getAttribute("user") != null && session.getAttribute("user") instanceof User) {
+        try {
+
+            String id_opinion = request.getParameter("ID_OPINION");
+            int id_op = Integer.parseInt(id_opinion);
+            DBManager.delComment(id_op);
+            rd = request.getRequestDispatcher("opinion.jsp");
+            rd.forward(request, response);
+        } catch (ServletException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NamingException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        }else {
+            rd = request.getRequestDispatcher("login.jsp");
+            rd.forward(request, response);
+        }
+
+     }
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -339,6 +407,14 @@ public class ExecServlet extends HttpServlet {
             if (request.getRequestURI().equals("/ProjectShop-war/getFullUserList")) {
                 getFullList(request, response, "USER");
                 return;
+            }
+            if (request.getRequestURI().equals("/ProjectShop-war/addComment")) {
+                 addComment(request,response);
+                 return;
+            }
+            if (request.getRequestURI().equals("/ProjectShop-war/delComment")) {
+                 delComment(request,response);
+                 return;
             }
 
 
