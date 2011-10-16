@@ -4,8 +4,7 @@
  */
 
 package DBManager;
-import DBClasses.Opinion;
-import DBClasses.Product;
+
 import java.util.List;
 import java.sql.*;
 import javax.naming.*;
@@ -14,8 +13,8 @@ import java.util.Date;
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import exceptions.NikNameException;
-import DBClasses.User;
-import DBClasses.Role;
+import DBClasses.*;
+
 /**
  *
  * @author Yra
@@ -81,6 +80,9 @@ public static List getFullList(String table) throws SQLException, NamingExceptio
                 }
                 if(table.equals("ROLE")){
                 list.add(i,new Role(rs));
+                }
+                if(table.equals("PRODUCT")){
+                list.add(i,new Product(rs));
                 }
             i=i+1;
             }

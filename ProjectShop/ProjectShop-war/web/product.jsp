@@ -13,33 +13,10 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Add product</title>
     </head>
     <body>
-         <%
-               ResultSet rs = DBManager.ProductDAL.getAllProducts();
-          %>
-
-         <table align="center" title="Full list of image" border="1" width="80%">
-            <tr>
-                <td>NAME</td>
-                <td>DESCRIPTION</td>
-                <td>ID_CATALOG</td>
-                <td>PRICE</td>
-            </tr>
-            <%
-              while (rs.next()) {%>
-              <tr>
-                  <td><%= rs.getInt(1) %></td>
-                  <td><%= rs.getInt(2)%></td>
-                  <td><%= rs.getString(3) %></td>
-                  <td><%= rs.getBlob(4) %></td>
-              </tr>
-                               <%}%>
-        </table>
-
-
-        <form name="addProductForm" action="olololo">
+        <form name="addProductForm" action="addProduct">
             <table>
                 <tr><td>Имя</td><td></td></tr>
                 <tr><td><input type="text" name="NAME" value="" size="20" /></td><td></td></tr>

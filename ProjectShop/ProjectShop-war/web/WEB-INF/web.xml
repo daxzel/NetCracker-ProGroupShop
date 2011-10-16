@@ -4,10 +4,6 @@
         <servlet-name>ExecServlet</servlet-name>
         <servlet-class>servlets.ExecServlet</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>ZHServlet</servlet-name>
-        <servlet-class>servlets.ZHServlet</servlet-class>
-    </servlet>
     <servlet-mapping>
         <servlet-name>ExecServlet</servlet-name>
         <url-pattern>/registration</url-pattern>
@@ -21,28 +17,12 @@
         <url-pattern>/updateUser</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>ZHServlet</servlet-name>
-        <url-pattern>/ZHServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>ExecServlet</servlet-name>
         <url-pattern>/delComment</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ExecServlet</servlet-name>
         <url-pattern>/addComment</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ZHServlet</servlet-name>
-        <url-pattern>/superSelect</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ZHServlet</servlet-name>
-        <url-pattern>/delImage</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ZHServlet</servlet-name>
-        <url-pattern>/addImage</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ExecServlet</servlet-name>
@@ -67,5 +47,17 @@
     <servlet-mapping>
         <servlet-name>ExecServlet</servlet-name>
         <url-pattern>/getOpinion</url-pattern>
+    </servlet-mapping>
+     <servlet-mapping>
+        <servlet-name>ExecServlet</servlet-name>
+        <url-pattern>/addProduct</url-pattern>
+    </servlet-mapping>
+     <servlet-mapping>
+        <servlet-name>ExecServlet</servlet-name>
+        <url-pattern>/getFullProductList</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ExecServlet</servlet-name>
+        <url-pattern>/product</url-pattern>
     </servlet-mapping>
 </web-app>

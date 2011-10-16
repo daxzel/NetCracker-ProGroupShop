@@ -10,7 +10,7 @@ import java.util.Date;
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import exceptions.NikNameException;
-import DBClasses.User;
+import DBClasses.*;
 import DBClasses.Role;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -178,5 +178,25 @@ public class DBManager extends AbstractManager {
             conn.close();
         }
         return list;
+    }
+    public static void addProduct(Product prd) throws SQLException,NamingException
+    {
+        Connection conn = getConnection();
+        PreparedStatement pst = conn.prepareStatement("INSERT INTO PRODUCT " + "(DESCRIPTION,ID_CATALOG,NAME,PRICE)" + "VALUES(?,?,?,?)");
+        pst.setString(1,prd.getDescription());
+        pst.setInt(2, prd.getIdCatalog());
+        pst.setString(3,prd.getName());
+        pst.setDouble(4, prd.getPrice());
+        pst.execute();
+    }
+    public static void addProduct(String name, String description, int it_catalog, double price) throws SQLException,NamingException
+    {
+       Connection conn = getConnection();
+        PreparedStatement pst = conn.prepareStatement("INSERT INTO PRODUCT " + "(DESCRIPTION,ID_CATALOG,NAME,PRICE)" + "VALUES(?,?,?,?)");
+        pst.setString(1,description);
+        pst.setInt(2,it_catalog);
+        pst.setString(3,name);
+        pst.setDouble(4, price);
+        pst.execute();
     }
 }

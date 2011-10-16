@@ -14,11 +14,11 @@
     </head>
     <body>
         <%if(session.getAttribute("user")==null){%>
-            <p align="center"><a href ="image.jsp">����������� ���������</a><br></p>
+            <p align="center"><a href ="image.jsp">Add image</a><br></p>
             <p align="center"><a href ="catalog.jsp">Каталог</a><br></p>
-            <p align="center"><a href ="opinion.jsp">����������� �������������</a><br></p>
-            <p align="center"><a href ="order.jsp">�����</a><br></p>
-            <p align="center"><a href ="product.jsp">Продукты</a><br></p>
+           
+            <p align="center"><a href ="order.jsp">Order</a><br></p>
+           
             <p align="center"><a href="registration.jsp">Регистрация</a></p>
             <p align="center"><a href="login.jsp">Вход</a></p>
             <p align="center"><a href="getFullList.jsp">Вывод всего</a></p>
@@ -27,11 +27,8 @@
             UserInterface usr = (UserInterface) session.getAttribute("user");
             if(usr.getRoleId()==1){
         %>
-            <p align="center"><a href ="image.jsp">����������� ���������</a><br></p>
             <p align="center"><a href ="catalog.jsp">Каталог</a><br></p>
-            <p align="center"><a href ="opinion.jsp">����������� �������������</a><br></p>
-            <p align="center"><a href ="order.jsp">�����</a><br></p>
-            <p align="center"><a href ="product.jsp">Продукты</a><br></p>
+            <p align="center"><a href ="product.jsp">Добавление продукта</a><br></p>
             <p align="center"><a href="updateUser.jsp?DO=upProf">Редактирование профиля</a></p>
             <p align="center"><a href="updateUser.jsp?DO=upUser">update user</a></p>
             <p align="center"><a href="add_comment.jsp">addcomment</a></p>
@@ -43,11 +40,8 @@
             <p align="center"><a href="getOpinion.jsp">Вывод всех комментариев продута</a></p>
 
             <%} if(usr.getRoleId()==2){%>
-            <p align="center"><a href ="image.jsp">����������� ���������</a><br></p>
             <p align="center"><a href ="catalog.jsp">Каталог</a><br></p>
-            <p align="center"><a href ="opinion.jsp">����������� �������������</a><br></p>
-            <p align="center"><a href ="order.jsp">�����</a><br></p>
-            <p align="center"><a href ="product.jsp">Продукты</a><br></p>
+            
             <p align="center"><a href="updateUser.jsp?DO=upProf">Редактирование профиля</a></p>
             <p align="center"><a href="add_comment.jsp">addcomment</a></p>
             <p align="center"><a href="del_comment.jsp">delcomment</a></p>

@@ -10,6 +10,16 @@ package DBClasses;
  * @author ололо
  */
 public interface ProductInterface extends DBClassInterface{
+    public int getIdCatalog() ;
 
+    @Override
+    public int getId() ;
+
+    public String getDescription();
+
+    public String getName();
+
+    public double getPrice();
+   
 
 }
