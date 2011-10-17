@@ -14,13 +14,18 @@
         <title>Login</title>
     </head>
     <body>
+       
          <form action="login">
+             <p align="center">
             Введите ник:
-            <input type="text" name="NIK" value="" size="20" />
+            <input type="text" name="NIK" value="" size="20" /><br>
              Введите пароль:
-            <input type="text" name="PASSWORD" value="" size="10" />
+            <input type="text" name="PASSWORD" value="" size="10" /><br>
             <input type="submit" value="Input" />
-            <br><p align="center"><a href ="index.jsp">index</a><br></p>
+           </p>
         </form>
+         <%if(request.getAttribute("result")!=null){%>
+         <%=request.getAttribute("result")%><%}%>
+         <p align="center"><a href ="index.jsp">index</a><br></p>
     </body>
 </html>

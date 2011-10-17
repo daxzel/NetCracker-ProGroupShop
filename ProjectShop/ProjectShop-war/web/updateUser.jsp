@@ -106,11 +106,11 @@
         </form>
         <%  }else{%>
         <%=request.getAttribute("result").toString()%>
-        <p align="center"><a href="updateUser.jsp?DO=upUser">update user</a></p>
+        <p align="left"><a href="updateUser.jsp?DO=upUser">update user</a></p>
                  <%}
                                     }
                         }
-                   %><br><p align="center"><a href ="index.jsp">index</a><br></p><% } else {
+                   %><br><p align="left"><a href ="index.jsp">index</a><br></p><% } else {
                         RequestDispatcher rd;
                         rd = request.getRequestDispatcher("login.jsp");
                         rd.forward(request, response);

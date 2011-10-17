@@ -1,7 +1,7 @@
 <%-- 
     Document   : add_image
     Created on : 06.10.2011, 21:05:24
-    Author     : ололо
+    Author     : пїЅпїЅпїЅпїЅпїЅ
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -20,23 +20,23 @@
 
                 <tbody>
                     <tr>
-                        <td>ПК продукта</td>
+                        <td>пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</td>
                         <td><input type="text" name="ID_PRODUCT" value=""/></td>
                     </tr>
                     <tr>
-                        <td>Название изображения</td>
+                        <td>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</td>
                         <td><input type="text" name="NAME" value="" /></td>
                     </tr>
                     <tr>
-                        <td>Путь к файлу</td>
+                        <td>пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ</td>
                         <td><input type="text" name="PATH" value="" /></td>
                     </tr>
                     <tr>
-                        <td>Ширина изображения</td>
+                        <td>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</td>
                         <td><input type="text" name="WIDTH" value="" /></td>
                     </tr>
                     <tr>
-                        <td>Высота изображения</td>
+                        <td>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</td>
                         <td><input type="text" name="HEIGHT" value=""/> </td>
                     </tr>
                 </tbody>
@@ -44,5 +44,6 @@
 
             <input type="submit" value="OK" />
         </form>
+        <p align="left"><a href ="index.jsp">index</a><br></p>
     </body>
 </html>

@@ -39,5 +39,6 @@
                         rd = request.getRequestDispatcher("login.jsp");
                         rd.forward(request, response);
                     }%>
+                     <p align="left"><a href ="index.jsp">index</a><br></p>
     </body>
 </html>

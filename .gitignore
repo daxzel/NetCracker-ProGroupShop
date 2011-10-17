@@ -11,3 +11,6 @@ build/*
 /ProjectShop/ProjectShop-war/nbproject/project.properties
 /ProjectShop/nbproject
 /ProjectShop/ProjectShop-war/nbproject/private
+/ProjectShop/nbproject
+/ProjectShop/ProjectShop-war/nbproject
+/ProjectShop/ProjectShop-ejb/nbproject

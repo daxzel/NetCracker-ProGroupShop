@@ -43,15 +43,21 @@
         <%if(request.getAttribute("result")!=null){
             if (request.getAttribute("result") instanceof PasswordException){
                 %><br>Пароль повторен не верно<%
-                }
+                }else{
+
             if (request.getAttribute("result") instanceof NikNameException){
                 %><br>Пользователь с таким ником уже существует<%
-                }
+                }else{
             if (request.getAttribute("result").equals("uspeh")){
                 %><br>Регистрация завершена<%
                 }
+            if (request.getAttribute("result") instanceof Exception){%>
+                произошла ошибка при регистрации<%
+             }
+            }
+                }
         }
         %>
-       <br> <p align="center"><a href ="index.jsp">index</a><br></p>
+      <p align="left"><a href ="index.jsp">index</a><br></p>
     </body>
 </html>

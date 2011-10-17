@@ -28,6 +28,8 @@
                 <tr><td><input type="text" name="ID_CATALOG" value="" size="10" /></td><td></td></tr>
                 <tr><td><input type="submit" value="Input" /></td><td></td></tr>
              </table>
+
         </form>
+        <p align="left"><a href ="index.jsp">index</a><br></p>
     </body>
 </html>

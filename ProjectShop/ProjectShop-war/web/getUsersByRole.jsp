@@ -29,6 +29,7 @@
             <input type="text" name="ROLE" value="" size="20" />
             <input type="submit" value="Input" />
         </form>
+         <p align="left"><a href ="index.jsp">index</a><br></p>
         <%} else {
                     if (request.getAttribute("result") instanceof List) {
                         List<UserInterface> list = (List<UserInterface>) request.getAttribute("result");
@@ -70,14 +71,15 @@
                                 }%>
             </tr>
         </table>
-
+ <p align="left"><a href ="index.jsp">index</a><br></p>
         <%  }
                             }
                         }
-                    } else {
+                    }else {
                         RequestDispatcher rd;
                         rd = request.getRequestDispatcher("login.jsp");
                         rd.forward(request, response);
                     }%>
+
     </body>
 </html>

@@ -67,10 +67,18 @@ public class ExecServlet extends HttpServlet {
             rd = request.getRequestDispatcher("registration.jsp");
             rd.forward(request, response);
         } catch (SQLException ex) {
-            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+            request.setAttribute("result", ex);
+            rd = request.getRequestDispatcher("registration.jsp");
+            rd.forward(request, response);
         } catch (NamingException ex) {
-            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+            request.setAttribute("result", ex);
+            rd = request.getRequestDispatcher("registration.jsp");
+            rd.forward(request, response);
         } catch (PasswordException ex) {
+            request.setAttribute("result", ex);
+            rd = request.getRequestDispatcher("registration.jsp");
+            rd.forward(request, response);
+        }catch(Exception ex){
             request.setAttribute("result", ex);
             rd = request.getRequestDispatcher("registration.jsp");
             rd.forward(request, response);
@@ -91,12 +99,12 @@ public class ExecServlet extends HttpServlet {
                 rd = request.getRequestDispatcher(homepage);
                 rd.forward(request, response);
             } catch (SQLException ex) {
-                result = "������ �� �������";
+                result = "ник введен не верно";
                 request.setAttribute("result", result);
                 rd = request.getRequestDispatcher(homepage);
                 rd.forward(request, response);
             } catch (NamingException ex) {
-                result = "��������� ������";
+                result = "произошла ошибка";
                 request.setAttribute("result", result);
                 rd = request.getRequestDispatcher(homepage);
                 rd.forward(request, response);
@@ -172,7 +180,7 @@ public class ExecServlet extends HttpServlet {
                 DBManager.updateUserbyNik(new User(usrOld.getId(), name, surname, otchestvo, nik, password, brn, phone, email, roleName), nikOld);
                 result = "uspeh";
                 request.setAttribute("result", result);
-                rd = request.getRequestDispatcher("index.jsp");
+                rd = request.getRequestDispatcher("updateUser.jsp");
                 rd.forward(request, response);
             } catch (NikNameException ex) {
                 result = "Пользователь с таким ником существует";
@@ -273,7 +281,7 @@ public class ExecServlet extends HttpServlet {
             usr.setLogin();
             if (usr.getPassword().equals(password)) {
                 session.setAttribute("user", usr);
-                session.setAttribute("login", true);
+             
             } else {
                 throw new NikNameException();
             }
@@ -286,11 +294,17 @@ public class ExecServlet extends HttpServlet {
                 rd.forward(request, response);
             }
         } catch (NikNameException ex) {
-            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+                request.setAttribute("result","не правильно введен пользователь и пароль");
+                rd = request.getRequestDispatcher("login.jsp");
+                rd.forward(request, response);
         } catch (SQLException ex) {
-            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+                request.setAttribute("result","произошла ошибка");
+                rd = request.getRequestDispatcher("login.jsp");
+                rd.forward(request, response);
         } catch (NamingException ex) {
-            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+                request.setAttribute("result","произошла ошибка");
+                rd = request.getRequestDispatcher("login.jsp");
+                rd.forward(request, response);
         }
     }
 
@@ -307,7 +321,7 @@ public class ExecServlet extends HttpServlet {
                 int id_usr = Integer.parseInt(id_user);
                 String text = request.getParameter("TEXT");
                 DBManager.addComment(id_pr, id_usr, text);
-                rd = request.getRequestDispatcher("opinion.jsp");
+                rd = request.getRequestDispatcher("index.jsp");
                 rd.forward(request, response);
             } catch (ServletException ex) {
                 Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);

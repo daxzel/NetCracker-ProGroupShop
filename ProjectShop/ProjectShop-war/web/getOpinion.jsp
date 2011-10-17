@@ -15,7 +15,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Comments</title>
     </head>
  <body>
         <%
@@ -60,7 +60,7 @@
         <%  }
                             }
                         }
-                    } else {
+                    }{
                         RequestDispatcher rd;
                         rd = request.getRequestDispatcher("login.jsp");
                         rd.forward(request, response);

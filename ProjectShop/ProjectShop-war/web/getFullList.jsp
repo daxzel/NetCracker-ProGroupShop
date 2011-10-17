@@ -36,7 +36,7 @@
         <%if(usr.getRoleId()==1){%>
              <p align="center"><a href ="getFullRoleList">Get full list of role</a><br></p>
         <%}%>
-        
+   <p align="center"><a href ="index.jsp">index</a><br></p>
         <%} else {
                     if (request.getAttribute("result") instanceof List) {
                         //  if()
@@ -80,7 +80,7 @@
             <%}%>
 
         </table>
-
+<p align="center"><a href ="index.jsp">index</a><br></p>
         <%  } if (list1.get(0) instanceof ProductInterface) {
                             List<ProductInterface> list = list1;
                           //  SimpleDateFormat formt = new SimpleDateFormat("dd MM yyyy");
@@ -96,7 +96,7 @@
             <%}%>
 
         </table>
-
+<p align="center"><a href ="index.jsp">index</a><br></p>
         <%  }
 
                         if (list1.get(0) instanceof RoleInterface&&usr.getRoleId()==1) {
@@ -117,7 +117,7 @@
             <%}%>
 
         </table>
-
+<p align="center"><a href ="index.jsp">index</a><br></p>
         <%  }
 
                                 }

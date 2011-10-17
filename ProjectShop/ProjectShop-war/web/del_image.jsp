@@ -29,5 +29,6 @@
 
             <input type="submit" value="OK" />
         </form>
+         <p align="left"><a href ="index.jsp">index</a><br></p>
     </body>
 </html>
