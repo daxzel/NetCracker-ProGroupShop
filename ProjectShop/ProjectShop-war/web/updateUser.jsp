@@ -110,7 +110,7 @@
                  <%}
                                     }
                         }
-                    } else {
+                   %><br><p align="center"><a href ="index.jsp">index</a><br></p><% } else {
                         RequestDispatcher rd;
                         rd = request.getRequestDispatcher("login.jsp");
                         rd.forward(request, response);

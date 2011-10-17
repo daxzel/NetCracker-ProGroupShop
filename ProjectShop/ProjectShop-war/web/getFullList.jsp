@@ -8,6 +8,7 @@
 <%@page import= "DBClasses.UserInterface"%>
 <%@page import= "DBClasses.RoleInterface"%>
 <%@page import= "DBClasses.ProductInterface"%>
+<%@page import= "DBClasses.CatalogInterface"%>
 <%@page import= "java.util.List"%>
 <%@page import="java.text.SimpleDateFormat;"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -27,9 +28,11 @@
                         if (usr.getLogin() == true) {
                             if (request.getAttribute("result") == null) {
         %>
-        <p align="center">
+
+            <p align="center"><a href ="getFullProductList">Get full list of product</a><br></p>
+        <%if(usr.getRoleId()<=2){%>
              <p align="center"><a href ="getFullUserList">Get full list of user</a><br></p>
-             <p align="center"><a href ="getFullProductList">Get full list of product</a><br></p>
+            <%}%>
         <%if(usr.getRoleId()==1){%>
              <p align="center"><a href ="getFullRoleList">Get full list of role</a><br></p>
         <%}%>
@@ -38,8 +41,8 @@
                     if (request.getAttribute("result") instanceof List) {
                         //  if()
                         List list1 = (List) request.getAttribute("result");
-                        if (list1.get(1) instanceof UserInterface) {
-                            List<UserInterface> list = (List<UserInterface>) request.getAttribute("result");
+                        if (list1.get(0) instanceof UserInterface) {
+                            List<UserInterface> list =  list1;
                             SimpleDateFormat formt = new SimpleDateFormat("dd MM yyyy");
         %>
         <table align="center"  border="1" width="80%">
@@ -78,8 +81,8 @@
 
         </table>
 
-        <%  } if (list1.get(1) instanceof ProductInterface) {
-                            List<ProductInterface> list = (List<ProductInterface>) request.getAttribute("result");
+        <%  } if (list1.get(0) instanceof ProductInterface) {
+                            List<ProductInterface> list = list1;
                           //  SimpleDateFormat formt = new SimpleDateFormat("dd MM yyyy");
         %>
         <table align="center"  border="1" width="80%">
@@ -96,8 +99,8 @@
 
         <%  }
 
-                        if (list1.get(1) instanceof RoleInterface&&usr.getRoleId()==1) {
-                            List<RoleInterface> list = (List<RoleInterface>) request.getAttribute("result");
+                        if (list1.get(0) instanceof RoleInterface&&usr.getRoleId()==1) {
+                            List<RoleInterface> list = list1;
                             
         %>
         <table align="center"  border="1" width="80%">

@@ -43,6 +43,9 @@ public class AbstractManager {
             if (table.equals("OPINION")) {
                 pst = conn.prepareStatement("SELECT * FROM OPINION WHERE ID_OPINION = ?");
             }
+             if (table.equals("CATALOG")) {
+                pst = conn.prepareStatement("SELECT * FROM CATALOG WHERE ID_CATALOG = ?");
+            }
             pst.setInt(1, id);
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
@@ -56,6 +59,9 @@ public class AbstractManager {
                     obj = new Product(rs);
                 }
                 if (table.equals("OPINION")) {
+                    obj = new Opinion(rs);
+                }
+                if (table.equals("CATALOG")) {
                     obj = new Opinion(rs);
                 }
 
@@ -83,6 +89,12 @@ public static List getFullList(String table) throws SQLException, NamingExceptio
                 }
                 if(table.equals("PRODUCT")){
                 list.add(i,new Product(rs));
+                }
+                if(table.equals("CATALOG")){
+                list.add(i,new Catalog(rs));
+                }
+                if(table.equals("OPINION")){
+                list.add(i,new Catalog(rs));
                 }
             i=i+1;
             }

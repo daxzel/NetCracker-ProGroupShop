@@ -20,10 +20,7 @@
     </head>
     <body>
         <%
-                    UserInterface usr = null;
-                    if (session.getAttribute("user") != null && session.getAttribute("user") instanceof UserInterface) {
-                        usr = (UserInterface) session.getAttribute("user");
-                        if (usr.getLogin() == true) {
+                   
                             if (request.getAttribute("product") != null&&request.getAttribute("opinion")!=null) {
                                 if (request.getAttribute("opinion") instanceof List &&request.getAttribute("product")instanceof ProductInterface) {
                                     ProductInterface prd = (ProductInterface)request.getAttribute("product");
@@ -38,7 +35,11 @@
             </tr>
             <tr align="center">
                 <td><%= prd.getName() %></td>
+                <%if(prd.getDescription()!=null){%>
                 <td><%= prd.getDescription() %></td>
+                <%}else{%>
+                <td></td>
+                <%}%>
                 <td><%= prd.getIdCatalog() %></td>
                 <td><%= prd.getPrice() %></td>
             </tr>
@@ -57,11 +58,6 @@
         </table><%
                             }
                         }
-                    }
-                    } else {
-                        RequestDispatcher rd;
-                        rd = request.getRequestDispatcher("login.jsp");
-                        rd.forward(request, response);
-                    }%>
+                   %>
     </body>
 </html>

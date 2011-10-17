@@ -52,5 +52,6 @@
                 }
         }
         %>
+       <br> <p align="center"><a href ="index.jsp">index</a><br></p>
     </body>
 </html>

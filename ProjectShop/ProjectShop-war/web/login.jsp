@@ -20,6 +20,7 @@
              Введите пароль:
             <input type="text" name="PASSWORD" value="" size="10" />
             <input type="submit" value="Input" />
+            <br><p align="center"><a href ="index.jsp">index</a><br></p>
         </form>
     </body>
 </html>

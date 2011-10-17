@@ -4,11 +4,13 @@
  */
 
 package DBClasses;
-
-/**
- *
- * @author ололо
- */
 public interface CatalogInterface extends DBClassInterface {
+
+    @Override
+    public int getId();
+
+    public int getParentId();
+
+    public String getName();
 
 }
