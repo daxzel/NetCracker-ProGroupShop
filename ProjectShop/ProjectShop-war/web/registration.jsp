@@ -15,18 +15,47 @@
         <title>Регистрация пользователя</title>
     </head>
     <body>
-       
+        <%
+        
+        String name="";
+        String surname="";
+        String otchestvo="";
+        String nik="";
+        
+        if(request.getAttribute("NAME")!=null)
+        {
+            name=request.getAttribute("NAME").toString();
+        }
+        
+        if(request.getAttribute("SURNAME")!=null)
+        {
+            surname=request.getAttribute("SURNAME").toString();
+        }
+        
+        if(request.getAttribute("OTCHESTVO")!=null)
+        {
+            otchestvo=request.getAttribute("OTCHESTVO").toString();
+        }
+        
+        if(request.getAttribute("NIK")!=null)
+        {
+            nik=request.getAttribute("NIK").toString();
+        }
+        
+        %>
+
+
         <H2>Регистрация</H2>
         <form name="myForm" action="registration">
             <table>
                 <tr><td>Имя</td><td></td></tr>
-                <tr><td><input type="text" name="NAME" value="" size="20" /></td><td></td></tr>
+                <tr><td><input type="text" name="NAME" value="<%=name%>" size="20" /></td><td></td></tr>
                 <tr><td>Фамилия</td><td></td></tr>
-                <tr><td><input type="text" name="SURNAME" value="" size="25" /></td><td></td></tr>
+                <tr><td><input type="text" name="SURNAME" value="<%=surname%>" size="25" /></td><td></td></tr>
                 <tr><td>Отчество</td><td></td></tr>
-                <tr><td><input type="text" name="OTCHESTVO" value="" size="20" /></td><td></td></tr>
+                <tr><td><input type="text" name="OTCHESTVO" value="<%=otchestvo%>" size="20" /></td><td></td></tr>
                 <tr><td>Ник</td><td></td></tr>
-                <tr><td><input type="text" name="NIK" value="" size="20" /></td><td></td></tr>
+                <tr><td><input type="text" name="NIK" value="<%=nik%>" size="20" /></td><td></td></tr>
                 <tr><td>Пароль</td><td> Пароль(еще раз)</td></tr>
                 <tr><td><input type="password" name="PASSWORD" value="" size="10" /></td><td>  <input type="password" name="PASSWORD2" value="" size="10" /></td></tr>
                 <tr><td>Дата рождения</td><td></td></tr>
@@ -39,23 +68,8 @@
              </table>
         </form>
 
-        
         <%if(request.getAttribute("result")!=null){
-            if (request.getAttribute("result") instanceof PasswordException){
-                %><br>Пароль повторен не верно<%
-                }else{
-
-            if (request.getAttribute("result") instanceof NikNameException){
-                %><br>Пользователь с таким ником уже существует<%
-                }else{
-            if (request.getAttribute("result").equals("uspeh")){
-                %><br>Регистрация завершена<%
-                }
-            if (request.getAttribute("result") instanceof Exception){%>
-                произошла ошибка при регистрации<%
-             }
-            }
-                }
+        %><%=request.getAttribute("result").toString()%><%
         }
         %>
       <p align="left"><a href ="index.jsp">index</a><br></p>

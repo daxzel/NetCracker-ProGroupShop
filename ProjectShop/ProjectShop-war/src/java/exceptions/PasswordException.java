@@ -10,8 +10,7 @@ package exceptions;
  * @author Yra
  */
 public class PasswordException extends Exception {
-    private String str;
     public PasswordException(){
-        str="pass exception";
+        super("pass exception");
     }
 }

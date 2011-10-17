@@ -52,34 +52,71 @@ public class ExecServlet extends HttpServlet {
                 throw new PasswordException();
             }
 
+            if (name=="")
+            {
+                throw new RegistrationException("Поле имя не заполнено");
+            }
+            else
+            {
+                request.setAttribute("NAME",name);
+            }
+
+            if (surname=="")
+            {
+                throw new RegistrationException("Поле фамилия не заполнено");
+            }
+            else
+            {
+                request.setAttribute("SURNAME",surname);
+            }
+
+
+            if (otchestvo=="")
+            {
+                throw new RegistrationException("Поле отчество не заполнено");
+            }
+            else
+            {
+                request.setAttribute("OTCHESTVO",otchestvo);
+            }
+
+            if (nik=="")
+            {
+                throw new RegistrationException("Поле ник не заполнено");
+            }
+            else
+            {
+                request.setAttribute("NIK",nik);
+            }
+
             String brn = request.getParameter("BORN");
             String phone = request.getParameter("PHONE");
             String email = request.getParameter("EMAIL");
+
             SimpleDateFormat formt = new SimpleDateFormat("dd MM yyyy");
             Date born = formt.parse(brn);
+
+
             DBManager.addUser(name, surname, otchestvo, nik, password, born, phone, email, 2);
             result = "uspeh";
             request.setAttribute("result", result);
             rd = request.getRequestDispatcher("registration.jsp");
             rd.forward(request, response);
+            
+        } catch (RegistrationException ex){
+            request.setAttribute("result", ex.getMessage());
+            rd = request.getRequestDispatcher("registration.jsp");
+            rd.forward(request, response);
         } catch (NikNameException ex) {
-            request.setAttribute("result", ex);
-            rd = request.getRequestDispatcher("registration.jsp");
-            rd.forward(request, response);
-        } catch (SQLException ex) {
-            request.setAttribute("result", ex);
-            rd = request.getRequestDispatcher("registration.jsp");
-            rd.forward(request, response);
-        } catch (NamingException ex) {
-            request.setAttribute("result", ex);
+            request.setAttribute("result", ex.getMessage());
             rd = request.getRequestDispatcher("registration.jsp");
             rd.forward(request, response);
         } catch (PasswordException ex) {
-            request.setAttribute("result", ex);
+            request.setAttribute("result", ex.getMessage());
             rd = request.getRequestDispatcher("registration.jsp");
             rd.forward(request, response);
         }catch(Exception ex){
-            request.setAttribute("result", ex);
+            request.setAttribute("result", "Неизвестная ошибка");
             rd = request.getRequestDispatcher("registration.jsp");
             rd.forward(request, response);
         }
