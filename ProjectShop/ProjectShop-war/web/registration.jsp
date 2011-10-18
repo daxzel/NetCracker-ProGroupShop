@@ -5,7 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="exceptions.*"%>
+<%@page import="exceptions.*, Other.*"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -17,60 +17,16 @@
     <body>
         <%
 
-        String name="";
-        String surname="";
-        String otchestvo="";
-        String nik="";
-        String password="";
-        String password2="";
-        String born="";
-        String phone="";
-        String email="";
-        
-        if(request.getAttribute("NAME")!=null)
-        {
-            name=request.getAttribute("NAME").toString();
-        }
-        
-        if(request.getAttribute("SURNAME")!=null)
-        {
-            surname=request.getAttribute("SURNAME").toString();
-        }
-        
-        if(request.getAttribute("OTCHESTVO")!=null)
-        {
-            otchestvo=request.getAttribute("OTCHESTVO").toString();
-        }
-        
-        if(request.getAttribute("NIK")!=null)
-        {
-            nik=request.getAttribute("NIK").toString();
-        }
-
-        if(request.getAttribute("PASSWORD")!=null)
-        {
-            password=request.getAttribute("PASSWORD").toString();
-        }
-
-        if(request.getAttribute("PASSWORD2")!=null)
-        {
-            password2=request.getAttribute("PASSWORD2").toString();
-        }
-
-        if(request.getAttribute("BORN")!=null)
-        {
-            born=request.getAttribute("BORN").toString();
-        }
-
-        if(request.getAttribute("PHONE")!=null)
-        {
-            phone=request.getAttribute("PHONE").toString();
-        }
-
-        if(request.getAttribute("EMAIL")!=null)
-        {
-            email=request.getAttribute("EMAIL").toString();
-        }
+        String name=JSPHelper.getRequestOrEmpty(request, "NAME");
+        String surname=JSPHelper.getRequestOrEmpty(request, "SURNAME");
+        String otchestvo=JSPHelper.getRequestOrEmpty(request, "OTCHESTVO");
+        String nik=JSPHelper.getRequestOrEmpty(request, "NIK");
+        String password=JSPHelper.getRequestOrEmpty(request, "PASSWORD");
+        String password2=JSPHelper.getRequestOrEmpty(request, "PASSWORD2");
+        String born=JSPHelper.getRequestOrEmpty(request, "BORN");
+        String phone=JSPHelper.getRequestOrEmpty(request, "PHONE");
+        String email=JSPHelper.getRequestOrEmpty(request, "EMAIL");
+        String role=JSPHelper.getRequestOrEmpty(request, "ROLE");
         
         %>
 
@@ -95,12 +51,22 @@
                 <tr><td><input type="text" name="PHONE" value="<%=phone%>" size="11" /></td><td></td></tr>
                 <tr><td>Электронная почта</td><td></td></tr>
                 <tr><td><input type="text" name="EMAIL" value="<%=email%>" size="25" /></td><td></td></tr>
+                <tr><td><select name="ROLE" style="width : 200">
+                    <% if (role.equals("1"))
+                    {%>
+                        <option value="1" selected>Админ</option>
+                        <option value="2">Пользователь</option>
+                    <%} else {%>
+                        <option value="1">Админ</option>
+                        <option value="2" selected>Пользователь</option>
+                    <%}%>
+                </select></td><td></td></tr>
                 <tr><td><input type="submit" value="Input" /></td><td></td></tr>
              </table>
         </form>
 
         <%if(request.getAttribute("result")!=null){
-        %><%=request.getAttribute("result")%><%
+                   %><%=request.getAttribute("result")%><%
         }
         %>
       <p align="left"><a href ="index.jsp">index</a><br></p>

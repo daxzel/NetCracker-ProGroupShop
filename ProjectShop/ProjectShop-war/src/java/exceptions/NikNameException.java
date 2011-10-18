@@ -10,7 +10,7 @@ package exceptions;
  * @author Yra
  */
 public class NikNameException extends Exception {
-public NikNameException(){
 
-}
+    public NikNameException(){
+    }
 }

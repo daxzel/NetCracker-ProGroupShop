@@ -50,6 +50,7 @@ public class ExecServlet extends HttpServlet {
         String born = request.getParameter("BORN");
         String phone = request.getParameter("PHONE");
         String email = request.getParameter("EMAIL");
+        String role = request.getParameter("ROLE");
         
         request.setAttribute("NAME",name);
         request.setAttribute("SURNAME",surname);
@@ -60,6 +61,7 @@ public class ExecServlet extends HttpServlet {
         request.setAttribute("BORN",born);
         request.setAttribute("EMAIL",email);
         request.setAttribute("PHONE",phone);
+        request.setAttribute("ROLE",role);
 
 
         try {
@@ -83,6 +85,11 @@ public class ExecServlet extends HttpServlet {
                 throw new RegistrationException("Поле ник не заполнено");
             }
 
+            if (DBManager.IsThereUser(nik))
+            {
+                throw new RegistrationException("Пользователь с таким ником уже зарегестрирован");
+            }
+
 
             if ((password.isEmpty())||(!password.equals(password2))) {
                 throw new PasswordException();
@@ -101,7 +108,7 @@ public class ExecServlet extends HttpServlet {
                 throw new RegistrationException("Неверный формат даты");
             }
 
-            DBManager.addUser(name, surname, otchestvo, nik, password, bornDate, phone, email, 2);
+            DBManager.addUser(name, surname, otchestvo, nik, password, bornDate, phone, email, Integer.parseInt(role));
             
             result = "Пользователь зарегестрирован";
             

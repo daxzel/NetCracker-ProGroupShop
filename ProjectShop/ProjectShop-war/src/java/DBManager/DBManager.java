@@ -35,6 +35,18 @@ public class DBManager extends AbstractManager {
         return usr;
     }
 
+    public static boolean IsThereUser(String nik) throws SQLException, NamingException {
+        Connection conn = getConnection();
+        try {
+            PreparedStatement pst = conn.prepareStatement("SELECT * FROM \"USER\" WHERE NIK = ?");
+            pst.setString(1, nik);
+            ResultSet rs = pst.executeQuery();
+            return rs.next();
+        } finally {
+            conn.close();
+        }
+    }
+
     public static void updateUserbyNik(User usr, String nikOld) throws SQLException, NamingException, NikNameException {
         Connection conn = getConnection();
         PreparedStatement pst = conn.prepareStatement("SELECT * FROM \"USER\" WHERE NIK = ? AND ID_USER<>?");
