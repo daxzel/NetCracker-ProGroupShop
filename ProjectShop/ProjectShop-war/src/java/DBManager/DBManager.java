@@ -61,7 +61,7 @@ public class DBManager extends AbstractManager {
         conn.commit();
     }
 
-    public static void addUser(String name, String surname, String otchestvo, String nik, String password, Date born, String phone, String email, int id_role) throws SQLException, NamingException, NikNameException {
+    public static void addUser(String name, String surname, String otchestvo, String nik, String password, java.util.Date born, String phone, String email, int id_role) throws SQLException, NamingException, NikNameException {
         Connection conn = getConnection();
         PreparedStatement pst = conn.prepareStatement("SELECT * FROM \"USER\" WHERE NIK = ?");
         pst.setString(1, nik);
@@ -76,6 +76,8 @@ public class DBManager extends AbstractManager {
         pst.setString(3, otchestvo);
         pst.setString(4, nik);
         pst.setString(5, password);
+
+        
         pst.setDate(6, new java.sql.Date(born.getTime()));
         pst.setString(7, phone);
         pst.setString(8, email);

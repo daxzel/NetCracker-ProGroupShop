@@ -6,26 +6,4 @@
             <line>21</line>
         </file>
     </editor-bookmarks>
-    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/1">
-        <file>file:/C:/Users/Yra/1/InternetShop/ProjectShop/ProjectShop-war/src/java/servlets/ExecServlet.java</file>
-        <file>file:/C:/Users/Yra/1/InternetShop/ProjectShop/ProjectShop-war/web/registration.jsp</file>
-        <file>file:/C:/Users/Yra/1/InternetShop/ProjectShop/ProjectShop-war/web/login.jsp</file>
-        <file>file:/C:/Users/Yra/1/InternetShop/ProjectShop/ProjectShop-war/web/index.jsp</file>
-        <file>file:/C:/Users/Yra/1/InternetShop/ProjectShop/ProjectShop-war/web/updateUser.jsp</file>
-        <file>file:/C:/Users/Yra/1/InternetShop/ProjectShop/ProjectShop-war/src/java/DBClasses/User.java</file>
-        <file>file:/C:/Users/Yra/1/InternetShop/ProjectShop/ProjectShop-war/web/getUsersByRole.jsp</file>
-        <file>file:/C:/Users/Yra/1/InternetShop/ProjectShop/ProjectShop-war/web/getFullList.jsp</file>
-        <file>file:/C:/Users/Yra/1/InternetShop/ProjectShop/ProjectShop-war/web/addProduct.jsp</file>
-        <file>file:/C:/Users/Yra/1/InternetShop/ProjectShop/ProjectShop-war/web/add_catalog.jsp</file>
-        <file>file:/C:/Users/Yra/1/InternetShop/ProjectShop/ProjectShop-war/web/add_comment.jsp</file>
-        <file>file:/C:/Users/Yra/1/InternetShop/ProjectShop/ProjectShop-war/web/add_image.jsp</file>
-        <file>file:/C:/Users/Yra/1/InternetShop/ProjectShop/ProjectShop-war/web/del_catalog.jsp</file>
-        <file>file:/C:/Users/Yra/1/InternetShop/ProjectShop/ProjectShop-war/web/del_comment.jsp</file>
-        <file>file:/C:/Users/Yra/1/InternetShop/ProjectShop/ProjectShop-war/web/del_image.jsp</file>
-        <file>file:/C:/Users/Yra/1/InternetShop/ProjectShop/ProjectShop-war/web/deleteUser.jsp</file>
-        <file>file:/C:/Users/Yra/1/InternetShop/ProjectShop/ProjectShop-war/web/getCatalog.jsp</file>
-        <file>file:/C:/Users/Yra/1/InternetShop/ProjectShop/ProjectShop-war/web/getChild_catalog.jsp</file>
-        <file>file:/C:/Users/Yra/1/InternetShop/ProjectShop/ProjectShop-war/web/getOpinion.jsp</file>
-        <file>file:/C:/Users/Yra/1/InternetShop/ProjectShop/ProjectShop-war/web/getProduct.jsp</file>
-    </open-files>
 </project-private>

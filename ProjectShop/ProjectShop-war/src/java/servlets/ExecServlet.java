@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.RequestDispatcher;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.text.ParsePosition;
 import java.util.*;
 import exceptions.*;
 import javax.servlet.http.HttpSession;
@@ -36,6 +37,7 @@ public class ExecServlet extends HttpServlet {
 
     protected void registration(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, ParseException, IOException {
+
         String result;
         RequestDispatcher rd;
 
@@ -45,44 +47,77 @@ public class ExecServlet extends HttpServlet {
         String nik = request.getParameter("NIK");
         String password = request.getParameter("PASSWORD");
         String password2 = request.getParameter("PASSWORD2");
+        String born = request.getParameter("BORN");
+        String phone = request.getParameter("PHONE");
+        String email = request.getParameter("EMAIL");
+        
+        request.setAttribute("NAME",name);
+        request.setAttribute("SURNAME",surname);
+        request.setAttribute("OTCHESTVO",otchestvo);
+        request.setAttribute("NIK",nik);
+        request.setAttribute("PASSWORD",password);
+        request.setAttribute("PASSWORD2",password2);
+        request.setAttribute("BORN",born);
+        request.setAttribute("EMAIL",email);
+        request.setAttribute("PHONE",phone);
+
 
         try {
+            if (name.isEmpty())
+            {
+                throw new RegistrationException("Поле имя не заполнено");
+            }
 
-            if (!password.equals(password2)) {
+            if (surname.isEmpty())
+            {
+                throw new RegistrationException("Поле фамилия не заполнено");
+            }
+
+            if (otchestvo.isEmpty())
+            {
+                throw new RegistrationException("Поле отчество не заполнено");
+            }
+
+            if (nik.isEmpty())
+            {
+                throw new RegistrationException("Поле ник не заполнено");
+            }
+
+
+            if ((password.isEmpty())||(!password.equals(password2))) {
                 throw new PasswordException();
             }
 
-            String brn = request.getParameter("BORN");
-            String phone = request.getParameter("PHONE");
-            String email = request.getParameter("EMAIL");
-            SimpleDateFormat formt = new SimpleDateFormat("dd MM yyyy");
-            Date born = formt.parse(brn);
-            DBManager.addUser(name, surname, otchestvo, nik, password, born, phone, email, 2);
-            result = "uspeh";
-            request.setAttribute("result", result);
-            rd = request.getRequestDispatcher("registration.jsp");
-            rd.forward(request, response);
+            SimpleDateFormat formt = new SimpleDateFormat("yyyy-MM-dd");
+
+            Date bornDate;
+
+            try
+            {
+                bornDate = formt.parse(born);
+            }
+            catch(Exception ex)
+            {
+                throw new RegistrationException("Неверный формат даты");
+            }
+
+            DBManager.addUser(name, surname, otchestvo, nik, password, bornDate, phone, email, 2);
+            
+            result = "Пользователь зарегестрирован";
+            
+        } catch (RegistrationException ex){
+            result= ex.getMessage();
         } catch (NikNameException ex) {
-            request.setAttribute("result", ex);
-            rd = request.getRequestDispatcher("registration.jsp");
-            rd.forward(request, response);
-        } catch (SQLException ex) {
-            request.setAttribute("result", ex);
-            rd = request.getRequestDispatcher("registration.jsp");
-            rd.forward(request, response);
-        } catch (NamingException ex) {
-            request.setAttribute("result", ex);
-            rd = request.getRequestDispatcher("registration.jsp");
-            rd.forward(request, response);
+            result= ex.getMessage();
         } catch (PasswordException ex) {
-            request.setAttribute("result", ex);
-            rd = request.getRequestDispatcher("registration.jsp");
-            rd.forward(request, response);
+            result= ex.getMessage();
         }catch(Exception ex){
-            request.setAttribute("result", ex);
-            rd = request.getRequestDispatcher("registration.jsp");
-            rd.forward(request, response);
+            result="Неизвестная ошибка";
         }
+
+        request.setAttribute("result", result);
+        rd = request.getRequestDispatcher("registration.jsp");
+        rd.forward(request, response);
     }
 
     protected void selectByNik(HttpServletRequest request,

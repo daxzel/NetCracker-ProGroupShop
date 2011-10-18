@@ -20,7 +20,7 @@
             Введите ник:
             <input type="text" name="NIK" value="" size="20" /><br>
              Введите пароль:
-            <input type="text" name="PASSWORD" value="" size="10" /><br>
+            <input type="password" name="PASSWORD" value="" size="10" /><br>
             <input type="submit" value="Input" />
            </p>
         </form>
