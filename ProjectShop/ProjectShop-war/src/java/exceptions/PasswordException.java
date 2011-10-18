@@ -11,6 +11,6 @@ package exceptions;
  */
 public class PasswordException extends Exception {
     public PasswordException(){
-        super("pass exception");
+        super("Ошибка в пароле");
     }
 }
