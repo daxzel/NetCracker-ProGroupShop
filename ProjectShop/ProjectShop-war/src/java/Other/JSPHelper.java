@@ -6,6 +6,11 @@
 package Other;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import DBClasses.*;
+
+
+
 
 /**
  *
@@ -24,5 +29,28 @@ public class JSPHelper {
         {
             return "";
         }
+    }
+
+    public static EnumRole Role(HttpSession sess)
+    {
+        Object user = sess.getAttribute("user");
+
+        if (user==null)
+        {
+            return EnumRole.guest;
+        }
+        else
+        {
+            UserInterface usr = (UserInterface) sess.getAttribute("user");
+            if(usr.getRoleId()==1)
+            {
+                return EnumRole.admin;
+            }
+            else
+            {
+                return EnumRole.user;
+            }
+        }
+
     }
 }
