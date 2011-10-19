@@ -51,7 +51,7 @@ public class ExecServlet extends HttpServlet {
         String phone = request.getParameter("PHONE");
         String email = request.getParameter("EMAIL");
         String role = request.getParameter("ROLE");
-        
+
         request.setAttribute("NAME",name);
         request.setAttribute("SURNAME",surname);
         request.setAttribute("OTCHESTVO",otchestvo);
@@ -63,31 +63,25 @@ public class ExecServlet extends HttpServlet {
         request.setAttribute("PHONE",phone);
         request.setAttribute("ROLE",role);
 
-        request.setAttribute("NAME", name);
-        request.setAttribute("SURNAME", surname);
-        request.setAttribute("OTCHESTVO", otchestvo);
-        request.setAttribute("NIK", nik);
-        request.setAttribute("PASSWORD", password);
-        request.setAttribute("PASSWORD2", password2);
-        request.setAttribute("BORN", born);
-        request.setAttribute("EMAIL", email);
-        request.setAttribute("PHONE", phone);
-
 
         try {
-            if (name.isEmpty()) {
+            if (name.isEmpty())
+            {
                 throw new RegistrationException("Поле имя не заполнено");
             }
 
-            if (surname.isEmpty()) {
+            if (surname.isEmpty())
+            {
                 throw new RegistrationException("Поле фамилия не заполнено");
             }
 
-            if (otchestvo.isEmpty()) {
+            if (otchestvo.isEmpty())
+            {
                 throw new RegistrationException("Поле отчество не заполнено");
             }
 
-            if (nik.isEmpty()) {
+            if (nik.isEmpty())
+            {
                 throw new RegistrationException("Поле ник не заполнено");
             }
 
@@ -105,9 +99,12 @@ public class ExecServlet extends HttpServlet {
 
             Date bornDate;
 
-            try {
+            try
+            {
                 bornDate = formt.parse(born);
-            } catch (Exception ex) {
+            }
+            catch(Exception ex)
+            {
                 throw new RegistrationException("Неверный формат даты");
             }
 
@@ -115,14 +112,14 @@ public class ExecServlet extends HttpServlet {
 
             result = "Пользователь зарегестрирован";
 
-        } catch (RegistrationException ex) {
-            result = ex.getMessage();
+        } catch (RegistrationException ex){
+            result= ex.getMessage();
         } catch (NikNameException ex) {
-            result = ex.getMessage();
+            result= ex.getMessage();
         } catch (PasswordException ex) {
-            result = ex.getMessage();
-        } catch (Exception ex) {
-            result = "Неизвестная ошибка";
+            result= ex.getMessage();
+        }catch(Exception ex){
+            result="Неизвестная ошибка";
         }
 
         request.setAttribute("result", result);
@@ -163,14 +160,14 @@ public class ExecServlet extends HttpServlet {
 
     protected void addProduct(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, ParseException, IOException {
-        
+
         RequestDispatcher rd;
         String name = request.getParameter("NAME");
         String description = request.getParameter("DESCRIPTION");
         String priceS = request.getParameter("PRICE");
         String id_catalogS = request.getParameter("ID_CATALOG");
 
-      
+
 
         String result;
         String page;
@@ -180,7 +177,7 @@ public class ExecServlet extends HttpServlet {
             int id_catalog = Integer.parseInt(id_catalogS);
 
             DBManager.addProduct(name, description, id_catalog, price);
-            
+
             result = "uspeh";
             page = "index.jsp";
 
