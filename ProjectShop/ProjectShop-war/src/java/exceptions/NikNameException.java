@@ -11,6 +11,9 @@ package exceptions;
  */
 public class NikNameException extends Exception {
 public NikNameException(){
-super("РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ СЃ С‚Р°РєРёРј РЅРёРєРѕРј СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚");
+
+super("Пользователь с таким ником уже существует");
+
+
 }
 }

@@ -50,6 +50,18 @@ public class ExecServlet extends HttpServlet {
         String born = request.getParameter("BORN");
         String phone = request.getParameter("PHONE");
         String email = request.getParameter("EMAIL");
+        String role = request.getParameter("ROLE");
+        
+        request.setAttribute("NAME",name);
+        request.setAttribute("SURNAME",surname);
+        request.setAttribute("OTCHESTVO",otchestvo);
+        request.setAttribute("NIK",nik);
+        request.setAttribute("PASSWORD",password);
+        request.setAttribute("PASSWORD2",password2);
+        request.setAttribute("BORN",born);
+        request.setAttribute("EMAIL",email);
+        request.setAttribute("PHONE",phone);
+        request.setAttribute("ROLE",role);
 
         request.setAttribute("NAME", name);
         request.setAttribute("SURNAME", surname);
@@ -79,8 +91,13 @@ public class ExecServlet extends HttpServlet {
                 throw new RegistrationException("Поле ник не заполнено");
             }
 
+            if (DBManager.IsThereUser(nik))
+            {
+                throw new RegistrationException("Пользователь с таким ником уже зарегестрирован");
+            }
 
-            if ((password.isEmpty()) || (!password.equals(password2))) {
+
+            if ((password.isEmpty())||(!password.equals(password2))) {
                 throw new PasswordException();
             }
 
@@ -94,7 +111,7 @@ public class ExecServlet extends HttpServlet {
                 throw new RegistrationException("Неверный формат даты");
             }
 
-            DBManager.addUser(name, surname, otchestvo, nik, password, bornDate, phone, email, 2);
+            DBManager.addUser(name, surname, otchestvo, nik, password, bornDate, phone, email, Integer.parseInt(role));
 
             result = "Пользователь зарегестрирован";
 
@@ -146,23 +163,44 @@ public class ExecServlet extends HttpServlet {
 
     protected void addProduct(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, ParseException, IOException {
-        String result;
+        
         RequestDispatcher rd;
         String name = request.getParameter("NAME");
         String description = request.getParameter("DESCRIPTION");
-        double price = Double.parseDouble(request.getParameter("PRICE"));
-        int id_catalog = Integer.parseInt(request.getParameter("ID_CATALOG"));
+        String priceS = request.getParameter("PRICE");
+        String id_catalogS = request.getParameter("ID_CATALOG");
+
+      
+
+        String result;
+        String page;
+
         try {
+            double price = Double.parseDouble(priceS);
+            int id_catalog = Integer.parseInt(id_catalogS);
+
             DBManager.addProduct(name, description, id_catalog, price);
+            
             result = "uspeh";
-            request.setAttribute("result", result);
-            rd = request.getRequestDispatcher("index.jsp");
-            rd.forward(request, response);
-        } catch (SQLException ex) {
-            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NamingException ex) {
+            page = "index.jsp";
+
+        } catch (Exception ex) {
+
+            request.setAttribute("NAME",name);
+            request.setAttribute("DESCRIPTION",description);
+            request.setAttribute("PRICE",priceS);
+            request.setAttribute("ID_CATALOG",id_catalogS);
+
+            result="Ошибка";
+            page="addProduct.jsp";
+
             Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        request.setAttribute("result", result);
+        rd = request.getRequestDispatcher(page);
+        rd.forward(request, response);
+
     }
 
     protected void updateUser(HttpServletRequest request,
