@@ -35,7 +35,7 @@ private Role role;
 public User(ResultSet rs) throws SQLException, NamingException{
     //SimpleDateFormat formt = new SimpleDateFormat("dd MM yyyy");
       // Date born = formt.parse(brn);
-     SimpleDateFormat formt = new SimpleDateFormat("dd MM yyyy");
+     SimpleDateFormat formt = new SimpleDateFormat("yyyy-MM-dd");
      setId(rs.getInt(1));
      setName(rs.getString(2));
      setSurname(rs.getString(3));
@@ -47,18 +47,16 @@ public User(ResultSet rs) throws SQLException, NamingException{
      setEmail(rs.getString(9));
      setRole(rs.getInt(10));
 }
-public User(int id_user, String name, String surname, String otchestvo,String nik,String password,String brn, String phone, String email, String role) throws SQLException, NamingException{
+public User(int id_user, String name, String surname, String otchestvo,String nik,String password,String brn, String phone, String email, String role) throws SQLException, NamingException, ParseException{
       //SimpleDateFormat formt = new SimpleDateFormat("dd MM yyyy");
       // Date born = formt.parse(brn);
        setId(id_user);
-        SimpleDateFormat formt = new SimpleDateFormat("dd MM yyyy");
+       SimpleDateFormat formt = new SimpleDateFormat("yyyy-MM-dd");
         Date born=null;
-        try {
+        
 
             born = formt.parse(brn);
-        } catch (ParseException ex) {
-            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
-        }
+       
         setName(name);
         setSurname(surname);
         setOtchestvo(otchestvo);
@@ -88,7 +86,7 @@ public void setSurname(String nsurname){
     surname=nsurname;
 }
 public String getOtchestvo(){
-    return surname;
+    return otchestvo;
     }
 public void setOtchestvo(String notchestvo){
     otchestvo=notchestvo;

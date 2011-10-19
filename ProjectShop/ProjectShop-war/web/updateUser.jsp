@@ -16,20 +16,17 @@
         <title>user update</title>
     </head>
     <body>
-        <%
-                    
-        %>
         <h2>User update</h2>
-        <%SimpleDateFormat formt = new SimpleDateFormat("dd MM yyyy");
+        <%SimpleDateFormat formt = new SimpleDateFormat("yyyy-MM-dd");
                     UserInterface usr = null;
-                    if (session.getAttribute("user") != null && session.getAttribute("user") instanceof UserInterface) {
+                    if (session.getAttribute("user") instanceof UserInterface) {
                         usr = (UserInterface) session.getAttribute("user");
                         if (usr.getLogin() == true) {
                             session.setAttribute("homepage", "updateUser.jsp");
-                            if (request.getParameter("DO") != null && request.getParameter("DO").equals("upProf")) {
+                            if ("upProf".equals(request.getParameter("DO"))||("upProf".equals(request.getAttribute("DO")))) {
                                 session.setAttribute("usrOld", usr);
- %>
-       <form name="myForm" action="updateUser">
+        %>
+        <form name="myForm" action="updateProfil">
             <table>
                 <tr><td>Name</td><td></td></tr>
                 <tr><td><input type="text" name="NAME" value="<%=usr.getName()%>" size="20" /></td><td></td></tr>
@@ -58,21 +55,31 @@
                 <tr><td><input type="submit" value="Input" /></td><td></td></tr>
             </table>
         </form>
+        <%if (request.getAttribute("result") instanceof String) {%>
+        <%=request.getAttribute("result").toString()%><%}%>
         <%                                }
-
-                                    if (request.getParameter("DO") != null && request.getParameter("DO").equals("upUser") && usr.getRoleId() == 1) {
+                            String str =null;
+                            if(request.getAttribute("DO")!=null){
+                                str =request.getAttribute("DO").toString();
+                                }
+                                    if (("upUser".equals(request.getParameter("DO")) && usr.getRoleId() == 1)||("upUser".equals(str) && usr.getRoleId() == 1)) {
+                                        if (request.getAttribute("result") == null) {
         %>
         <form action="selectByNik">
             Input nik:
             <input type="text" name="NIK" value="" size="20" />
             <input type="submit" value="Input" />
         </form>
-        <%                            }
-                                    if (request.getAttribute("result") != null ){
-                                      if(request.getAttribute("result") instanceof UserInterface && usr.getRoleId() == 1) {
-                                        UserInterface user = (UserInterface) request.getAttribute("result");
-                                        session.setAttribute("usrOld", user);
-        %>
+        <%                            } else {
+                                                    if (usr.getRoleId() == 1) {
+                                                        UserInterface user;
+                                                        if (request.getAttribute("result") instanceof UserInterface) {
+                                                            user = (UserInterface) request.getAttribute("result");
+                                                            session.setAttribute("usrOld", user);
+                                                        } else {
+                                                            user = (UserInterface) session.getAttribute("usrOld");
+                                                        }
+                                                      %>
         <form name="myForm" action="updateUser">
             <table>
                 <tr><td>Name</td><td></td></tr>
@@ -83,7 +90,6 @@
                 <tr><td><input type="text" name="OTCHESTVO" value="<%=user.getOtchestvo()%>" size="20" /></td><td></td></tr>
                 <tr><td>Nik</td><td></td></tr>
                 <tr><td><input type="text" name="NIK" value="<%=user.getNik()%>" size="20" /></td><td></td></tr>
-
                 <tr><td>Born</td><td></td></tr>
                 <tr><td><input type="text" name="BORN" value="<%=formt.format(user.getBorn())%>" size="10" /></td><td></td></tr>
                 <tr><td>Phone</td><td></td></tr>
@@ -104,18 +110,18 @@
 
             </table>
         </form>
-        <%  }else{%>
-        <%=request.getAttribute("result").toString()%>
-        <p align="left"><a href="updateUser.jsp?DO=upUser">update user</a></p>
-                 <%}
-                                    }
-                        }
-                   %><br><p align="left"><a href ="index.jsp">index</a><br></p><% } else {
-                        RequestDispatcher rd;
-                        rd = request.getRequestDispatcher("login.jsp");
-                        rd.forward(request, response);
-                    }
-        %>
+        <%if (request.getAttribute("result") != null&&request.getAttribute("result")instanceof String) {%>
+        <%=request.getAttribute("result").toString()%><%}%>
+        <%  }
+                                                }}
+        %><br><p align="left"><a href ="index.jsp">index</a><br></p><% 
+                                   }
+                               } else {
+                                   RequestDispatcher rd;
+                                   rd = request.getRequestDispatcher("login.jsp");
+                                   rd.forward(request, response);
+                               }
+            %>
 
     </body>
 </html>

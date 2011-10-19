@@ -38,6 +38,10 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ExecServlet</servlet-name>
+        <url-pattern>/updateProfil</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ExecServlet</servlet-name>
         <url-pattern>/getFullRoleList</url-pattern>
     </servlet-mapping>
     <servlet-mapping>

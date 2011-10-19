@@ -76,8 +76,6 @@ public class DBManager extends AbstractManager {
         pst.setString(3, otchestvo);
         pst.setString(4, nik);
         pst.setString(5, password);
-
-        
         pst.setDate(6, new java.sql.Date(born.getTime()));
         pst.setString(7, phone);
         pst.setString(8, email);

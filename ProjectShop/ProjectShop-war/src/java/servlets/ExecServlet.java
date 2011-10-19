@@ -50,41 +50,37 @@ public class ExecServlet extends HttpServlet {
         String born = request.getParameter("BORN");
         String phone = request.getParameter("PHONE");
         String email = request.getParameter("EMAIL");
-        
-        request.setAttribute("NAME",name);
-        request.setAttribute("SURNAME",surname);
-        request.setAttribute("OTCHESTVO",otchestvo);
-        request.setAttribute("NIK",nik);
-        request.setAttribute("PASSWORD",password);
-        request.setAttribute("PASSWORD2",password2);
-        request.setAttribute("BORN",born);
-        request.setAttribute("EMAIL",email);
-        request.setAttribute("PHONE",phone);
+
+        request.setAttribute("NAME", name);
+        request.setAttribute("SURNAME", surname);
+        request.setAttribute("OTCHESTVO", otchestvo);
+        request.setAttribute("NIK", nik);
+        request.setAttribute("PASSWORD", password);
+        request.setAttribute("PASSWORD2", password2);
+        request.setAttribute("BORN", born);
+        request.setAttribute("EMAIL", email);
+        request.setAttribute("PHONE", phone);
 
 
         try {
-            if (name.isEmpty())
-            {
+            if (name.isEmpty()) {
                 throw new RegistrationException("Поле имя не заполнено");
             }
 
-            if (surname.isEmpty())
-            {
+            if (surname.isEmpty()) {
                 throw new RegistrationException("Поле фамилия не заполнено");
             }
 
-            if (otchestvo.isEmpty())
-            {
+            if (otchestvo.isEmpty()) {
                 throw new RegistrationException("Поле отчество не заполнено");
             }
 
-            if (nik.isEmpty())
-            {
+            if (nik.isEmpty()) {
                 throw new RegistrationException("Поле ник не заполнено");
             }
 
 
-            if ((password.isEmpty())||(!password.equals(password2))) {
+            if ((password.isEmpty()) || (!password.equals(password2))) {
                 throw new PasswordException();
             }
 
@@ -92,27 +88,24 @@ public class ExecServlet extends HttpServlet {
 
             Date bornDate;
 
-            try
-            {
+            try {
                 bornDate = formt.parse(born);
-            }
-            catch(Exception ex)
-            {
+            } catch (Exception ex) {
                 throw new RegistrationException("Неверный формат даты");
             }
 
             DBManager.addUser(name, surname, otchestvo, nik, password, bornDate, phone, email, 2);
-            
+
             result = "Пользователь зарегестрирован";
-            
-        } catch (RegistrationException ex){
-            result= ex.getMessage();
+
+        } catch (RegistrationException ex) {
+            result = ex.getMessage();
         } catch (NikNameException ex) {
-            result= ex.getMessage();
+            result = ex.getMessage();
         } catch (PasswordException ex) {
-            result= ex.getMessage();
-        }catch(Exception ex){
-            result="Неизвестная ошибка";
+            result = ex.getMessage();
+        } catch (Exception ex) {
+            result = "Неизвестная ошибка";
         }
 
         request.setAttribute("result", result);
@@ -130,6 +123,7 @@ public class ExecServlet extends HttpServlet {
             String nik = request.getParameter("NIK");
             try {
                 User usr = DBManager.findUserByNik(nik);
+                request.setAttribute("DO", "upUser");
                 request.setAttribute("result", usr);
                 rd = request.getRequestDispatcher(homepage);
                 rd.forward(request, response);
@@ -172,35 +166,38 @@ public class ExecServlet extends HttpServlet {
     }
 
     protected void updateUser(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, ParseException, IOException {
-        String result;
+            HttpServletResponse response, String type) throws ServletException, ParseException, IOException {
+        String result = "порофиль не отредактирован";
         HttpSession session = request.getSession();
         RequestDispatcher rd;
         if (session.getAttribute("user") != null && session.getAttribute("user") instanceof User) {
             User usrOld = (User) session.getAttribute("usrOld");
             String nikOld = usrOld.getNik();
             String name = request.getParameter("NAME");
-            String surname = request.getParameter("SURNAME");
-            String otchestvo = request.getParameter("OTCHESTVO");
-            String nik = request.getParameter("NIK");
-            String password = null;
-            String password2 = null;
-
-            if (request.getParameter("PASSWORD") != null) {
-                if (request.getParameter("PASSWORD").equals("")) {
+            try {
+                if ("".equals(name)) {
+                    throw new UpdateException("Имя введено не верно");
+                }
+                String surname = request.getParameter("SURNAME");
+                if ("".equals(surname)) {
+                    throw new UpdateException("Фамилия ввдена не верно");
+                }
+                String otchestvo = request.getParameter("OTCHESTVO");
+                if ("".equals(otchestvo)) {
+                    throw new UpdateException("Отчество введено не верно");
+                }
+                String nik = request.getParameter("NIK");
+                if ("".equals(nik)) {
+                    throw new UpdateException("Ник введен не верно");
+                }
+                String password = request.getParameter("PASSWORD");
+                String password2 = request.getParameter("PASSWORD2");
+                if ("".equals(password) || password == null) {
                     password = usrOld.getPassword();
                     password2 = usrOld.getPassword();
                 } else {
                     password = request.getParameter("PASSWORD");
                     password2 = request.getParameter("PASSWORD2");
-                }
-            } else {
-                password = usrOld.getPassword();
-                password2 = usrOld.getPassword();
-            }
-            try {
-                if (password.equals("")) {
-                    throw new PasswordException();
                 }
                 if (!password.equals(password2)) {
                     throw new PasswordException();
@@ -212,26 +209,93 @@ public class ExecServlet extends HttpServlet {
                 if (request.getParameter("ID_ROLE") != null) {
                     roleName = request.getParameter("ID_ROLE");
                 }
-                DBManager.updateUserbyNik(new User(usrOld.getId(), name, surname, otchestvo, nik, password, brn, phone, email, roleName), nikOld);
-                result = "uspeh";
-                request.setAttribute("result", result);
-                rd = request.getRequestDispatcher("updateUser.jsp");
-                rd.forward(request, response);
+                User usr = new User(usrOld.getId(), name, surname, otchestvo, nik, password, brn, phone, email, roleName);
+                usr.setLogin();
+                DBManager.updateUserbyNik(usr, nikOld);
+                if (type.equals("updateProfil")) {
+                    request.setAttribute("DO", "upProf");
+                    session.setAttribute("user", usr);
+                }
+                if (type.equals("updateUser")) {
+                    request.setAttribute("DO", "upUser");
+                    session.setAttribute("usrOld",usr);
+                }
+                result = "профиль отредактирован";
             } catch (NikNameException ex) {
                 result = "Пользователь с таким ником существует";
-                request.setAttribute("result", result);
-                rd = request.getRequestDispatcher("updateUser.jsp");
-                rd.forward(request, response);
+                if (type.equals("updateProfil")) {
+                    request.setAttribute("DO", "upProf");
+                    //  session.setAttribute("user",usr);
+                }
+                if (type.equals("updateUser")) {
+                    request.setAttribute("DO", "upUser");
+                    session.setAttribute("usrOld", usrOld);
+                }
+
+            } catch (UpdateException ex) {
+                result = ex.getMessage();
+                if (type.equals("updateUser")) {
+                    request.setAttribute("DO", "upUser");
+                    session.setAttribute("usrOld", usrOld);
+                }
+                if (type.equals("updateProfil")) {
+                    request.setAttribute("DO", "upProf");
+                    //  session.setAttribute("user",usr);
+                }
             } catch (SQLException ex) {
-                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+                result = "неизвестная ошибка";
+                if (type.equals("updateUser")) {
+                    request.setAttribute("DO", "upUser");
+                    session.setAttribute("usrOld", usrOld);
+                }
+                if (type.equals("updateProfil")) {
+                    request.setAttribute("DO", "upProf");
+                    //  session.setAttribute("user",usr);
+                }
             } catch (NamingException ex) {
-                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+                result = "неизвестная ошибка";
+                if (type.equals("updateUser")) {
+                    request.setAttribute("DO", "upUser");
+                    session.setAttribute("usrOld", usrOld);
+                }
+                if (type.equals("updateProfil")) {
+                    request.setAttribute("DO", "upProf");
+                    //  session.setAttribute("user",usr);
+                }
             } catch (PasswordException ex) {
-                result = "Пароль введен не верно";
-                request.setAttribute("result", result);
-                rd = request.getRequestDispatcher("updateUser.jsp");
-                rd.forward(request, response);
+                result = ex.getMessage();
+                if (type.equals("updateUser")) {
+                    request.setAttribute("DO", "upUser");
+                    session.setAttribute("usrOld", usrOld);
+                }
+                if (type.equals("updateProfil")) {
+                    request.setAttribute("DO", "upProf");
+                    //  session.setAttribute("user",usr);
+                }
+            } catch (ParseException ex) {
+                result = "ошибка ввода даты рождения";
+                if (type.equals("updateUser")) {
+                    request.setAttribute("DO", "upUser");
+                    session.setAttribute("usrOld", usrOld);
+                }
+                if (type.equals("updateProfil")) {
+                    request.setAttribute("DO", "upProf");
+                    //  session.setAttribute("user",usr);
+                }
+            }catch (Exception ex) {
+                result = "ошибка ввода даты рождения";
+                if (type.equals("updateUser")) {
+                    request.setAttribute("DO", "upUser");
+                    session.setAttribute("usrOld", usrOld);
+                }
+                if (type.equals("updateProfil")) {
+                    request.setAttribute("DO", "upProf");
+                    //  session.setAttribute("user",usr);
+                }
             }
+            request.setAttribute("result", result);
+            rd = request.getRequestDispatcher("updateUser.jsp");
+            rd.forward(request, response);
         } else {
             rd = request.getRequestDispatcher("login.jsp");
             rd.forward(request, response);
@@ -316,7 +380,7 @@ public class ExecServlet extends HttpServlet {
             usr.setLogin();
             if (usr.getPassword().equals(password)) {
                 session.setAttribute("user", usr);
-             
+
             } else {
                 throw new NikNameException();
             }
@@ -329,17 +393,17 @@ public class ExecServlet extends HttpServlet {
                 rd.forward(request, response);
             }
         } catch (NikNameException ex) {
-                request.setAttribute("result","не правильно введен пользователь и пароль");
-                rd = request.getRequestDispatcher("login.jsp");
-                rd.forward(request, response);
+            request.setAttribute("result", "не правильно введен пользователь и пароль");
+            rd = request.getRequestDispatcher("login.jsp");
+            rd.forward(request, response);
         } catch (SQLException ex) {
-                request.setAttribute("result","произошла ошибка");
-                rd = request.getRequestDispatcher("login.jsp");
-                rd.forward(request, response);
+            request.setAttribute("result", "произошла ошибка");
+            rd = request.getRequestDispatcher("login.jsp");
+            rd.forward(request, response);
         } catch (NamingException ex) {
-                request.setAttribute("result","произошла ошибка");
-                rd = request.getRequestDispatcher("login.jsp");
-                rd.forward(request, response);
+            request.setAttribute("result", "произошла ошибка");
+            rd = request.getRequestDispatcher("login.jsp");
+            rd.forward(request, response);
         }
     }
 
@@ -442,30 +506,30 @@ public class ExecServlet extends HttpServlet {
             HttpServletResponse response) throws ServletException, IOException {
         RequestDispatcher rd;
         HttpSession session = request.getSession();
-       // if (session.getAttribute("user") != null && session.getAttribute("user") instanceof User) {
-            try {
-                String id_product = request.getParameter("id");
-                int id_pr = Integer.parseInt(id_product);
-                Product prd = (Product) DBManager.getById("PRODUCT", id_pr);
-                List<Opinion> list = DBManager.findOpinionByProduct(id_pr);
-                request.setAttribute("product", prd);
-                request.setAttribute("opinion", list);
-                rd = request.getRequestDispatcher("getProduct.jsp");
-                rd.forward(request, response);
-            } catch (ServletException ex) {
-                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SQLException ex) {
-                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (NamingException ex) {
-                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-            }
-      /*  } else {
-            rd = request.getRequestDispatcher("login.jsp");
+        // if (session.getAttribute("user") != null && session.getAttribute("user") instanceof User) {
+        try {
+            String id_product = request.getParameter("id");
+            int id_pr = Integer.parseInt(id_product);
+            Product prd = (Product) DBManager.getById("PRODUCT", id_pr);
+            List<Opinion> list = DBManager.findOpinionByProduct(id_pr);
+            request.setAttribute("product", prd);
+            request.setAttribute("opinion", list);
+            rd = request.getRequestDispatcher("getProduct.jsp");
             rd.forward(request, response);
+        } catch (ServletException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NamingException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        /*  } else {
+        rd = request.getRequestDispatcher("login.jsp");
+        rd.forward(request, response);
         }*/
 
     }
@@ -511,15 +575,15 @@ public class ExecServlet extends HttpServlet {
     protected void getFullCtg(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         RequestDispatcher rd;
-        int i =1;
+        int i = 1;
         try {
-            if(request.getParameter("pid")!=null){
-               i= Integer.parseInt(request.getParameter("pid"));
+            if (request.getParameter("pid") != null) {
+                i = Integer.parseInt(request.getParameter("pid"));
             }
             request.setAttribute("result", DBManager.findCatalogBuPid(i));
             rd = request.getRequestDispatcher("getCatalog.jsp");
             rd.forward(request, response);
-        }catch(CatalogException ex){
+        } catch (CatalogException ex) {
             try {
                 request.setAttribute("result", DBManager.findProductByCatalog(i));
                 rd = request.getRequestDispatcher("getCatalog.jsp");
@@ -582,7 +646,11 @@ public class ExecServlet extends HttpServlet {
                 return;
             }
             if (request.getRequestURI().equals("/ProjectShop-war/updateUser")) {
-                updateUser(request, response);
+                updateUser(request, response, "updateUser");
+                return;
+            }
+            if (request.getRequestURI().equals("/ProjectShop-war/updateProfil")) {
+                updateUser(request, response, "updateProfil");
                 return;
             }
             if (request.getRequestURI().equals("/ProjectShop-war/getUsersByRole")) {

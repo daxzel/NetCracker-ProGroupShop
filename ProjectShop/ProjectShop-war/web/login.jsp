@@ -24,8 +24,9 @@
             <input type="submit" value="Input" />
            </p>
         </form>
+        <p align="center"><a href ="index.jsp">index</a><br></p>
          <%if(request.getAttribute("result")!=null){%>
          <%=request.getAttribute("result")%><%}%>
-         <p align="center"><a href ="index.jsp">index</a><br></p>
+         
     </body>
 </html>

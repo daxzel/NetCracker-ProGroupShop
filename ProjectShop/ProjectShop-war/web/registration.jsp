@@ -103,6 +103,7 @@
         %><%=request.getAttribute("result")%><%
         }
         %>
+        <p align="left"><a href ="login.jsp">enter</a><br></p>
       <p align="left"><a href ="index.jsp">index</a><br></p>
     </body>
 </html>

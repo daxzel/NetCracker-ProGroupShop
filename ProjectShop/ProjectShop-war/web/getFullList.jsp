@@ -43,7 +43,7 @@
                         List list1 = (List) request.getAttribute("result");
                         if (list1.get(0) instanceof UserInterface) {
                             List<UserInterface> list =  list1;
-                            SimpleDateFormat formt = new SimpleDateFormat("dd MM yyyy");
+                           SimpleDateFormat formt = new SimpleDateFormat("yyyy-MM-dd");
         %>
         <table align="center"  border="1" width="80%">
             <tr align="center">
