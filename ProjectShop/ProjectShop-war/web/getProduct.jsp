@@ -20,11 +20,10 @@
     </head>
     <body>
         <%
-                   
-                            if (request.getAttribute("product") != null&&request.getAttribute("opinion")!=null) {
-                                if (request.getAttribute("opinion") instanceof List &&request.getAttribute("product")instanceof ProductInterface) {
-                                    ProductInterface prd = (ProductInterface)request.getAttribute("product");
-                                    List<OpinionInterface> list = (List<OpinionInterface>) request.getAttribute("opinion");
+            if (request.getAttribute("product") != null&&request.getAttribute("opinion")!=null) {
+                if (request.getAttribute("opinion") instanceof List &&request.getAttribute("product")instanceof ProductInterface) {
+                    ProductInterface prd = (ProductInterface)request.getAttribute("product");
+                    List<OpinionInterface> list = (List<OpinionInterface>) request.getAttribute("opinion");
         %>
         <table align="center" border="1" width="80%">
             <tr align="center">

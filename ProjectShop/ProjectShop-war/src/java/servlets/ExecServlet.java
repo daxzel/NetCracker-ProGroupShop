@@ -159,23 +159,44 @@ public class ExecServlet extends HttpServlet {
 
     protected void addProduct(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, ParseException, IOException {
-        String result;
+        
         RequestDispatcher rd;
         String name = request.getParameter("NAME");
         String description = request.getParameter("DESCRIPTION");
-        double price = Double.parseDouble(request.getParameter("PRICE"));
-        int id_catalog = Integer.parseInt(request.getParameter("ID_CATALOG"));
+        String priceS = request.getParameter("PRICE");
+        String id_catalogS = request.getParameter("ID_CATALOG");
+
+      
+
+        String result;
+        String page;
+
         try {
+            double price = Double.parseDouble(priceS);
+            int id_catalog = Integer.parseInt(id_catalogS);
+
             DBManager.addProduct(name, description, id_catalog, price);
+            
             result = "uspeh";
-            request.setAttribute("result", result);
-            rd = request.getRequestDispatcher("index.jsp");
-            rd.forward(request, response);
-        } catch (SQLException ex) {
-            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NamingException ex) {
+            page = "index.jsp";
+
+        } catch (Exception ex) {
+
+            request.setAttribute("NAME",name);
+            request.setAttribute("DESCRIPTION",description);
+            request.setAttribute("PRICE",priceS);
+            request.setAttribute("ID_CATALOG",id_catalogS);
+
+            result="Ошибка";
+            page="addProduct.jsp";
+
             Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        request.setAttribute("result", result);
+        rd = request.getRequestDispatcher(page);
+        rd.forward(request, response);
+
     }
 
     protected void updateUser(HttpServletRequest request,
