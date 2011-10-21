@@ -7,6 +7,8 @@ package DBClasses;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.*;
+import javax.naming.NamingException;
 
 /**
  *
@@ -18,6 +20,7 @@ private String description;
 private int idCatalog;
 private String name;
 private double price;
+private List<Opinion> opinions;
 
 private Catalog catalog;
 
@@ -27,6 +30,14 @@ private Catalog catalog;
         setIdCatalog(rs.getInt(3));
         setName(rs.getString(4));
         setPrice(rs.getDouble(5));
+}
+      public Product(String description, int id, int id_catalog, String name, double price) throws SQLException, NamingException {
+        this.setDescription(description);
+        this.setId(id);
+        this.setIdCatalog( id_catalog);
+        this.setName(name);
+        this.setPrice(price);
+        this.setOpinionList();
 }
 
     public int getIdCatalog() {
@@ -60,4 +71,11 @@ private Catalog catalog;
     public void setPrice(double nprice){
         price= nprice;
     }
+    public List getOpinionList() {
+        return opinions;
+    }
+     public void setOpinionList() throws SQLException, NamingException{
+        opinions = DBManager.DBManager.findOpinionByProduct(this.getId());
+    }
+
 }

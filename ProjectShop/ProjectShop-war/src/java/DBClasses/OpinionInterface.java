@@ -13,6 +13,7 @@ public interface OpinionInterface extends DBClassInterface{
     public String getText();
     public int getIdProduct();
     public int getIdUser();
+    public String getUserNik();
 
 
 

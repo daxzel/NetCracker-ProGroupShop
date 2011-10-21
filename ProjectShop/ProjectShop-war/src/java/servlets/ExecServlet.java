@@ -510,13 +510,13 @@ public class ExecServlet extends HttpServlet {
 
         RequestDispatcher rd;
         HttpSession session = request.getSession();
-        if (session.getAttribute("user") != null && session.getAttribute("user") instanceof User) {
+      //  if (session.getAttribute("user") != null && session.getAttribute("user") instanceof User) {
             try {
 
-                String id_product = request.getParameter("ID_PRODUCT");
-                int id_pr = Integer.parseInt(id_product);
-                List<Opinion> list = DBManager.findOpinionByProduct(id_pr);
-                request.setAttribute("result", list);
+                String name_pr = request.getParameter("NAME");
+               // int id_pr = Integer.parseInt(id_product);
+                Product prd = DBManager.findOpinionByProductName(name_pr);
+                request.setAttribute("result", prd);
                 rd = request.getRequestDispatcher("getOpinion.jsp");
                 rd.forward(request, response);
             } catch (ServletException ex) {
@@ -530,10 +530,10 @@ public class ExecServlet extends HttpServlet {
             } catch (IOException ex) {
                 Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } else {
+        /*} else {
             rd = request.getRequestDispatcher("login.jsp");
             rd.forward(request, response);
-        }
+        }*/
 
     }
 
@@ -716,12 +716,12 @@ public class ExecServlet extends HttpServlet {
                 delComment(request, response);
                 return;
             }
-            if (request.getRequestURI().equals("/ProjectShop-war/getOpinion")) {
+            if (request.getRequestURI().equals("/ProjectShop-war/getOpinionByProduct")) {
                 getOpinionByProduct(request, response);
                 return;
             }
             if (request.getRequestURI().equals("/ProjectShop-war/product")) {
-                getProduct(request, response);
+                getOpinionByProduct(request, response);
                 return;
             }
             if (request.getRequestURI().equals("/ProjectShop-war/catalog")) {

@@ -26,8 +26,11 @@
         %>
         <form action="getUsersByRole">
             Введите роль:
-            <input type="text" name="ROLE" value="" size="20" />
-            <input type="submit" value="Input" />
+             <tr><td><select name="ROLE" style="width : 200">
+                        <option value="admin" selected>Админ</option>
+                        <option value="user">Пользователь</option>
+                </select></td><td></td></tr>
+           <input type="submit" value="Input" />
         </form>
          <p align="left"><a href ="index.jsp">index</a><br></p>
         <%} else {

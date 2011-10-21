@@ -62,6 +62,9 @@ public class Opinion implements OpinionInterface {
     public void setUser(int idUsr) throws SQLException, NamingException {
          user = (User) DBManager.getById("USER", idUsr);
     }
+    public User getUser() throws SQLException, NamingException {
+        return user;
+    }
 
     @Override
     public String getText() {
@@ -70,6 +73,11 @@ public class Opinion implements OpinionInterface {
 
     public void setText(String txt) {
         text = txt;
+    }
+
+    @Override
+    public String getUserNik() {
+       return this.user.getNik();
     }
 
 }

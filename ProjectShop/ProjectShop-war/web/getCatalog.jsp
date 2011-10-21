@@ -41,7 +41,7 @@
             </tr>
             <% for (int i = 0; i <= (list.size() - 1); i++) {%>
             <tr align="center">
-                  <td><p align="center"><a href ="product?id=<%=list.get(i).getId()%>"><%= list.get(i).getName()%></a></p></td>
+                  <td><p align="center"><a href ="product?NAME=<%=list.get(i).getName() %>"><%= list.get(i).getName()%></a></p></td>
             </tr>
             <%}%>
 

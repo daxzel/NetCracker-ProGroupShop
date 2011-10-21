@@ -50,7 +50,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ExecServlet</servlet-name>
-        <url-pattern>/getOpinion</url-pattern>
+        <url-pattern>/getOpinionByProduct</url-pattern>
     </servlet-mapping>
      <servlet-mapping>
         <servlet-name>ExecServlet</servlet-name>

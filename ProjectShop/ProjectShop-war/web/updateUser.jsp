@@ -5,7 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import= "DBClasses.*"%>
+<%@page import= "DBClasses.UserInterface"%>
 <%@page import= "java.text.SimpleDateFormat"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     "http://www.w3.org/TR/html4/loose.dtd">
@@ -17,7 +17,9 @@
     </head>
     <body>
         <h2>User update</h2>
-        <%SimpleDateFormat formt = new SimpleDateFormat("yyyy-MM-dd");
+        <%
+       
+        SimpleDateFormat formt = new SimpleDateFormat("yyyy-MM-dd");
                     UserInterface usr = null;
                     if (session.getAttribute("user") instanceof UserInterface) {
                         usr = (UserInterface) session.getAttribute("user");
@@ -105,7 +107,11 @@
                 <tr><td><input type="text" name="EMAIL" value="<%=user.getEmail()%>" size="25" /></td><td></td></tr>
                         <%}%>
                 <tr><td>Role</td><td></td></tr>
-                <tr><td><input type="text" name="ID_ROLE" value="<%=user.getRoleName()%>" size="25" /></td><td></td></tr>
+                 <tr><td><select name="ID_ROLE" style="width : 200">
+                        <option value="admin" selected>Админ</option>
+                        <option value="user">Пользователь</option>
+                </select></td><td></td></tr>
+               
                 <tr><td><input type="submit" value="Input" /></td><td></td></tr>
 
             </table>

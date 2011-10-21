@@ -4,6 +4,7 @@
  */
 
 package DBClasses;
+import java.util.*;
 
 /**
  *
@@ -20,6 +21,6 @@ public interface ProductInterface extends DBClassInterface{
     public String getName();
 
     public double getPrice();
-   
+   public List getOpinionList();
 
 }

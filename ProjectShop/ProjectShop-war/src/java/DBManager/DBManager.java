@@ -191,6 +191,26 @@ public class DBManager extends AbstractManager {
         }
         return list;
     }
+     public static Product findOpinionByProductName(String name_pr) throws SQLException, NamingException{
+      
+        Connection conn = getConnection();
+       
+         Product prd  = null;
+        try {
+            PreparedStatement pst=conn.prepareStatement("SELECT * FROM PRODUCT WHERE NAME=?");
+            pst.setString(1, name_pr);
+            ResultSet rs = pst.executeQuery();
+            rs.next();
+            prd = new Product(rs.getString(1),rs.getInt(2),rs.getInt(3),rs.getString(4),rs.getDouble(5));
+           // pst = conn.prepareStatement("SELECT * FROM OPINION WHERE ID_PRODUCT=?)");
+           // pst.setString(1, name_pr);
+          //  ResultSet rs = pst.executeQuery();
+           
+        } finally {
+            conn.close();
+        }
+        return prd;
+    }
     public static void addProduct(Product prd) throws SQLException,NamingException
     {
         Connection conn = getConnection();
