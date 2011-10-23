@@ -27,6 +27,7 @@ import exceptions.*;
 import javax.servlet.http.HttpSession;
 import DBClasses.User;
 import DBManager.*;
+import Other.JSPHelper;
 
 /**
  *
@@ -652,7 +653,98 @@ public class ExecServlet extends HttpServlet {
         }
 
     }
+     protected void addOrder(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, ParseException, IOException {
+        String result="заказ не добавлен";
+        RequestDispatcher rd;
+        String kol_vo="";
+         try {
+            HttpSession session = request.getSession();
+            kol_vo =request.getParameter("KOL");
+            String status = request.getParameter("STATUS");
+            String id_product = session.getAttribute("ID_PRODUCT").toString();
+            User usr = (User) session.getAttribute("user");
 
+       //     kol_vo =request.getParameter("KOL");
+
+            DBManager.addOrder(id_product, usr.getNik(),kol_vo,status);
+            if("false".equals(status)){
+            result = "Заказ добавлен в корзину";
+             }else{
+                 result = "Заказ оформлен";
+             }
+        } catch (CatalogException ex) {
+            result ="произошла ошибка при добавлении заказа";
+        } catch (NikNameException ex) {
+            result ="произошла ошибка при добавлении заказа";
+        } catch (SQLException ex) {
+           result ="произошла ошибка при добавлении заказа";
+        } catch (NamingException ex) {
+           result ="произошла ошибка при добавлении заказа";
+        }finally{
+            request.setAttribute("kol_vo", kol_vo);
+            request.setAttribute("result", result);
+            rd = request.getRequestDispatcher("addOrder.jsp");
+            rd.forward(request, response);
+        }
+
+    }
+     protected void getOrders(HttpServletRequest request,
+            HttpServletResponse response, String status) throws ServletException, ParseException, IOException, LoginException {
+        RequestDispatcher rd;
+        HttpSession session = request.getSession();
+        UserInterface usr = JSPHelper.getUser(session);
+            try {
+                request.setAttribute("result", DBManager.findOrderByUser(usr.getId() , status));
+                rd = request.getRequestDispatcher("getBasket.jsp");
+                rd.forward(request, response);
+            } catch (SQLException ex) {
+                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NamingException ex) {
+                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+     }
+
+              protected void updateStatusOrders(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, ParseException, IOException, LoginException {
+        RequestDispatcher rd;
+        HttpSession session = request.getSession();
+        UserInterface usr = JSPHelper.getUser(session);
+            try {
+                String id_order = request.getParameter("id_order");
+                
+                request.setAttribute("result2", DBManager.updateOrderStatus(id_order));
+                request.setAttribute("result", DBManager.findOrderByUser(usr.getId() , "false"));
+                rd = request.getRequestDispatcher("getBasket.jsp");
+                rd.forward(request, response);
+            } catch (SQLException ex) {
+                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NamingException ex) {
+                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+     }
+               protected void deleteOrder(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException, LoginException {
+        HttpSession session = request.getSession();
+        RequestDispatcher rd;
+         UserInterface usr = JSPHelper.getUser(session);
+            try {
+                String id_order = request.getParameter("id_order");
+                   String result2;
+                result2 = DBManager.deleteOrder(id_order);
+                request.setAttribute("result", DBManager.findOrderByUser(usr.getId() , "false"));
+                request.setAttribute("result2", result2);
+                rd = request.getRequestDispatcher("getBasket.jsp");
+                rd.forward(request, response);
+            } catch (SQLException ex) {
+                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NamingException ex) {
+                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+    }
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -744,10 +836,34 @@ public class ExecServlet extends HttpServlet {
                 getChildCatalog(request, response);
                 return;
             }
+            if (request.getRequestURI().equals("/ProjectShop-war/order")) {
+                addOrder(request, response);
+                return;
+            }
+            if (request.getRequestURI().equals("/ProjectShop-war/basket")) {
+                getOrders(request, response, "false");
+                return;
+            }
+            if (request.getRequestURI().equals("/ProjectShop-war/updateStatusOrder")) {
+                updateStatusOrders(request, response);
+                return;
+            }
+            if (request.getRequestURI().equals("/ProjectShop-war/getOrders")) {
+               getOrders(request, response, "true");
+               return;
+            }
+            if (request.getRequestURI().equals("/ProjectShop-war/deleteOrder")) {
+               deleteOrder(request, response);
+               return;
+            }
+
 
 
         } catch (ParseException ex) {
             Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (LoginException ex) {
+            rd = request.getRequestDispatcher("login.jsp");
+            rd.forward(request, response);
         }
 
     }

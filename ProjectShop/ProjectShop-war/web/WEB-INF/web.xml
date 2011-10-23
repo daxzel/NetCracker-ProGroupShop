@@ -84,4 +84,27 @@
         <servlet-name>ExecServlet</servlet-name>
         <url-pattern>/getChild_catalog</url-pattern>
     </servlet-mapping>
+
+     <servlet-mapping>
+        <servlet-name>ExecServlet</servlet-name>
+        <url-pattern>/order</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ExecServlet</servlet-name>
+        <url-pattern>/basket</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ExecServlet</servlet-name>
+        <url-pattern>/updateStatusOrder</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ExecServlet</servlet-name>
+        <url-pattern>/getOrders</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ExecServlet</servlet-name>
+        <url-pattern>/deleteOrder</url-pattern>
+    </servlet-mapping>
+
 </web-app>

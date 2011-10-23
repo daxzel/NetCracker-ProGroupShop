@@ -8,6 +8,7 @@ package Other;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import DBClasses.*;
+import exceptions.*;
 
 
 
@@ -49,6 +50,28 @@ public class JSPHelper {
             else
             {
                 return EnumRole.user;
+            }
+        }
+
+    }
+    public static UserInterface getUser(HttpSession sess) throws LoginException
+    {
+        Object user = sess.getAttribute("user");
+
+        if (user==null)
+        {
+            throw new LoginException();
+        }
+        else
+        {
+            UserInterface usr = (UserInterface) sess.getAttribute("user");
+            if(usr.getRoleId()==1)
+            {
+                    return usr;
+            }
+            else
+            {
+                return usr;
             }
         }
 

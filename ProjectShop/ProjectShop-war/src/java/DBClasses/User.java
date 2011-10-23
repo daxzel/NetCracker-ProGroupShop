@@ -67,12 +67,29 @@ public User(int id_user, String name, String surname, String otchestvo,String ni
         setEmail(email);
         setRole(role);
 }
+public User(int id_user, String name, String surname, String otchestvo,String nik,String password,java.sql.Date brn, String phone, String email, int role) throws SQLException, NamingException{
+      //SimpleDateFormat formt = new SimpleDateFormat("dd MM yyyy");
+      // Date born = formt.parse(brn);
+       setId(id_user);
+       born = brn;
+       setName(name);
+       setSurname(surname);
+       setOtchestvo(otchestvo);
+       setNik(nik);
+       setPassword(password);
+       setBorn(born);
+       setPhone(phone);
+       setEmail(email);
+       setRole(role);
+}
+    @Override
 public int getId(){
    return id_user;
 }
 public void setId(int nid_user){
     id_user=nid_user;
 }
+    @Override
 public String getName(){
     return name;
     }

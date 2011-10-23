@@ -170,8 +170,8 @@ public class DBManager extends AbstractManager {
         conn.commit();
         conn.close();
     }
-    
-    public static List findOpinionByProduct(int id_pr) throws SQLException, NamingException{
+
+    public static List findOpinionByProduct(int id_pr) throws SQLException, NamingException {
         List<Opinion> list = new ArrayList();
         Connection conn = getConnection();
         //Product product = null;
@@ -191,47 +191,49 @@ public class DBManager extends AbstractManager {
         }
         return list;
     }
-     public static Product findOpinionByProductName(String name_pr) throws SQLException, NamingException{
-      
+
+    public static Product findOpinionByProductName(String name_pr) throws SQLException, NamingException {
+
         Connection conn = getConnection();
-       
-         Product prd  = null;
+
+        Product prd = null;
         try {
-            PreparedStatement pst=conn.prepareStatement("SELECT * FROM PRODUCT WHERE NAME=?");
+            PreparedStatement pst = conn.prepareStatement("SELECT * FROM PRODUCT WHERE NAME=?");
             pst.setString(1, name_pr);
             ResultSet rs = pst.executeQuery();
             rs.next();
-            prd = new Product(rs.getString(1),rs.getInt(2),rs.getInt(3),rs.getString(4),rs.getDouble(5));
-           // pst = conn.prepareStatement("SELECT * FROM OPINION WHERE ID_PRODUCT=?)");
-           // pst.setString(1, name_pr);
-          //  ResultSet rs = pst.executeQuery();
-           
+            prd = new Product(rs.getString(1), rs.getInt(2), rs.getInt(3), rs.getString(4), rs.getDouble(5));
+            // pst = conn.prepareStatement("SELECT * FROM OPINION WHERE ID_PRODUCT=?)");
+            // pst.setString(1, name_pr);
+            //  ResultSet rs = pst.executeQuery();
+
         } finally {
             conn.close();
         }
         return prd;
     }
-    public static void addProduct(Product prd) throws SQLException,NamingException
-    {
+
+    public static void addProduct(Product prd) throws SQLException, NamingException {
         Connection conn = getConnection();
         PreparedStatement pst = conn.prepareStatement("INSERT INTO PRODUCT " + "(DESCRIPTION,ID_CATALOG,NAME,PRICE)" + "VALUES(?,?,?,?)");
-        pst.setString(1,prd.getDescription());
+        pst.setString(1, prd.getDescription());
         pst.setInt(2, prd.getIdCatalog());
-        pst.setString(3,prd.getName());
+        pst.setString(3, prd.getName());
         pst.setDouble(4, prd.getPrice());
         pst.execute();
     }
-    public static void addProduct(String name, String description, int it_catalog, double price) throws SQLException,NamingException
-    {
-       Connection conn = getConnection();
+
+    public static void addProduct(String name, String description, int it_catalog, double price) throws SQLException, NamingException {
+        Connection conn = getConnection();
         PreparedStatement pst = conn.prepareStatement("INSERT INTO PRODUCT " + "(DESCRIPTION,ID_CATALOG,NAME,PRICE)" + "VALUES(?,?,?,?)");
-        pst.setString(1,description);
-        pst.setInt(2,it_catalog);
-        pst.setString(3,name);
+        pst.setString(1, description);
+        pst.setInt(2, it_catalog);
+        pst.setString(3, name);
         pst.setDouble(4, price);
         pst.execute();
     }
-     public static void addCatalog(String idParent, String name) throws SQLException, NamingException, CatalogException {
+
+    public static void addCatalog(String idParent, String name) throws SQLException, NamingException, CatalogException {
         Connection conn = getConnection();
         PreparedStatement pst = conn.prepareStatement("SELECT * FROM \"CATALOG\" WHERE NAME = ?");
         pst.setString(1, name);
@@ -250,6 +252,34 @@ public class DBManager extends AbstractManager {
             pst.execute();
         }
         conn.commit();
+        rs.close();
+        pst.close();
+        conn.close();
+    }
+
+    public static void addOrder(String id_product, String nik, String kol_vo, String status) throws SQLException, NamingException, CatalogException, NikNameException {
+        Connection conn = getConnection();
+        int id_user = 0;
+        PreparedStatement pst = conn.prepareStatement("SELECT ID_USER FROM \"USER\" WHERE NIK = ?");
+        pst.setString(1, nik);
+        ResultSet rs = pst.executeQuery();
+        if (rs.next()) {
+            id_user = rs.getInt(1);
+        } else {
+            throw new NikNameException();
+        }
+        int id_prd = Integer.parseInt(id_product);
+        int kolichestvo = Integer.parseInt(kol_vo);
+        boolean stat = Boolean.parseBoolean(status);
+        pst = conn.prepareStatement("INSERT INTO \"ORDER\" " + "(ID_USER,ID_PRODUCT,STATUS,KOL_VO)" + "VALUES(?,?,?,?)");
+        pst.setInt(1, id_user);
+        pst.setInt(2, id_prd);
+        pst.setBoolean(3, stat);
+        pst.setInt(4, kolichestvo);
+        pst.execute();
+        rs.close();
+        pst.close();
+        conn.commit();
         conn.close();
     }
 
@@ -262,6 +292,7 @@ public class DBManager extends AbstractManager {
         conn.close();
         return value;
     }
+
     public static List findChildCatalog(String name) throws SQLException, NamingException {
         List<Catalog> list = new ArrayList();
         Connection conn = getConnection();
@@ -288,13 +319,13 @@ public class DBManager extends AbstractManager {
         return list;
     }
 
-     public static List findCatalogBuPid(int id_parent) throws SQLException, NamingException, CatalogException{
+    public static List findCatalogBuPid(int id_parent) throws SQLException, NamingException, CatalogException {
         List<Catalog> list = new ArrayList();
         Connection conn = getConnection();
         //Product product = null;
         Catalog cat = null;
         try {
-            PreparedStatement pst  = conn.prepareStatement("SELECT * FROM \"CATALOG\" WHERE ID_PARENT = ?");
+            PreparedStatement pst = conn.prepareStatement("SELECT * FROM \"CATALOG\" WHERE ID_PARENT = ?");
             pst.setInt(1, id_parent);
             ResultSet rs = pst.executeQuery();
             rs = pst.executeQuery();
@@ -303,15 +334,17 @@ public class DBManager extends AbstractManager {
                 cat = new Catalog(rs);
                 list.add(i, cat);
                 i = i + 1;
-            }if(i==0){
+            }
+            if (i == 0) {
                 throw new CatalogException();
             }
-        }finally {
+        } finally {
             conn.close();
         }
         return list;
     }
-      public static List findProductByCatalog(int id_cat) throws SQLException, NamingException{
+
+    public static List findProductByCatalog(int id_cat) throws SQLException, NamingException {
         List<Product> list = new ArrayList();
         Connection conn = getConnection();
         //Product product = null;
@@ -330,5 +363,132 @@ public class DBManager extends AbstractManager {
             conn.close();
         }
         return list;
-      }
+    }
+
+    public static Order getByIdOrder(int id) throws SQLException, NamingException {
+
+        Connection conn = getConnection();
+        Order obj = null;
+        try {
+            PreparedStatement pst = null;
+            pst = conn.prepareStatement("SELECT * FROM ORDER WHERE ID_ORDER = ?");
+            pst.setInt(1, id);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                obj = new Order(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getBoolean(4), rs.getInt(5));
+            } else {
+                throw new SQLException();
+            }
+
+
+        } finally {
+            conn.close();
+        }
+        return obj;
+    }
+
+    public static Product getByIdProduct(int id) throws SQLException, NamingException {
+
+        Connection conn = getConnection();
+        Product obj = null;
+        try {
+            PreparedStatement pst = null;
+            pst = conn.prepareStatement("SELECT * FROM \"PRODUCT\" WHERE ID_PRODUCT = ?");
+            pst.setInt(1, id);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                obj = new Product(rs.getString(1), rs.getInt(2), rs.getInt(3), rs.getString(4), rs.getDouble(5));
+            } else {
+                throw new SQLException();
+            }
+        } finally {
+            conn.close();
+        }
+        return obj;
+    }
+
+    public static User getByIdUser(int id) throws SQLException, NamingException {
+
+        Connection conn = getConnection();
+        User obj = null;
+        try {
+            PreparedStatement pst = null;
+            pst = conn.prepareStatement("SELECT * FROM USER WHERE ID_USER = ?");
+            pst.setInt(1, id);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                obj = new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getDate(7), rs.getString(8), rs.getString(9), rs.getInt(10));
+            } else {
+                throw new SQLException();
+            }
+        } finally {
+            conn.close();
+        }
+        return obj;
+    }
+    public static List findOrderByUser (int id_user, String status) throws SQLException, NamingException {
+        List<Order> list = new ArrayList();
+        Connection conn = getConnection();
+        //Product product = null;
+        Order ord = null;
+        try {
+          //  int id_usr = Integer.parseInt(id_user);
+            boolean stat = Boolean.parseBoolean(status);
+            PreparedStatement pst = conn.prepareStatement("SELECT * FROM \"ORDER\" WHERE ID_USER = ? AND STATUS =?");
+            pst.setInt(1, id_user);
+            pst.setBoolean(2, stat);
+            ResultSet rs = pst.executeQuery();
+            int i = 0;
+            while (rs.next()) {
+                ord = new Order(rs.getInt(1), rs.getInt(2),rs.getInt(3), rs.getBoolean(4), rs.getInt(5));
+                list.add(i, ord);
+                i = i + 1;
+            }
+        } finally {
+            conn.close();
+        }
+        return list;
+    }
+    public static String updateOrderStatus (String id_order) throws SQLException, NamingException {
+        String result = "Заказ не оформлен";
+        Connection conn = getConnection();
+       PreparedStatement pst = conn.prepareStatement("UPDATE \"ORDER\" SET STATUS =1  WHERE ID_ORDER = ? ");
+        try {
+            int id_ord = Integer.parseInt(id_order);
+            boolean stat =true;
+           
+            pst.setInt(1, id_ord);
+            int numUpdate = pst.executeUpdate();
+            int i = 0;
+            if (numUpdate ==1) {
+                result= "Заказ оформлен";
+            }else{
+                result= "Произошла ошибка при оформлении заказа";
+            }
+        } finally {
+            pst.close();
+            conn.close();
+        }
+        return result;
+    }
+    public static String deleteOrder(String id_order) throws SQLException, NamingException {
+         int numDelete = 0;
+          String result = "Заказ не удален из корзины";
+        int id_ord= Integer.parseInt(id_order);
+        Connection conn = getConnection();
+        PreparedStatement pst = conn.prepareStatement("DELETE FROM \"ORDER\" WHERE ID_ORDER = ?");
+        try {
+        pst.setInt(1, id_ord);
+        numDelete = pst.executeUpdate();
+        if (numDelete ==1) {
+                result= "Заказ удален из корзины";
+            }else{
+                result= "Произошла ошибка при удалении заказа";
+            }
+        } finally {
+            pst.close();
+            conn.close();
+        }
+        return result;
+    }
 }

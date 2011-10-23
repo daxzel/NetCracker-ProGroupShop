@@ -36,8 +36,29 @@
                     if (request.getAttribute("result") instanceof ProductInterface) {
                         ProductInterface prd = (ProductInterface)request.getAttribute("result");
                         List<OpinionInterface> list = prd.getOpinionList();
+                        session.setAttribute("product", prd);
 
         %>
+        <table align="center" border="1" width="80%">
+            <tr align="center">
+                <td>NAME</td>
+                <td>DESCRIPTION</td>
+                <td>ID_CATALOG</td>
+                <td>PRICE</td>
+                <td rowspan="2"><a href ="addOrder.jsp" >order</a></td>
+            </tr>
+            <tr align="center">
+                <td><%= prd.getName() %></td>
+                <%if(prd.getDescription()!=null){%>
+                <td><%= prd.getDescription() %></td>
+                <%}else{%>
+                <td></td>
+                <%}%>
+                <td><%= prd.getIdCatalog() %></td>
+                <td><%= prd.getPrice() %></td>
+                
+            </tr>
+            </table><br><br>
         <table align="center"  border="1" width="80%">
             <tr align="center">
                   <td colspan="2">Comments to <%=prd.getName() %></td>
