@@ -4,7 +4,7 @@ INSERT INTO "CATALOG" (ID_CATALOG,"NAME")   VALUES(1,'Техника');
        
               INSERT INTO "CATALOG" (ID_CATALOG,ID_PARENT,"NAME")   VALUES(3,2,'Холодильники');
               INSERT INTO "CATALOG" (ID_CATALOG,ID_PARENT,"NAME")   VALUES(4,2,'Стиральные машины');
-              INSERT INTO "CATALOG" (ID_CATALOG,ID_PARENT,"NAME")   VALUES(5,2,'Моечные машины');
+              INSERT INTO "CATALOG" (ID_CATALOG,ID_PARENT,"NAME")   VALUES(5,2,'Пылесосы');
               INSERT INTO "CATALOG" (ID_CATALOG,ID_PARENT,"NAME")   VALUES(6,2,'Микроволновые печи');
               
        INSERT INTO "CATALOG" (ID_CATALOG,ID_PARENT,"NAME")   VALUES(7,1,'Электроника');
@@ -12,7 +12,6 @@ INSERT INTO "CATALOG" (ID_CATALOG,"NAME")   VALUES(1,'Техника');
               INSERT INTO "CATALOG" (ID_CATALOG,ID_PARENT,"NAME") VALUES(8,7,'Телевизоры');
               INSERT INTO "CATALOG" (ID_CATALOG,ID_PARENT,"NAME") VALUES(9,7,'Компьютеры');
               INSERT INTO "CATALOG" (ID_CATALOG,ID_PARENT,"NAME") VALUES(10,7,'Телефоны');
-              INSERT INTO "CATALOG" (ID_CATALOG,ID_PARENT,"NAME") VALUES(11,7,'Магнитафоны');
        
  INSERT INTO PRODUCT (ID_PRODUCT,ID_CATALOG,NAME,PRICE,DESCRIPTION) VALUES(0,3,'LG GW-B207 FVQA',33090,
          'Цвет:	 бежевый
@@ -28,6 +27,7 @@ INSERT INTO "CATALOG" (ID_CATALOG,"NAME")   VALUES(1,'Техника');
         Количество компрессоров:	 1
         Класс энергопотребления:	 A
         Гарантия:	 3 года');
+        
   INSERT INTO PRODUCT (ID_PRODUCT,ID_CATALOG,NAME,PRICE,DESCRIPTION) VALUES(1,3,'Siemens KA 58NA45RU',62820,
         'Цвет:	 нержавеющая сталь
         Высота, см:	 180
@@ -41,6 +41,292 @@ INSERT INTO "CATALOG" (ID_CATALOG,"NAME")   VALUES(1,'Техника');
         Размораживание морозильной камеры:	 No Frost
         Количество компрессоров:	 1
         Класс энергопотребления:	 А+');
+        
+   INSERT INTO PRODUCT (ID_PRODUCT,ID_CATALOG,NAME,PRICE,DESCRIPTION) VALUES(2,3,'Zanussi ZRD 324',8960,
+        '
+    Высота, см:	 144
+    Ширина, см:	 54
+    Глубина, см:	 59.5 см
+    Расположение морозильной камеры:	 сверху
+    Количество компрессоров:	 1
+    Объем холодильной камеры, л:	 187
+    Объем морозильной камеры, л:	 48 л
+    Тип управления:	 электромеханическое
+    Размораживание холодильной камеры:	 автоматическое
+    Размораживание морозильной камеры:	 ручное
+    Класс энергопотребления:	 А
+    Цвет:	 белый
+    Гарантия:	 1 год');
     
+    INSERT INTO PRODUCT (ID_PRODUCT,ID_CATALOG,NAME,PRICE,DESCRIPTION) VALUES(3,3,'Vestel LWR 260',9990 ,
+        'Высота, см:	 144
+    Ширина, см:	 54
+    Глубина, см:	 60 см
+    Расположение морозильной камеры:	 сверху
+    Количество компрессоров:	 1
+    Объем холодильной камеры, л:	 189 л
+    Объем морозильной камеры, л:	 49 л
+    Тип управления:	 электромеханическое
+    Размораживание холодильной камеры:	 автоматическое
+    Размораживание морозильной камеры:	 ручное
+    Класс энергопотребления:	 А
+    Цвет:	 белый');
+    
+    INSERT INTO PRODUCT (ID_PRODUCT,ID_CATALOG,NAME,PRICE,DESCRIPTION) VALUES(4,3,'Hansa HR-138W',9990 ,
+        'Высота, см:	 140 см
+    Ширина, см:	 45.1
+    Глубина, см:	 54.2
+    Расположение морозильной камеры:	 снизу
+    Объем холодильной камеры, л:	 106
+    Объем морозильной камеры, л:	 32
+    Тип управления:	 электромеханическое
+    Класс энергопотребления:	 А
+    Цвет:	 белый');
+    
+    INSERT INTO PRODUCT (ID_PRODUCT,ID_CATALOG,NAME,PRICE,DESCRIPTION) VALUES(5,3,'Beko DS 333020',11320 ,
+        'Общий объем, л:	 330
+    Высота, см:	 175
+    Ширина, см:	 60
+    Глубина, см:	 60
+    Расположение морозильной камеры:	 сверху
+    Количество компрессоров:	 1
+    Объем холодильной камеры, л:	 237
+    Объем морозильной камеры, л:	 73
+    Тип управления:	 электромеханическое
+    Размораживание холодильной камеры:	 автоматическое
+    Размораживание морозильной камеры:	 ручное
+    Класс энергопотребления:	 А+
+    Цвет:	 белый');
+    
+    INSERT INTO PRODUCT (ID_PRODUCT,ID_CATALOG,NAME,PRICE,DESCRIPTION) VALUES(6,3,'Electrolux ERD 32190 W',11320 ,
+        'Высота, см:	 171,3
+    Ширина, см:	 60
+    Глубина, см:	 60 см
+    Расположение морозильной камеры:	 сверху
+    Количество компрессоров:	 1
+    Объем холодильной камеры, л:	 242 л
+    Объем морозильной камеры, л:	 70 л
+    Тип управления:	 электромеханическое
+    Размораживание холодильной камеры:	 автоматическое
+    Размораживание морозильной камеры:	 ручное
+    Класс энергопотребления:	 А
+    Цвет:	 белый
+    Гарантия:	 1 год');
+    
+    INSERT INTO PRODUCT (ID_PRODUCT,ID_CATALOG,NAME,PRICE,DESCRIPTION) VALUES(7,4,'Hotpoint-Ariston ARMXXD 1297',17590 ,
+        '- Тип стиральной машинки: отдельностоящая
+    - Тип загрузки: фронтальная
+    - Управление: электронное	
+    - Особенности: полноразмерная
+    - Максимальная загрузка: 7 кг (стирка), 5 кг (сушка)
+    - Обороты: до 1200 об/мин
+    - Сушка
+    - Цвет: белый
+    - Размеры (ВxШxГ): 85x60x54 см');
+    
+     INSERT INTO PRODUCT (ID_PRODUCT,ID_CATALOG,NAME,PRICE,DESCRIPTION) VALUES(8,4,'Bosch WLX 24463 OE',15880 ,
+        '- Тип стиральной машинки: отдельностоящая
+    - Тип загрузки: фронтальная
+    - Управление: электронное
+    - Особенности: узкая
+    - Максимальная загрузка: 5 кг
+    - Обороты: 1200 об/мин
+    - Цвет: белый
+    - Размеры (ВxШxГ): 84.7x60x44 см');   
+    
+    INSERT INTO PRODUCT (ID_PRODUCT,ID_CATALOG,NAME,PRICE,DESCRIPTION) VALUES(9,4,'Kuppersbusch W 1809.0 W',117180 ,
+        '- Тип стиральной машинки: отдельностоящая	
+    - Тип загрузки: фронтальная
+    - Управление: электронное	
+    - Особенности: полноразмерная	
+    - Максимальная загрузка: 7 кг	
+    - Обороты: 1800	об/мин
+    - Цвет: белый	
+    - Размеры (ВxШxГ): 85х63х60 см');    
+    
+     INSERT INTO PRODUCT (ID_PRODUCT,ID_CATALOG,NAME,PRICE,DESCRIPTION) VALUES(10,4,'Indesit PWE 81472 S',17900 ,
+        '- Тип стиральной машинки: отдельностоящая
+    - Тип загрузки: фронтальная
+    - Управление: электронное	
+    - Особенности: полноразмерная
+    - Максимальная загрузка: 8 кг 
+    - Обороты отжима: 1400 об/мин	
+    - Цвет: серебристо-белый
+    - Размеры (ВxШxГ): 85х59.5х62 см');  
+    
+    INSERT INTO PRODUCT (ID_PRODUCT,ID_CATALOG,NAME,PRICE,DESCRIPTION) VALUES(11,4,'AEG LS 84840',39900 ,
+        '- Тип стиральной машинки: отдельностоящая
+    - Тип загрузки: фронтальная
+    - Управление: электронное
+    - Особенности: узкая
+    - Максимальная загрузка: 6 кг
+    - Обороты: 1400 об/мин
+    - Цвет: белый
+    - Размеры (ВxШxГ): 85x60x44 см');  
+    
+    INSERT INTO PRODUCT (ID_PRODUCT,ID_CATALOG,NAME,PRICE,DESCRIPTION) VALUES(12,4,'Hotpoint-Ariston AQLF 9D 69',26700 ,
+        '- Тип стиральной машинки: отдельностоящая	
+    - Тип загрузки: фронтальная
+    - Управление: электронное - сенсорное	
+    - Особенности: полноразмерная
+    - Максимальная загрузка: 9 кг	
+    - Обороты: 1600 об/мин	
+    - Цвет: белый	
+    - Размеры (ВxШxГ): 85х60х65 см ');  
+    
+    INSERT INTO PRODUCT (ID_PRODUCT,ID_CATALOG,NAME,PRICE,DESCRIPTION) VALUES(13,5,'Sinbo SVC-3445',3990 ,
+        'Потребляемая мощность	 2200 Вт
+    Объём пылесборника	 4 л
+    Уровень шума	 62 Дб
+    Гарантия	 1');  
+    
+    INSERT INTO PRODUCT (ID_PRODUCT,ID_CATALOG,NAME,PRICE,DESCRIPTION) VALUES(14,5,'Bosch BSGL-2 MOVE8',3250 ,
+        'Потребляемая мощность	 2100 Вт
+    Мощность всасывания	 400
+    Фильтрация	 HEPA 12
+    Турбощетка	 нет
+    Объём пылесборника	 3.5 л
+    Насадки	 щетка ковер/пол, для мягкой мебели и щелевая насадка
+    Трубки	 телескопические
+    Уровень шума	 79 Дб
+    Гарантия	 1');   
+    
+    INSERT INTO PRODUCT (ID_PRODUCT,ID_CATALOG,NAME,PRICE,DESCRIPTION) VALUES(15,6,'Wellton WMO-1700GW',2190 ,
+        'Открывание дверцы:	 кнопка
+    Объем, л:	 17
+    Тип управления:	 механическое
+    Мощность микроволн, Вт:	 700
+    Мощность гриля, Вт:	 900
+    Цвет корпуса:	 белый');     
+    
+    INSERT INTO PRODUCT (ID_PRODUCT,ID_CATALOG,NAME,PRICE,DESCRIPTION) VALUES(16,6,'Beko MWС 2010 MW',2280 ,
+        'Открывание дверцы:	 кнопка
+    Объем, л:	 20
+    Тип управления:	 механическое
+    Мощность микроволн, Вт:	 700
+    Мощность гриля, Вт:	 800
+    Цвет корпуса:');    
+    
+    INSERT INTO PRODUCT (ID_PRODUCT,ID_CATALOG,NAME,PRICE,DESCRIPTION) VALUES(17,6,'Supra MWS 4020',2240 ,
+        'Открывание дверцы:	 ручка
+    Объем, л:	 20
+    Тип управления:	 электронное
+    Мощность микроволн, Вт:	 800
+    Мощность гриля, Вт:	 1000
+    Цвет корпуса:	 белый');  
+    
+    INSERT INTO PRODUCT (ID_PRODUCT,ID_CATALOG,NAME,PRICE,DESCRIPTION) VALUES(18,6,'Beko MWC 2010 EW',2440 ,
+        'Открывание дверцы:	 кнопка
+    Объем, л:	 20
+    Тип управления:	 электронное
+    Мощность микроволн, Вт:	 700
+    Мощность гриля, Вт:	 800
+    Цвет корпуса:	 белый');  
+    
+     INSERT INTO PRODUCT (ID_PRODUCT,ID_CATALOG,NAME,PRICE,DESCRIPTION) VALUES(19,6,'Gorenje MO 20 MGW',2510 ,
+        'Открывание дверцы:	 кнопка
+    Объем, л:	 20
+    Тип управления:	 механическое
+    Мощность микроволн, Вт:	 800
+    Мощность гриля, Вт:	 1 200
+    Цвет корпуса:	 белый');  
+    
+    INSERT INTO PRODUCT (ID_PRODUCT,ID_CATALOG,NAME,PRICE,DESCRIPTION) VALUES(20,6,'Erisson MWG 20 DM',2340 ,
+        'Открывание дверцы:	 кнопка
+    Объем, л:	 20
+    Тип управления:	 электронное
+    Мощность микроволн, Вт:	 800
+    Мощность гриля, Вт:	 1000
+    Цвет корпуса:	 серебристый');
+    
+    INSERT INTO PRODUCT (ID_PRODUCT,ID_CATALOG,NAME,PRICE,DESCRIPTION) VALUES(21,6,'Mystery MMW-2005G',2480  ,
+        'Открывание дверцы:	 кнопка
+    Объем, л:	 20
+    Тип управления:	 электронное
+    Мощность микроволн, Вт:	 800
+    Мощность гриля, Вт:	 1000
+    Цвет корпуса:	 серебристый');
+    
+    INSERT INTO PRODUCT (ID_PRODUCT,ID_CATALOG,NAME,PRICE,DESCRIPTION) VALUES(22,6,'Hansa HMO-2071SGM',2630  ,
+        'Открывание дверцы:	 кнопка
+    Объем, л:	 20
+    Тип управления:	 электронное
+    Мощность микроволн, Вт:	 700
+    Мощность гриля, Вт:	 900
+    Цвет корпуса:	 серебристый');
+    
+    INSERT INTO PRODUCT (ID_PRODUCT,ID_CATALOG,NAME,PRICE,DESCRIPTION) VALUES(23,8,'Acer AT2054D',6194,
+        'Тип	:	ЖК-телевизор
+    Диагональ	:	20''
+    Формат экрана	:	16:9
+    Разрешение	:	1600x900
+    Поддержка HDTV	:	есть
+    HD-формат	:	720p
+    Стереозвук	:	есть');
+    
+     INSERT INTO PRODUCT (ID_PRODUCT,ID_CATALOG,NAME,PRICE,DESCRIPTION) VALUES(24,8,'Acer AT3258ML', 22005,
+        'Тип	:	ЖК-телевизор
+    Диагональ	:	32" (81 см)
+    Формат экрана	:	16:9
+    Разрешение	:	1920x1080
+    Поддержка HDTV	:	есть
+    HD-формат	:	1080p (Full HD)
+    Стереозвук	:	есть
+    Частота развертки	:	100 Гц');
+    
+    INSERT INTO PRODUCT (ID_PRODUCT,ID_CATALOG,NAME,PRICE,DESCRIPTION) VALUES(25,8,'LED LG 19 19LV2300',10432,
+        'Тип	:	ЖК-телевизор
+    Диагональ	:	19" (48 см)
+    Формат экрана	:	16:9
+    Разрешение	:	1366x768
+    Поддержка HDTV	:	есть
+    HD-формат	:	720p
+    Стереозвук	:	есть');
+    
+    INSERT INTO PRODUCT (ID_PRODUCT,ID_CATALOG,NAME,PRICE,DESCRIPTION) VALUES(27,8,'LED LG 22'' 22LV2300',12355,
+        'Тип	:	ЖК-телевизор
+    Диагональ	:	22" (56 см)
+    Формат экрана	:	16:9
+    Разрешение	:	1366x768
+    Поддержка HDTV	:	есть
+    HD-формат	:	720p
+    Стереозвук	:	есть');
+    
+    INSERT INTO PRODUCT (ID_PRODUCT,ID_CATALOG,NAME,PRICE,DESCRIPTION) VALUES(28,8,'LCD LG 32'' 32LK455C',17050,
+        'Тип	:	ЖК-телевизор
+    Диагональ	:	32" (81 см)
+    Формат экрана	:	16:9
+    Разрешение	:	1920x1080
+    Поддержка HDTV	:	есть
+    HD-формат	:	1080p (Full HD)
+    Стереозвук	:	есть');
+    
+    INSERT INTO PRODUCT (ID_PRODUCT,ID_CATALOG,NAME,PRICE,DESCRIPTION) VALUES(29,8,'LCD 32'' Rolsen RL-32A09105',17050,
+        'Тип	:	ЖК-телевизор
+    Диагональ	:	32" (81 см)
+    Формат экрана	:	16:9
+    Разрешение	:	1366x768
+    Поддержка HDTV	:	есть
+    HD-формат	:	720p
+    Стереозвук	:	есть');
+    
+    INSERT INTO PRODUCT (ID_PRODUCT,ID_CATALOG,NAME,PRICE,DESCRIPTION) VALUES(30,8,'LED 19'' Toshiba REGZA 19EL834R',6846,
+        'Тип	:	ЖК-телевизор
+    Диагональ	:	19" (48 см)
+    Формат экрана	:	16:9
+    Разрешение	:	1366x768
+    Поддержка HDTV	:	есть
+    HD-формат	:	720p
+    Стереозвук	:	есть
+    Светодиодная (LED) подсветка	:	есть');
+    
+     INSERT INTO PRODUCT (ID_PRODUCT,ID_CATALOG,NAME,PRICE,DESCRIPTION) VALUES(31,8,' LED 26'' Toshiba 26DL833R',15811,
+        'Тип	:	ЖК-телевизор
+    Диагональ	:	26" (66 см)
+    Формат экрана	:	16:9
+    Разрешение	:	1366x768
+    Поддержка HDTV	:	есть
+    HD-формат	:	720p
+    Стереозвук	:	есть');
        
 COMMIT;
