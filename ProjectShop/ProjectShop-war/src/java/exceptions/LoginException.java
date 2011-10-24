@@ -13,4 +13,7 @@ public class LoginException extends Exception {
 public LoginException(){
 super("Не выполнен вход в систему");
 }
+public LoginException(String message){
+super(message);
+}
 }

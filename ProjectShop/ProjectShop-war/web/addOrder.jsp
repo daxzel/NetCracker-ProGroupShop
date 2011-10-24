@@ -5,7 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import = "DBClasses.ProductInterface, DBClasses.UserInterface, DBClasses.OrderInterface,Other.*"%>
+<%@page import = "DBClasses.ProductInterface, DBClasses.UserInterface, DBClasses.OrderInterface,Other.*;"%>
 <%@page errorPage="errorPage.jsp"%>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"

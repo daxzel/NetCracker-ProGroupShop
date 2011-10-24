@@ -6,7 +6,8 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="java.sql.*,javax.sql.*,javax.naming.*,javax.sql.DataSource, Other.JSPHelper;" %>
+<%@page import="java.sql.*,javax.sql.*,javax.naming.*,javax.sql.DataSource, Other.JSPHelper,DBClasses.UserInterface;" %>
+<%@page errorPage="errorPage.jsp"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -16,10 +17,13 @@
         <title>Add product</title>
     </head>
     <body>
-        <%String name=JSPHelper.getRequestOrEmpty(request, "NAME");
+        <%
+        UserInterface usr = JSPHelper.getUser(session);
+        String name=JSPHelper.getRequestOrEmpty(request, "NAME");
         String description=JSPHelper.getRequestOrEmpty(request, "DESCRIPTION");
         String price=JSPHelper.getRequestOrEmpty(request, "PRICE");
-        String id_catalog=JSPHelper.getRequestOrEmpty(request, "ID_CATALOG");%>
+        String name_catalog=JSPHelper.getRequestOrEmpty(request, "NAME_CATALOG");
+         %>
         
         <form name="addProductForm" action="addProduct">
             <table>
@@ -29,8 +33,8 @@
                 <tr><td><input type="text" name="DESCRIPTION" value="<%=description%>" size="100" /></td><td></td></tr>
                 <tr><td>Цена</td><td></td></tr>
                 <tr><td><input type="text" name="PRICE" value="<%=price%>" size="20" /></td><td></td></tr>
-                <tr><td>Ид каталога</td><td></td></tr>
-                <tr><td><input type="text" name="ID_CATALOG" value="<%=id_catalog%>" size="10" /></td><td></td></tr>
+                <tr><td>Название каталога</td><td></td></tr>
+                <tr><td><input type="text" name="NAME_CATALOG" value="<%=name_catalog%>" size="10" /></td><td></td></tr>
                 <tr><td><input type="submit" value="Input" /></td><td></td></tr>
              </table>
 

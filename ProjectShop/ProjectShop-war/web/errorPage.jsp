@@ -17,7 +17,7 @@
         <title>Error page</title>
     </head>
     <body>
-        <%=exception.getMessage() %><br>
+         <%=exception.getMessage() %><br>
         <%if(exception instanceof LoginException){%>
         Для входа в систему перейдите по ссылке<br>
         <p align="left"><a href ="login.jsp">login</a><br></p>

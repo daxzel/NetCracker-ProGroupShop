@@ -15,7 +15,7 @@
 
         <H2>Удаление записи из каталога</H2>
         <%
-            if (request.getAttribute("result") == null) {
+            
         %>
         <form name="delCatalog" action="del_catalog">
             <table>                
@@ -26,13 +26,10 @@
         </form>
 
 
-        <%} else {
-            if (Integer.parseInt(request.getAttribute("result").toString()) == 1) {%>
-        Запись удалена.
-        <%} else {%>
-        Удаление не успешно.
-        <%}
-            }%>
+        <%if (request.getAttribute("result") != null) {%>
+            <%=request.getAttribute("result")%>
+        
+            <%}%>
  <p align="left"><a href ="index.jsp">index</a><br></p>
     </body>
 </html>

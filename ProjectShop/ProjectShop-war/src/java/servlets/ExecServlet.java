@@ -53,46 +53,41 @@ public class ExecServlet extends HttpServlet {
         String email = request.getParameter("EMAIL");
         String role = request.getParameter("ROLE");
 
-        request.setAttribute("NAME",name);
-        request.setAttribute("SURNAME",surname);
-        request.setAttribute("OTCHESTVO",otchestvo);
-        request.setAttribute("NIK",nik);
-        request.setAttribute("PASSWORD",password);
-        request.setAttribute("PASSWORD2",password2);
-        request.setAttribute("BORN",born);
-        request.setAttribute("EMAIL",email);
-        request.setAttribute("PHONE",phone);
-        request.setAttribute("ROLE",role);
+        request.setAttribute("NAME", name);
+        request.setAttribute("SURNAME", surname);
+        request.setAttribute("OTCHESTVO", otchestvo);
+        request.setAttribute("NIK", nik);
+        request.setAttribute("PASSWORD", password);
+        request.setAttribute("PASSWORD2", password2);
+        request.setAttribute("BORN", born);
+        request.setAttribute("EMAIL", email);
+        request.setAttribute("PHONE", phone);
+        request.setAttribute("ROLE", role);
 
 
         try {
-            if (name.isEmpty())
-            {
+            if (name.isEmpty()) {
                 throw new RegistrationException("Поле имя не заполнено");
             }
 
-            if (surname.isEmpty())
-            {
+            if (surname.isEmpty()) {
                 throw new RegistrationException("Поле фамилия не заполнено");
             }
 
-            if (otchestvo.isEmpty())
-            {
+            if (otchestvo.isEmpty()) {
                 throw new RegistrationException("Поле отчество не заполнено");
             }
 
-            if (nik.isEmpty())
-            {
+            if (nik.isEmpty()) {
                 throw new RegistrationException("Поле ник не заполнено");
             }
 
-            if (DBManager.IsThereUser(nik))
-            {
+            if (DBManager.IsThereUser(nik)) {
                 throw new RegistrationException("Пользователь с таким ником уже зарегестрирован");
             }
 
 
-            if ((password.isEmpty())||(!password.equals(password2))) {
+            if ((password.isEmpty()) || (!password.equals(password2))) {
                 throw new PasswordException();
             }
 
@@ -100,12 +95,9 @@ public class ExecServlet extends HttpServlet {
 
             Date bornDate;
 
-            try
-            {
+            try {
                 bornDate = formt.parse(born);
-            }
-            catch(Exception ex)
-            {
+            } catch (Exception ex) {
                 throw new RegistrationException("Неверный формат даты");
             }
 
@@ -113,14 +105,14 @@ public class ExecServlet extends HttpServlet {
 
             result = "Пользователь зарегестрирован";
 
-        } catch (RegistrationException ex){
-            result= ex.getMessage();
+        } catch (RegistrationException ex) {
+            result = ex.getMessage();
         } catch (NikNameException ex) {
-            result= ex.getMessage();
+            result = ex.getMessage();
         } catch (PasswordException ex) {
-            result= ex.getMessage();
-        }catch(Exception ex){
-            result="Неизвестная ошибка";
+            result = ex.getMessage();
+        } catch (Exception ex) {
+            result = "Неизвестная ошибка";
         }
 
         request.setAttribute("result", result);
@@ -129,7 +121,11 @@ public class ExecServlet extends HttpServlet {
     }
 
     protected void selectByNik(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, ParseException, IOException {
+            HttpServletResponse response) throws ServletException, ParseException, IOException, LoginException {
+        UserInterface usr = JSPHelper.getUser(request.getSession());
+        if (2 == usr.getRoleId()) {
+            throw new LoginException("Вы не обладаете правами администратора");
+        }
         String result, homepage;
         RequestDispatcher rd;
         HttpSession session = request.getSession();
@@ -137,9 +133,9 @@ public class ExecServlet extends HttpServlet {
             homepage = session.getAttribute("homepage").toString();
             String nik = request.getParameter("NIK");
             try {
-                User usr = DBManager.findUserByNik(nik);
+                User user = DBManager.findUserByNik(nik);
                 request.setAttribute("DO", "upUser");
-                request.setAttribute("result", usr);
+                request.setAttribute("result", user);
                 rd = request.getRequestDispatcher(homepage);
                 rd.forward(request, response);
             } catch (SQLException ex) {
@@ -160,53 +156,95 @@ public class ExecServlet extends HttpServlet {
     }
 
     protected void addProduct(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, ParseException, IOException {
-
+            HttpServletResponse response) throws ServletException, ParseException, IOException, LoginException {
         RequestDispatcher rd;
+        UserInterface usr = JSPHelper.getUser(request.getSession());
+        if (2 == usr.getRoleId()) {
+            throw new LoginException("Вы не обладаете правами администратора");
+        }
         String name = request.getParameter("NAME");
         String description = request.getParameter("DESCRIPTION");
         String priceS = request.getParameter("PRICE");
-        String id_catalogS = request.getParameter("ID_CATALOG");
-
-
-
-        String result;
-        String page;
-
+        String name_catalog = request.getParameter("NAME_CATALOG");
+        String result = "Произошла ошибка при добавлении продукта";
+        String page = "addProduct.jsp";
+        double price = 0;
+        int id_catalog = 0;
         try {
-            double price = Double.parseDouble(priceS);
-            int id_catalog = Integer.parseInt(id_catalogS);
+            if ("".equals(name)) {
+                throw new ProductException("Название продукта не может быть пустым полем");
+            }
+            if ("".equals(priceS)) {
+                throw new ProductException("Цена  продукта не может быть пустым полем");
+            }
+            if ("".equals(name_catalog)) {
+                throw new ProductException("Название каталога продукта не может быть пустым полем");
+            }
 
-            DBManager.addProduct(name, description, id_catalog, price);
+            price = Double.parseDouble(priceS);
+            DBManager.addProduct(name, description, name_catalog, price);
+            result = "Продукт добавлен";
+            request.setAttribute("NAME", name);
+            request.setAttribute("DESCRIPTION", description);
+            request.setAttribute("PRICE", priceS);
+            request.setAttribute("NAME_CATALOG", name_catalog);
+            page = "addProduct.jsp";
 
-            result = "uspeh";
-            page = "index.jsp";
+        } catch (NumberFormatException ex) {
+            request.setAttribute("NAME", name);
+            request.setAttribute("DESCRIPTION", description);
+            request.setAttribute("PRICE", priceS);
+            request.setAttribute("NAME_CATALOG", name_catalog);
+            result = "Ошибка в указании цены";
+            page = "addProduct.jsp";
+        } catch (ProductException ex) {
+            request.setAttribute("NAME", name);
+            request.setAttribute("DESCRIPTION", description);
+            request.setAttribute("PRICE", priceS);
+            request.setAttribute("NAME_CATALOG", name_catalog);
+            result = ex.getMessage();
+            page = "addProduct.jsp";
+        } catch (CatalogException ex) {
+            request.setAttribute("NAME", name);
+            request.setAttribute("DESCRIPTION", description);
+            request.setAttribute("PRICE", priceS);
+            request.setAttribute("NAME_CATALOG", name_catalog);
+            result = ex.getMessage();
+            page = "addProduct.jsp";
 
         } catch (Exception ex) {
 
-            request.setAttribute("NAME",name);
-            request.setAttribute("DESCRIPTION",description);
-            request.setAttribute("PRICE",priceS);
-            request.setAttribute("ID_CATALOG",id_catalogS);
+            request.setAttribute("NAME", name);
+            request.setAttribute("DESCRIPTION", description);
+            request.setAttribute("PRICE", priceS);
+            request.setAttribute("NAME_CATALOG", name_catalog);
 
-            result="Ошибка";
-            page="addProduct.jsp";
+            result = "Ошибка";
+            page = "addProduct.jsp";
 
-            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+            // Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            request.setAttribute("result", result);
+            rd = request.getRequestDispatcher(page);
+            rd.forward(request, response);
         }
 
-        request.setAttribute("result", result);
-        rd = request.getRequestDispatcher(page);
-        rd.forward(request, response);
+
 
     }
 
     protected void updateUser(HttpServletRequest request,
-            HttpServletResponse response, String type) throws ServletException, ParseException, IOException {
+            HttpServletResponse response, String type) throws ServletException, ParseException, IOException, LoginException {
         String result = "порофиль не отредактирован";
         HttpSession session = request.getSession();
         RequestDispatcher rd;
-        if (session.getAttribute("user") != null && session.getAttribute("user") instanceof User) {
+        UserInterface user = JSPHelper.getUser(request.getSession());
+        if (type.equals("updateUser")&&2 == user.getRoleId()) {
+             throw new LoginException("Вы не обладаете правами администратора");
+
+                }
+
+       // if (session.getAttribute("user") != null && session.getAttribute("user") instanceof User) {
             User usrOld = (User) session.getAttribute("usrOld");
             String nikOld = usrOld.getNik();
             String name = request.getParameter("NAME");
@@ -254,7 +292,7 @@ public class ExecServlet extends HttpServlet {
                 }
                 if (type.equals("updateUser")) {
                     request.setAttribute("DO", "upUser");
-                    session.setAttribute("usrOld",usr);
+                    session.setAttribute("usrOld", usr);
                 }
                 result = "профиль отредактирован";
             } catch (NikNameException ex) {
@@ -318,7 +356,7 @@ public class ExecServlet extends HttpServlet {
                     request.setAttribute("DO", "upProf");
                     //  session.setAttribute("user",usr);
                 }
-            }catch (Exception ex) {
+            } catch (Exception ex) {
                 result = "ошибка ввода даты рождения";
                 if (type.equals("updateUser")) {
                     request.setAttribute("DO", "upUser");
@@ -332,10 +370,7 @@ public class ExecServlet extends HttpServlet {
             request.setAttribute("result", result);
             rd = request.getRequestDispatcher("updateUser.jsp");
             rd.forward(request, response);
-        } else {
-            rd = request.getRequestDispatcher("login.jsp");
-            rd.forward(request, response);
-        }
+       
     }
 
     protected void getUserByRole(HttpServletRequest request,
@@ -362,26 +397,26 @@ public class ExecServlet extends HttpServlet {
     }
 
     protected void deleteUser(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, IOException {
+            HttpServletResponse response) throws ServletException, IOException, LoginException {
         HttpSession session = request.getSession();
         RequestDispatcher rd;
-        if (session.getAttribute("user") != null && session.getAttribute("user") instanceof User) {
-            try {
-                String nik = request.getParameter("NIK");
-
-                int numDelete = DBManager.deleteUser(nik);
-                request.setAttribute("result", numDelete);
-                rd = request.getRequestDispatcher("deleteUser.jsp");
-                rd.forward(request, response);
-            } catch (SQLException ex) {
-                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (NamingException ex) {
-                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } else {
-            rd = request.getRequestDispatcher("login.jsp");
-            rd.forward(request, response);
+        UserInterface usr = JSPHelper.getUser(request.getSession());
+        if (2 == usr.getRoleId()) {
+            throw new LoginException("Вы не обладаете правами администратора");
         }
+        try {
+            String nik = request.getParameter("NIK");
+
+            int numDelete = DBManager.deleteUser(nik);
+            request.setAttribute("result", numDelete);
+            rd = request.getRequestDispatcher("deleteUser.jsp");
+            rd.forward(request, response);
+        } catch (SQLException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NamingException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
     protected void getFullList(HttpServletRequest request,
@@ -511,29 +546,29 @@ public class ExecServlet extends HttpServlet {
 
         RequestDispatcher rd;
         HttpSession session = request.getSession();
-      //  if (session.getAttribute("user") != null && session.getAttribute("user") instanceof User) {
-            try {
+        //  if (session.getAttribute("user") != null && session.getAttribute("user") instanceof User) {
+        try {
 
-                String name_pr = request.getParameter("NAME");
-               // int id_pr = Integer.parseInt(id_product);
-                Product prd = DBManager.findOpinionByProductName(name_pr);
-                request.setAttribute("result", prd);
-                rd = request.getRequestDispatcher("getOpinion.jsp");
-                rd.forward(request, response);
-            } catch (ServletException ex) {
-                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SQLException ex) {
-                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (NamingException ex) {
-                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        /*} else {
-            rd = request.getRequestDispatcher("login.jsp");
+            String name_pr = request.getParameter("NAME");
+            // int id_pr = Integer.parseInt(id_product);
+            Product prd = DBManager.findOpinionByProductName(name_pr);
+            request.setAttribute("result", prd);
+            rd = request.getRequestDispatcher("getOpinion.jsp");
             rd.forward(request, response);
+        } catch (ServletException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NamingException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        /*} else {
+        rd = request.getRequestDispatcher("login.jsp");
+        rd.forward(request, response);
         }*/
 
     }
@@ -571,40 +606,67 @@ public class ExecServlet extends HttpServlet {
     }
 
     protected void addCatalog(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, ParseException, IOException {
+            HttpServletResponse response) throws ServletException, ParseException, IOException, LoginException {
+        RequestDispatcher rd;
+        HttpSession session = request.getSession();
+        UserInterface usr = JSPHelper.getUser(session);
+        if (2 == usr.getRoleId()) {
+            throw new LoginException("Вы не обладаете правами администратора");
+        }
+        String result = "Добавление каталога прошло не успешно";
         try {
-            String result;
-            RequestDispatcher rd;
-            String idParent = request.getParameter("IDPARENT");
+            String nameParent = request.getParameter("PARENTNAME");
             String name = request.getParameter("NAME");
-            DBManager.addCatalog(idParent, name);
-            result = "ok";
+            if ("".equals(name)) {
+                throw new CatalogException("Название каталога не может быть пустым");
+            }
+            DBManager.addCatalog(nameParent, name);
+            result = "Добавление каталога завершено";
             request.setAttribute("result", result);
             rd = request.getRequestDispatcher("add_catalog.jsp");
             rd.forward(request, response);
         } catch (SQLException ex) {
-            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+            result = "Произошла ошибка при добавлении каталога";
         } catch (NamingException ex) {
-            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+            result = "Произошла ошибка при добавлении каталога";
         } catch (CatalogException ex) {
-            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+            result = ex.getMessage();
+            //Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            request.setAttribute("result", result);
+            rd = request.getRequestDispatcher("add_catalog.jsp");
+            rd.forward(request, response);
         }
 
     }
 
     protected void delCatalog(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, IOException {
+            HttpServletResponse response) throws ServletException, IOException, LoginException {
         String name = request.getParameter("NAME");
+        UserInterface usr = JSPHelper.getUser(request.getSession());
+        if (2 == usr.getRoleId()) {
+            throw new LoginException("Вы не обладаете правами администратора");
+        }
         RequestDispatcher rd;
+        String result = "Произошла ошибка";
         try {
+            if ("".equals(name)) {
+                throw new CatalogException("Имя каталога не может быть пустым");
+            }
             int value = DBManager.delCatalog(name);
-            request.setAttribute("result", value);
+            if (value > 0) {
+                result = "Удаление завершено";
+            }
+        } catch (CatalogException ex) {
+            result = ex.getMessage();
+        } catch (SQLException ex) {
+            // Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NamingException ex) {
+            //  Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            request.setAttribute("result", result);
             rd = request.getRequestDispatcher("del_catalog.jsp");
             rd.forward(request, response);
-        } catch (SQLException ex) {
-            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NamingException ex) {
-            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -653,35 +715,34 @@ public class ExecServlet extends HttpServlet {
         }
 
     }
-     protected void addOrder(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, ParseException, IOException {
-        String result="заказ не добавлен";
+
+    protected void addOrder(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, ParseException, IOException, LoginException {
+        String result = "заказ не добавлен";
+        UserInterface usr = JSPHelper.getUser(request.getSession());
         RequestDispatcher rd;
-        String kol_vo="";
-         try {
+        String kol_vo = "";
+        try {
             HttpSession session = request.getSession();
-            kol_vo =request.getParameter("KOL");
+            kol_vo = request.getParameter("KOL");
             String status = request.getParameter("STATUS");
             String id_product = session.getAttribute("ID_PRODUCT").toString();
-            User usr = (User) session.getAttribute("user");
-
-       //     kol_vo =request.getParameter("KOL");
-
-            DBManager.addOrder(id_product, usr.getNik(),kol_vo,status);
-            if("false".equals(status)){
-            result = "Заказ добавлен в корзину";
-             }else{
-                 result = "Заказ оформлен";
-             }
+            //   User usr = (User) session.getAttribute("user");
+            DBManager.addOrder(id_product, usr.getNik(), kol_vo, status);
+            if ("false".equals(status)) {
+                result = "Заказ добавлен в корзину";
+            } else {
+                result = "Заказ оформлен";
+            }
         } catch (CatalogException ex) {
-            result ="произошла ошибка при добавлении заказа";
+            result = "произошла ошибка при добавлении заказа";
         } catch (NikNameException ex) {
-            result ="произошла ошибка при добавлении заказа";
+            result = "произошла ошибка при добавлении заказа";
         } catch (SQLException ex) {
-           result ="произошла ошибка при добавлении заказа";
+            result = "произошла ошибка при добавлении заказа";
         } catch (NamingException ex) {
-           result ="произошла ошибка при добавлении заказа";
-        }finally{
+            result = "произошла ошибка при добавлении заказа";
+        } finally {
             request.setAttribute("kol_vo", kol_vo);
             request.setAttribute("result", result);
             rd = request.getRequestDispatcher("addOrder.jsp");
@@ -689,62 +750,65 @@ public class ExecServlet extends HttpServlet {
         }
 
     }
-     protected void getOrders(HttpServletRequest request,
+
+    protected void getOrders(HttpServletRequest request,
             HttpServletResponse response, String status) throws ServletException, ParseException, IOException, LoginException {
         RequestDispatcher rd;
         HttpSession session = request.getSession();
         UserInterface usr = JSPHelper.getUser(session);
-            try {
-                request.setAttribute("result", DBManager.findOrderByUser(usr.getId() , status));
-                rd = request.getRequestDispatcher("getBasket.jsp");
-                rd.forward(request, response);
-            } catch (SQLException ex) {
-                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (NamingException ex) {
-                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        try {
+            request.setAttribute("result", DBManager.findOrderByUser(usr.getId(), status));
+            rd = request.getRequestDispatcher("getBasket.jsp");
+            rd.forward(request, response);
+        } catch (SQLException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NamingException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
-     }
+    }
 
-              protected void updateStatusOrders(HttpServletRequest request,
+    protected void updateStatusOrders(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, ParseException, IOException, LoginException {
         RequestDispatcher rd;
         HttpSession session = request.getSession();
         UserInterface usr = JSPHelper.getUser(session);
-            try {
-                String id_order = request.getParameter("id_order");
-                
-                request.setAttribute("result2", DBManager.updateOrderStatus(id_order));
-                request.setAttribute("result", DBManager.findOrderByUser(usr.getId() , "false"));
-                rd = request.getRequestDispatcher("getBasket.jsp");
-                rd.forward(request, response);
-            } catch (SQLException ex) {
-                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (NamingException ex) {
-                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        try {
+            String id_order = request.getParameter("id_order");
 
-     }
-               protected void deleteOrder(HttpServletRequest request,
+            request.setAttribute("result2", DBManager.updateOrderStatus(id_order));
+            request.setAttribute("result", DBManager.findOrderByUser(usr.getId(), "false"));
+            rd = request.getRequestDispatcher("getBasket.jsp");
+            rd.forward(request, response);
+        } catch (SQLException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NamingException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    protected void deleteOrder(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException, LoginException {
         HttpSession session = request.getSession();
         RequestDispatcher rd;
-         UserInterface usr = JSPHelper.getUser(session);
-            try {
-                String id_order = request.getParameter("id_order");
-                   String result2;
-                result2 = DBManager.deleteOrder(id_order);
-                request.setAttribute("result", DBManager.findOrderByUser(usr.getId() , "false"));
-                request.setAttribute("result2", result2);
-                rd = request.getRequestDispatcher("getBasket.jsp");
-                rd.forward(request, response);
-            } catch (SQLException ex) {
-                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (NamingException ex) {
-                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        UserInterface usr = JSPHelper.getUser(session);
+        try {
+            String id_order = request.getParameter("id_order");
+            String result2;
+            result2 = DBManager.deleteOrder(id_order);
+            request.setAttribute("result", DBManager.findOrderByUser(usr.getId(), "false"));
+            request.setAttribute("result2", result2);
+            rd = request.getRequestDispatcher("getBasket.jsp");
+            rd.forward(request, response);
+        } catch (SQLException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NamingException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -849,12 +913,12 @@ public class ExecServlet extends HttpServlet {
                 return;
             }
             if (request.getRequestURI().equals("/ProjectShop-war/getOrders")) {
-               getOrders(request, response, "true");
-               return;
+                getOrders(request, response, "true");
+                return;
             }
             if (request.getRequestURI().equals("/ProjectShop-war/deleteOrder")) {
-               deleteOrder(request, response);
-               return;
+                deleteOrder(request, response);
+                return;
             }
 
 
