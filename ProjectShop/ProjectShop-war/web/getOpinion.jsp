@@ -43,7 +43,7 @@
             <tr align="center">
                 <td>NAME</td>
                 <td>DESCRIPTION</td>
-                <td>ID_CATALOG</td>
+                <td>NAME_CATALOG</td>
                 <td>PRICE</td>
                 <td rowspan="2"><a href ="addOrder.jsp" >order</a></td>
             </tr>
@@ -54,7 +54,7 @@
                 <%}else{%>
                 <td></td>
                 <%}%>
-                <td><%= prd.getIdCatalog() %></td>
+                <td><%= prd.getNameCatalog() %></td>
                 <td><%= prd.getPrice() %></td>
                 
             </tr>

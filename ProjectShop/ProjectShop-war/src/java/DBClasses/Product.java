@@ -38,10 +38,17 @@ private Catalog catalog;
         this.setName(name);
         this.setPrice(price);
         this.setOpinionList();
+        this.setCatalog(id_catalog);
 }
 
     public int getIdCatalog() {
        return idCatalog;
+    }
+    public void setCatalog(int idCatalog) throws SQLException, NamingException {
+       catalog  = (Catalog)  DBManager.DBManager.getById("CATALOG", idCatalog) ;
+    }
+    public String getNameCatalog() {
+      return catalog.getName();
     }
     public void setIdCatalog(int nid){
        idCatalog  = nid;

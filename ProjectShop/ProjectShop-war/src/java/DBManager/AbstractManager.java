@@ -62,7 +62,7 @@ public class AbstractManager {
                     obj = new Opinion(rs);
                 }
                 if (table.equals("CATALOG")) {
-                    obj = new Opinion(rs);
+                    obj = new Catalog(rs);
                 }
 
             } else {
