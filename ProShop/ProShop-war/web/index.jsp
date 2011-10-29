@@ -5,7 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="java.sql.*,javax.sql.*,javax.naming.*,javax.sql.DataSource,DBClasses.UserInterface, Other.*" %>
+<%@page import="java.sql.*,javax.sql.*,javax.naming.*,javax.sql.DataSource,entityBeans.UserBeanRemoteHome,entityBeans.UserBeanRemote, Other.*,exceptions.LoginException"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -13,16 +13,11 @@
         <title>Интернет-магазин</title>
     </head>
     <body>
-        <%UserInterface usr = (UserInterface)session.getAttribute("user");%>
-
-        <%if (usr==null) {%>
-
-        <p align="center"><a href="registration.jsp">Регистрация</a></p>
-        <p align="center"><a href="login.jsp">Вход</a></p>
-        <p align="center"><a href="getFull_catalog">Каталог</a></p>
-
-        <%} else {
-            if (usr.getRoleId() == 1) {
+        <%
+                    UserBeanRemote usr = null;
+                    try {
+                        usr = JSPHelper.getUser2(session);
+                        if (usr.getRoleId() == 1) {
         %>
 
         <p align="center"><a href="getFull_catalog">Каталог</a></p>
@@ -43,7 +38,7 @@
         <p align="center"><a href="getChild_catalog.jsp">Вывести потомков</a></p>
 
         <%} else {
-                        if (usr.getRoleId() == 2) {%>
+                                    if (usr.getRoleId() == 2) {%>
         <p align="center"><a href="basket">Корзина</a></p>
         <p align="center"><a href="getOrders">Заказы</a></p>
         <p align="center"><a href="getFull_catalog">Каталог</a></p>
@@ -57,7 +52,13 @@
         <p align="center"><a href="getOpinion.jsp">Вывод всех комментариев продута</a></p>
 
         <%                                    }
-                        }
-                    }%>
+                                }
+                            } catch (LoginException ex) {%>
+
+
+        <p align="center"><a href="registration.jsp">Регистрация</a></p>
+        <p align="center"><a href="login.jsp">Вход</a></p>
+        <p align="center"><a href="getFull_catalog">Каталог</a></p>
+        <%}%>
     </body>
 </html>

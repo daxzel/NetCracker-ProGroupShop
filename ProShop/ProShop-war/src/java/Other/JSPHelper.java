@@ -5,10 +5,12 @@
 
 package Other;
 
+import java.rmi.RemoteException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import DBClasses.*;
 import exceptions.*;
+import entityBeans.UserBeanRemote;
 
 
 
@@ -72,6 +74,29 @@ public class JSPHelper {
             else
             {
                 return usr;
+            }
+        }
+
+    }
+     public static UserBeanRemote getUser2(HttpSession sess) throws LoginException
+    {
+        Object user = sess.getAttribute("user");
+
+        if (user==null)
+        {
+            throw new LoginException();
+        }
+        else
+        {
+            try {
+                UserBeanRemote usr = (UserBeanRemote) sess.getAttribute("user");
+                if (usr.getRoleId() == 1) {
+                    return usr;
+                } else {
+                    return usr;
+                }
+            } catch (RemoteException ex) {
+                throw new LoginException("Произошла ошибка повторите попытку");
             }
         }
 

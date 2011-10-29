@@ -89,11 +89,6 @@ public class ExecServlet extends HttpServlet {
                 throw new RegistrationException("Поле ник не заполнено");
             }
 
-            if (DBManager.IsThereUser(nik)) {
-                throw new RegistrationException("Пользователь с таким ником уже зарегестрирован");
-            }
-
-
             if ((password.isEmpty()) || (!password.equals(password2))) {
                 throw new PasswordException();
             }
@@ -110,15 +105,18 @@ public class ExecServlet extends HttpServlet {
 
 
             //DBManager.addUser(name, surname, otchestvo, nik, password, bornDate, phone, email, Integer.parseInt(role));
-            UserBeanRemoteHome userHome = (UserBeanRemoteHome) Helper.lookupHome("ejb/UserBean",  UserBeanRemoteHome.class);
+            UserBeanRemoteHome userHome = (UserBeanRemoteHome) Helper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
             userHome.create(name, surname, otchestvo, nik, password, new java.sql.Date(bornDate.getTime()), phone, email, new Long(Long.parseLong(role)));
             result = "Пользователь зарегестрирован";
-
+        } catch (DuplicateKeyException ex) {
+            result = ex.getMessage();
+        } catch (CreateException ex) {
+            result = "Ошибка при создании пользователя";
         } catch (RegistrationException ex) {
             result = ex.getMessage();
         }/* catch (NikNameException ex) {
-            result = ex.getMessage();
-        } */catch (PasswordException ex) {
+        result = ex.getMessage();
+        } */ catch (PasswordException ex) {
             result = ex.getMessage();
         } catch (Exception ex) {
             result = "Неизвестная ошибка";
@@ -131,35 +129,33 @@ public class ExecServlet extends HttpServlet {
 
     protected void selectByNik(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, ParseException, IOException, LoginException {
-        UserInterface usr = JSPHelper.getUser(request.getSession());
+        UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
         if (2 == usr.getRoleId()) {
             throw new LoginException("Вы не обладаете правами администратора");
         }
-        String result, homepage;
+        String result = "Пользователь не найден";
+        String homepage;
         RequestDispatcher rd;
         HttpSession session = request.getSession();
-        if (session.getAttribute("user") != null && session.getAttribute("user") instanceof User) {
-            homepage = session.getAttribute("homepage").toString();
-            String nik = request.getParameter("NIK");
-            try {
-                User user = DBManager.findUserByNik(nik);
-                request.setAttribute("DO", "upUser");
-                request.setAttribute("result", user);
-                rd = request.getRequestDispatcher(homepage);
-                rd.forward(request, response);
-            } catch (SQLException ex) {
-                result = "ник введен не верно";
-                request.setAttribute("result", result);
-                rd = request.getRequestDispatcher(homepage);
-                rd.forward(request, response);
-            } catch (NamingException ex) {
-                result = "произошла ошибка";
-                request.setAttribute("result", result);
-                rd = request.getRequestDispatcher(homepage);
-                rd.forward(request, response);
-            }
-        } else {
-            rd = request.getRequestDispatcher("login.jsp");
+        homepage = session.getAttribute("homepage").toString();
+        String nik = request.getParameter("NIK");
+        try {
+            UserBeanRemoteHome userHome = (UserBeanRemoteHome) Helper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
+            UserBeanRemote user = userHome.findByNik(nik);
+            //request.setAttribute("DO", "upUser");
+            session.setAttribute("userOld", user);
+        } catch (ObjectNotFoundException ex) {
+            result = "не существует пользователя с таким ником";
+            request.setAttribute("result", result);
+        } catch (FinderException ex) {
+            result = "ник введен не верно";
+            request.setAttribute("result", result);
+        } catch (NamingException ex) {
+            result = "произошла ошибка";
+            request.setAttribute("result", result);
+        } finally {
+            request.setAttribute("DO", "upUser");
+            rd = request.getRequestDispatcher(homepage);
             rd.forward(request, response);
         }
     }
@@ -247,24 +243,26 @@ public class ExecServlet extends HttpServlet {
         String result = "порофиль не отредактирован";
         HttpSession session = request.getSession();
         RequestDispatcher rd;
-        UserInterface user = JSPHelper.getUser(request.getSession());
-        if (type.equals("updateUser") && 2 == user.getRoleId()) {
-            throw new LoginException("Вы не обладаете правами администратора");
-
+        UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
+        if (type.equals("updateUser")) {
+            if (2 == usr.getRoleId()) {
+                throw new LoginException("Вы не обладаете правами администратора");
+            }
+            usr = (UserBeanRemote) session.getAttribute("userOld");
         }
-
-        // if (session.getAttribute("user") != null && session.getAttribute("user") instanceof User) {
-        User usrOld = (User) session.getAttribute("usrOld");
-        String nikOld = usrOld.getNik();
+        //   UserBeanRemote usrOld = (UserBeanRemote) session.getAttribute("usrOld");
+        // String nikOld = usrOld.getNik();
         String name = request.getParameter("NAME");
         try {
             if ("".equals(name)) {
                 throw new UpdateException("Имя введено не верно");
             }
+
             String surname = request.getParameter("SURNAME");
             if ("".equals(surname)) {
                 throw new UpdateException("Фамилия ввдена не верно");
             }
+
             String otchestvo = request.getParameter("OTCHESTVO");
             if ("".equals(otchestvo)) {
                 throw new UpdateException("Отчество введено не верно");
@@ -275,26 +273,34 @@ public class ExecServlet extends HttpServlet {
             }
             String password = request.getParameter("PASSWORD");
             String password2 = request.getParameter("PASSWORD2");
-            if ("".equals(password) || password == null) {
-                password = usrOld.getPassword();
-                password2 = usrOld.getPassword();
-            } else {
-                password = request.getParameter("PASSWORD");
-                password2 = request.getParameter("PASSWORD2");
-            }
-            if (!password.equals(password2)) {
-                throw new PasswordException();
-            }
             String brn = request.getParameter("BORN");
             String phone = request.getParameter("PHONE");
             String email = request.getParameter("EMAIL");
-            String roleName = usrOld.getRoleName();
-            if (request.getParameter("ID_ROLE") != null) {
-                roleName = request.getParameter("ID_ROLE");
+            SimpleDateFormat formt = new SimpleDateFormat("yyyy-MM-dd");
+            Date born = formt.parse(brn);
+            UserBeanRemoteHome userHome = (UserBeanRemoteHome) Helper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
+            try {
+                userHome.findByNikAndId(nik, new Long(usr.getId()));
+                throw new UpdateException("Пользователь с таким ником уже существует");
+            } catch (ObjectNotFoundException ex) {
             }
-            User usr = new User(usrOld.getId(), name, surname, otchestvo, nik, password, brn, phone, email, roleName);
-            usr.setLogin();
-            DBManager.updateUserbyNik(usr, nikOld);
+             if ("".equals(password) || password == null) {
+              
+            } else {
+                if (!password.equals(password2)) {
+                    throw new PasswordException();
+                }
+                usr.setPassword(password);
+            }
+            usr.setName(name);
+            usr.setSurname(surname);
+            usr.setOtchestvo(otchestvo);
+            usr.setNik(nik);
+           
+            usr.setBorn(new java.sql.Date(born.getTime()));
+            usr.setPhone(phone);
+            usr.setEmail(email);
+
             if (type.equals("updateProfil")) {
                 request.setAttribute("DO", "upProf");
                 session.setAttribute("user", usr);
@@ -304,32 +310,11 @@ public class ExecServlet extends HttpServlet {
                 session.setAttribute("usrOld", usr);
             }
             result = "профиль отредактирован";
-        } catch (NikNameException ex) {
-            result = "Пользователь с таким ником существует";
-            if (type.equals("updateProfil")) {
-                request.setAttribute("DO", "upProf");
-                //  session.setAttribute("user",usr);
-            }
-            if (type.equals("updateUser")) {
-                request.setAttribute("DO", "upUser");
-                session.setAttribute("usrOld", usrOld);
-            }
-
-        } catch (UpdateException ex) {
+        }  catch (UpdateException ex) {
             result = ex.getMessage();
             if (type.equals("updateUser")) {
                 request.setAttribute("DO", "upUser");
-                session.setAttribute("usrOld", usrOld);
-            }
-            if (type.equals("updateProfil")) {
-                request.setAttribute("DO", "upProf");
-                //  session.setAttribute("user",usr);
-            }
-        } catch (SQLException ex) {
-            result = "неизвестная ошибка";
-            if (type.equals("updateUser")) {
-                request.setAttribute("DO", "upUser");
-                session.setAttribute("usrOld", usrOld);
+                session.setAttribute("usrOld", usr);
             }
             if (type.equals("updateProfil")) {
                 request.setAttribute("DO", "upProf");
@@ -339,7 +324,7 @@ public class ExecServlet extends HttpServlet {
             result = "неизвестная ошибка";
             if (type.equals("updateUser")) {
                 request.setAttribute("DO", "upUser");
-                session.setAttribute("usrOld", usrOld);
+                session.setAttribute("usrOld", usr);
             }
             if (type.equals("updateProfil")) {
                 request.setAttribute("DO", "upProf");
@@ -349,7 +334,7 @@ public class ExecServlet extends HttpServlet {
             result = ex.getMessage();
             if (type.equals("updateUser")) {
                 request.setAttribute("DO", "upUser");
-                session.setAttribute("usrOld", usrOld);
+                session.setAttribute("usrOld", usr);
             }
             if (type.equals("updateProfil")) {
                 request.setAttribute("DO", "upProf");
@@ -359,17 +344,17 @@ public class ExecServlet extends HttpServlet {
             result = "ошибка ввода даты рождения";
             if (type.equals("updateUser")) {
                 request.setAttribute("DO", "upUser");
-                session.setAttribute("usrOld", usrOld);
+                session.setAttribute("usrOld", usr);
             }
             if (type.equals("updateProfil")) {
                 request.setAttribute("DO", "upProf");
                 //  session.setAttribute("user",usr);
             }
         } catch (Exception ex) {
-            result = "ошибка ввода даты рождения";
+            result = "ошибка";
             if (type.equals("updateUser")) {
                 request.setAttribute("DO", "upUser");
-                session.setAttribute("usrOld", usrOld);
+                session.setAttribute("usrOld", usr);
             }
             if (type.equals("updateProfil")) {
                 request.setAttribute("DO", "upProf");
@@ -383,12 +368,12 @@ public class ExecServlet extends HttpServlet {
     }
 
     protected void getUserByRole(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, IOException {
+            HttpServletResponse response) throws ServletException, IOException, LoginException {
 
         RequestDispatcher rd;
         HttpSession session = request.getSession();
-        if (session.getAttribute("user") != null && session.getAttribute("user") instanceof User) {
-            String rolename = request.getParameter("ROLE");
+        UserBeanRemote usr = JSPHelper.getUser2(session);
+        String rolename = request.getParameter("ROLE");
             try {
                 List list = DBManager.findUsersByRole(rolename);
                 request.setAttribute("result", list);
@@ -399,10 +384,7 @@ public class ExecServlet extends HttpServlet {
             } catch (NamingException ex) {
                 Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } else {
-            rd = request.getRequestDispatcher("login.jsp");
-            rd.forward(request, response);
-        }
+      
     }
 
     protected void deleteUser(HttpServletRequest request,
@@ -452,18 +434,20 @@ public class ExecServlet extends HttpServlet {
             HttpServletResponse response) throws ServletException, IOException {
         RequestDispatcher rd;
         HttpSession session = request.getSession();
+        String result;
         try {
 
             String nik = request.getParameter("NIK");
             String password = request.getParameter("PASSWORD");
-            User usr = DBManager.findUserByNik(nik);
-            usr.setLogin();
-            if (usr.getPassword().equals(password)) {
-                session.setAttribute("user", usr);
-
-            } else {
-                throw new NikNameException();
+            if ("".equals(nik) || "".equals(password)) {
+                throw new LoginException("Не указанны поля пользователя или пароля");
             }
+            UserBeanRemoteHome userHome = (UserBeanRemoteHome) Helper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
+            UserBeanRemote usr = userHome.findByNikAndPassword(nik, password);
+            // usr.getNik();
+            session.setAttribute("user", usr);
+            // session.setAttribute("userNik", usr);
+            // session.setAttribute("password", password);
             if (session.getAttribute("homepage") != null) {
                 String homepage = session.getAttribute("homepage").toString();
                 rd = request.getRequestDispatcher(homepage);
@@ -472,12 +456,14 @@ public class ExecServlet extends HttpServlet {
                 rd = request.getRequestDispatcher("index.jsp");
                 rd.forward(request, response);
             }
-        } catch (NikNameException ex) {
-            request.setAttribute("result", "не правильно введен пользователь и пароль");
+        } catch (LoginException ex) {
+            result = ex.getMessage();
+            request.setAttribute("result", result);
             rd = request.getRequestDispatcher("login.jsp");
             rd.forward(request, response);
-        } catch (SQLException ex) {
-            request.setAttribute("result", "произошла ошибка");
+        } catch (FinderException ex) {
+            result = "Не правильно указанно имя полльзователя";
+            request.setAttribute("result", result);
             rd = request.getRequestDispatcher("login.jsp");
             rd.forward(request, response);
         } catch (NamingException ex) {
@@ -823,9 +809,9 @@ public class ExecServlet extends HttpServlet {
 
         RequestDispatcher rd;
         String result, homepage, forwardAddress;
-        String ee =request.getRequestURI();
+        String ee = request.getRequestURI();
         try {
-          
+
 
             if (request.getRequestURI().equals("/ProShop-war/login")) {
                 login(request, response);

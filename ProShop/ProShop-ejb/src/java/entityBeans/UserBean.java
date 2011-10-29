@@ -46,6 +46,7 @@ public class UserBean implements EntityBean {
     private String phone;
     private String email;
     private long id_role;
+    private RoleBeanRemote role;
 
     // <editor-fold defaultstate="collapsed" desc="EJB infrastructure methods. Click the + sign on the left to edit the code.">
     // TODO Add code to acquire and use other enterprise resources (DataSource, JMS, enterprise beans, Web services)
@@ -115,11 +116,13 @@ public class UserBean implements EntityBean {
      * @see javax.ejb.EntityBean#ejbLoad()
      */
     public void ejbLoad() {
-        id_user = Long.parseLong(entityContext.getPrimaryKey().toString());
+        java.lang.Long lg = (java.lang.Long)entityContext.getPrimaryKey();
+        id_user=lg.longValue();
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
         try {
+             conn = dataSource.getConnection();
             pst = conn.prepareStatement("SELECT * FROM \"USER\" WHERE ID_USER = ?");
             pst.setLong(1, id_user);
             rs = pst.executeQuery();
@@ -135,6 +138,7 @@ public class UserBean implements EntityBean {
             born = rs.getDate(7);
             phone = rs.getString(8);
             email = rs.getString(9);
+            
             id_role = rs.getLong(10);
         } catch (SQLException e) {
             throw new EJBException("Ошибка SELECT");
@@ -232,6 +236,56 @@ public class UserBean implements EntityBean {
             }
         }
     }
+    public java.lang.Long ejbFindByNikAndId(String nik,java.lang.Long id_user) throws ObjectNotFoundException {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        try {
+            conn = dataSource.getConnection();
+            pst = conn.prepareStatement("SELECT ID_USER FROM \"USER\" WHERE NIK = ? AND ID_USER <> ?");
+            pst.setString(1, nik);
+            pst.setLong(2,id_user.longValue());
+            ResultSet rs = pst.executeQuery();
+            if (!rs.next()) {
+                throw new ObjectNotFoundException("Запись не найдена");
+            }
+            return new Long(rs.getLong(1));
+        } catch (SQLException e) {
+            throw new EJBException("Ошибка SELECT");
+        } finally {
+            try {
+                Helper.closeConnection(conn, pst);
+            } catch (SQLException ex1) {
+                throw new EJBException("Ошибка закрытии соединия с базой");
+            }
+        }
+    }
+
+     public java.lang.Long ejbFindByNikAndPassword(String nik,String password) throws ObjectNotFoundException {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        java.lang.Long lg =null;
+        try {
+            conn = dataSource.getConnection();
+            pst = conn.prepareStatement("SELECT ID_USER FROM \"USER\" WHERE NIK = ? AND PASSWORD=? ");
+            pst.setString(1, nik);
+            pst.setString(2, password);
+            ResultSet rs = pst.executeQuery();
+            if (!rs.next()) {
+                throw new ObjectNotFoundException("Запись не найдена");
+            }
+            lg = new Long(rs.getLong(1));
+           
+        } catch (SQLException e) {
+            throw new EJBException("Ошибка SELECT");
+        } finally {
+            try {
+                Helper.closeConnection(conn, pst);
+            } catch (SQLException ex1) {
+                throw new EJBException("Ошибка закрытии соединия с базой");
+            }
+        }
+         return lg;
+    }
 
     public Collection ejbFindByRole(java.lang.Long id_role) throws ObjectNotFoundException {
         Connection conn = null;
@@ -314,7 +368,6 @@ public class UserBean implements EntityBean {
             pst.setString(7, phone);
             pst.setString(8, email);
             pst.setLong(9, id_role.longValue());
-          //  pst.registerOutParameter("ID_USER_ID", Types.INTEGER );
             pst.registerOutParameter(10, Types.INTEGER);
             rs = pst.executeQuery();
             if (!rs.next()) {
@@ -324,11 +377,11 @@ public class UserBean implements EntityBean {
             id_user = pst.getLong(10);
             
         } catch (SQLException ex) {
-            ex.printStackTrace();
+           throw new EJBException("Произошла ошибка добавления");
         }  finally {
 
             try {
-                Helper.closeConnection(conn, pst);
+                Helper.closeConnection(conn, pst,rs);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -418,4 +471,6 @@ public class UserBean implements EntityBean {
     public void setRoleId(java.lang.Long nid_role) {
         id_role = nid_role.longValue();
     }
+
+
 }

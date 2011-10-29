@@ -13,7 +13,19 @@
             <prim-key-class>java.lang.Long</prim-key-class>
             <reentrant>false</reentrant>
         </entity>
-    </enterprise-beans>
+        <entity>
+            <display-name>RoleBeanEB</display-name>
+            <ejb-name>RoleBean</ejb-name>
+            <home>entityBeans.RoleBeanRemoteHome</home>
+            <remote>entityBeans.RoleBeanRemote</remote>
+            <local-home>entityBeans.RoleBeanLocalHome</local-home>
+            <local>entityBeans.RoleBeanLocal</local>
+            <ejb-class>entityBeans.RoleBean</ejb-class>
+            <persistence-type>Bean</persistence-type>
+            <prim-key-class>java.lang.Long</prim-key-class>
+            <reentrant>false</reentrant>
+        </entity>
+        </enterprise-beans>
     <assembly-descriptor>
         <container-transaction>
             <method>
@@ -22,5 +34,12 @@
             </method>
             <trans-attribute>Required</trans-attribute>
         </container-transaction>
-    </assembly-descriptor>
+        <container-transaction>
+            <method>
+                <ejb-name>RoleBean</ejb-name>
+                <method-name>*</method-name>
+            </method>
+            <trans-attribute>Required</trans-attribute>
+        </container-transaction>
+        </assembly-descriptor>
 </ejb-jar>

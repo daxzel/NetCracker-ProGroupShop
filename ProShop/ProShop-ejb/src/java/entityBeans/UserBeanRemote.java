@@ -14,8 +14,7 @@ import java.rmi.RemoteException;
  */
 public interface UserBeanRemote extends EJBObject {
 
-    public long getId()throws RemoteException;
-
+    public long getId() throws RemoteException;
 
     public void setId(java.lang.Long nid_user) throws RemoteException;
 
@@ -31,7 +30,7 @@ public interface UserBeanRemote extends EJBObject {
 
     public void setOtchestvo(String notchestvo) throws RemoteException;
 
-    public String getNik()throws RemoteException;
+    public String getNik() throws RemoteException;
 
     public void setNik(String nnik) throws RemoteException;
 
@@ -51,4 +50,9 @@ public interface UserBeanRemote extends EJBObject {
     public void setRoleId(java.lang.Long nid_role) throws RemoteException;
 
     public long getRoleId() throws RemoteException;
+
+    public String getPassword() throws RemoteException;
+
+     public void setPassword(String npassword) throws RemoteException;
+
 }
