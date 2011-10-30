@@ -5,12 +5,8 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import= "DBClasses.UserInterface"%>
-<%@page import= "DBClasses.RoleInterface"%>
-<%@page import= "DBClasses.ProductInterface"%>
-<%@page import= "DBClasses.CatalogInterface"%>
-<%@page import= "java.util.List"%>
-<%@page import="java.text.SimpleDateFormat;"%>
+<%@page import= "entityBeans.*,java.util.List,java.util.Iterator,java.text.SimpleDateFormat,Other.JSPHelper,exceptions.LoginException,DBClasses.*;"%>
+<%@page errorPage="errorPage.jsp"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -21,30 +17,40 @@
 
     </head>
     <body>
-        <%
-                    UserInterface usr = null;
-                    if (session.getAttribute("user") != null && session.getAttribute("user") instanceof UserInterface) {
-                        usr = (UserInterface) session.getAttribute("user");
-                        if (usr.getLogin() == true) {
-                            if (request.getAttribute("result") == null) {
+        <%           UserBeanRemote usr = null;
+                    try {
+                        usr = JSPHelper.getUser2(session);
+                    } catch (LoginException ex) {
+                    }
+                    //  if (session.getAttribute("user") != null && session.getAttribute("user") instanceof UserInterface) {
+                    //    usr = (UserBeanRemote) session.getAttribute("user");
+                    //  if (usr.getLogin() == true) {
+                    if (request.getAttribute("result") == null) {
         %>
 
-            <p align="center"><a href ="getFullProductList">Get full list of product</a><br></p>
-        <%if(usr.getRoleId()<=2){%>
-             <p align="center"><a href ="getFullUserList">Get full list of user</a><br></p>
+        <p align="center"><a href ="getFullProductList">Get full list of product</a><br></p>
+            <% if (usr != null) {
+                                        if (usr.getRoleId() <= 2) {%>
+        <p align="center"><a href ="getFullUserList">Get full list of user</a><br></p>
             <%}%>
-        <%if(usr.getRoleId()==1){%>
-             <p align="center"><a href ="getFullRoleList">Get full list of role</a><br></p>
-        <%}%>
-   <p align="center"><a href ="index.jsp">index</a><br></p>
-        <%} else {
-                    if (request.getAttribute("result") instanceof List) {
-                        //  if()
-                        List list1 = (List) request.getAttribute("result");
-                        if (list1.get(0) instanceof UserInterface) {
-                         UserInterface user;
-                           SimpleDateFormat formt = new SimpleDateFormat("yyyy-MM-dd");
-        %>
+            <%if (usr.getRoleId() == 1) {%>
+        <p align="center"><a href ="getFullRoleList">Get full list of role</a><br></p>
+            <%}
+                                    }%>
+        <p align="center"><a href ="index.jsp">index</a><br></p>
+            <%} else {
+                                    if (request.getAttribute("result") instanceof List) {
+                                        //  if()
+                                        List list1 = (List) request.getAttribute("result");
+
+                                       
+                                        if (list1.isEmpty()) {%>
+        <p align="center">Таблица не содержит данных</p>
+                                        <%} else {
+                                            if (list1.get(0) instanceof UserBeanRemote) {
+                                                UserBeanRemote user;
+                                                SimpleDateFormat formt = new SimpleDateFormat("yyyy-MM-dd");
+            %>
         <table align="center"  border="1" width="80%">
             <tr align="center">
                 <td width="5%" align="center">User id</td>
@@ -58,8 +64,8 @@
                 <td width="30%" align="center">Role</td>
             </tr>
             <% for (int i = 0; i <= (list1.size() - 1); i++) {
-                user= (UserInterface)list1.get(i);
-                %>
+                                                            user = (UserBeanRemote) list1.get(i);
+            %>
             <tr align="center">
                 <td><%= user.getId()%></td>
                 <td><%= user.getName()%></td>
@@ -77,35 +83,40 @@
                 <%} else {%>
                 <td></td>
                 <%}%>
-                <td><%= user.getRoleName()%></td>
+                <td><%if (user.getRoleId() == 1) {%>
+                    admin
+                    <%} else {%>
+                    user
+                    <%}%></td>
             </tr>
             <%}%>
 
         </table>
-<p align="center"><a href ="index.jsp">index</a><br></p>
-        <%  } if (list1.get(0) instanceof ProductInterface) {
-                           ProductInterface prd;
-                          //  SimpleDateFormat formt = new SimpleDateFormat("dd MM yyyy");
-        %>
+        <p align="center"><a href ="index.jsp">index</a><br></p>
+            <%  }
+                                                        if (list1.get(0) instanceof ProductInterface) {
+                                                            ProductInterface prd;
+                                                            //  SimpleDateFormat formt = new SimpleDateFormat("dd MM yyyy");
+%>
         <table align="center"  border="1" width="80%">
             <tr align="center">
                 <td width="15%" align="center">Name</td>
             </tr>
             <% for (int i = 0; i <= (list1.size() - 1); i++) {
-                prd= (ProductInterface) list1.get(i); %>
+                                                                        prd = (ProductInterface) list1.get(i);%>
             <tr align="center">
-                  <td><p align="center"><a href ="product?NAME=<%=prd.getName() %>"><%= prd.getName()%></a></p></td>
+                <td><p align="center"><a href ="product?NAME=<%=prd.getName()%>"><%= prd.getName()%></a></p></td>
             </tr>
             <%}%>
 
         </table>
-<p align="center"><a href ="index.jsp">index</a><br></p>
-        <%  }
+        <p align="center"><a href ="index.jsp">index</a><br></p>
+            <%  }
 
-                        if (list1.get(0) instanceof RoleInterface&&usr.getRoleId()==1) {
-                            RoleInterface role;
-                            
-        %>
+                                                        if (list1.get(0) instanceof RoleBeanRemote && usr.getRoleId() == 1) {
+                                                            RoleBeanRemote role;
+
+            %>
         <table align="center"  border="1" width="80%">
             <tr align="center">
                 <td width="5%" align="center">Role id</td>
@@ -113,7 +124,7 @@
 
             </tr>
             <% for (int i = 0; i <= (list1.size() - 1); i++) {
-                role=(RoleInterface)list1.get(i);%>
+                                                                        role = (RoleBeanRemote) list1.get(i);%>
             <tr align="center">
                 <td><%= role.getId()%></td>
                 <td><%= role.getName()%></td>
@@ -121,16 +132,12 @@
             <%}%>
 
         </table>
-<p align="center"><a href ="index.jsp">index</a><br></p>
-        <%  }
+        <p align="center"><a href ="index.jsp">index</a><br></p>
+            <%  }
 
                                 }
                             }
                         }
-                    }else {
-                        RequestDispatcher rd;
-                        rd = request.getRequestDispatcher("login.jsp");
-                        rd.forward(request, response);
-                    }%>
+            %>
     </body>
 </html>

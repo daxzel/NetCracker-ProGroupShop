@@ -6,10 +6,10 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page isErrorPage="true" %>
-<%@ page import = "exceptions.*"%>
+<%@ page import = "exceptions.*,javax.servlet.RequestDispatcher;"%>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-   "http://www.w3.org/TR/html4/loose.dtd">
+    "http://www.w3.org/TR/html4/loose.dtd">
 
 <html>
     <head>
@@ -17,11 +17,13 @@
         <title>Error page</title>
     </head>
     <body>
-         <%=exception.getMessage() %><br>
-        <%if(exception instanceof LoginException){%>
-        Для входа в систему перейдите по ссылке<br>
-        <p align="left"><a href ="login.jsp">login</a><br></p>
-        <%    }
+        <br>
+        <%if (exception instanceof LoginException) {
+                        RequestDispatcher rd = request.getRequestDispatcher("login.jsp");
+                        rd.forward(request, response);
+                    } else {
         %>
+        <%=exception.getMessage()%>
+        <%}%>
     </body>
 </html>

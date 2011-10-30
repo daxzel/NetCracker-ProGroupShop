@@ -19,6 +19,6 @@ public interface RoleBeanRemoteHome extends EJBHome {
 
     entityBeans.RoleBeanRemote findByName(String name) throws FinderException, RemoteException;
 
-    java.util.Collection findAll() throws FinderException, RemoteException;
+    java.util.List findAll() throws FinderException, RemoteException;
 
 }

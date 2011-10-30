@@ -72,6 +72,10 @@
         <servlet-name>ExecServlet</servlet-name>
         <url-pattern>/add_catalog</url-pattern>
     </servlet-mapping>
+     <servlet-mapping>
+        <servlet-name>ExecServlet</servlet-name>
+        <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ExecServlet</servlet-name>
         <url-pattern>/del_catalog</url-pattern>

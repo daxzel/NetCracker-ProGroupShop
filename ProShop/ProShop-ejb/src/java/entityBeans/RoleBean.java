@@ -110,6 +110,7 @@ public class RoleBean implements EntityBean {
         PreparedStatement pst = null;
         ResultSet rs = null;
         try {
+            conn = dataSource.getConnection();
             pst = conn.prepareStatement("SELECT * FROM \"ROLE\" WHERE ID_ROLE = ?");
             pst.setLong(1, id_role);
             rs = pst.executeQuery();

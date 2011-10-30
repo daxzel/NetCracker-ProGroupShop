@@ -8,6 +8,7 @@ import DBClasses.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.logging.Level;
@@ -160,6 +161,15 @@ public class ExecServlet extends HttpServlet {
         }
     }
 
+    protected void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        if (session.getAttribute("user") != null) {
+            session.removeAttribute("user");
+        }
+        RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
+        rd.forward(request, response);
+    }
+
     protected void addProduct(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, ParseException, IOException, LoginException {
         RequestDispatcher rd;
@@ -284,8 +294,7 @@ public class ExecServlet extends HttpServlet {
                 throw new UpdateException("Пользователь с таким ником уже существует");
             } catch (ObjectNotFoundException ex) {
             }
-             if ("".equals(password) || password == null) {
-              
+            if ("".equals(password) || password == null) {
             } else {
                 if (!password.equals(password2)) {
                     throw new PasswordException();
@@ -296,7 +305,7 @@ public class ExecServlet extends HttpServlet {
             usr.setSurname(surname);
             usr.setOtchestvo(otchestvo);
             usr.setNik(nik);
-           
+
             usr.setBorn(new java.sql.Date(born.getTime()));
             usr.setPhone(phone);
             usr.setEmail(email);
@@ -310,7 +319,7 @@ public class ExecServlet extends HttpServlet {
                 session.setAttribute("usrOld", usr);
             }
             result = "профиль отредактирован";
-        }  catch (UpdateException ex) {
+        } catch (UpdateException ex) {
             result = ex.getMessage();
             if (type.equals("updateUser")) {
                 request.setAttribute("DO", "upUser");
@@ -374,58 +383,98 @@ public class ExecServlet extends HttpServlet {
         HttpSession session = request.getSession();
         UserBeanRemote usr = JSPHelper.getUser2(session);
         String rolename = request.getParameter("ROLE");
-            try {
-                List list = DBManager.findUsersByRole(rolename);
-                request.setAttribute("result", list);
-                rd = request.getRequestDispatcher("getUsersByRole.jsp");
-                rd.forward(request, response);
-            } catch (SQLException ex) {
-                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (NamingException ex) {
-                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        String result = "Пользователи не найденны";
+        try {
+            long role_id = 0;
+            if ("admin".equals(rolename)) {
+                role_id = 1;
+            } else {
+                if ("user".equals(rolename)) {
+                    role_id = 2;
+                }
             }
-      
+            UserBeanRemoteHome userHome = (UserBeanRemoteHome) Helper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
+            Collection list = userHome.findByRole(new Long(role_id));
+            //List list = DBManager.findUsersByRole(rolename);
+            request.setAttribute("result", list);
+        } catch (FinderException ex) {
+            request.setAttribute("result", "Ошибка поиска");
+        } catch (NamingException ex) {
+            request.setAttribute("result", "Ошибка поиска");
+        } finally {
+            rd = request.getRequestDispatcher("getUsersByRole.jsp");
+            rd.forward(request, response);
+        }
+
     }
 
     protected void deleteUser(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException, LoginException {
         HttpSession session = request.getSession();
         RequestDispatcher rd;
-        UserInterface usr = JSPHelper.getUser(request.getSession());
+        UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
+        String result = "Удаление не выполнено";
         if (2 == usr.getRoleId()) {
             throw new LoginException("Вы не обладаете правами администратора");
         }
         try {
             String nik = request.getParameter("NIK");
-
-            int numDelete = DBManager.deleteUser(nik);
-            request.setAttribute("result", new Integer(numDelete));
+            UserBeanRemoteHome userHome = (UserBeanRemoteHome) Helper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
+            UserBeanRemote user = userHome.findByNik(nik);
+           // userHome.remove(user);
+            userHome.remove(new Long(user.getId()));
+          //  user.remove();
+            // int numDelete = DBManager.deleteUser(nik);
+            result = "Удаление завершено";
+        } catch (ObjectNotFoundException ex) {
+            result="Пользователя с таким ником не существует";
+        } catch (RemoteException ex) {
+            result = "Ошибка при удалении";
+        } catch (RemoveException ex) {
+            result = "Ошибка при удалении";
+        } catch (FinderException ex) {
+            result = "Ошибка при поиске";
+        }  catch (NamingException ex) {
+             result = "Произошла ошибка попробуйте еще раз)";
+        } finally {
+            request.setAttribute("result", result);
             rd = request.getRequestDispatcher("deleteUser.jsp");
             rd.forward(request, response);
-        } catch (SQLException ex) {
-            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NamingException ex) {
-            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
 
     protected void getFullList(HttpServletRequest request,
-            HttpServletResponse response, String table) throws ServletException, IOException {
+            HttpServletResponse response, String table) throws ServletException, LoginException, IOException {
         RequestDispatcher rd;
         HttpSession session = request.getSession();
-        if (session.getAttribute("user") != null && session.getAttribute("user") instanceof User) {
-            try {
-                request.setAttribute("result", DBManager.getFullList(table));
-                rd = request.getRequestDispatcher("getFullList.jsp");
-                rd.forward(request, response);
-            } catch (SQLException ex) {
-                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (NamingException ex) {
-                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        String result = "Ошибка поиска";
+        UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
+        try {
+            List list = null;
+
+            //request.setAttribute("result", DBManager.getFullList(table));
+            if ("USER".equals(table)) {
+                UserBeanRemoteHome userHome = (UserBeanRemoteHome) Helper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
+                list = userHome.findAll();
+            } else {
+                if ("ROLE".equals(table)) {
+                    RoleBeanRemoteHome roleHome = (RoleBeanRemoteHome) Helper.lookupHome("ejb/RoleBean", RoleBeanRemoteHome.class);
+                    list = roleHome.findAll();
+                }
             }
-        } else {
-            rd = request.getRequestDispatcher("login.jsp");
+            request.setAttribute("result", list);
+        } catch (FinderException ex) {
+            result = "Произошла ошибка поиска";
+            request.setAttribute("result", result);
+        } catch (RemoteException ex) {
+            result = "Произошла ошибка поиска";
+            request.setAttribute("result", result);
+        } catch (NamingException ex) {
+            result = "Произошла ошибка поиска";
+            request.setAttribute("result", result);
+        } finally {
+            rd = request.getRequestDispatcher("getFullList.jsp");
             rd.forward(request, response);
         }
     }
@@ -916,7 +965,10 @@ public class ExecServlet extends HttpServlet {
                 deleteOrder(request, response);
                 return;
             }
-
+            if (request.getRequestURI().equals("/ProShop-war/logout")) {
+                logout(request, response);
+                return;
+            }
 
 
         } catch (ParseException ex) {

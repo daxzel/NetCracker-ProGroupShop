@@ -17,7 +17,7 @@ public interface UserBeanRemoteHome extends EJBHome {
 
     public entityBeans.UserBeanRemote findByPrimaryKey(java.lang.Long id_user) throws FinderException, RemoteException;
 
-    public java.util.Collection findAll() throws FinderException, RemoteException;
+    public java.util.List findAll() throws FinderException, RemoteException;
 
     public entityBeans.UserBeanRemote findByNik(String nik) throws FinderException, RemoteException;
 

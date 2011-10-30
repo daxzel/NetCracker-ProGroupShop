@@ -93,15 +93,17 @@ public class UserBean implements EntityBean {
         PreparedStatement pst = null;
         try {
             conn = dataSource.getConnection();
-            pst = conn.prepareStatement("DELETE FROM \"USER\" WHERE NIK = ?");
-            pst.setString(1, nik);
+            pst = conn.prepareStatement("DELETE FROM \"USER\" WHERE ID_USER = ?");
+            pst.setLong(1, id_user);
             if (pst.executeUpdate() < 1) {
                 throw new RemoveException("Ошибка удаления");
             }
-        } catch (SQLException e) {
-            throw new EJBException("Ошибка DELETE");
-        } finally {
+           // conn.commit();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }  finally {
             try {
+//                 conn.commit();
                 Helper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
@@ -287,7 +289,7 @@ public class UserBean implements EntityBean {
          return lg;
     }
 
-    public Collection ejbFindByRole(java.lang.Long id_role) throws ObjectNotFoundException {
+    public Collection ejbFindByRole(java.lang.Long id_role) {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
