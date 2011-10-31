@@ -25,6 +25,59 @@
             <prim-key-class>java.lang.Long</prim-key-class>
             <reentrant>false</reentrant>
         </entity>
+        <entity>
+            <display-name>ProductBeanEB</display-name>
+            <ejb-name>ProductBean</ejb-name>
+            <home>entityBeans.ProductBeanRemoteHome</home>
+            <remote>entityBeans.ProductBeanRemote</remote>
+            <local-home>entityBeans.ProductBeanLocalHome</local-home>
+            <local>entityBeans.ProductBeanLocal</local>
+            <ejb-class>entityBeans.ProductBean</ejb-class>
+            <persistence-type>Bean</persistence-type>
+            <prim-key-class>java.lang.Long</prim-key-class>
+            <reentrant>false</reentrant>
+        </entity>
+        <entity>
+            <display-name>CatalogBeanEB</display-name>
+            <ejb-name>CatalogBean</ejb-name>
+            <home>entityBeans.CatalogBeanRemoteHome</home>
+            <remote>entityBeans.CatalogBeanRemote</remote>
+            <local-home>entityBeans.CatalogBeanLocalHome</local-home>
+            <local>entityBeans.CatalogBeanLocal</local>
+            <ejb-class>entityBeans.CatalogBean</ejb-class>
+            <persistence-type>Container</persistence-type>
+            <prim-key-class>java.lang.Long</prim-key-class>
+            <reentrant>false</reentrant>
+            <abstract-schema-name>CatalogBean</abstract-schema-name>
+            <cmp-field>
+                <field-name>pk</field-name>
+            </cmp-field>
+            <primkey-field>pk</primkey-field>
+        </entity>
+        <entity>
+            <display-name>OrderBeanEB</display-name>
+            <ejb-name>OrderBean</ejb-name>
+            <home>entityBeans.OrderBeanRemoteHome</home>
+            <remote>entityBeans.OrderBeanRemote</remote>
+            <local-home>entityBeans.OrderBeanLocalHome</local-home>
+            <local>entityBeans.OrderBeanLocal</local>
+            <ejb-class>entityBeans.OrderBean</ejb-class>
+            <persistence-type>Bean</persistence-type>
+            <prim-key-class>java.lang.Long</prim-key-class>
+            <reentrant>false</reentrant>
+        </entity>
+        <entity>
+            <display-name>CatalogBeanEB</display-name>
+            <ejb-name>CatalogBean</ejb-name>
+            <home>entityBeans.CatalogBeanRemoteHome</home>
+            <remote>entityBeans.CatalogBeanRemote</remote>
+            <local-home>entityBeans.CatalogBeanLocalHome</local-home>
+            <local>entityBeans.CatalogBeanLocal</local>
+            <ejb-class>entityBeans.CatalogBean</ejb-class>
+            <persistence-type>Bean</persistence-type>
+            <prim-key-class>java.lang.Long</prim-key-class>
+            <reentrant>false</reentrant>
+        </entity>
         </enterprise-beans>
     <assembly-descriptor>
         <container-transaction>
@@ -37,6 +90,34 @@
         <container-transaction>
             <method>
                 <ejb-name>RoleBean</ejb-name>
+                <method-name>*</method-name>
+            </method>
+            <trans-attribute>Required</trans-attribute>
+        </container-transaction>
+        <container-transaction>
+            <method>
+                <ejb-name>ProductBean</ejb-name>
+                <method-name>*</method-name>
+            </method>
+            <trans-attribute>Required</trans-attribute>
+        </container-transaction>
+        <container-transaction>
+            <method>
+                <ejb-name>CatalogBean</ejb-name>
+                <method-name>*</method-name>
+            </method>
+            <trans-attribute>Required</trans-attribute>
+        </container-transaction>
+        <container-transaction>
+            <method>
+                <ejb-name>OrderBean</ejb-name>
+                <method-name>*</method-name>
+            </method>
+            <trans-attribute>Required</trans-attribute>
+        </container-transaction>
+        <container-transaction>
+            <method>
+                <ejb-name>CatalogBean</ejb-name>
                 <method-name>*</method-name>
             </method>
             <trans-attribute>Required</trans-attribute>

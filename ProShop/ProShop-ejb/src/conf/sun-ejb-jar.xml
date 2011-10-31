@@ -10,5 +10,17 @@
       <ejb-name>RoleBean</ejb-name>
       <jndi-name>ejb/RoleBean</jndi-name>
     </ejb>
+    <ejb>
+      <ejb-name>ProductBean</ejb-name>
+      <jndi-name>ejb/ProductBean</jndi-name>
+    </ejb>
+    <ejb>
+      <ejb-name>CatalogBean</ejb-name>
+      <jndi-name>ejb/CatalogBean</jndi-name>
+    </ejb>
+    <ejb>
+      <ejb-name>OrderBean</ejb-name>
+      <jndi-name>ejb/OrderBean</jndi-name>
+    </ejb>
   </enterprise-beans>
 </sun-ejb-jar>
