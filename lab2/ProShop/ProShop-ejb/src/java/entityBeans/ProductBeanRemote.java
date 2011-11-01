@@ -38,6 +38,6 @@ public interface ProductBeanRemote extends EJBObject {
 
     public void setPrice(java.lang.Double nprice) throws RemoteException;
 
-    public java.util.List getOpinions() throws RemoteException;
+    public java.util.List getOpinionList()  throws RemoteException;
     
 }

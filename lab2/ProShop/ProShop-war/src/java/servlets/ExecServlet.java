@@ -467,18 +467,22 @@ public class ExecServlet extends HttpServlet {
         RequestDispatcher rd;
         HttpSession session = request.getSession();
         String result = "Ошибка поиска";
-        UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
         try {
             List list = null;
-
-            //request.setAttribute("result", DBManager.getFullList(table));
-            if ("USER".equals(table)) {
-                UserBeanRemoteHome userHome = (UserBeanRemoteHome) Helper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
-                list = userHome.findAll();
+            if ("PRODUCT".equals(table)) {
+                ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) Helper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
+                list = productHome.findAll();
             } else {
-                if ("ROLE".equals(table)) {
-                    RoleBeanRemoteHome roleHome = (RoleBeanRemoteHome) Helper.lookupHome("ejb/RoleBean", RoleBeanRemoteHome.class);
-                    list = roleHome.findAll();
+                UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
+                //request.setAttribute("result", DBManager.getFullList(table));
+                if ("USER".equals(table)) {
+                    UserBeanRemoteHome userHome = (UserBeanRemoteHome) Helper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
+                    list = userHome.findAll();
+                } else {
+                    if ("ROLE".equals(table)) {
+                        RoleBeanRemoteHome roleHome = (RoleBeanRemoteHome) Helper.lookupHome("ejb/RoleBean", RoleBeanRemoteHome.class);
+                        list = roleHome.findAll();
+                    }
                 }
             }
             request.setAttribute("result", list);
@@ -609,16 +613,11 @@ public class ExecServlet extends HttpServlet {
         RequestDispatcher rd;
         HttpSession session = request.getSession();
         String result = "Произошла ошибка перейдите на стартовую страницу";
-
         try {
-
             String id_pr = request.getParameter("ID");
             Long id_product = new Long(Long.parseLong(id_pr));
-            ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) Helper.lookupHome("ejb/UserBean", ProductBeanRemoteHome.class);
-            //UserBeanRemote user = userHome.findByNik(nik);
+            ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) Helper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
             ProductBeanRemote prd = productHome.findByPrimaryKey(id_product);
-            // int id_pr = Integer.parseInt(id_product);
-
             request.setAttribute("result", prd);
             rd = request.getRequestDispatcher("getOpinion.jsp");
             rd.forward(request, response);
@@ -890,9 +889,9 @@ public class ExecServlet extends HttpServlet {
             OrderBeanRemote order = orderHome.findByPrimaryKey(new Long(Long.parseLong(id_order)));
             orderHome.remove(new Long(order.getId()));
             request.setAttribute("result", orderHome.findByUserAndStatus(new Long(usr.getId()), false));
-            result2="Заказ удален из корзины";
-        }  catch (RemoveException ex) {
-           result2 = "Произошла ошибка";
+            result2 = "Заказ удален из корзины";
+        } catch (RemoveException ex) {
+            result2 = "Произошла ошибка";
         } catch (FinderException ex) {
             result2 = "Произошла ошибка";
         } catch (RemoteException ex) {

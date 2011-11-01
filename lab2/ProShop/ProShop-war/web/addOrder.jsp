@@ -5,7 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import = "DBClasses.ProductInterface, DBClasses.UserInterface, DBClasses.OrderInterface,Other.*;"%>
+<%@page import = "entityBeans.UserBeanRemote,entityBeans.ProductBeanRemote,entityBeans.OrderBeanRemote,Other.*;"%>
 <%@page errorPage="errorPage.jsp"%>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -17,24 +17,23 @@
         <title>Order</title>
     </head>
     <body><% 
-                UserInterface user = JSPHelper.getUser(session);
+                UserBeanRemote user = JSPHelper.getUser2(session);
                    
-                    ProductInterface prd = null;
+                    ProductBeanRemote prd = null;
                     String kol_vo="";
                     if (session.getAttribute("product") != null) {
-                        prd = (ProductInterface) session.getAttribute("product");
-                        session.setAttribute("ID_PRODUCT",new Integer(prd.getId()));
+                        prd = (ProductBeanRemote) session.getAttribute("product");
+                        session.setAttribute("ID_PRODUCT",new Long(prd.getId()));
                         if(request.getAttribute("kol_vo")!=null){
                             kol_vo=request.getAttribute("kol_vo").toString();
                         }
                         //request.setAttribute("NIK", user.getNik());
                     }
-
         %>
         <form name="myForm" action="order">
             <table>
                 <tr><td>Название продукта</td></tr>
-                <tr><td><a href ="product?NAME=<%=prd.getName() %>"><%= prd.getName()%></a></td>/tr>
+                <tr><td><a href ="product?NAME=<%=prd.getName() %>"><%= prd.getName()%></a></td>
                 <tr><td>Цена</td><td></td></tr>
                 <tr><td><%=prd.getPrice() %></td></tr>
                 <tr><td>Количество</td></tr>

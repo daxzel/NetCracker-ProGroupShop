@@ -61,6 +61,7 @@
             <prim-key-class>java.lang.Long</prim-key-class>
             <reentrant>false</reentrant>
         </entity>
+        
         <entity>
             <display-name>OpinionBeanEB</display-name>
             <ejb-name>OpinionBean</ejb-name>
@@ -110,6 +111,7 @@
             </method>
             <trans-attribute>Required</trans-attribute>
         </container-transaction>
+
         <container-transaction>
             <method>
                 <ejb-name>OpinionBean</ejb-name>

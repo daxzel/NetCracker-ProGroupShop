@@ -32,6 +32,8 @@ import javax.sql.DataSource;
  */
 public class OrderBean implements EntityBean {
 
+    private UserBeanRemoteHome userHome;
+    private ProductBeanRemoteHome productHome;
     private EntityContext entityContext;
     private DataSource dataSource;
     private long id_order;
@@ -53,6 +55,8 @@ public class OrderBean implements EntityBean {
     public void setEntityContext(EntityContext ctx) {
         this.entityContext = ctx;
         try {
+            userHome = (UserBeanRemoteHome) OtherBean.Helper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
+            productHome = (ProductBeanRemoteHome) OtherBean.Helper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
             javax.naming.Context context = new javax.naming.InitialContext();
             try {
                 dataSource = (DataSource) context.lookup("jdbc/InternetShop");
@@ -128,14 +132,14 @@ public class OrderBean implements EntityBean {
             }
             id_order = rs.getLong(1);
             id_user = rs.getLong(2);
-           
-        
+
+
             id_product = rs.getLong(3);
             //
             status = rs.getBoolean(4);
             amount = rs.getInt(5);
 
-       
+
         } catch (SQLException e) {
             throw new EJBException("Ошибка SELECT");
         } finally {
@@ -151,11 +155,11 @@ public class OrderBean implements EntityBean {
      * @see javax.ejb.EntityBean#ejbStore()
      */
     public void ejbStore() {
-         Connection conn = null;
+        Connection conn = null;
         PreparedStatement pst = null;
         try {
             conn = dataSource.getConnection();
-            pst = conn.prepareStatement("UPDATE \"ORDER\"" + "SET STATUS = ? WHERE ID_USER=?");
+            pst = conn.prepareStatement("UPDATE \"ORDER\"" + "SET STATUS = ? WHERE ID_ORDER=?");
             pst.setBoolean(1, status);
             pst.setLong(2, id_order);
             if (pst.executeUpdate() < 1) {
@@ -198,6 +202,7 @@ public class OrderBean implements EntityBean {
             }
         }
     }
+
     public Collection ejbFindByUserAndStatus(java.lang.Long id_user, boolean status) {
         Connection conn = null;
         PreparedStatement pst = null;
@@ -219,15 +224,15 @@ public class OrderBean implements EntityBean {
             throw new EJBException("Ошибка SELECT");
         } finally {
             try {
-                Helper.closeConnection(conn, pst,rs);
+                Helper.closeConnection(conn, pst, rs);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
         }
     }
 
-   public java.lang.Long ejbCreate(java.lang.Long id_user, java.lang.Long id_product,java.lang.Boolean status, java.lang.Integer amount) throws CreateException{
-       
+    public java.lang.Long ejbCreate(java.lang.Long id_user, java.lang.Long id_product, java.lang.Boolean status, java.lang.Integer amount) throws CreateException {
+
         this.id_user = id_user.longValue();
         this.id_product = id_product.longValue();
         this.status = status.booleanValue();
@@ -261,67 +266,74 @@ public class OrderBean implements EntityBean {
 
         }
     }
-    public void ejbPostCreate(java.lang.Long id_user, java.lang.Long id_product, java.lang.Boolean status, java.lang.Integer amount) throws CreateException  {
-    }
-     public void setId(java.lang.Long id_order){
-         this.id_order=id_order.longValue();
-     }
 
-    public long getId(){
+    public void ejbPostCreate(java.lang.Long id_user, java.lang.Long id_product, java.lang.Boolean status, java.lang.Integer amount) throws CreateException {
+    }
+
+    public void setId(java.lang.Long id_order) {
+        this.id_order = id_order.longValue();
+    }
+
+    public long getId() {
         return id_order;
     }
 
-     //public void setIdUser(java.lang.Long id_order) throws RemoteException;
-
-    public long getIdUser(){
+    //public void setIdUser(java.lang.Long id_order) throws RemoteException;
+    public long getIdUser() {
         return id_user;
     }
 
-    public void setNameUser() throws NamingException, FinderException, RemoteException{
-       UserBeanRemoteHome userHome = (UserBeanRemoteHome) OtherBean.Helper.lookupHome("ejb/UserBean",UserBeanRemoteHome.class);
-       UserBeanRemote user = userHome.findByPrimaryKey(new Long(this.id_user));
-       this.name_user=user.getNik();
-    }
-     public void setNameAndPriceProduct() throws NamingException, FinderException, RemoteException{
-       ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) OtherBean.Helper.lookupHome("ejb/ProductBean",ProductBeanRemoteHome.class);
-       ProductBeanRemote product = productHome.findByPrimaryKey(new Long(this.id_product));
-       this.name_product=product.getName();
-       this.price_product= product.getPrice();
+    /*public void setNameUser() throws NamingException, FinderException, RemoteException {
+    UserBeanRemoteHome userHome = (UserBeanRemoteHome) OtherBean.Helper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
+    UserBeanRemote user = userHome.findByPrimaryKey(new Long(this.id_user));
+    this.name_user = user.getNik();
+    }*/
+
+    /*public void setNameAndPriceProduct() throws NamingException, FinderException, RemoteException {
+    ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) OtherBean.Helper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
+    ProductBeanRemote product = productHome.findByPrimaryKey(new Long(this.id_product));
+    this.name_product = product.getName();
+    this.price_product = product.getPrice();
+    }*/
+    public String getNameUser() throws FinderException, RemoteException {
+        UserBeanRemote usr = userHome.findByPrimaryKey(new Long(id_user));
+        return usr.getNik();
     }
 
-    public String getNameUser() {
-        return name_user;
+    public String getNameProduct() throws FinderException, RemoteException {
+        ProductBeanRemote prd = productHome.findByPrimaryKey(new Long(id_product));
+        return prd.getName();
+    }
+     public double getPriceProduct() throws FinderException, RemoteException {
+        ProductBeanRemote prd = productHome.findByPrimaryKey(new Long(id_product));
+        return prd.getPrice();
     }
 
-    public void setIdProduct(java.lang.Long id_product){
-        this.id_product= id_product.longValue();
+    public void setIdProduct(java.lang.Long id_product) {
+        this.id_product = id_product.longValue();
     }
 
-    public java.lang.Long getIdProduct(){
+    public java.lang.Long getIdProduct() {
         return new Long(id_product);
     }
 
-    public String getNameProduct(){
-        return name_product;
-    }
+    
 
-    public int getAmount(){
+    public int getAmount() {
         return amount;
     }
 
-    public boolean getStatus(){
+    public boolean getStatus() {
         return status;
     }
 
-    public void setStatus(boolean status){
-        this.status=status;
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
-    public double getPriceProduct(){
-        return price_product;
-    }
+    
 
-    public double getPrice(){
-        return price_product*amount;
+    public double getPrice() {
+        return price_product * amount;
     }
 }

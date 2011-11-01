@@ -34,27 +34,33 @@
                 <td width="25%" align="center">Цена</td>
                 <td width="25%" align="center">Количество</td>
                 <td width="20%" align="center">Цена заказа</td>
-                <%if (list.size() != 0 && !ord.getStatus()) {%>
+                <%if (!ord.getStatus()) {%>
                 <td width="20%" align="center">Оформить заказ</td>
                 <td width="20%" align="center">Удалить заказ</td>
                 <%}%>
             </tr>
-            <% for (int i = 0; i <= (list.size() - 1); i++) {
-                                            ord = (OrderBeanRemote) list.get(i);%>
+            <%
+                                        double priceProduct;
+                                        int amount;
+                                        for (int i = 0; i <= (list.size() - 1); i++) {
+                                            ord = (OrderBeanRemote) list.get(i);
+                                            priceProduct = ord.getPriceProduct();
+                                            amount = ord.getAmount();
+            %>
             <tr align="center">
-                <td><a href ="product?NAME=<%=ord.getNameProduct()%>"><%= ord.getNameProduct()%></a></td>
-                <td><%= ord.getPriceProduct()%></td>
-                <td><%= ord.getAmount() %></td>
-                <td><%= ord.getPrice()%></td>
+                <td><a href ="product?ID=<%=ord.getIdProduct().longValue()%>"><%= ord.getNameProduct()%></a></td>
+                <td><%= priceProduct %></td>
+                <td><%=  amount%></td>
+                <td><%= (priceProduct)*(amount)%></td>
                 <%if (!ord.getStatus()) {%>
                 <td><a href ="updateStatusOrder?id_order=<%=ord.getId()%>">оформить заказ</a></td>
                 <td><a href ="deleteOrder?id_order=<%=ord.getId()%>">удалить заказ</a></td>
                 <%}%>
             </tr>
-        </table>
-        <%}
 
-                                    if (request.getAttribute("result2") instanceof String) {%>
+            <%}%> </table><%
+
+                                        if (request.getAttribute("result2") instanceof String) {%>
         <p align="center">
             <%=request.getAttribute("result2")%>
         </p>

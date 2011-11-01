@@ -58,7 +58,7 @@
                                 }
                             } catch (LoginException ex) {%>
 
-
+        <p align="center"><a href="getFullList.jsp">Вывод всех продуктов</a></p>
         <p align="center"><a href="registration.jsp">Регистрация</a></p>
         <p align="center"><a href="login.jsp">Вход</a></p>
         <p align="center"><a href="getFull_catalog">Каталог</a></p>

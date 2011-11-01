@@ -5,7 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import= "entityBeans.*,java.util.List,java.util.Iterator,java.text.SimpleDateFormat,Other.JSPHelper,exceptions.LoginException,DBClasses.*;"%>
+<%@page import= "entityBeans.*,java.util.List,java.util.Iterator,java.text.SimpleDateFormat,Other.JSPHelper,exceptions.LoginException;"%>
 <%@page errorPage="errorPage.jsp"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     "http://www.w3.org/TR/html4/loose.dtd">
@@ -22,9 +22,6 @@
                         usr = JSPHelper.getUser2(session);
                     } catch (LoginException ex) {
                     }
-                    //  if (session.getAttribute("user") != null && session.getAttribute("user") instanceof UserInterface) {
-                    //    usr = (UserBeanRemote) session.getAttribute("user");
-                    //  if (usr.getLogin() == true) {
                     if (request.getAttribute("result") == null) {
         %>
 
@@ -40,17 +37,14 @@
         <p align="center"><a href ="index.jsp">index</a><br></p>
             <%} else {
                                     if (request.getAttribute("result") instanceof List) {
-                                        //  if()
                                         List list1 = (List) request.getAttribute("result");
-
-                                       
                                         if (list1.isEmpty()) {%>
         <p align="center">Таблица не содержит данных</p>
-                                        <%} else {
-                                            if (list1.get(0) instanceof UserBeanRemote) {
-                                                UserBeanRemote user;
-                                                SimpleDateFormat formt = new SimpleDateFormat("yyyy-MM-dd");
-            %>
+        <%} else {
+                                                    if (list1.get(0) instanceof UserBeanRemote) {
+                                                        UserBeanRemote user;
+                                                        SimpleDateFormat formt = new SimpleDateFormat("yyyy-MM-dd");
+        %>
         <table align="center"  border="1" width="80%">
             <tr align="center">
                 <td width="5%" align="center">User id</td>
@@ -64,7 +58,7 @@
                 <td width="30%" align="center">Role</td>
             </tr>
             <% for (int i = 0; i <= (list1.size() - 1); i++) {
-                                                            user = (UserBeanRemote) list1.get(i);
+                                                                        user = (UserBeanRemote) list1.get(i);
             %>
             <tr align="center">
                 <td><%= user.getId()%></td>
@@ -97,15 +91,15 @@
                                                         if (list1.get(0) instanceof ProductBeanRemote) {
                                                             ProductBeanRemote prd;
                                                             //  SimpleDateFormat formt = new SimpleDateFormat("dd MM yyyy");
-%>
+            %>
         <table align="center"  border="1" width="80%">
             <tr align="center">
                 <td width="15%" align="center">Name</td>
             </tr>
             <% for (int i = 0; i <= (list1.size() - 1); i++) {
-                                                                        prd = (ProductBeanRemote) list1.get(i);%>
+                                                                            prd = (ProductBeanRemote) list1.get(i);%>
             <tr align="center">
-                <td><p align="center"><a href ="product?ID=<%=prd.getId() %>"><%= prd.getName()%></a></p></td>
+                <td><p align="center"><a href ="product?ID=<%=prd.getId()%>"><%= prd.getName()%></a></p></td>
             </tr>
             <%}%>
 
@@ -124,7 +118,7 @@
 
             </tr>
             <% for (int i = 0; i <= (list1.size() - 1); i++) {
-                                                                        role = (RoleBeanRemote) list1.get(i);%>
+                                                                            role = (RoleBeanRemote) list1.get(i);%>
             <tr align="center">
                 <td><%= role.getId()%></td>
                 <td><%= role.getName()%></td>

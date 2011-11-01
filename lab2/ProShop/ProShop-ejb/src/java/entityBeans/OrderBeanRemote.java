@@ -20,12 +20,9 @@ public interface OrderBeanRemote extends EJBObject {
     public long getId() throws RemoteException;
 
     //public void setIdUser(java.lang.Long id_order) throws RemoteException;
-
     public long getIdUser() throws RemoteException;
 
-    public void setNameUser()  throws NamingException, FinderException, RemoteException;
-
-    public String getNameUser() throws RemoteException;
+    public void setNameUser() throws NamingException, FinderException, RemoteException;
 
     public void setIdProduct(java.lang.Long id_product) throws RemoteException;
 
@@ -43,5 +40,5 @@ public interface OrderBeanRemote extends EJBObject {
 
     public double getPrice() throws RemoteException;
 
-    public void setNameAndPriceProduct() throws NamingException, FinderException, RemoteException;
+    public String getNameUser() throws FinderException, RemoteException;
 }

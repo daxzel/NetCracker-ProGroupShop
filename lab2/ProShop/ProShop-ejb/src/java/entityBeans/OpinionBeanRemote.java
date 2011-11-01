@@ -28,4 +28,6 @@ public interface OpinionBeanRemote extends EJBObject {
     public String getText() throws RemoteException;
 
     public void setText(String text) throws RemoteException;
+
+    public String getUserName() throws RemoteException;
 }

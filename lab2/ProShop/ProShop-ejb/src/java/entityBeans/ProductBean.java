@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Collection;
+import java.util.List;
 import java.util.Vector;
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
@@ -32,6 +33,8 @@ import javax.sql.DataSource;
  */
 public class ProductBean implements EntityBean {
 
+    private OpinionBeanRemoteHome opinionHome;
+    private CatalogBeanRemoteHome catalogHome;
     private EntityContext entityContext;
     private DataSource dataSource;
     private long id_product;
@@ -51,6 +54,8 @@ public class ProductBean implements EntityBean {
     public void setEntityContext(EntityContext ctx) {
         this.entityContext = ctx;
         try {
+            opinionHome = (OpinionBeanRemoteHome) OtherBean.Helper.lookupHome("ejb/OpinionBean", OpinionBeanRemoteHome.class);
+            catalogHome = (CatalogBeanRemoteHome) OtherBean.Helper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
             javax.naming.Context context = new javax.naming.InitialContext();
             try {
                 dataSource = (DataSource) context.lookup("jdbc/InternetShop");
@@ -197,7 +202,7 @@ public class ProductBean implements EntityBean {
             }
             this.id_product = pst.getLong(5);
             return new Long(this.id_product);
-        }catch (RemoteException ex) {
+        } catch (RemoteException ex) {
             throw new EJBException("Произошла ошибка добавления");
         } catch (NamingException ex) {
             throw new EJBException("Произошла ошибка добавления");
@@ -272,6 +277,35 @@ public class ProductBean implements EntityBean {
             }
         }
     }
+    public Collection ejbFindAll() {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            conn = dataSource.getConnection();
+            pst = conn.prepareStatement("SELECT ID_PRODUCT FROM \"PRODUCT\"");
+         //   pst.setLong(1, id_catalog.longValue());
+            // rs = pst.executeQuery();
+            ResultSet resultSet = pst.executeQuery();
+            Vector keys = new Vector();
+            while (resultSet.next()) {
+                long id_product = resultSet.getLong(1);
+                keys.addElement(new Long(id_product));
+            }
+            return keys;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new EJBException("Ошибка SELECT");
+            // e.printStackTrace();
+        } finally {
+            try {
+                Helper.closeConnection(conn, pst);
+            } catch (SQLException ex1) {
+                throw new EJBException("Ошибка закрытии соединия с базой");
+            }
+        }
+    }
+
 
     public String ejbFindByName(java.lang.String name) throws ObjectNotFoundException {
         Connection conn = null;
@@ -304,8 +338,9 @@ public class ProductBean implements EntityBean {
         id_catalog = nid.longValue();
     }
 
-    public String getNameCatalog() {
-        return name_catalog;
+    public String getNameCatalog() throws FinderException, RemoteException {
+        CatalogBeanRemote ctg = catalogHome.findByPrimaryKey(new Long(this.id_catalog));
+        return ctg.getName();
     }
 
     public void setNameCatalog(String nid) {
@@ -336,6 +371,12 @@ public class ProductBean implements EntityBean {
         name = nname;
     }
 
+    public List getOpinionList() throws NamingException, FinderException, RemoteException {
+
+        List list = opinionHome.findOpinionByProduct(new Long(this.id_product));
+        return list;
+    }
+
     public double getPrice() {
         return price;
     }
@@ -344,7 +385,12 @@ public class ProductBean implements EntityBean {
         price = nprice.doubleValue();
     }
 
-    public void getOpinions() {
-        //    price = nprice.doubleValue();
+    public List getOpinions() throws NamingException, FinderException, RemoteException {
+        List list = null;
+        OpinionBeanRemoteHome opinionHome = (OpinionBeanRemoteHome) OtherBean.Helper.lookupHome("ejb/OpinionBean", OpinionBeanRemoteHome.class);
+        list = opinionHome.findOpinionByProduct(new Long(this.id_product));
+        return list;
+
+
     }
 }
