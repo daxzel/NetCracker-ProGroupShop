@@ -14,6 +14,8 @@ import javax.sql.*;
  */
 public class Helper {
 
+    private static DataSource dataSource = null;
+
     public static void closeConnection(Connection conn, PreparedStatement pst, ResultSet rs) throws SQLException {
         if (rs != null) {
             pst.close();
@@ -35,6 +37,15 @@ public class Helper {
         }
     }
 
+    public static Connection getConnection() throws SQLException, NamingException {
+       // if (dataSource == null) {
+            javax.naming.Context context = new javax.naming.InitialContext();
+            DataSource dataSource = (DataSource) context.lookup("jdbc/InternetShop");
+       // }
+        return dataSource.getConnection();
+
+    }
+
     public static Object lookupHome(String name, java.lang.Class clas) throws NamingException {
         return javax.rmi.PortableRemoteObject.narrow(lookupName(name), clas);
     }
@@ -43,4 +54,7 @@ public class Helper {
         javax.naming.Context namingContext = new javax.naming.InitialContext();
         return namingContext.lookup(name);
     }
+    /*public static void main(String args){
+
+    }*/
 }

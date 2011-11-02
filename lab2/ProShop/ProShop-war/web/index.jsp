@@ -34,7 +34,7 @@
         <p align="center"><a href="getUsersByRole.jsp">Вывод пользователей по их ролям</a></p>
         <p align="center"><a href="deleteUser.jsp">Удалить пользователя</a></p>
         <p align="center"><a href="getFullList.jsp">Вывод всего</a></p>
-        <p align="center"><a href="getOpinion.jsp">Вывод всех комментариев продута</a></p>
+   
         <p align="center"><a href="getFull_catalog">Вывести каталог</a></p>
         <p align="center"><a href="getChild_catalog.jsp">Вывести потомков</a></p>
         <p align="center"><a href="logout">Выход</a></p>
@@ -51,7 +51,7 @@
         <p align="center"><a href="del_comment.jsp">delcomment</a></p>
         <p align="center"><a href="getUsersByRole.jsp">Вывод пользователей по их ролям</a></p>
         <p align="center"><a href="getFullList.jsp">Вывод всего</a></p>
-        <p align="center"><a href="getOpinion.jsp">Вывод всех комментариев продута</a></p>
+      
         <p align="center"><a href="logout">Выход</a></p>
 
         <%                                    }

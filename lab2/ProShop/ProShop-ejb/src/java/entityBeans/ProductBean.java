@@ -36,7 +36,7 @@ public class ProductBean implements EntityBean {
     private OpinionBeanRemoteHome opinionHome;
     private CatalogBeanRemoteHome catalogHome;
     private EntityContext entityContext;
-    private DataSource dataSource;
+    private Connection conn;
     private long id_product;
     private String description;
     private long id_catalog;
@@ -56,9 +56,9 @@ public class ProductBean implements EntityBean {
         try {
             opinionHome = (OpinionBeanRemoteHome) OtherBean.Helper.lookupHome("ejb/OpinionBean", OpinionBeanRemoteHome.class);
             catalogHome = (CatalogBeanRemoteHome) OtherBean.Helper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
-            javax.naming.Context context = new javax.naming.InitialContext();
+            //   javax.naming.Context context = new javax.naming.InitialContext();
             try {
-                dataSource = (DataSource) context.lookup("jdbc/InternetShop");
+           //     conn = Helper.getConnection();
             } catch (Exception e) {
                 throw new EJBException("Проблема с подключением к базе");
             }
@@ -93,15 +93,17 @@ public class ProductBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("DELETE FROM \"PRODUCT\" WHERE ID_PRODUCT = ?");
             pst.setLong(1, id_product);
             if (pst.executeUpdate() < 1) {
                 throw new RemoveException("Ошибка удаления");
             }
             // conn.commit();
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка при удалении");
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            throw new EJBException("Ошибка при удалении");
         } finally {
             try {
 //                 conn.commit();
@@ -121,7 +123,7 @@ public class ProductBean implements EntityBean {
         PreparedStatement pst = null;
         ResultSet rs = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM \"PRODUCT\" WHERE ID_PRODUCT = ?");
             pst.setLong(1, id_product);
             rs = pst.executeQuery();
@@ -133,6 +135,8 @@ public class ProductBean implements EntityBean {
             id_catalog = rs.getLong(3);
             name = rs.getString(4);
             price = rs.getDouble(5);
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
         } catch (SQLException e) {
             throw new EJBException("Ошибка SELECT");
         } finally {
@@ -151,7 +155,7 @@ public class ProductBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("UPDATE \"PRODUCT\"" + "SET DESCRIPTION = ?,ID_CATALOG =?,NAME=?,PRICE=?   WHERE ID_PRODUCT=?");
             pst.setString(1, description);
             pst.setLong(2, id_catalog);
@@ -161,6 +165,8 @@ public class ProductBean implements EntityBean {
             if (pst.executeUpdate() < 1) {
                 throw new NoSuchEntityException("Не найдена запись");
             }
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка UPDATE");
         } catch (SQLException e) {
             throw new EJBException("Ошибка UPDATE");
         } finally {
@@ -189,7 +195,7 @@ public class ProductBean implements EntityBean {
             CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) OtherBean.Helper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
             CatalogBeanRemote ctg = catalogHome.findByName(name_catalog);
             this.id_catalog = ctg.getId();
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareCall("BEGIN INSERT INTO \"PRODUCT\" " + "(DESCRIPTION,ID_CATALOG,NAME,PRICE)" + "VALUES(?,?,?,?) RETURNING ID_PRODUCT INTO ?;END;");
             pst.setString(1, this.description);
             pst.setLong(2, this.id_catalog);
@@ -230,7 +236,7 @@ public class ProductBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM \"PRODUCT\" WHERE ID_PRODUCT = ?");
             pst.setLong(1, id_product.longValue());
             ResultSet resultSet = pst.executeQuery();
@@ -238,6 +244,8 @@ public class ProductBean implements EntityBean {
                 throw new ObjectNotFoundException("Запись не найдена");
             }
             return id_product;
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
         } catch (SQLException e) {
             throw new EJBException("Ошибка SELECT");
         } finally {
@@ -254,7 +262,7 @@ public class ProductBean implements EntityBean {
         PreparedStatement pst = null;
         ResultSet rs = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("SELECT ID_PRODUCT FROM \"PRODUCT\" WHERE ID_CATALOG = ?");
             pst.setLong(1, id_catalog.longValue());
             // rs = pst.executeQuery();
@@ -265,6 +273,8 @@ public class ProductBean implements EntityBean {
                 keys.addElement(new Long(id_product));
             }
             return keys;
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
         } catch (SQLException e) {
             e.printStackTrace();
             throw new EJBException("Ошибка SELECT");
@@ -277,41 +287,43 @@ public class ProductBean implements EntityBean {
             }
         }
     }
+
     public Collection ejbFindAll() {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("SELECT ID_PRODUCT FROM \"PRODUCT\"");
-         //   pst.setLong(1, id_catalog.longValue());
+            //   pst.setLong(1, id_catalog.longValue());
             // rs = pst.executeQuery();
-            ResultSet resultSet = pst.executeQuery();
+            rs = pst.executeQuery();
             Vector keys = new Vector();
-            while (resultSet.next()) {
-                long id_product = resultSet.getLong(1);
+            while (rs.next()) {
+                long id_product = rs.getLong(1);
                 keys.addElement(new Long(id_product));
             }
             return keys;
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
         } catch (SQLException e) {
             e.printStackTrace();
             throw new EJBException("Ошибка SELECT");
             // e.printStackTrace();
         } finally {
             try {
-                Helper.closeConnection(conn, pst);
+                Helper.closeConnection(conn, pst,rs);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
         }
     }
 
-
     public String ejbFindByName(java.lang.String name) throws ObjectNotFoundException {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM \"PRODUCT\" WHERE NAME = ?");
             pst.setString(1, name);
             ResultSet resultSet = pst.executeQuery();
@@ -319,6 +331,8 @@ public class ProductBean implements EntityBean {
                 throw new ObjectNotFoundException("Запись не найдена");
             }
             return name;
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
         } catch (SQLException e) {
             throw new EJBException("Ошибка SELECT");
         } finally {
@@ -385,12 +399,12 @@ public class ProductBean implements EntityBean {
         price = nprice.doubleValue();
     }
 
-    public List getOpinions() throws NamingException, FinderException, RemoteException {
+  /*  public List getOpinions() throws NamingException, FinderException, RemoteException {
         List list = null;
         OpinionBeanRemoteHome opinionHome = (OpinionBeanRemoteHome) OtherBean.Helper.lookupHome("ejb/OpinionBean", OpinionBeanRemoteHome.class);
         list = opinionHome.findOpinionByProduct(new Long(this.id_product));
         return list;
 
 
-    }
+    }*/
 }

@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.*;
 import java.sql.*;
+import javax.naming.NamingException;
 import javax.sql.*;
 import java.util.*;
 //import java.util.Date;
@@ -35,7 +36,7 @@ import OtherBean.Helper;
 public class UserBean implements EntityBean {
 
     private EntityContext entityContext;
-    private DataSource dataSource;
+    private Connection conn;
     private long id_user;
     private String name;
     private String surname;
@@ -58,9 +59,10 @@ public class UserBean implements EntityBean {
     public void setEntityContext(EntityContext ctx) {
         this.entityContext = ctx;
         try {
-            javax.naming.Context context = new javax.naming.InitialContext();
+            //    javax.naming.Context context = new javax.naming.InitialContext();
             try {
-                dataSource = (DataSource) context.lookup("jdbc/InternetShop");
+                //      dataSource = (DataSource) context.lookup("jdbc/InternetShop");
+                // conn = Helper.getConnection();
             } catch (Exception e) {
                 throw new EJBException("Проблема с подключением к базе");
             }
@@ -92,13 +94,15 @@ public class UserBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("DELETE FROM \"USER\" WHERE ID_USER = ?");
             pst.setLong(1, id_user);
             if (pst.executeUpdate() < 1) {
                 throw new RemoveException("Ошибка удаления");
             }
             // conn.commit();
+        }  catch (NamingException ex) {
+            ex.printStackTrace();
         } catch (SQLException ex) {
             ex.printStackTrace();
         } finally {
@@ -124,7 +128,7 @@ public class UserBean implements EntityBean {
         PreparedStatement pst = null;
         ResultSet rs = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM \"USER\" WHERE ID_USER = ?");
             pst.setLong(1, id_user);
             rs = pst.executeQuery();
@@ -142,11 +146,13 @@ public class UserBean implements EntityBean {
             email = rs.getString(9);
 
             id_role = rs.getLong(10);
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
         } catch (SQLException e) {
             throw new EJBException("Ошибка SELECT");
         } finally {
             try {
-                Helper.closeConnection(conn, pst);
+                Helper.closeConnection(conn, pst,rs);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -160,7 +166,7 @@ public class UserBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("UPDATE \"USER\"" + "SET NAME =?, SURNAME =?, OTCHESTVO =?,NIK=?,  PASSWORD =?, BORN=?,PHONE=?,EMAIL=?,ID_ROLE=? WHERE ID_USER=?");
 
             pst.setString(1, name);
@@ -176,6 +182,8 @@ public class UserBean implements EntityBean {
             if (pst.executeUpdate() < 1) {
                 throw new NoSuchEntityException("Не найдена запись");
             }
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка UPDATE");
         } catch (SQLException e) {
             throw new EJBException("Ошибка UPDATE");
         } finally {
@@ -195,7 +203,7 @@ public class UserBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM \"USER\" WHERE ID_USER = ?");
             pst.setLong(1, id_user.longValue());
             ResultSet resultSet = pst.executeQuery();
@@ -203,6 +211,8 @@ public class UserBean implements EntityBean {
                 throw new ObjectNotFoundException("Запись не найдена");
             }
             return id_user;
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
         } catch (SQLException e) {
             throw new EJBException("Ошибка SELECT");
         } finally {
@@ -218,7 +228,7 @@ public class UserBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("SELECT ID_USER FROM \"USER\" WHERE NIK = ?");
             pst.setString(1, nik);
             ResultSet rs = pst.executeQuery();
@@ -226,6 +236,8 @@ public class UserBean implements EntityBean {
                 throw new ObjectNotFoundException("Запись не найдена");
             }
             return new Long(rs.getLong(1));
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
         } catch (SQLException e) {
             throw new EJBException("Ошибка SELECT");
         } finally {
@@ -241,7 +253,7 @@ public class UserBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("SELECT ID_USER FROM \"USER\" WHERE NIK = ? AND ID_USER <> ?");
             pst.setString(1, nik);
             pst.setLong(2, id_user.longValue());
@@ -250,6 +262,8 @@ public class UserBean implements EntityBean {
                 throw new ObjectNotFoundException("Запись не найдена");
             }
             return new Long(rs.getLong(1));
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
         } catch (SQLException e) {
             throw new EJBException("Ошибка SELECT");
         } finally {
@@ -265,22 +279,25 @@ public class UserBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         java.lang.Long lg = null;
+         ResultSet rs = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("SELECT ID_USER FROM \"USER\" WHERE NIK = ? AND PASSWORD=? ");
             pst.setString(1, nik);
             pst.setString(2, password);
-            ResultSet rs = pst.executeQuery();
+            rs = pst.executeQuery();
             if (!rs.next()) {
                 throw new ObjectNotFoundException("Запись не найдена");
             }
             lg = new Long(rs.getLong(1));
 
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
         } catch (SQLException e) {
             throw new EJBException("Ошибка SELECT");
         } finally {
             try {
-                Helper.closeConnection(conn, pst);
+                Helper.closeConnection(conn, pst,rs);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -293,7 +310,7 @@ public class UserBean implements EntityBean {
         PreparedStatement pst = null;
         ResultSet rs = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM \"USER\" WHERE ID_ROLE = ?");
             pst.setLong(1, id_role.longValue());
             rs = pst.executeQuery();
@@ -304,6 +321,8 @@ public class UserBean implements EntityBean {
                 keys.addElement(new Long(id_user));
             }
             return keys;
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
         } catch (SQLException e) {
             throw new EJBException("Ошибка SELECT");
         } finally {
@@ -319,7 +338,7 @@ public class UserBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM \"USER\"");
             ResultSet resultSet = pst.executeQuery();
             Vector keys = new Vector();
@@ -328,6 +347,8 @@ public class UserBean implements EntityBean {
                 keys.addElement(new Long(id_user));
             }
             return keys;
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
         } catch (SQLException e) {
             throw new EJBException("Ошибка SELECT");
         } finally {
@@ -358,7 +379,7 @@ public class UserBean implements EntityBean {
         CallableStatement pst = null;
         ResultSet rs = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareCall("BEGIN INSERT INTO \"USER\" " + "(NAME,SURNAME,OTCHESTVO,NIK,PASSWORD,BORN,PHONE,EMAIL,ID_ROLE)" + "VALUES(?,?,?,?,?,?,?,?,?) RETURNING ID_USER INTO ?;END;");
             pst.setString(1, name);
             pst.setString(2, surname);
@@ -377,6 +398,8 @@ public class UserBean implements EntityBean {
 
             id_user = pst.getLong(10);
             return new Long(id_user);
+        } catch (NamingException ex) {
+            throw new EJBException("Произошла ошибка добавления");
         } catch (SQLException ex) {
             throw new EJBException("Произошла ошибка добавления");
         } finally {

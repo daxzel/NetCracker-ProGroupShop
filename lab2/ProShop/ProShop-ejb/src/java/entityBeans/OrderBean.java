@@ -35,7 +35,7 @@ public class OrderBean implements EntityBean {
     private UserBeanRemoteHome userHome;
     private ProductBeanRemoteHome productHome;
     private EntityContext entityContext;
-    private DataSource dataSource;
+    // private Connection conn;
     private long id_order;
     private long id_user;
     private long id_product;
@@ -57,9 +57,10 @@ public class OrderBean implements EntityBean {
         try {
             userHome = (UserBeanRemoteHome) OtherBean.Helper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
             productHome = (ProductBeanRemoteHome) OtherBean.Helper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
-            javax.naming.Context context = new javax.naming.InitialContext();
+            //   javax.naming.Context context = new javax.naming.InitialContext();
             try {
-                dataSource = (DataSource) context.lookup("jdbc/InternetShop");
+                //  dataSource = (DataSource) context.lookup("jdbc/InternetShop");
+                // conn= Helper.getConnection();
             } catch (Exception e) {
                 throw new EJBException("Проблема с подключением к базе");
             }
@@ -91,13 +92,15 @@ public class OrderBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("DELETE FROM \"ORDER\" WHERE ID_ORDER = ?");
             pst.setLong(1, id_order);
             if (pst.executeUpdate() < 1) {
                 throw new RemoveException("Ошибка удаления");
             }
 
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка при удалении");
         } catch (SQLException ex) {
             throw new EJBException("Ошибка при удалении");
         } finally {
@@ -123,7 +126,7 @@ public class OrderBean implements EntityBean {
         PreparedStatement pst = null;
         ResultSet rs = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM \"ORDER\" WHERE ID_ORDER = ?");
             pst.setLong(1, id_order);
             rs = pst.executeQuery();
@@ -140,6 +143,8 @@ public class OrderBean implements EntityBean {
             amount = rs.getInt(5);
 
 
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
         } catch (SQLException e) {
             throw new EJBException("Ошибка SELECT");
         } finally {
@@ -158,13 +163,15 @@ public class OrderBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("UPDATE \"ORDER\"" + "SET STATUS = ? WHERE ID_ORDER=?");
             pst.setBoolean(1, status);
             pst.setLong(2, id_order);
             if (pst.executeUpdate() < 1) {
                 throw new NoSuchEntityException("Не найдена запись");
             }
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка UPDATE");
         } catch (SQLException e) {
             throw new EJBException("Ошибка UPDATE");
         } finally {
@@ -184,7 +191,7 @@ public class OrderBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM \"ORDER\" WHERE ID_ORDER = ?");
             pst.setLong(1, id_order.longValue());
             ResultSet resultSet = pst.executeQuery();
@@ -192,6 +199,8 @@ public class OrderBean implements EntityBean {
                 throw new ObjectNotFoundException("Запись не найдена");
             }
             return id_order;
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
         } catch (SQLException e) {
             throw new EJBException("Ошибка SELECT");
         } finally {
@@ -208,7 +217,7 @@ public class OrderBean implements EntityBean {
         PreparedStatement pst = null;
         ResultSet rs = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM \"ORDER\" WHERE ID_USER = ? AND STATUS = ?");
             pst.setLong(1, id_user.longValue());
             pst.setBoolean(2, status);
@@ -220,6 +229,8 @@ public class OrderBean implements EntityBean {
                 keys.addElement(new Long(id_order));
             }
             return keys;
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
         } catch (SQLException e) {
             throw new EJBException("Ошибка SELECT");
         } finally {
@@ -241,7 +252,7 @@ public class OrderBean implements EntityBean {
         CallableStatement pst = null;
         ResultSet rs = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareCall("BEGIN INSERT INTO \"ORDER\" " + "(ID_USER,ID_PRODUCT,STATUS,KOL_VO)" + "VALUES(?,?,?,?) RETURNING ID_ORDER INTO ?;END;");
             pst.setLong(1, this.id_user);
             pst.setLong(2, this.id_product);
@@ -254,6 +265,8 @@ public class OrderBean implements EntityBean {
             }
             this.id_order = pst.getLong(5);
             return new Long(this.id_order);
+        } catch (NamingException ex) {
+            throw new EJBException("Произошла ошибка добавления");
         } catch (SQLException ex) {
             throw new EJBException("Произошла ошибка добавления");
         } finally {
@@ -304,7 +317,8 @@ public class OrderBean implements EntityBean {
         ProductBeanRemote prd = productHome.findByPrimaryKey(new Long(id_product));
         return prd.getName();
     }
-     public double getPriceProduct() throws FinderException, RemoteException {
+
+    public double getPriceProduct() throws FinderException, RemoteException {
         ProductBeanRemote prd = productHome.findByPrimaryKey(new Long(id_product));
         return prd.getPrice();
     }
@@ -317,8 +331,6 @@ public class OrderBean implements EntityBean {
         return new Long(id_product);
     }
 
-    
-
     public int getAmount() {
         return amount;
     }
@@ -330,8 +342,6 @@ public class OrderBean implements EntityBean {
     public void setStatus(boolean status) {
         this.status = status;
     }
-
-    
 
     public double getPrice() {
         return price_product * amount;

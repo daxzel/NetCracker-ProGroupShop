@@ -9,6 +9,7 @@ import javax.ejb.EntityContext;
 import javax.ejb.FinderException;
 
 import java.sql.*;
+import javax.naming.NamingException;
 import javax.sql.*;
 import java.rmi.RemoteException;
 import java.sql.ResultSet;
@@ -33,7 +34,7 @@ import javax.ejb.*;
 public class RoleBean implements EntityBean {
 
     private EntityContext entityContext;
-    private DataSource dataSource;
+    private Connection conn;
     private long id_role;
     private String name;
 
@@ -47,9 +48,10 @@ public class RoleBean implements EntityBean {
     public void setEntityContext(EntityContext ctx) {
         this.entityContext = ctx;
         try {
-            javax.naming.Context context = new javax.naming.InitialContext();
+            // javax.naming.Context context = new javax.naming.InitialContext();
             try {
-                dataSource = (DataSource) context.lookup("jdbc/InternetShop");
+                //    dataSource = (DataSource) context.lookup("jdbc/InternetShop");
+               // conn = Helper.getConnection();
             } catch (Exception e) {
                 throw new EJBException("Проблема с подключением к базе");
             }
@@ -81,12 +83,14 @@ public class RoleBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("DELETE FROM \"ROLE\" WHERE ID_ROLE = ?");
             pst.setLong(1, id_role);
             if (pst.executeUpdate() < 1) {
                 throw new RemoveException("Ошибка удаления");
             }
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка DELETE");
         } catch (SQLException e) {
             throw new EJBException("Ошибка DELETE");
         } finally {
@@ -110,7 +114,7 @@ public class RoleBean implements EntityBean {
         PreparedStatement pst = null;
         ResultSet rs = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM \"ROLE\" WHERE ID_ROLE = ?");
             pst.setLong(1, id_role);
             rs = pst.executeQuery();
@@ -120,6 +124,8 @@ public class RoleBean implements EntityBean {
             id_role = rs.getLong(1);
             name = rs.getString(2);
 
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
         } catch (SQLException e) {
             throw new EJBException("Ошибка SELECT");
         } finally {
@@ -138,13 +144,15 @@ public class RoleBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("UPDATE \"ROLE\"" + "SET NAME =? WHERE ID_ROLE=?");
             pst.setString(1, name);
             pst.setLong(2, id_role);
             if (pst.executeUpdate() < 1) {
                 throw new NoSuchEntityException("Не найдена запись");
             }
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка UPDATE");
         } catch (SQLException e) {
             throw new EJBException("Ошибка UPDATE");
         } finally {
@@ -164,7 +172,7 @@ public class RoleBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM \"ROLE\" WHERE ID_ROLE = ?");
             pst.setLong(1, id_role.longValue());
             ResultSet resultSet = pst.executeQuery();
@@ -172,6 +180,8 @@ public class RoleBean implements EntityBean {
                 throw new ObjectNotFoundException("Запись не найдена");
             }
             return id_role;
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
         } catch (SQLException e) {
             throw new EJBException("Ошибка SELECT");
         } finally {
@@ -187,7 +197,7 @@ public class RoleBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("SELECT ID_ROLE FROM \"ROLE\" WHERE NAME = ?");
             pst.setString(1, name);
             ResultSet rs = pst.executeQuery();
@@ -195,6 +205,8 @@ public class RoleBean implements EntityBean {
                 throw new ObjectNotFoundException("Запись не найдена");
             }
             return new Long(rs.getLong(1));
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
         } catch (SQLException e) {
             throw new EJBException("Ошибка SELECT");
         } finally {
@@ -210,7 +222,7 @@ public class RoleBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM \"ROLE\"");
             ResultSet resultSet = pst.executeQuery();
             Vector keys = new Vector();
@@ -219,6 +231,8 @@ public class RoleBean implements EntityBean {
                 keys.addElement(new Long(id_role));
             }
             return keys;
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
         } catch (SQLException e) {
             throw new EJBException("Ошибка SELECT");
         } finally {

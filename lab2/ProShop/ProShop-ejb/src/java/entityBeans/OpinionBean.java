@@ -32,7 +32,6 @@ import javax.sql.DataSource;
 public class OpinionBean implements EntityBean {
 
     private EntityContext entityContext;
-    private DataSource dataSource;
     private long id_opinion;
     private long id_product;
     private long id_user;
@@ -48,9 +47,8 @@ public class OpinionBean implements EntityBean {
     public void setEntityContext(EntityContext ctx) {
         this.entityContext = ctx;
         try {
-            javax.naming.Context context = new javax.naming.InitialContext();
+            // javax.naming.Context context = new javax.naming.InitialContext();
             try {
-                dataSource = (DataSource) context.lookup("jdbc/InternetShop");
             } catch (Exception e) {
                 throw new EJBException("Проблема с подключением к базе");
             }
@@ -91,7 +89,7 @@ public class OpinionBean implements EntityBean {
         PreparedStatement pst = null;
         ResultSet rs = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM \"OPINION\" WHERE ID_OPINION = ?");
             pst.setLong(1, id_opinion);
             rs = pst.executeQuery();
@@ -102,6 +100,8 @@ public class OpinionBean implements EntityBean {
             id_product = rs.getLong(2);
             id_user = rs.getLong(3);
             text = rs.getString(4);
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
         } catch (SQLException e) {
             throw new EJBException("Ошибка SELECT");
         } finally {
@@ -120,16 +120,18 @@ public class OpinionBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("UPDATE \"OPINION\"" + "SET TEXT=? WHERE ID_OPINION=?");
             pst.setString(1, text);
             pst.setLong(2, id_opinion);
             if (pst.executeUpdate() < 1) {
                 throw new NoSuchEntityException("Не найдена запись");
             }
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка UPDATE");
         } catch (SQLException e) {
             e.printStackTrace();
-           // throw new EJBException("Ошибка UPDATE");
+            throw new EJBException("Ошибка UPDATE");
         } finally {
             try {
                 Helper.closeConnection(conn, pst);
@@ -143,15 +145,17 @@ public class OpinionBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("DELETE FROM \"OPINION\" WHERE ID_OPINION = ?");
             pst.setLong(1, id_opinion);
             if (pst.executeUpdate() < 1) {
                 throw new RemoveException("Ошибка удаления");
             }
             // conn.commit();
+        } catch (NamingException ex) {
+            throw new RemoveException("Ошибка удаления");
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            throw new RemoveException("Ошибка удаления");
         } finally {
             try {
 //                 conn.commit();
@@ -170,7 +174,7 @@ public class OpinionBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("SELECT ID_OPINION FROM \"OPINION\" WHERE ID_OPINION = ?");
             //id_op.longValue();
             pst.setLong(1, id_op.longValue());
@@ -179,6 +183,8 @@ public class OpinionBean implements EntityBean {
                 throw new ObjectNotFoundException("Запись не найдена");
             }
             return id_op;
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
         } catch (SQLException e) {
             throw new EJBException("Ошибка SELECT");
         } finally {
@@ -196,7 +202,7 @@ public class OpinionBean implements EntityBean {
         ResultSet rs = null;
         Connection conn = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("SELECT ID_OPINION FROM \"OPINION\" WHERE ID_PRODUCT = ?");
             pst.setLong(1, id_pr.longValue());
             rs = pst.executeQuery();
@@ -206,6 +212,8 @@ public class OpinionBean implements EntityBean {
                 keys.addElement(new Long(id_opinion));
             }
             return keys;
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
         } catch (SQLException e) {
             throw new EJBException("Ошибка SELECT");
         } finally {
@@ -225,7 +233,7 @@ public class OpinionBean implements EntityBean {
         CallableStatement pst = null;
         ResultSet rs = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareCall("BEGIN INSERT INTO \"OPINION\" " + "(ID_PRODUCT, ID_USER, TEXT)" + "VALUES(?, ?, ?) RETURNING ID_OPINION INTO ?;END;");
             pst.setLong(1, id_prod.longValue());
             pst.setLong(2, id_user.longValue());
@@ -237,6 +245,8 @@ public class OpinionBean implements EntityBean {
             }
             id_opinion = pst.getLong(4);
             return new Long(id_opinion);
+        } catch (NamingException ex) {
+            throw new EJBException("Произошла ошибка добавления");
         } catch (SQLException ex) {
             throw new EJBException("Произошла ошибка добавления");
         } finally {
@@ -301,4 +311,3 @@ public class OpinionBean implements EntityBean {
         return name;
     }
 }
-

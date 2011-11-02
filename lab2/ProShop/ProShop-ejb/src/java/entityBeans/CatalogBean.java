@@ -12,6 +12,7 @@ import java.util.Vector;
 import javax.ejb.CreateException;
 import javax.ejb.DuplicateKeyException;
 import javax.ejb.EJBException;
+import javax.naming.NamingException;
 import javax.sql.*;
 import javax.ejb.EntityBean;
 import javax.ejb.EntityContext;
@@ -27,7 +28,7 @@ import javax.ejb.RemoveException;
 public class CatalogBean implements EntityBean {
 
     private EntityContext entityContext;
-    private DataSource dataSource;
+    private Connection conn;
     private long id_catalog;
     private long id_parent;
     private String name;
@@ -42,10 +43,11 @@ public class CatalogBean implements EntityBean {
     public void setEntityContext(EntityContext ctx) {
         this.entityContext = ctx;
         try {
-            javax.naming.Context context = new javax.naming.InitialContext();
+            //  javax.naming.Context context = new javax.naming.InitialContext();
             try {
-                dataSource = (DataSource) context.lookup("jdbc/InternetShop");
+            //    conn = Helper.getConnection();
             } catch (Exception e) {
+                e.printStackTrace();
                 throw new EJBException("Проблема с подключением к базе");
             }
         } catch (Exception e) {
@@ -79,12 +81,14 @@ public class CatalogBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("DELETE FROM \"CATALOG\" WHERE ID_CATALOG = ?");
             pst.setLong(1, id_catalog);
             if (pst.executeUpdate() < 1) {
                 throw new RemoveException("Ошибка удаления");
             }
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка при удалении");
         } catch (SQLException ex) {
             throw new EJBException("Ошибка при удалении");
             // ex.printStackTrace();
@@ -106,7 +110,7 @@ public class CatalogBean implements EntityBean {
         PreparedStatement pst = null;
         ResultSet rs = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM \"CATALOG\" WHERE ID_CATALOG = ?");
             pst.setLong(1, id_catalog);
             rs = pst.executeQuery();
@@ -117,6 +121,8 @@ public class CatalogBean implements EntityBean {
             id_parent = rs.getLong(2);
             name = rs.getString(3);
 
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
         } catch (SQLException e) {
             throw new EJBException("Ошибка SELECT");
         } finally {
@@ -135,7 +141,7 @@ public class CatalogBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("UPDATE \"CATALOG\"" + "SET ID_PARENT=?, NAME =? WHERE ID_CATALOG=?");
 
             pst.setLong(1, id_parent);
@@ -144,6 +150,8 @@ public class CatalogBean implements EntityBean {
             if (pst.executeUpdate() < 1) {
                 throw new NoSuchEntityException("Не найдена запись");
             }
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка UPDATE");
         } catch (SQLException e) {
             throw new EJBException("Ошибка UPDATE");
         } finally {
@@ -163,7 +171,7 @@ public class CatalogBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM \"CATALOG\" WHERE ID_CATALOG = ?");
             //id_catalog.longValue();
             pst.setLong(1, id_catalog.longValue());
@@ -172,6 +180,8 @@ public class CatalogBean implements EntityBean {
                 throw new ObjectNotFoundException("Запись не найдена");
             }
             return id_catalog;
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
         } catch (SQLException e) {
             throw new EJBException("Ошибка SELECT");
         } finally {
@@ -187,7 +197,7 @@ public class CatalogBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("SELECT ID_CATALOG FROM \"CATALOG\" WHERE NAME = ?");
             pst.setString(1, name);
             ResultSet rs = pst.executeQuery();
@@ -195,6 +205,8 @@ public class CatalogBean implements EntityBean {
                 throw new ObjectNotFoundException("Запись не найдена");
             }
             return new Long(rs.getLong(1));
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
         } catch (SQLException e) {
             throw new EJBException("Ошибка SELECT");
         } finally {
@@ -222,7 +234,7 @@ public class CatalogBean implements EntityBean {
         CallableStatement pst = null;
         ResultSet rs = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareCall("BEGIN INSERT INTO \"CATALOG\" " + "(ID_PARENT,NAME)" + "VALUES(?,?) RETURNING ID_CATALOG INTO ?;END;");
             pst.setLong(1, id_parent);
             pst.setString(2, name);
@@ -234,6 +246,8 @@ public class CatalogBean implements EntityBean {
 
             id_catalog = pst.getLong(3);
             return new Long(id_catalog);
+        } catch (NamingException ex) {
+            throw new EJBException("Произошла ошибка добавления");
         } catch (SQLException ex) {
             throw new EJBException("Произошла ошибка добавления");
         } finally {
@@ -253,13 +267,13 @@ public class CatalogBean implements EntityBean {
     public Collection ejbFindCatalogByPid(java.lang.Long id_catalog) {
         Connection conn = null;
         PreparedStatement pst = null;
-        ResultSet resultSet= null;
+        ResultSet resultSet = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("SELECT ID_CATALOG FROM \"CATALOG\" WHERE ID_PARENT = ?");
             pst.setLong(1, id_catalog.longValue());
-            resultSet  = pst.executeQuery();
-          //  ResultSet resultSet = pst.executeQuery();
+            resultSet = pst.executeQuery();
+            //  ResultSet resultSet = pst.executeQuery();
             Vector keys = new Vector();
             while (resultSet.next()) {
                 long id_catalogs = resultSet.getLong(1);
@@ -267,11 +281,13 @@ public class CatalogBean implements EntityBean {
             }
 
             return keys;
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
         } catch (SQLException e) {
             throw new EJBException("Ошибка SELECT");
         } finally {
             try {
-                Helper.closeConnection(conn, pst,resultSet);
+                Helper.closeConnection(conn, pst, resultSet);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -282,7 +298,7 @@ public class CatalogBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = dataSource.getConnection();
+            conn = Helper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM \"CATALOG\"");
             ResultSet resultSet = pst.executeQuery();
             Vector keys = new Vector();
@@ -291,6 +307,8 @@ public class CatalogBean implements EntityBean {
                 keys.addElement(new Long(id_catalog));
             }
             return keys;
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
         } catch (SQLException e) {
             throw new EJBException("Ошибка SELECT");
         } finally {

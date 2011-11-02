@@ -21,7 +21,7 @@ public interface CatalogBeanRemote extends EJBObject {
 
     public void setName(java.lang.String name) throws RemoteException;
 
-    public void setId(java.lang.Long id_catalog) throws RemoteException;
+    void setId(java.lang.Long id_catalog) throws RemoteException;
 
     public void setParentId(java.lang.Long id_parent) throws RemoteException;
 }
