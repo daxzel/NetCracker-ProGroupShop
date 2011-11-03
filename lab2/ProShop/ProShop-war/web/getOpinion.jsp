@@ -5,6 +5,9 @@
 --%>
 
 
+<%@page import="exceptions.LoginException"%>
+<%@page import="Other.JSPHelper"%>
+<%@page import="entityBeans.UserBeanRemote"%>
 <%@page import= "entityBeans.ProductBeanRemote,entityBeans.OpinionBeanRemote,java.util.List;"%>
 
 <%@page errorPage= "errorPage.jsp"%>
@@ -18,7 +21,11 @@
         <title>Product</title>
     </head>
     <body>
-        <%
+        <%  UserBeanRemote usr = null;
+                    try {
+                        usr = JSPHelper.getUser2(session);
+                    } catch (LoginException ex) {
+                    }
                     if (request.getAttribute("result") == null) {
         %>
         <form action="getOpinionByProduct">
@@ -27,11 +34,11 @@
             <input type="submit" value="Input" />
         </form>
         <%} else {
-                                        if (request.getAttribute("result") instanceof ProductBeanRemote) {
-                                            ProductBeanRemote prd = (ProductBeanRemote) request.getAttribute("result");
-                                            List list = prd.getOpinionList();
-                                            OpinionBeanRemote opn;
-                                            session.setAttribute("product", prd);
+                                if (request.getAttribute("result") instanceof ProductBeanRemote) {
+                                    ProductBeanRemote prd = (ProductBeanRemote) request.getAttribute("result");
+                                    List list = prd.getOpinionList();
+                                    OpinionBeanRemote opn;
+                                    session.setAttribute("product", prd);
 
         %>
         <table align="center" border="1" width="80%">
@@ -56,23 +63,43 @@
         </table><br><br>
         <table align="center"  border="1" width="80%">
             <tr align="center">
-                <td colspan="2">Comments to <%=prd.getName()%></td>
+                <td colspan="3">Comments to <%=prd.getName()%></td>
 
             </tr>
             <tr align="center">
                 <td width="25%" align="center">User nik</td>
                 <td width="20%" align="center">Text</td>
+                <td width="20%" align="center">Delete</td>
 
             </tr>
             <% for (int i = 0; i <= (list.size() - 1); i++) {
-                                        opn = (OpinionBeanRemote) list.get(i);%>
+                                                    opn = (OpinionBeanRemote) list.get(i);%>
             <tr align="center">
-                <td><%= opn.getUserName() %></td>
+                <td><%= opn.getUserName()%></td>
                 <td><%= opn.getText()%></td>
+                <td><%if (usr != null) {
+                         if (opn.getIdUser() == usr.getId() || usr.getRoleId() == 1) {%>
+                         <a href ="delComment?ID=<%=opn.getIdOpinion()%>">del this comment</a>
+                         <%}
+                     }%></td>
                 <%}%>
             </tr>
         </table>
+        <br>
+        <form action="addComment">
+            <table align="center"  border="1" width="80%">
+                <tr align="center">
+                    <td colspan="2">Add you comment to <%=prd.getName()%></td>
 
+                </tr>
+                <tr align="center">
+                    <td>
+                        <textarea name="COMMENT" rows="4" cols="120">
+                        </textarea></td><td>
+                        <input type="submit" value="Input" />
+                    </td></tr>
+            </table>
+        </form>
         <%  }
                     }
 

@@ -4,6 +4,9 @@
     Author     : Pushok
 --%>
 
+<%@page import="Other.JSPHelper"%>
+<%@page import="exceptions.LoginException"%>
+<%@page import="entityBeans.UserBeanRemote"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -14,8 +17,10 @@
     <body>
 
         <H2>Удаление записи из каталога</H2>
-        <%
-            
+        <% UserBeanRemote usr = JSPHelper.getUser2(session);
+                    if (2 == usr.getRoleId()) {
+                        throw new LoginException("Вы не обладаете правами администратора");
+                    }
         %>
         <form name="delCatalog" action="del_catalog">
             <table>                
@@ -27,9 +32,9 @@
 
 
         <%if (request.getAttribute("result") != null) {%>
-            <%=request.getAttribute("result")%>
-        
-            <%}%>
- <p align="left"><a href ="index.jsp">index</a><br></p>
+        <%=request.getAttribute("result")%>
+
+        <%}%>
+        <p align="left"><a href ="index.jsp">index</a><br></p>
     </body>
 </html>

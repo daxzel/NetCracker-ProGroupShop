@@ -4,7 +4,6 @@
  */
 package servlets;
 
-import DBClasses.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -26,8 +25,7 @@ import java.text.ParsePosition;
 import java.util.*;
 import exceptions.*;
 import javax.servlet.http.HttpSession;
-import DBClasses.User;
-import DBManager.*;
+
 import Other.JSPHelper;
 import entityBeans.*;
 import Other.JSPHelper;
@@ -237,26 +235,7 @@ public class ExecServlet extends HttpServlet {
             request.setAttribute("NAME_CATALOG", name_catalog);
             result = ex.getMessage();
             page = "addProduct.jsp";
-        }/* catch (CatalogException ex) {
-        request.setAttribute("NAME", name);
-        request.setAttribute("DESCRIPTION", description);
-        request.setAttribute("PRICE", priceS);
-        request.setAttribute("NAME_CATALOG", name_catalog);
-        result = ex.getMessage();
-        page = "addProduct.jsp";
-
-        } catch (Exception ex) {
-
-        request.setAttribute("NAME", name);
-        request.setAttribute("DESCRIPTION", description);
-        request.setAttribute("PRICE", priceS);
-        request.setAttribute("NAME_CATALOG", name_catalog);
-
-        result = "Ошибка";
-        page = "addProduct.jsp";
-
-        // Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }*/ finally {
+        } finally {
             request.setAttribute("result", result);
             rd = request.getRequestDispatcher(page);
             rd.forward(request, response);
@@ -413,7 +392,7 @@ public class ExecServlet extends HttpServlet {
             }
             UserBeanRemoteHome userHome = (UserBeanRemoteHome) Helper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
             Collection list = userHome.findByRole(new Long(role_id));
-            //List list = DBManager.findUsersByRole(rolename);
+
             request.setAttribute("result", list);
         } catch (FinderException ex) {
             request.setAttribute("result", "Ошибка поиска");
@@ -439,10 +418,9 @@ public class ExecServlet extends HttpServlet {
             String nik = request.getParameter("NIK");
             UserBeanRemoteHome userHome = (UserBeanRemoteHome) Helper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
             UserBeanRemote user = userHome.findByNik(nik);
-            // userHome.remove(user);
+
             userHome.remove(new Long(user.getId()));
-            //  user.remove();
-            // int numDelete = DBManager.deleteUser(nik);
+
             result = "Удаление завершено";
         } catch (ObjectNotFoundException ex) {
             result = "Пользователя с таким ником не существует";
@@ -474,7 +452,7 @@ public class ExecServlet extends HttpServlet {
                 list = productHome.findAll();
             } else {
                 UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
-                //request.setAttribute("result", DBManager.getFullList(table));
+
                 if ("USER".equals(table)) {
                     UserBeanRemoteHome userHome = (UserBeanRemoteHome) Helper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
                     list = userHome.findAll();
@@ -515,10 +493,9 @@ public class ExecServlet extends HttpServlet {
             }
             UserBeanRemoteHome userHome = (UserBeanRemoteHome) Helper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
             UserBeanRemote usr = userHome.findByNikAndPassword(nik, password);
-            // usr.getNik();
+
             session.setAttribute("user", usr);
-            // session.setAttribute("userNik", usr);
-            // session.setAttribute("password", password);
+
             if (session.getAttribute("homepage") != null) {
                 String homepage = session.getAttribute("homepage").toString();
                 rd = request.getRequestDispatcher(homepage);
@@ -545,66 +522,66 @@ public class ExecServlet extends HttpServlet {
     }
 
     protected void addComment(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, IOException {
+            HttpServletResponse response) throws ServletException, IOException, LoginException {
         RequestDispatcher rd;
         HttpSession session = request.getSession();
-        if (session.getAttribute("user") != null && session.getAttribute("user") instanceof User) {
-            try {
+        UserBeanRemote usr = JSPHelper.getUser2(session);
 
-                String id_product = request.getParameter("ID_PRODUCT");
-                int id_pr = Integer.parseInt(id_product);
-                String id_user = request.getParameter("ID_USER");
-                int id_usr = Integer.parseInt(id_user);
-                String text = request.getParameter("TEXT");
-                DBManager.addComment(id_pr, id_usr, text);
-                rd = request.getRequestDispatcher("index.jsp");
-                rd.forward(request, response);
-            } catch (ServletException ex) {
-                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SQLException ex) {
-                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (NamingException ex) {
-                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } else {
-            rd = request.getRequestDispatcher("login.jsp");
+
+
+        try {
+            ProductBeanRemote product = (ProductBeanRemote) session.getAttribute("product");
+            String text = request.getParameter("COMMENT");
+            OpinionBeanRemoteHome opinionHome = (OpinionBeanRemoteHome) Helper.lookupHome("ejb/OpinionBean", OpinionBeanRemoteHome.class);
+            opinionHome.create(new Long(product.getId()), new Long(usr.getId()), text);
+            rd = request.getRequestDispatcher("getOpinion.jsp");
+            request.setAttribute("result", product);
             rd.forward(request, response);
+        } catch (CreateException ex) {
+            ex.printStackTrace();
+        } catch (RemoteException ex) {
+            ex.printStackTrace();
+        } catch (ServletException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NamingException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
+      
+
     }
 
     protected void delComment(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, IOException {
+            HttpServletResponse response) throws ServletException, IOException, LoginException {
 
         RequestDispatcher rd;
         HttpSession session = request.getSession();
-        if (session.getAttribute("user") != null && session.getAttribute("user") instanceof User) {
-            try {
-
-                String id_opinion = request.getParameter("ID_OPINION");
-                int id_op = Integer.parseInt(id_opinion);
-                DBManager.delComment(id_op);
-                rd = request.getRequestDispatcher("opinion.jsp");
-                rd.forward(request, response);
-            } catch (ServletException ex) {
-                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SQLException ex) {
-                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (NamingException ex) {
-                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } else {
-            rd = request.getRequestDispatcher("login.jsp");
+          UserBeanRemote usr = JSPHelper.getUser2(session);
+        try {
+            ProductBeanRemote product = (ProductBeanRemote) session.getAttribute("product");
+            String id_op = request.getParameter("ID");
+            OpinionBeanRemoteHome opinionHome = (OpinionBeanRemoteHome) Helper.lookupHome("ejb/OpinionBean", OpinionBeanRemoteHome.class);
+            opinionHome.remove(new Long(Long.parseLong(id_op)));
+            rd = request.getRequestDispatcher("getOpinion.jsp");
+            request.setAttribute("result", product);
             rd.forward(request, response);
+        } catch (RemoteException ex) {
+            ex.printStackTrace();
+        } catch (RemoveException ex) {
+            ex.printStackTrace();
+        } catch (ServletException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NamingException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+         
     }
 
     protected void getOpinionByProduct(HttpServletRequest request,
@@ -637,42 +614,7 @@ public class ExecServlet extends HttpServlet {
         } catch (IOException ex) {
             Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
-        /*} else {
-        rd = request.getRequestDispatcher("login.jsp");
-        rd.forward(request, response);
-        }*/
 
-    }
-
-    protected void getProduct(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, IOException {
-        RequestDispatcher rd;
-        HttpSession session = request.getSession();
-        // if (session.getAttribute("user") != null && session.getAttribute("user") instanceof User) {
-        try {
-            String id_product = request.getParameter("id");
-            int id_pr = Integer.parseInt(id_product);
-            Product prd = (Product) DBManager.getById("PRODUCT", id_pr);
-            List list = DBManager.findOpinionByProduct(id_pr);
-            request.setAttribute("product", prd);
-            request.setAttribute("opinion", list);
-            rd = request.getRequestDispatcher("getProduct.jsp");
-            rd.forward(request, response);
-        } catch (ServletException ex) {
-            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NamingException ex) {
-            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        /*  } else {
-        rd = request.getRequestDispatcher("login.jsp");
-        rd.forward(request, response);
-        }*/
 
     }
 
@@ -773,24 +715,6 @@ public class ExecServlet extends HttpServlet {
         } catch (NamingException ex) {
             Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-
-    protected void getChildCatalog(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, IOException {
-        try {
-            String result;
-            String homepage;
-            RequestDispatcher rd;
-            String name = request.getParameter("NAME");
-            request.setAttribute("result", DBManager.findChildCatalog(name));
-            rd = request.getRequestDispatcher("getChild_catalog.jsp");
-            rd.forward(request, response);
-        } catch (SQLException ex) {
-            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NamingException ex) {
-            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
     }
 
     protected void addOrder(HttpServletRequest request,
@@ -962,10 +886,6 @@ public class ExecServlet extends HttpServlet {
                 getFullList(request, response, "USER");
                 return;
             }
-            if (request.getRequestURI().equals("/ProShop-war/addComment")) {
-                addComment(request, response);
-                return;
-            }
             if (request.getRequestURI().equals("/ProShop-war/delComment")) {
                 delComment(request, response);
                 return;
@@ -994,10 +914,6 @@ public class ExecServlet extends HttpServlet {
                 getFullCtg(request, response);
                 return;
             }
-            if (request.getRequestURI().equals("/ProShop-war/getChild_catalog")) {
-                getChildCatalog(request, response);
-                return;
-            }
             if (request.getRequestURI().equals("/ProShop-war/order")) {
                 addOrder(request, response);
                 return;
@@ -1020,6 +936,10 @@ public class ExecServlet extends HttpServlet {
             }
             if (request.getRequestURI().equals("/ProShop-war/logout")) {
                 logout(request, response);
+                return;
+            }
+            if (request.getRequestURI().equals("/ProShop-war/addComment")) {
+                addComment(request, response);
                 return;
             }
 

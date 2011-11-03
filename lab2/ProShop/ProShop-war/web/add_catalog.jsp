@@ -4,7 +4,10 @@
     Author     : Pushok
 --%>
 
+<%@page import="exceptions.LoginException"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import = "entityBeans.UserBeanRemote,Other.*;"%>
+<%@page errorPage="errorPage.jsp"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -12,8 +15,11 @@
         <title>Добавление новой записи в каталог</title>
     </head>
     <body>
-        
-               
+        <% UserBeanRemote usr = JSPHelper.getUser2(session);
+                    if (2 == usr.getRoleId()) {
+                        throw new LoginException("Вы не обладаете правами администратора");
+                    }
+        %>
         <H2>Добавление новой записи в каталог</H2>
         <form name="addCatalog" action="add_catalog">
             <table>
@@ -22,14 +28,14 @@
                 <tr><td>Name</td><td></td></tr>
                 <tr><td><input type="text" name="NAME" value="" size="200" /></td><td></td></tr>                
                 <tr><td><input type="submit" value="Input" /></td><td></td></tr>
-             </table>
+            </table>
         </form>
 
-        
-        <%if(request.getAttribute("result")!=null){%>
-         <%=request.getAttribute("result")%>
+
+        <%if (request.getAttribute("result") != null) {%>
+        <%=request.getAttribute("result")%>
         <%}
         %>
-       <p align="left"><a href ="index.jsp">index</a><br></p>
+        <p align="left"><a href ="index.jsp">index</a><br></p>
     </body>
 </html>

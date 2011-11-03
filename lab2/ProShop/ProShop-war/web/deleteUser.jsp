@@ -4,6 +4,7 @@
     Author     : Yra
 --%>
 
+<%@page import="exceptions.LoginException"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import= "entityBeans.UserBeanRemote,Other.JSPHelper"%>
 <%@page errorPage="errorPage.jsp"%>
@@ -17,20 +18,19 @@
     </head>
     <body>
         <%UserBeanRemote usr = JSPHelper.getUser2(session);
-                    /*if (session.getAttribute("user") != null && session.getAttribute("user") instanceof UserInterface) {
-                        usr = (UserInterface) session.getAttribute("user");
-                        if (usr.getLogin() == true) {*/
-                           // if (request.getAttribute("result") == null) {
+                    if (2 == usr.getRoleId()) {
+                        throw new LoginException("Вы не обладаете правами администратора");
+                    }
         %>
         <form action="deleteUser">
             Введите ник:
             <input type="text" name="NIK" value="" size="20" />
             <input type="submit" value="Input" />
         </form>
-        <%if (request.getAttribute("result") != null){%>
-        <%=request.getAttribute("result").toString() %>
+        <%if (request.getAttribute("result") != null) {%>
+        <%=request.getAttribute("result").toString()%>
         <%}%>
-    
-                     <p align="left"><a href ="index.jsp">index</a><br></p>
+
+        <p align="left"><a href ="index.jsp">index</a><br></p>
     </body>
 </html>
