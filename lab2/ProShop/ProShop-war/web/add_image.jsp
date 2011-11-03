@@ -17,31 +17,29 @@
         <form action="addImage">
             
             <table border="0">
-
                 <tbody>
                     <tr>
-                        <td>�� ��������</td>
+                        <td>Номер продукта</td>
                         <td><input type="text" name="ID_PRODUCT" value=""/></td>
                     </tr>
                     <tr>
-                        <td>�������� �����������</td>
+                        <td>Название</td>
                         <td><input type="text" name="NAME" value="" /></td>
                     </tr>
                     <tr>
-                        <td>���� � �����</td>
+                        <td>Путь к картинке</td>
                         <td><input type="text" name="PATH" value="" /></td>
                     </tr>
                     <tr>
-                        <td>������ �����������</td>
+                        <td>ширина</td>
                         <td><input type="text" name="WIDTH" value="" /></td>
                     </tr>
                     <tr>
-                        <td>������ �����������</td>
+                        <td>высота</td>
                         <td><input type="text" name="HEIGHT" value=""/> </td>
                     </tr>
                 </tbody>
             </table>
-
             <input type="submit" value="OK" />
         </form>
         <p align="left"><a href ="index.jsp">index</a><br></p>

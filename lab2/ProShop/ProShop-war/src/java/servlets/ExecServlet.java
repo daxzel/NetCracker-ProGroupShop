@@ -105,7 +105,10 @@ public class ExecServlet extends HttpServlet {
 
             //DBManager.addUser(name, surname, otchestvo, nik, password, bornDate, phone, email, Integer.parseInt(role));
             UserBeanRemoteHome userHome = (UserBeanRemoteHome) Helper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
-            userHome.create(name, surname, otchestvo, nik, password, new java.sql.Date(bornDate.getTime()), phone, email, new Long(Long.parseLong(role)));
+            java.sql.Date sqlDate = new java.sql.Date(bornDate.getTime());
+            java.lang.Long idRole = new Long(Long.parseLong(role));
+
+            userHome.create(name, surname, otchestvo, nik, password, sqlDate, phone, email, idRole);
             result = "Пользователь зарегестрирован";
         } catch (DuplicateKeyException ex) {
             result = ex.getMessage();
@@ -158,6 +161,11 @@ public class ExecServlet extends HttpServlet {
             rd.forward(request, response);
         }
     }
+
+    protected void addImage(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException, LoginException {
+    }
+
 
     protected void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -851,6 +859,11 @@ public class ExecServlet extends HttpServlet {
 
             if (request.getRequestURI().equals("/ProShop-war/selectByNik")) {
                 selectByNik(request, response);
+                return;
+            }
+
+            if (request.getRequestURI().equals("/ProShop-war/addImage")) {
+                addImage(request, response);
                 return;
             }
 

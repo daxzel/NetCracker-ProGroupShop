@@ -74,6 +74,23 @@
             <prim-key-class>java.lang.Long</prim-key-class>
             <reentrant>false</reentrant>
         </entity>
+        <entity>
+            <display-name>ImageBeanEB</display-name>
+            <ejb-name>ImageBean</ejb-name>
+            <home>entityBeans.ImageBeanRemoteHome</home>
+            <remote>entityBeans.ImageBeanRemote</remote>
+            <local-home>entityBeans.ImageBeanLocalHome</local-home>
+            <local>entityBeans.ImageBeanLocal</local>
+            <ejb-class>entityBeans.ImageBean</ejb-class>
+            <persistence-type>Container</persistence-type>
+            <prim-key-class>java.lang.Long</prim-key-class>
+            <reentrant>false</reentrant>
+            <abstract-schema-name>ImageBean</abstract-schema-name>
+            <cmp-field>
+                <field-name>pk</field-name>
+            </cmp-field>
+            <primkey-field>pk</primkey-field>
+        </entity>
         </enterprise-beans>
     <assembly-descriptor>
         <container-transaction>
@@ -115,6 +132,13 @@
         <container-transaction>
             <method>
                 <ejb-name>OpinionBean</ejb-name>
+                <method-name>*</method-name>
+            </method>
+            <trans-attribute>Required</trans-attribute>
+        </container-transaction>
+        <container-transaction>
+            <method>
+                <ejb-name>ImageBean</ejb-name>
                 <method-name>*</method-name>
             </method>
             <trans-attribute>Required</trans-attribute>
