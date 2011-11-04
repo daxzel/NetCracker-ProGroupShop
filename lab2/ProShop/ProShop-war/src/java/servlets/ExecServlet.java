@@ -34,6 +34,7 @@ import java.sql.*;
 import javax.sql.*;
 import javax.ejb.*;
 import OtherBean.Helper;
+import java.io.*;
 
 /**
  *
@@ -162,8 +163,104 @@ public class ExecServlet extends HttpServlet {
         }
     }
 
+    public static byte[] getBytesFromFile(File file) throws IOException {
+        InputStream is = new FileInputStream(file);
+        long length = file.length();
+        if (length > Integer.MAX_VALUE) {
+            return null;
+        }
+
+        byte[] bytes = new byte[(int)length];
+
+        // Read in the bytes
+        int offset = 0;
+        int numRead = 0;
+        while (offset < bytes.length && (numRead=is.read(bytes, offset, bytes.length-offset)) >= 0) {
+            offset += numRead;
+        }
+
+        // Ensure all the bytes have been read in
+        if (offset < bytes.length) {
+            throw new IOException("Could not completely read file "+file.getName());
+        }
+
+        // Close the input stream and return bytes
+        is.close();
+        return bytes;
+    }
+
+
     protected void addImage(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException, LoginException {
+        RequestDispatcher rd;
+        String id_productS = request.getParameter("ID_PRODUCT");
+        String name = request.getParameter("NAME");
+        String path = request.getParameter("PATH");
+        String widthS = request.getParameter("WIDTH");
+        String heightS = request.getParameter("HEIGHT");
+        String result = "Произошла ошибка при добавлении картинки";
+        String page = "addImage.jsp";
+
+        long id_product;
+        int width=0;
+        int height=0;
+
+        try {
+
+            if ("".equals(id_productS)) {
+                throw new Exception("Продукт не может быть пустым полем");
+            }
+
+            if ("".equals(name)) {
+                throw new Exception("Название картинки не может быть пустым полем");
+            }
+
+            if ("".equals(path)) {
+                throw new Exception("Путь к картинке не может быть пустым полем");
+            }
+
+            if ("".equals(widthS)) {
+                throw new Exception("Ширина не может быть пустым полем");
+            }
+
+            if ("".equals(heightS)) {
+                throw new Exception("Высота не может быть пустым полем");
+            }
+
+            height = Integer.parseInt(heightS);
+            id_product=Long.parseLong(widthS);
+            width=Integer.parseInt(widthS);
+
+            ImageBeanRemoteHome imageHome = (ImageBeanRemoteHome) Helper.lookupHome("ejb/ImageBean", ImageBeanRemoteHome.class);
+            ImageBeanRemote imageBean=imageHome.create(id_product, name, null, width, height);
+
+            Blob blob = imageBean.getImage();
+            java.io.File image = new java.io.File (path);
+            byte[] value = getBytesFromFile(image);
+            long len=value.length;
+            blob.setBytes(len, value);
+            imageBean.setImage(blob);
+
+            result = "Продукт добавлен";
+            page = "index.jsp";
+
+        } catch (FinderException ex) {
+            result = "Имя каталога указанно не верно";
+        } catch (NamingException ex) {
+            result = "Ошибка";
+        } catch (CreateException ex) {
+            result = ex.getMessage();
+        } catch (NumberFormatException ex) {
+            result = "Ошибка в указании цены";
+        } catch (Exception ex) {
+            result = ex.getMessage();
+        } finally {
+            request.setAttribute("result", result);
+            rd = request.getRequestDispatcher(page);
+            rd.forward(request, response);
+        }
+
+
     }
 
 
@@ -862,7 +959,7 @@ public class ExecServlet extends HttpServlet {
                 return;
             }
 
-            if (request.getRequestURI().equals("/ProShop-war/addImage")) {
+            if (request.getRequestURI().equals("/ProShop-war/add_image")) {
                 addImage(request, response);
                 return;
             }

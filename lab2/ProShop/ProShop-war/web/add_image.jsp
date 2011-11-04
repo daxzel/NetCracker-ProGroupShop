@@ -14,7 +14,7 @@
         <title>add_image</title>
     </head>
     <body>
-        <form action="addImage">
+        <form name="add_image" action="add_image">
             
             <table border="0">
                 <tbody>
@@ -40,7 +40,7 @@
                     </tr>
                 </tbody>
             </table>
-            <input type="submit" value="OK" />
+            <input type="submit"  value="Input" />
         </form>
         <p align="left"><a href ="index.jsp">index</a><br></p>
     </body>
