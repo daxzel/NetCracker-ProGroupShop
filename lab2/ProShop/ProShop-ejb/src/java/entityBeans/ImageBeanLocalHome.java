@@ -17,6 +17,4 @@ public interface ImageBeanLocalHome extends EJBLocalHome {
 
     entityBeans.ImageBeanLocal findByPrimaryKey(java.lang.Long key)  throws FinderException;
 
-    entityBeans.ImageBeanLocal create(java.lang.Long key)  throws CreateException;
-
 }

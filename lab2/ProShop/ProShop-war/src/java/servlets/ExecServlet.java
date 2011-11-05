@@ -199,7 +199,7 @@ public class ExecServlet extends HttpServlet {
         String widthS = request.getParameter("WIDTH");
         String heightS = request.getParameter("HEIGHT");
         String result = "Произошла ошибка при добавлении картинки";
-        String page = "addImage.jsp";
+        String page = "add_image.jsp";
 
         long id_product;
         int width=0;
@@ -228,19 +228,16 @@ public class ExecServlet extends HttpServlet {
             }
 
             height = Integer.parseInt(heightS);
-            id_product=Long.parseLong(widthS);
+            id_product=Long.parseLong(id_productS);
             width=Integer.parseInt(widthS);
 
             ImageBeanRemoteHome imageHome = (ImageBeanRemoteHome) Helper.lookupHome("ejb/ImageBean", ImageBeanRemoteHome.class);
-            ImageBeanRemote imageBean=imageHome.create(id_product, name, null, width, height);
+            ImageBeanRemote imageBean=imageHome.create(id_product, name, width, height);
 
-            Blob blob = imageBean.getImage();
-            java.io.File image = new java.io.File (path);
-            byte[] value = getBytesFromFile(image);
-            long len=value.length;
-            blob.setBytes(len, value);
-            imageBean.setImage(blob);
-
+            java.io.File image = new java.io.File(path);
+            Vector v = new Vector();
+            v.add(getBytesFromFile(image));
+            imageBean.setImageV(v);
             result = "Продукт добавлен";
             page = "index.jsp";
 
@@ -631,9 +628,6 @@ public class ExecServlet extends HttpServlet {
         RequestDispatcher rd;
         HttpSession session = request.getSession();
         UserBeanRemote usr = JSPHelper.getUser2(session);
-
-
-
         try {
             ProductBeanRemote product = (ProductBeanRemote) session.getAttribute("product");
             String text = request.getParameter("COMMENT");
@@ -996,6 +990,11 @@ public class ExecServlet extends HttpServlet {
                 getFullList(request, response, "USER");
                 return;
             }
+            if (request.getRequestURI().equals("/ProShop-war/getFullUserList")) {
+                getFullList(request, response, "IMAGE");
+                return;
+            }
+
             if (request.getRequestURI().equals("/ProShop-war/delComment")) {
                 delComment(request, response);
                 return;

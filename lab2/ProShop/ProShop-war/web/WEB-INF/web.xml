@@ -4,6 +4,10 @@
         <servlet-name>ExecServlet</servlet-name>
         <servlet-class>servlets.ExecServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ImageServlet</servlet-name>
+        <servlet-class>servlets.ImageServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ExecServlet</servlet-name>
         <url-pattern>/registration</url-pattern>
@@ -111,6 +115,10 @@
     <servlet-mapping>
         <servlet-name>ExecServlet</servlet-name>
         <url-pattern>/add_image</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ImageServlet</servlet-name>
+        <url-pattern>/Images</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

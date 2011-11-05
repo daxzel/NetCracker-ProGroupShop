@@ -8,6 +8,7 @@ package entityBeans;
 import java.rmi.RemoteException;
 import javax.ejb.EJBObject;
 import java.sql.*;
+import java.util.*;
 
 /**
  *
@@ -36,4 +37,8 @@ public interface ImageBeanRemote extends EJBObject {
     long getHeaight() throws RemoteException;
 
     void setHeaight(int i_heaight) throws RemoteException;
+
+    public Vector getImageV() throws RemoteException;
+
+    public void setImageV(Vector v) throws RemoteException;
 }

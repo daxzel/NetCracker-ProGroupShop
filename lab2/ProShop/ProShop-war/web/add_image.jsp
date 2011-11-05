@@ -42,6 +42,11 @@
             </table>
             <input type="submit"  value="Input" />
         </form>
+
+        <%if(request.getAttribute("result")!=null){
+                   %><%=request.getAttribute("result")%><%
+        }
+        %>
         <p align="left"><a href ="index.jsp">index</a><br></p>
     </body>
 </html>
