@@ -232,12 +232,8 @@ public class ExecServlet extends HttpServlet {
             width=Integer.parseInt(widthS);
 
             ImageBeanRemoteHome imageHome = (ImageBeanRemoteHome) Helper.lookupHome("ejb/ImageBean", ImageBeanRemoteHome.class);
-            ImageBeanRemote imageBean=imageHome.create(id_product, name, width, height);
-
-            java.io.File image = new java.io.File(path);
-            Vector v = new Vector();
-            v.add(getBytesFromFile(image));
-            imageBean.setImageV(v);
+             java.io.File image = new java.io.File(path);
+            ImageBeanRemote imageBean=imageHome.create(id_product, name,getBytesFromFile(image), width, height);
             result = "Продукт добавлен";
             page = "index.jsp";
 

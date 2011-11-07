@@ -39,8 +39,8 @@ public class Helper {
 
     public static Connection getConnection() throws SQLException, NamingException {
        // if (dataSource == null) {
-            javax.naming.Context context = new javax.naming.InitialContext();
-            DataSource dataSource = (DataSource) context.lookup("jdbc/InternetShop");
+              javax.naming.Context context = new javax.naming.InitialContext();
+              DataSource dataSource = (DataSource) context.lookup("jdbc/InternetShop");
        // }
         return dataSource.getConnection();
 

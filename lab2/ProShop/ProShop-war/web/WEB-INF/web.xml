@@ -118,7 +118,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ImageServlet</servlet-name>
-        <url-pattern>/Images</url-pattern>
+        <url-pattern>/Image.png</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

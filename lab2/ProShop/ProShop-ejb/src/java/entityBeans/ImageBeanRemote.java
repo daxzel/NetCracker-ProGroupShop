@@ -26,9 +26,9 @@ public interface ImageBeanRemote extends EJBObject {
 
     void setId_product(java.lang.Long id) throws RemoteException;
 
-    Blob getImage() throws RemoteException;
+    byte[] getImage() throws RemoteException;
 
-    void setImage(Blob i_image) throws RemoteException;
+    void setImage(byte[] image) throws RemoteException;
 
     long getWidth() throws RemoteException;
 
@@ -37,8 +37,4 @@ public interface ImageBeanRemote extends EJBObject {
     long getHeaight() throws RemoteException;
 
     void setHeaight(int i_heaight) throws RemoteException;
-
-    public Vector getImageV() throws RemoteException;
-
-    public void setImageV(Vector v) throws RemoteException;
 }

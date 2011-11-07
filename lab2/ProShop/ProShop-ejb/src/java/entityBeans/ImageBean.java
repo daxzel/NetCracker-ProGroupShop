@@ -24,7 +24,6 @@ public class ImageBean implements EntityBean {
     private long id_img;
     private long id_product;
     private String name;
-    private oracle.sql.BLOB image;
     private int width;
     private int heaight;
     
@@ -58,19 +57,19 @@ public class ImageBean implements EntityBean {
      * @see javax.ejb.EntityBean#ejbRemove()
      */
 
-    public java.lang.Long ejbFindByPrimaryKey(java.lang.Long id_catalog) throws ObjectNotFoundException {
+    public java.lang.Long ejbFindByPrimaryKey(java.lang.Long i_id_image) throws ObjectNotFoundException {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
             conn = Helper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM IMAGE WHERE ID_IMG = ?");
             //id_catalog.longValue();
-            pst.setLong(1, id_catalog.longValue());
+            pst.setLong(1, i_id_image.longValue());
             ResultSet resultSet = pst.executeQuery();
             if (!resultSet.next()) {
                 throw new ObjectNotFoundException("Запись не найдена");
             }
-            return id_catalog;
+            return i_id_image;
         } catch (NamingException ex) {
             throw new EJBException("Ошибка SELECT");
         } catch (SQLException e) {
@@ -162,7 +161,6 @@ public class ImageBean implements EntityBean {
             id_img = rs.getLong(1);
             id_product = rs.getLong(2);
             name = rs.getString(3);
-            image = (oracle.sql.BLOB)rs.getBlob(4);
             width=rs.getInt(5);
             heaight=rs.getInt(6);
         } catch (NamingException ex) {
@@ -186,13 +184,12 @@ public class ImageBean implements EntityBean {
         PreparedStatement pst = null;
         try {
             conn = Helper.getConnection();
-            pst = conn.prepareStatement("UPDATE IMAGE SET ID_PRODUCT =?, NAME =?, IMAGE =?, WIDTH=?, HEIGHT =? WHERE ID_IMG=?");
+            pst = conn.prepareStatement("UPDATE IMAGE SET ID_PRODUCT =?, NAME =?, WIDTH=?, HEIGHT =? WHERE ID_IMG=?");
             pst.setLong(1, id_product);
             pst.setString(2, name);
-            pst.setBlob(3, image);
-            pst.setInt(4, width);
-            pst.setInt(5, heaight);
-            pst.setLong(6, id_img);
+            pst.setInt(3, width);
+            pst.setInt(4, heaight);
+            pst.setLong(5, id_img);
             if (pst.executeUpdate() < 1) {
                 throw new NoSuchEntityException("Не найдена запись");
             }
@@ -221,7 +218,7 @@ public class ImageBean implements EntityBean {
         setId_img(key.longValue());
     }
     
-    public java.lang.Long ejbCreate(long i_id_product,String i_name,  int i_width, int i_heaight)  throws CreateException {
+    public java.lang.Long ejbCreate(long i_id_product,String i_name, byte[] picture,  int i_width, int i_heaight)  throws CreateException {
         this.id_product=i_id_product;
         this.name = i_name;
         this.width = i_width;
@@ -231,28 +228,25 @@ public class ImageBean implements EntityBean {
         ResultSet rs = null;
         try {
             conn = Helper.getConnection();
-            pst = conn.prepareCall("BEGIN INSERT INTO IMAGE (ID_PRODUCT, NAME, IMAGE, WIDTH, HEIGHT)" + "VALUES(?,?,empty_blob(),?,?) RETURNING ID_IMG INTO ?;END;");
+            pst = conn.prepareCall("BEGIN INSERT INTO IMAGE (ID_PRODUCT, NAME, IMAGE, WIDTH, HEIGHT)" + "VALUES(?,?,?,?,?) RETURNING ID_IMG INTO ?;END;");
             pst.setLong(1, id_product);
             pst.setString(2, name);
-            pst.setInt(3, width);
-            pst.setInt(4, heaight);
+            pst.setBytes(3, picture);
+            pst.setInt(4, width);
+            pst.setInt(5, heaight);
 
 
-            pst.registerOutParameter(5, Types.INTEGER);
+            pst.registerOutParameter(6, Types.INTEGER);
             rs = pst.executeQuery();
             if (!rs.next()) {
                 throw new CreateException("Ошибка вставки");
             }
-            id_img = pst.getLong(5);
+            id_img = pst.getLong(6);
 
-            pst=conn.prepareCall("select IMAGE from IMAGE where ID_IMG="+id_img+" FOR UPDATE NOWAIT");
-            rs = pst.executeQuery();
-            rs.next();
-            this.image=(oracle.sql.BLOB)rs.getBlob(1);
             return new Long(id_img);
         } catch (NamingException ex) {
             throw new EJBException("Произошла ошибка добавления");
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             throw new EJBException("Произошла ошибка добавления");
         } finally {
 
@@ -263,9 +257,10 @@ public class ImageBean implements EntityBean {
             }
 
         }
+
     }
 
-    public void ejbPostCreate(long i_id_product,String i_name, int i_width, int i_heaight)  throws CreateException {
+    public void ejbPostCreate(long i_id_product,String i_name, byte[] picture,  int i_width, int i_heaight)  throws CreateException {
     }
 
     public long getId_product()
@@ -278,83 +273,44 @@ public class ImageBean implements EntityBean {
         id_product=id.longValue();
     }
 
-    public Blob getImage()
+    public byte[] getImage()
     {
         try
         {
+            Connection conn = null;
+            PreparedStatement pst = null;
+            conn = Helper.getConnection();
 
-            return new javax.sql.rowset.serial.SerialBlob(image);
-            //return image;
+            pst=conn.prepareCall("select IMAGE from IMAGE where ID_IMG="+id_img);
+            ResultSet rs = pst.executeQuery();
+            rs.next();
+            oracle.sql.BLOB tempImage = (oracle.sql.BLOB)rs.getBlob(1);
+            java.io.InputStream byte_stream = tempImage.getBinaryStream(1L);
+            byte [] byte_array=new byte[3000000];
+            int bytes_read = byte_stream.read(byte_array);
+            return byte_array;
         }
         catch(Exception ex)
         {
             return null;
         }
     }
-
-    public java.awt.Image getImageI()
+    public void setImage(byte[] image)
     {
         try
         {
-            java.io.InputStream stream = image.getBinaryStream();
-            java.awt.Image img = javax.imageio.ImageIO.read(stream);
-            return img;
+            Connection conn = null;
+            PreparedStatement pst = null;
+            conn = Helper.getConnection();
+            pst = conn.prepareStatement("UPDATE IMAGE SET IMAGE =? WHERE ID_IMG=?");
+            pst.setBytes(1, image);
+            pst.setLong(2, id_img);
+            pst.executeQuery();         
         }
         catch(Exception ex)
         {
-            return null;
+            int i = 0;
         }
-    }
-
-    public void setImageV(Vector v)
-    {
-        try
-        {
-            Iterator it = v.iterator();
-
-            java.io.OutputStream out =  image.getBinaryOutputStream();
-
-            while(it.hasNext())
-            {
-                byte[] bytes = (byte[])it.next();
-                out.write(bytes);
-            }
-            out.flush();
-            out.close();
-        }
-        catch(Exception ex)
-        {
-        }
-    }
-
-    public Vector getImageV()
-    {
-        try
-        {
-            Vector v = new Vector();
-            java.io.InputStream in = image.getBinaryStream();
-            
-            int count = 1024;
-            int index = 0 ;
-
-            while(in.available()>0)
-            {
-                byte[] buff= new byte[count];
-                in.read(buff, index, count);
-                index+=count;
-                v.add(buff);
-            }
-            return v;
-        }
-        catch(Exception ex)
-        {
-            return null;
-        }
-    }
-
-    public void setImage(Blob i_image)
-    {
-        image=(oracle.sql.BLOB)i_image;
     }
 
     public long getWidth()

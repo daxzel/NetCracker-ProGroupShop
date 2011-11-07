@@ -33,24 +33,19 @@ public class ImageServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
 
-        PrintWriter out = response.getWriter();
+        javax.servlet.ServletOutputStream out =  response.getOutputStream();
         try
         {
             long id = Long.parseLong(request.getParameter("ID"));
             ImageBeanRemoteHome imageHome = (ImageBeanRemoteHome) Helper.lookupHome("ejb/ImageBean", ImageBeanRemoteHome.class);
             ImageBeanRemote imageBean=imageHome.findByPrimaryKey(new Long(id));
-            Vector v = imageBean.getImageV();
+            byte[] image = imageBean.getImage();
             response.setContentType("text/html;charset=UTF-8");
-            Iterator it = v.iterator();
-           
-            while(it.hasNext())
-            {
-                out.write(((Integer)it.next()).intValue());
-            }
+            out.write(image);
         }
         catch(Exception ex)
         {
-            out.write(ex.getMessage());
+//            out.write(ex.getMessage());
         }
         try {
             /* TODO output your page here
