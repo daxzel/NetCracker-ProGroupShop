@@ -232,8 +232,33 @@ public class ExecServlet extends HttpServlet {
             width=Integer.parseInt(widthS);
 
             ImageBeanRemoteHome imageHome = (ImageBeanRemoteHome) Helper.lookupHome("ejb/ImageBean", ImageBeanRemoteHome.class);
-             java.io.File image = new java.io.File(path);
-            ImageBeanRemote imageBean=imageHome.create(id_product, name,getBytesFromFile(image), width, height);
+
+              File file = new File(path);
+       //     java.io.FileInputStream imageStream  = new java.io.FileInputStream(file);
+
+            //BufferedInputStream BuffStream = new BufferedInputStream(imageStream);
+
+         //   javax.imageio.ImageIO i = new javax.imageio.ImageIO();
+
+         //   java.awt.image.BufferedImage image =  new javax.swing.ImageIcon(path).getImage();
+
+         //   java.awt.Image im = javax.imageio.ImageIO.read(imageStream);
+            // com.healthmarketscience.rmiio.RemoteInputStreamServer imageRStream =
+//                    new com.healthmarketscience.rmiio.SimpleRemoteInputStream(BuffStream);
+
+           //com.healthmarketscience.rmiio.RemoteInputStream rs = (com.healthmarketscience.rmiio.RemoteInputStream) (imageRStream.export());
+
+          // java.awt.Image a;
+          // com.healthmarketscience.rmiio.exporter.DefaultRemoteStreamExporter.getInstance().
+
+            ImageBeanRemote imageBean=imageHome.create(id_product, name, new Tools.SerializbleImage(file) , width, height);
+
+           // rs.close(true);
+
+            //BuffStream.close();
+            
+//            imageStream.close();
+
             result = "Продукт добавлен";
             page = "index.jsp";
 
@@ -245,7 +270,7 @@ public class ExecServlet extends HttpServlet {
             result = ex.getMessage();
         } catch (NumberFormatException ex) {
             result = "Ошибка в указании цены";
-        } catch (Exception ex) {
+        } catch (Throwable ex) {
             result = ex.getMessage();
         } finally {
             request.setAttribute("result", result);

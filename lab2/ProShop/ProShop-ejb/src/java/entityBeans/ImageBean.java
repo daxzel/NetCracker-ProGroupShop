@@ -13,6 +13,8 @@ import javax.ejb.*;
 import java.sql.*;
 import java.util.*;
 import OtherBean.*;
+import java.awt.*;
+import java.io.*;
 /**
  *
  * @author Admin
@@ -218,7 +220,56 @@ public class ImageBean implements EntityBean {
         setId_img(key.longValue());
     }
     
-    public java.lang.Long ejbCreate(long i_id_product,String i_name, byte[] picture,  int i_width, int i_heaight)  throws CreateException {
+    private InputStream imageToStream(Tools.SerializbleImage image) throws IOException, SQLException
+    {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        ObjectOutputStream oos = new ObjectOutputStream(out);
+        
+        oos.writeObject(image);
+        
+        oos.flush();
+
+        byte[] outBytes = out.toByteArray();
+
+        ByteArrayInputStream in = new ByteArrayInputStream(outBytes);
+
+        return in;
+
+    }
+
+    private byte[] imageToBytes(Tools.SerializbleImage image) throws IOException, SQLException
+    {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        ObjectOutputStream oos = new ObjectOutputStream(out);
+
+        oos.writeObject(image);
+
+        oos.flush();
+
+        return out.toByteArray();
+
+    }
+
+    private void imageToBlob2(Tools.SerializbleImage image, oracle.sql.BLOB blob) throws IOException, SQLException
+    {
+        ObjectOutputStream oos = new ObjectOutputStream(blob.getBinaryOutputStream(1L));
+
+        oos.writeObject(image);
+
+        oos.flush();
+
+    }
+
+    private Tools.SerializbleImage blobToImage( oracle.sql.BLOB blob) throws IOException, SQLException, java.lang.ClassNotFoundException
+    {
+        ObjectInputStream ois = new ObjectInputStream(blob.getBinaryStream(1L));
+
+        return (Tools.SerializbleImage)ois.readObject();
+    }
+
+    public java.lang.Long ejbCreate(long i_id_product,String i_name, Tools.SerializbleImage image,  int i_width, int i_heaight)  throws CreateException {
         this.id_product=i_id_product;
         this.name = i_name;
         this.width = i_width;
@@ -228,20 +279,30 @@ public class ImageBean implements EntityBean {
         ResultSet rs = null;
         try {
             conn = Helper.getConnection();
-            pst = conn.prepareCall("BEGIN INSERT INTO IMAGE (ID_PRODUCT, NAME, IMAGE, WIDTH, HEIGHT)" + "VALUES(?,?,?,?,?) RETURNING ID_IMG INTO ?;END;");
+            pst = conn.prepareCall("BEGIN INSERT INTO IMAGE (ID_PRODUCT, NAME, IMAGE, WIDTH, HEIGHT)" + "VALUES(?,?,empty_blob(),?,?) RETURNING ID_IMG INTO ?;END;");
             pst.setLong(1, id_product);
             pst.setString(2, name);
-            pst.setBytes(3, picture);
-            pst.setInt(4, width);
-            pst.setInt(5, heaight);
+            pst.setInt(3, width);
+            pst.setInt(4, heaight);
 
 
-            pst.registerOutParameter(6, Types.INTEGER);
+            pst.registerOutParameter(5, Types.INTEGER);
             rs = pst.executeQuery();
             if (!rs.next()) {
                 throw new CreateException("Ошибка вставки");
             }
-            id_img = pst.getLong(6);
+            id_img = pst.getLong(5);
+
+            pst=conn.prepareCall("select IMAGE from IMAGE where ID_IMG="+id_img);
+            rs = pst.executeQuery();
+            rs.next();
+            Blob blob = rs.getBlob(1);
+            imageToBlob2(image, (oracle.sql.BLOB)blob);
+
+            pst = conn.prepareCall("UPDATE IMAGE SET IMAGE =? WHERE ID_IMG=?");
+            pst.setBlob(1, blob);
+            pst.setLong(2, id_img);
+            pst.executeQuery();
 
             return new Long(id_img);
         } catch (NamingException ex) {
@@ -260,7 +321,7 @@ public class ImageBean implements EntityBean {
 
     }
 
-    public void ejbPostCreate(long i_id_product,String i_name, byte[] picture,  int i_width, int i_heaight)  throws CreateException {
+    public void ejbPostCreate(long i_id_product,String i_name,  Tools.SerializbleImage image, int i_width, int i_heaight)  throws CreateException {
     }
 
     public long getId_product()
@@ -312,6 +373,47 @@ public class ImageBean implements EntityBean {
             int i = 0;
         }
     }
+    
+    public Tools.SerializbleImage getImageI()
+    {
+        try
+        {
+            Connection conn = null;
+            PreparedStatement pst = null;
+            conn = Helper.getConnection();
+
+            pst=conn.prepareCall("select IMAGE from IMAGE where ID_IMG="+id_img);
+            ResultSet rs = pst.executeQuery();
+            rs.next();
+            return this.blobToImage((oracle.sql.BLOB)rs.getBlob(1));
+            //oracle.sql.BLOB tempImage = (oracle.sql.BLOB)rs.getBlob(1);
+//            java.io.InputStream byte_stream = tempImage.getBinaryStream(1L);
+//            byte [] byte_array=new byte[3000000];
+//            int bytes_read = byte_stream.read(byte_array);
+//            return byte_array;
+        }
+        catch(Exception ex)
+        {
+            return null;
+        }
+    }
+    public void setImageI(Tools.SerializbleImage image)
+    {
+        try
+        {
+            Connection conn = null;
+            PreparedStatement pst = null;
+            conn = Helper.getConnection();
+            pst = conn.prepareStatement("UPDATE IMAGE SET IMAGE =? WHERE ID_IMG=?");
+            pst.setBinaryStream(1, imageToStream(image));
+            pst.setLong(2, id_img);
+            pst.executeQuery();         
+        }
+        catch(Exception ex)
+        {
+        }
+    }
+    
 
     public long getWidth()
     {

@@ -27,7 +27,7 @@
                         <td><input type="text" name="NAME" value="" /></td>
                     </tr>
                     <tr>
-                        <td>Путь к картинке</td>
+                        <td>Картинка</td>
                         <td><input type="text" name="PATH" value="" /></td>
                     </tr>
                     <tr>

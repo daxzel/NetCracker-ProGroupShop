@@ -9,6 +9,7 @@ import java.rmi.RemoteException;
 import javax.ejb.EJBObject;
 import java.sql.*;
 import java.util.*;
+import java.awt.Image;
 
 /**
  *
@@ -37,4 +38,9 @@ public interface ImageBeanRemote extends EJBObject {
     long getHeaight() throws RemoteException;
 
     void setHeaight(int i_heaight) throws RemoteException;
+
+    public Tools.SerializbleImage getImageI() throws RemoteException;
+
+    public void setImageI(Tools.SerializbleImage image) throws RemoteException;
+
 }
