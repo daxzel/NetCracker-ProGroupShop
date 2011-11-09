@@ -14,7 +14,7 @@
         <title>add_image</title>
     </head>
     <body>
-        <form name="add_image" action="add_image">
+        <form name="add_image" method="post" action="add_image" enctype="multipart/form-data">
             
             <table border="0">
                 <tbody>
@@ -28,7 +28,7 @@
                     </tr>
                     <tr>
                         <td>Картинка</td>
-                        <td><input type="text" name="PATH" value="" /></td>
+                        <td><input type="file" name="IMAGE" value="" /></td>
                     </tr>
                     <tr>
                         <td>ширина</td>

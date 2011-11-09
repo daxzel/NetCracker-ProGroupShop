@@ -374,28 +374,16 @@ public class ImageBean implements EntityBean {
         }
     }
     
-    public Tools.SerializbleImage getImageI()
+    public Tools.SerializbleImage getImageI() throws SQLException,IOException, NamingException, ClassNotFoundException
     {
-        try
-        {
-            Connection conn = null;
-            PreparedStatement pst = null;
-            conn = Helper.getConnection();
+        Connection conn = null;
+        PreparedStatement pst = null;
+        conn = Helper.getConnection();
 
-            pst=conn.prepareCall("select IMAGE from IMAGE where ID_IMG="+id_img);
-            ResultSet rs = pst.executeQuery();
-            rs.next();
-            return this.blobToImage((oracle.sql.BLOB)rs.getBlob(1));
-            //oracle.sql.BLOB tempImage = (oracle.sql.BLOB)rs.getBlob(1);
-//            java.io.InputStream byte_stream = tempImage.getBinaryStream(1L);
-//            byte [] byte_array=new byte[3000000];
-//            int bytes_read = byte_stream.read(byte_array);
-//            return byte_array;
-        }
-        catch(Exception ex)
-        {
-            return null;
-        }
+        pst=conn.prepareCall("select IMAGE from IMAGE where ID_IMG="+id_img);
+        ResultSet rs = pst.executeQuery();
+        rs.next();
+        return this.blobToImage((oracle.sql.BLOB)rs.getBlob(1));
     }
     public void setImageI(Tools.SerializbleImage image)
     {

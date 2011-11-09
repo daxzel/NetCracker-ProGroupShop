@@ -44,6 +44,19 @@ public class SerializbleImage implements Serializable {
        }
    }
 
+    public SerializbleImage(java.io.InputStream stream) throws Exception
+   {
+       try
+       {
+            ofBufferedImage(javax.imageio.ImageIO.read(stream));
+       }
+       catch(IOException ex)
+       {
+           throw new Exception("Ошибка чтения картинки");
+       }
+   }
+
+
 
    public BufferedImage getImage() {
        BufferedImage result = new BufferedImage(width,

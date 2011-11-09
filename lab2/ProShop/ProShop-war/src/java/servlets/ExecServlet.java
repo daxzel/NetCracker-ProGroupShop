@@ -163,43 +163,77 @@ public class ExecServlet extends HttpServlet {
         }
     }
 
-    public static byte[] getBytesFromFile(File file) throws IOException {
-        InputStream is = new FileInputStream(file);
-        long length = file.length();
-        if (length > Integer.MAX_VALUE) {
-            return null;
-        }
-
-        byte[] bytes = new byte[(int)length];
-
-        // Read in the bytes
-        int offset = 0;
-        int numRead = 0;
-        while (offset < bytes.length && (numRead=is.read(bytes, offset, bytes.length-offset)) >= 0) {
-            offset += numRead;
-        }
-
-        // Ensure all the bytes have been read in
-        if (offset < bytes.length) {
-            throw new IOException("Could not completely read file "+file.getName());
-        }
-
-        // Close the input stream and return bytes
-        is.close();
-        return bytes;
-    }
-
-
     protected void addImage(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException, LoginException {
         RequestDispatcher rd;
-        String id_productS = request.getParameter("ID_PRODUCT");
-        String name = request.getParameter("NAME");
-        String path = request.getParameter("PATH");
-        String widthS = request.getParameter("WIDTH");
-        String heightS = request.getParameter("HEIGHT");
+
+        String id_productS =null;
+        String name = null;
+        String widthS = null;
+        String heightS = null;
         String result = "Произошла ошибка при добавлении картинки";
         String page = "add_image.jsp";
+
+        org.apache.commons.fileupload.disk.DiskFileItemFactory factory = new org.apache.commons.fileupload.disk.DiskFileItemFactory();
+
+        factory.setSizeThreshold(1024*1024);
+
+        File tempDir = (File)getServletContext().getAttribute("javax.servlet.context.tempdir");
+
+        factory.setRepository(tempDir);
+        org.apache.commons.fileupload.servlet.ServletFileUpload upload = new org.apache.commons.fileupload.servlet.ServletFileUpload(factory);
+
+        upload.setSizeMax(1024 * 1024 * 10);
+
+        Tools.SerializbleImage im = null;
+
+        try
+        {
+            List items = upload.parseRequest(request);
+            Iterator iter = items.iterator();
+            while (iter.hasNext())
+            {
+                org.apache.commons.fileupload.FileItem item = (org.apache.commons.fileupload.FileItem) iter.next();
+                if (!item.isFormField())
+                {
+                    im = new Tools.SerializbleImage(item.getInputStream());
+                }
+                else
+                {
+                    String fieldName = item.getFieldName();
+                    if (fieldName.equals("NAME"))
+                    {
+                        name = item.getString();
+                    }
+                    else
+                    {
+                        if (fieldName.equals("ID_PRODUCT"))
+                        {
+                            id_productS = item.getString();
+                        }
+                        else
+                        {
+                            if (fieldName.equals("WIDTH"))
+                            {
+                                widthS = item.getString();
+                            }
+                            else
+                            {
+                                if (fieldName.equals("HEIGHT"))
+                                {
+                                    heightS = item.getString();
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            int x = 0;
+        }
 
         long id_product;
         int width=0;
@@ -213,10 +247,6 @@ public class ExecServlet extends HttpServlet {
 
             if ("".equals(name)) {
                 throw new Exception("Название картинки не может быть пустым полем");
-            }
-
-            if ("".equals(path)) {
-                throw new Exception("Путь к картинке не может быть пустым полем");
             }
 
             if ("".equals(widthS)) {
@@ -233,31 +263,7 @@ public class ExecServlet extends HttpServlet {
 
             ImageBeanRemoteHome imageHome = (ImageBeanRemoteHome) Helper.lookupHome("ejb/ImageBean", ImageBeanRemoteHome.class);
 
-              File file = new File(path);
-       //     java.io.FileInputStream imageStream  = new java.io.FileInputStream(file);
-
-            //BufferedInputStream BuffStream = new BufferedInputStream(imageStream);
-
-         //   javax.imageio.ImageIO i = new javax.imageio.ImageIO();
-
-         //   java.awt.image.BufferedImage image =  new javax.swing.ImageIcon(path).getImage();
-
-         //   java.awt.Image im = javax.imageio.ImageIO.read(imageStream);
-            // com.healthmarketscience.rmiio.RemoteInputStreamServer imageRStream =
-//                    new com.healthmarketscience.rmiio.SimpleRemoteInputStream(BuffStream);
-
-           //com.healthmarketscience.rmiio.RemoteInputStream rs = (com.healthmarketscience.rmiio.RemoteInputStream) (imageRStream.export());
-
-          // java.awt.Image a;
-          // com.healthmarketscience.rmiio.exporter.DefaultRemoteStreamExporter.getInstance().
-
-            ImageBeanRemote imageBean=imageHome.create(id_product, name, new Tools.SerializbleImage(file) , width, height);
-
-           // rs.close(true);
-
-            //BuffStream.close();
-            
-//            imageStream.close();
+            ImageBeanRemote imageBean=imageHome.create(id_product, name, im , width, height);
 
             result = "Продукт добавлен";
             page = "index.jsp";
