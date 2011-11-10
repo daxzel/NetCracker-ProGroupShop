@@ -4,6 +4,9 @@
     Author     : ололо
 --%>
 
+<%@page import="entityBeans.UserBeanRemote"%>
+<%@page import="exceptions.LoginException"%>
+<%@page import="Other.JSPHelper"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
@@ -14,6 +17,11 @@
         <title>JSP Page</title>
     </head>
     <body>
+         <% UserBeanRemote usr = JSPHelper.getUser2(session);
+                    if (usr.getRoleId() > 2) {
+                        throw new LoginException("Вы не обладаете правами администратора");
+                    }
+        %>
   <form action="DelImageServlet">
 
             <table border="0">

@@ -5,7 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import= "DBClasses.UserInterface,java.util.*,java.text.SimpleDateFormat,Other.JSPHelper,entityBeans.UserBeanRemote;"%>
+<%@page import= "java.util.*,java.text.SimpleDateFormat,Other.JSPHelper,entityBeans.UserBeanRemote;"%>
 <%@page errorPage="errorPage.jsp"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     "http://www.w3.org/TR/html4/loose.dtd">
@@ -25,6 +25,7 @@
             Введите роль:
             <tr><td><select name="ROLE" style="width : 200">
                         <option value="admin" selected>Админ</option>
+                        <option value="manager" selected>Менеджер</option>
                         <option value="user">Пользователь</option>
                     </select></td><td></td></tr>
             <input type="submit" value="Input" />

@@ -69,8 +69,9 @@
             <tr align="center">
                 <td width="25%" align="center">User nik</td>
                 <td width="20%" align="center">Text</td>
+                <%if (usr != null) {%>
                 <td width="20%" align="center">Delete</td>
-
+                <%}%>
             </tr>
             <% for (int i = 0; i <= (list.size() - 1); i++) {
                                                     opn = (OpinionBeanRemote) list.get(i);%>
@@ -78,11 +79,11 @@
                 <td><%= opn.getUserName()%></td>
                 <td><%= opn.getText()%></td>
                 <td><%if (usr != null) {
-                         if (opn.getIdUser() == usr.getId() || usr.getRoleId() == 1) {%>
-                         <a href ="delComment?ID=<%=opn.getIdOpinion()%>">del this comment</a>
-                         <%}
-                     }%></td>
-                <%}%>
+                         if (opn.getIdUser() == usr.getId() || usr.getRoleId() <= 2) {%>
+                    <a href ="delComment?ID=<%=opn.getIdOpinion()%>">del this comment</a>
+                    <%}
+                              }%></td>
+                    <%}%>
             </tr>
         </table>
         <br>
