@@ -163,131 +163,7 @@ public class ExecServlet extends HttpServlet {
         }
     }
 
-    protected void addImage(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, IOException, LoginException {
-        RequestDispatcher rd;
-
-        String id_productS =null;
-        String name = null;
-        String widthS = null;
-        String heightS = null;
-        String result = "Произошла ошибка при добавлении картинки";
-        String page = "add_image.jsp";
-
-        org.apache.commons.fileupload.disk.DiskFileItemFactory factory = new org.apache.commons.fileupload.disk.DiskFileItemFactory();
-
-        factory.setSizeThreshold(1024*1024);
-
-        File tempDir = (File)getServletContext().getAttribute("javax.servlet.context.tempdir");
-
-        factory.setRepository(tempDir);
-        org.apache.commons.fileupload.servlet.ServletFileUpload upload = new org.apache.commons.fileupload.servlet.ServletFileUpload(factory);
-
-        upload.setSizeMax(1024 * 1024 * 10);
-
-        Tools.SerializbleImage im = null;
-
-        try
-        {
-            List items = upload.parseRequest(request);
-            Iterator iter = items.iterator();
-            while (iter.hasNext())
-            {
-                org.apache.commons.fileupload.FileItem item = (org.apache.commons.fileupload.FileItem) iter.next();
-                if (!item.isFormField())
-                {
-                    im = new Tools.SerializbleImage(item.getInputStream());
-                }
-                else
-                {
-                    String fieldName = item.getFieldName();
-                    if (fieldName.equals("NAME"))
-                    {
-                        name = item.getString();
-                    }
-                    else
-                    {
-                        if (fieldName.equals("ID_PRODUCT"))
-                        {
-                            id_productS = item.getString();
-                        }
-                        else
-                        {
-                            if (fieldName.equals("WIDTH"))
-                            {
-                                widthS = item.getString();
-                            }
-                            else
-                            {
-                                if (fieldName.equals("HEIGHT"))
-                                {
-                                    heightS = item.getString();
-                                }
-                            }
-                        }
-                    }
-
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            int x = 0;
-        }
-
-        long id_product;
-        int width=0;
-        int height=0;
-
-        try {
-
-            if ("".equals(id_productS)) {
-                throw new Exception("Продукт не может быть пустым полем");
-            }
-
-            if ("".equals(name)) {
-                throw new Exception("Название картинки не может быть пустым полем");
-            }
-
-            if ("".equals(widthS)) {
-                throw new Exception("Ширина не может быть пустым полем");
-            }
-
-            if ("".equals(heightS)) {
-                throw new Exception("Высота не может быть пустым полем");
-            }
-
-            height = Integer.parseInt(heightS);
-            id_product=Long.parseLong(id_productS);
-            width=Integer.parseInt(widthS);
-
-            ImageBeanRemoteHome imageHome = (ImageBeanRemoteHome) Helper.lookupHome("ejb/ImageBean", ImageBeanRemoteHome.class);
-
-            ImageBeanRemote imageBean=imageHome.create(id_product, name, im , width, height);
-
-            result = "Продукт добавлен";
-            page = "index.jsp";
-
-        } catch (FinderException ex) {
-            result = "Имя каталога указанно не верно";
-        } catch (NamingException ex) {
-            result = "Ошибка";
-        } catch (CreateException ex) {
-            result = ex.getMessage();
-        } catch (NumberFormatException ex) {
-            result = "Ошибка в указании цены";
-        } catch (Throwable ex) {
-            result = ex.getMessage();
-        } finally {
-            request.setAttribute("result", result);
-            rd = request.getRequestDispatcher(page);
-            rd.forward(request, response);
-        }
-
-
-    }
-
-
+    
     protected void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         if (session.getAttribute("user") != null) {
@@ -977,11 +853,6 @@ public class ExecServlet extends HttpServlet {
 
             if (request.getRequestURI().equals("/ProShop-war/selectByNik")) {
                 selectByNik(request, response);
-                return;
-            }
-
-            if (request.getRequestURI().equals("/ProShop-war/add_image")) {
-                addImage(request, response);
                 return;
             }
 

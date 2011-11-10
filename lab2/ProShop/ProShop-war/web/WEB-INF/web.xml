@@ -8,6 +8,10 @@
         <servlet-name>ImageServlet</servlet-name>
         <servlet-class>servlets.ImageServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>XMLServlet</servlet-name>
+        <servlet-class>servlets.XMLServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ExecServlet</servlet-name>
         <url-pattern>/registration</url-pattern>
@@ -113,12 +117,16 @@
         <url-pattern>/deleteOrder</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>ExecServlet</servlet-name>
-        <url-pattern>/add_image</url-pattern>
+        <servlet-name>ImageServlet</servlet-name>
+        <url-pattern>/Image.jpeg</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ImageServlet</servlet-name>
-        <url-pattern>/Image.jpeg</url-pattern>
+        <url-pattern>/add_image</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>XMLServlet</servlet-name>
+        <url-pattern>/XML/Products.xml</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
