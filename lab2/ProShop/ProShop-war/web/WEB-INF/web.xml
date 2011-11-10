@@ -12,6 +12,7 @@
         <servlet-name>XMLServlet</servlet-name>
         <servlet-class>servlets.XMLServlet</servlet-class>
     </servlet>
+
     <servlet-mapping>
         <servlet-name>ExecServlet</servlet-name>
         <url-pattern>/registration</url-pattern>

@@ -29,6 +29,7 @@ public class XMLServlet extends HttpServlet {
             PrintWriter out = response.getWriter();
             try
             {
+                java.io.PrintWriter writer= new java.io.PrintWriter("c:\\1.xml");
                 ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) Helper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
                 Tools.XMLHelper.ProductToXml(productHome.findAll(), out);
             }
@@ -42,7 +43,6 @@ public class XMLServlet extends HttpServlet {
         {
         }
     }
-
 
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.

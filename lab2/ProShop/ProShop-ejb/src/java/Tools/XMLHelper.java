@@ -20,6 +20,7 @@ public class XMLHelper
     {
         try
         {
+            result.write("<?xml-stylesheet  type=\"text/xsl\" href=\"http://localhost:32722/ProShop-war/static/Products.xslt\"?>");
 
             DocumentBuilderFactory factory
               = DocumentBuilderFactory.newInstance();
@@ -64,10 +65,9 @@ public class XMLHelper
             DOMSource domSource = new DOMSource(doc);
             TransformerFactory tf = TransformerFactory.newInstance();
             Transformer transformer = tf.newTransformer();
-//            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-//            transformer.setOutputProperty(OutputKeys.METHOD, "xml");
-//            transformer.setOutputProperty(OutputKeys.ENCODING,"UTF-8");
-//            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+       //     transformer.setOutputProperty(OutputKeys, "yes");
+
+
 
             StreamResult sr = new StreamResult(result);
             transformer.transform(domSource, sr);
