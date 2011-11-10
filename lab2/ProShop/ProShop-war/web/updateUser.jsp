@@ -4,8 +4,9 @@
     Author     : Yra
 --%>
 
+<%@page import="exceptions.LoginException"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import= "DBClasses.UserInterface,entityBeans.UserBeanRemote,Other.JSPHelper"%>
+<%@page import= "entityBeans.UserBeanRemote,Other.JSPHelper"%>
 <%@page import= "java.text.SimpleDateFormat"%>
 <%@ page errorPage="errorPage.jsp"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -22,13 +23,11 @@
 
                     SimpleDateFormat formt = new SimpleDateFormat("yyyy-MM-dd");
                     UserBeanRemote usr = JSPHelper.getUser2(session);
-                    // if (session.getAttribute("user") instanceof UserInterface) {
-                    //   usr = (UserInterface) session.getAttribute("user");
-                    // if (usr.getLogin() == true) {
+
                     session.setAttribute("homepage", "updateUser.jsp");
                     if ("upProf".equals(request.getParameter("DO")) || ("upProf".equals(request.getAttribute("DO")))) {
                         //  session.setAttribute("usrOld", usr);
-        %>
+%>
         <form name="myForm" action="updateProfil">
             <table>
                 <tr><td>Name</td><td></td></tr>
@@ -67,6 +66,9 @@
                     }
                     if (("upUser".equals(request.getParameter("DO")) && usr.getRoleId() == 1) || ("upUser".equals(str) && usr.getRoleId() == 1)) {
                         if (session.getAttribute("userOld") == null) {
+                            if (usr.getRoleId() >= 2) {
+                                throw new LoginException("Вы не обладаете правами администратора");
+                            }
         %>
         <form action="selectByNik">
             Input nik:
@@ -74,14 +76,16 @@
             <input type="submit" value="Input" />
         </form>
         <%                            } else {
-                                    if (usr.getRoleId() == 1) {
-                                        UserBeanRemote user;
-                                        if (session.getAttribute("userOld") instanceof UserBeanRemote) {
-                                            user = (UserBeanRemote) session.getAttribute("userOld");
-                                            //session.setAttribute("usrOld", user);
+                                    if (usr.getRoleId() >= 2) {
+                                        throw new LoginException("Вы не обладаете правами администратора");
+                                    }
+                                    UserBeanRemote user;
+                                    if (session.getAttribute("userOld") instanceof UserBeanRemote) {
+                                        user = (UserBeanRemote) session.getAttribute("userOld");
+                                        //session.setAttribute("usrOld", user);
                                        /* } else {
-                                            user = (UserBeanRemote) session.getAttribute("usrOld");
-                                            }*/
+                                        user = (UserBeanRemote) session.getAttribute("usrOld");
+                                        }*/
         %>
         <form name="myForm" action="updateUser">
             <table>
@@ -109,8 +113,9 @@
                         <%}%>
                 <tr><td>Role</td><td></td></tr>
                 <tr><td><select name="ID_ROLE" style="width : 200">
-                            <option value="admin" selected>Админ</option>
-                            <option value="user">Пользователь</option>
+                            <option value="1" selected>Админ</option>
+                            <option value="3">Пользователь</option>
+                            <option value="2">Менеджер</option>
                         </select></td><td></td></tr>
 
                 <tr><td><input type="submit" value="Input" /></td><td></td></tr>
@@ -118,13 +123,13 @@
             </table>
         </form>
         <%
-                                      }
-                                  }
-                              }
-                              if (request.getAttribute("result") != null) {%>
+                            }
+                        }
+
+                    if (request.getAttribute("result") != null) {%>
         <%=request.getAttribute("result").toString()%><%}
 
-                    }
+            }
         %><br><p align="left"><a href ="index.jsp">index</a><br></p><%
             %>
 

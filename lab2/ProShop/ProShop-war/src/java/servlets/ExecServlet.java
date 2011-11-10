@@ -133,7 +133,7 @@ public class ExecServlet extends HttpServlet {
     protected void selectByNik(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, ParseException, IOException, LoginException {
         UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
-        if (2 == usr.getRoleId()) {
+        if (usr.getRoleId() > 2) {
             throw new LoginException("Вы не обладаете правами администратора");
         }
         String result = "Пользователь не найден";
@@ -163,12 +163,16 @@ public class ExecServlet extends HttpServlet {
         }
     }
 
-    
     protected void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         if (session.getAttribute("user") != null) {
+            if (session.getAttribute("homepage") != null) {
+                session.removeAttribute("homepage");
+            }
             session.removeAttribute("user");
+
         }
+
         RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
         rd.forward(request, response);
     }
@@ -177,7 +181,7 @@ public class ExecServlet extends HttpServlet {
             HttpServletResponse response) throws ServletException, ParseException, IOException, LoginException {
         RequestDispatcher rd;
         UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
-        if (2 == usr.getRoleId()) {
+        if (usr.getRoleId() > 2) {
             throw new LoginException("Вы не обладаете правами администратора");
         }
         String name = request.getParameter("NAME");
@@ -257,7 +261,7 @@ public class ExecServlet extends HttpServlet {
         RequestDispatcher rd;
         UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
         if (type.equals("updateUser")) {
-            if (2 == usr.getRoleId()) {
+            if (usr.getRoleId() >= 2) {
                 throw new LoginException("Вы не обладаете правами администратора");
             }
             usr = (UserBeanRemote) session.getAttribute("userOld");
@@ -311,6 +315,10 @@ public class ExecServlet extends HttpServlet {
             usr.setBorn(new java.sql.Date(born.getTime()));
             usr.setPhone(phone);
             usr.setEmail(email);
+            if (type.equals("updateUser")) {
+                long id_role = Long.parseLong(request.getParameter("ID_ROLE"));
+                usr.setRoleId(new Long(id_role));
+            }
 
             if (type.equals("updateProfil")) {
                 request.setAttribute("DO", "upProf");
@@ -392,7 +400,11 @@ public class ExecServlet extends HttpServlet {
                 role_id = 1;
             } else {
                 if ("user".equals(rolename)) {
-                    role_id = 2;
+                    role_id = 3;
+                } else {
+                    if ("manager".equals(rolename)) {
+                        role_id = 2;
+                    }
                 }
             }
             UserBeanRemoteHome userHome = (UserBeanRemoteHome) Helper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
@@ -416,7 +428,7 @@ public class ExecServlet extends HttpServlet {
         RequestDispatcher rd;
         UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
         String result = "Удаление не выполнено";
-        if (2 == usr.getRoleId()) {
+        if (usr.getRoleId() >= 2) {
             throw new LoginException("Вы не обладаете правами администратора");
         }
         try {
@@ -552,7 +564,7 @@ public class ExecServlet extends HttpServlet {
         } catch (IOException ex) {
             Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
-      
+
 
     }
 
@@ -561,7 +573,7 @@ public class ExecServlet extends HttpServlet {
 
         RequestDispatcher rd;
         HttpSession session = request.getSession();
-          UserBeanRemote usr = JSPHelper.getUser2(session);
+        UserBeanRemote usr = JSPHelper.getUser2(session);
         try {
             ProductBeanRemote product = (ProductBeanRemote) session.getAttribute("product");
             String id_op = request.getParameter("ID");
@@ -583,7 +595,7 @@ public class ExecServlet extends HttpServlet {
         } catch (IOException ex) {
             Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
-         
+
     }
 
     protected void getOpinionByProduct(HttpServletRequest request,
@@ -625,7 +637,7 @@ public class ExecServlet extends HttpServlet {
         RequestDispatcher rd;
         HttpSession session = request.getSession();
         UserBeanRemote usr = JSPHelper.getUser2(session);
-        if (2 == usr.getRoleId()) {
+        if (usr.getRoleId() > 2) {
             throw new LoginException("Вы не обладаете правами администратора");
         }
         String result = "Добавление каталога прошло не успешно";
@@ -663,7 +675,7 @@ public class ExecServlet extends HttpServlet {
             HttpServletResponse response) throws ServletException, IOException, LoginException {
         String name = request.getParameter("NAME");
         UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
-        if (2 == usr.getRoleId()) {
+        if (usr.getRoleId() > 2) {
             throw new LoginException("Вы не обладаете правами администратора");
         }
         RequestDispatcher rd;

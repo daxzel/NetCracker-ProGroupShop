@@ -27,7 +27,7 @@
 
         <p align="center"><a href ="getFullProductList">Get full list of product</a><br></p>
             <% if (usr != null) {
-                                        if (usr.getRoleId() <= 2) {%>
+                                        if (usr.getRoleId() <= 3) {%>
         <p align="center"><a href ="getFullUserList">Get full list of user</a><br></p>
             <%}%>
             <%if (usr.getRoleId() == 1) {%>

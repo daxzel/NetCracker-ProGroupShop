@@ -58,7 +58,8 @@
                         <option value="2">Пользователь</option>
                     <%} else {%>
                         <option value="1">Админ</option>
-                        <option value="2" selected>Пользователь</option>
+                        <option value="3" selected>Пользователь</option>
+                        <option value="2" selected>Менеджер</option>
                     <%}%>
                 </select></td><td></td></tr>
                 <tr><td><input type="submit" value="Input" /></td><td></td></tr>
