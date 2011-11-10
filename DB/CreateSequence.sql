@@ -81,5 +81,12 @@ BEGIN
 SELECT MY_SEQ_U.NEXTVAL INTO :NEW.ID_USER FROM dual;
 END;
 /
-
+create or replace trigger "TRIGGER_DELETE_USER"
+BEFORE
+delete on "USER"
+for each row
+begin
+ UPDATE "OPINION" SET ID_USER=NULL WHERE ID_USER=:old.ID_USER;
+end;
+/
 
