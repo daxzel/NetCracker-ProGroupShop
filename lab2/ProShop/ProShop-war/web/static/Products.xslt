@@ -9,22 +9,29 @@
         <title>Документ без названия</title>
         </head>
         
-        <body>
+        <body style="background-color:#999">
         	<xsl:apply-templates select="PRODUCTS"/>
         </body>
         </html>
     </xsl:template>
     
 	<xsl:template match="PRODUCTS">
-    	<div style=" padding-left:100px; width:1000px">
+    	<div style=" padding-left:100px; width:1000px; border-color:#666">
         	<xsl:apply-templates select="PRODUCT"/>  
         </div>     
  	</xsl:template>
     
     <xsl:template match="PRODUCT">  
-    	<div style="background-color:#0FF">
-        	<h5><xsl:value-of select="./NAME"/> (<xsl:value-of select="./attribute::ID"/>) </h5>
-            <p><xsl:value-of select="./DESCRIPTION"/> </p>
+    	<div style=" border-width:2px; border-style:groove; margin:20px; padding:20px; background-color:#CCC">
+        	<div>
+            	<div style="border-bottom-style:double; border-width:2px;">
+        			<h4><xsl:value-of select="./NAME"/> (<xsl:value-of select="./attribute::ID"/>) </h4>
+                </div>
+            	<p><xsl:value-of select="./DESCRIPTION"/> </p>
+            </div>
+            <div style="text-align:right">
+            	<p><strong>Цена: </strong><xsl:value-of select="./PRICE"/> </p>	
+            </div>
         </div>   
     </xsl:template>  
     
