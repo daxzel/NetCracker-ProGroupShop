@@ -129,6 +129,10 @@
         <servlet-name>XMLServlet</servlet-name>
         <url-pattern>/XML/Products.xml</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>XMLServlet</servlet-name>
+        <url-pattern>/XML/exportUser</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30

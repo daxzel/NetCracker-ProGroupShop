@@ -96,8 +96,8 @@
             <persistence-type>Bean</persistence-type>
             <prim-key-class>java.lang.Long</prim-key-class>
             <reentrant>false</reentrant>
-          </entity>
-        </enterprise-beans>
+        </entity>
+    </enterprise-beans>
     <assembly-descriptor>
         <container-transaction>
             <method>
@@ -151,17 +151,10 @@
         </container-transaction>
         <container-transaction>
             <method>
-                <ejb-name>NewSessionBean</ejb-name>
-                <method-name>*</method-name>
-            </method>
-            <trans-attribute>Required</trans-attribute>
-        </container-transaction>
-        <container-transaction>
-            <method>
                 <ejb-name>XmlBean</ejb-name>
                 <method-name>*</method-name>
             </method>
             <trans-attribute>Required</trans-attribute>
         </container-transaction>
-        </assembly-descriptor>
+    </assembly-descriptor>
 </ejb-jar>

@@ -2,9 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package SessionBeans;
 
+import java.rmi.RemoteException;
+import java.util.ArrayList;
 import javax.ejb.EJBObject;
 
 /**
@@ -12,5 +13,6 @@ import javax.ejb.EJBObject;
  * @author Yra
  */
 public interface XmlBeanRemote extends EJBObject {
-    
+
+    public String exportToXML(ArrayList users) throws RemoteException;
 }

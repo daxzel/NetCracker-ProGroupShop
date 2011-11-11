@@ -45,53 +45,58 @@
                                                         UserBeanRemote user;
                                                         SimpleDateFormat formt = new SimpleDateFormat("yyyy-MM-dd");
         %>
-        <table align="center"  border="1" width="80%">
-            <tr align="center">
-                <td width="5%" align="center">User id</td>
-                <td width="15%" align="center">Name</td>
-                <td width="25%" align="center">Surname</td>
-                <td width="20%" align="center">Otchestvo</td>
-                <td width="30%" align="center">Nik</td>
-                <td width="30%" align="center">Born</td>
-                <td width="30%" align="center">Phone</td>
-                <td width="30%" align="center">Email</td>
-                <td width="30%" align="center">Role</td>
-            </tr>
-            <% for (int i = 0; i <= (list1.size() - 1); i++) {
-                                                                        user = (UserBeanRemote) list1.get(i);
-            %>
-            <tr align="center">
-                <td><%= user.getId()%></td>
-                <td><%= user.getName()%></td>
-                <td><%= user.getSurname()%></td>
-                <td><%= user.getOtchestvo()%></td>
-                <td><%= user.getNik()%></td>
-                <td><%=formt.format(user.getBorn())%></td>
-                <%if (user.getPhone() != null) {%>
-                <td><%= user.getPhone()%></td>
-                <%} else {%>
-                <td></td>
-                <%}
-                     if (user.getEmail() != null) {%>
-                <td><%= user.getEmail()%></td>
-                <%} else {%>
-                <td></td>
-                <%}%>
-                <td><%if (user.getRoleId() == 1) {%>
-                    admin
-                    <%} else {%>
-                    user
-                    <%}%></td>
-            </tr>
-            <%}%>
+        <form action="exportUser">
 
-        </table>
+            <table align="center"  border="1" width="80%">
+                <tr align="center">
+                    <td width="5%" align="center">User id</td>
+                    <td width="15%" align="center">Name</td>
+                    <td width="25%" align="center">Surname</td>
+                    <td width="20%" align="center">Otchestvo</td>
+                    <td width="30%" align="center">Nik</td>
+                    <td width="30%" align="center">Born</td>
+                    <td width="30%" align="center">Phone</td>
+                    <td width="30%" align="center">Email</td>
+                    <td width="30%" align="center">Role</td>
+                    <td width="30%" align="center">Export</td>
+                </tr>
+                <% for (int i = 0; i <= (list1.size() - 1); i++) {
+                                                                            user = (UserBeanRemote) list1.get(i);
+                %>
+                <tr align="center">
+                    <td><%= user.getId()%></td>
+                    <td><%= user.getName()%></td>
+                    <td><%= user.getSurname()%></td>
+                    <td><%= user.getOtchestvo()%></td>
+                    <td><%= user.getNik()%></td>
+                    <td><%=formt.format(user.getBorn())%></td>
+                    <%if (user.getPhone() != null) {%>
+                    <td><%= user.getPhone()%></td>
+                    <%} else {%>
+                    <td></td>
+                    <%}
+                     if (user.getEmail() != null) {%>
+                    <td><%= user.getEmail()%></td>
+                    <%} else {%>
+                    <td></td>
+                    <%}%>
+                    <td><%if (user.getRoleId() == 1) {%>
+                        admin
+                        <%} else {%>
+                        user
+                        <%}%></td>
+                    <td><a href ="XML/exportUser?ID=<%=usr.getId() %>">Export</a></td>
+                </tr>
+                <%}%>
+
+            </table>
+        </form>
         <p align="center"><a href ="index.jsp">index</a><br></p>
             <%  }
                                                         if (list1.get(0) instanceof ProductBeanRemote) {
                                                             ProductBeanRemote prd;
                                                             //  SimpleDateFormat formt = new SimpleDateFormat("dd MM yyyy");
-            %>
+%>
         <table align="center"  border="1" width="80%">
             <tr align="center">
                 <td width="15%" align="center">Name</td>

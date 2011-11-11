@@ -14,14 +14,14 @@
             <xs:element name="EMAIL" type="xs:string"/>
             <xs:element name="ID_ROLE" type="xs:ID"/>
         </xs:sequence>
-        <xs:attribute name="ID" type="xs:ID"/>
+        <xs:attribute name="ID_USER" type="xs:ID"/>
     </xs:complexType>
     
     <xs:complexType name="ROLE">
         <xs:sequence>
             <xs:element name="NAME" type="xs:Name"/>       
         </xs:sequence>
-        <xs:attribute name="ID" type="xs:ID"/>
+        <xs:attribute name="ID_ROLE" type="xs:ID"/>
     </xs:complexType>
     
     <xs:complexType name="CATALOG">

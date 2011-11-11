@@ -4,11 +4,9 @@
  */
 package servlets;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
+
 import java.rmi.RemoteException;
-import java.sql.SQLException;
+
 import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
