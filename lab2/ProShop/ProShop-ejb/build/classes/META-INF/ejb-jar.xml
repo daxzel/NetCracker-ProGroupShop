@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ejb-jar version="2.1" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/ejb-jar_2_1.xsd">
     <enterprise-beans>
+        <session>
+            <display-name>XmlBeanSB</display-name>
+            <ejb-name>XmlBean</ejb-name>
+            <home>SessionBeans.XmlBeanRemoteHome</home>
+            <remote>SessionBeans.XmlBeanRemote</remote>
+            <local-home>SessionBeans.XmlBeanLocalHome</local-home>
+            <local>SessionBeans.XmlBeanLocal</local>
+            <ejb-class>SessionBeans.XmlBean</ejb-class>
+            <session-type>Stateless</session-type>
+            <transaction-type>Container</transaction-type>
+        </session>
         <entity>
             <display-name>UserBeanEB</display-name>
             <ejb-name>UserBean</ejb-name>
@@ -61,7 +72,7 @@
             <prim-key-class>java.lang.Long</prim-key-class>
             <reentrant>false</reentrant>
         </entity>
-        
+
         <entity>
             <display-name>OpinionBeanEB</display-name>
             <ejb-name>OpinionBean</ejb-name>
@@ -85,8 +96,8 @@
             <persistence-type>Bean</persistence-type>
             <prim-key-class>java.lang.Long</prim-key-class>
             <reentrant>false</reentrant>
-          </entity>
-        </enterprise-beans>
+        </entity>
+    </enterprise-beans>
     <assembly-descriptor>
         <container-transaction>
             <method>
@@ -138,5 +149,12 @@
             </method>
             <trans-attribute>Required</trans-attribute>
         </container-transaction>
-        </assembly-descriptor>
+        <container-transaction>
+            <method>
+                <ejb-name>XmlBean</ejb-name>
+                <method-name>*</method-name>
+            </method>
+            <trans-attribute>Required</trans-attribute>
+        </container-transaction>
+    </assembly-descriptor>
 </ejb-jar>

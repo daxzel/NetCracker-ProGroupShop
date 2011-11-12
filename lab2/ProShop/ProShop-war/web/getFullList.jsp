@@ -58,7 +58,9 @@
                     <td width="30%" align="center">Phone</td>
                     <td width="30%" align="center">Email</td>
                     <td width="30%" align="center">Role</td>
+                    <%if (usr.getRoleId() == 1) {%>
                     <td width="30%" align="center">Export</td>
+                    <%}%>
                 </tr>
                 <% for (int i = 0; i <= (list1.size() - 1); i++) {
                                                                             user = (UserBeanRemote) list1.get(i);
@@ -85,11 +87,14 @@
                         <%} else {%>
                         user
                         <%}%></td>
-                    <td><a href ="XML/exportUser?ID=<%=user.getId()%>">Export</a></td>
+                        <%if (usr.getRoleId() == 1) {%>
                     <td><input type="checkbox" name="<%=user.getId()%>" value="ON" /></td>
+                        <%}%>
                 </tr>
                 <%}%>
+                <%if (usr.getRoleId() == 1) {%>
                 <tr><td><input type="submit" value="input" name="input" /></td></tr>
+                        <%}%>
             </table>
         </form>
         <p align="center"><a href ="index.jsp">index</a><br></p>
@@ -97,7 +102,7 @@
                                                         if (list1.get(0) instanceof ProductBeanRemote) {
                                                             ProductBeanRemote prd;
                                                             //  SimpleDateFormat formt = new SimpleDateFormat("dd MM yyyy");
-            %>
+%>
         <table align="center"  border="1" width="80%">
             <tr align="center">
                 <td width="15%" align="center">Name</td>

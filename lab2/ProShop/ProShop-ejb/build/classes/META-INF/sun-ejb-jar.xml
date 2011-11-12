@@ -30,5 +30,9 @@
       <ejb-name>ImageBean</ejb-name>
       <jndi-name>ejb/ImageBean</jndi-name>
     </ejb>
+    <ejb>
+      <ejb-name>XmlBean</ejb-name>
+      <jndi-name>ejb/XmlBean</jndi-name>
+    </ejb>
   </enterprise-beans>
 </sun-ejb-jar>
