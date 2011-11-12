@@ -112,7 +112,6 @@ public class XmlBean implements SessionBean {
                     user = userHome.findByPrimaryKey((Long) users.get(i));
                     Element userNode = new Element("USER");
                     root.addContent(userNode);
-
                     userNode.setAttribute("ID_USER", (new Long(user.getId())).toString());
                     userNode.addContent((new Element("NAME")).setText(user.getName()));
                     userNode.addContent((new Element("SURNAME")).setText(user.getSurname()));

@@ -45,7 +45,7 @@
                                                         UserBeanRemote user;
                                                         SimpleDateFormat formt = new SimpleDateFormat("yyyy-MM-dd");
         %>
-        <form action="exportUser">
+        <form action="XML/exportUser">
 
             <table align="center"  border="1" width="80%">
                 <tr align="center">
@@ -75,7 +75,7 @@
                     <%} else {%>
                     <td></td>
                     <%}
-                     if (user.getEmail() != null) {%>
+                         if (user.getEmail() != null) {%>
                     <td><%= user.getEmail()%></td>
                     <%} else {%>
                     <td></td>
@@ -85,10 +85,11 @@
                         <%} else {%>
                         user
                         <%}%></td>
-                    <td><a href ="XML/exportUser?ID=<%=usr.getId() %>">Export</a></td>
+                    <td><a href ="XML/exportUser?ID=<%=user.getId()%>">Export</a></td>
+                    <td><input type="checkbox" name="<%=user.getId()%>" value="ON" /></td>
                 </tr>
                 <%}%>
-
+                <tr><td><input type="submit" value="input" name="input" /></td></tr>
             </table>
         </form>
         <p align="center"><a href ="index.jsp">index</a><br></p>
@@ -96,7 +97,7 @@
                                                         if (list1.get(0) instanceof ProductBeanRemote) {
                                                             ProductBeanRemote prd;
                                                             //  SimpleDateFormat formt = new SimpleDateFormat("dd MM yyyy");
-%>
+            %>
         <table align="center"  border="1" width="80%">
             <tr align="center">
                 <td width="15%" align="center">Name</td>
