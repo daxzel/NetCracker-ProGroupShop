@@ -6,6 +6,12 @@ package SessionBeans;
 
 import OtherBean.Helper;
 import entityBeans.CatalogBeanRemoteHome;
+import entityBeans.ImageBeanRemoteHome;
+import entityBeans.OpinionBeanRemoteHome;
+import entityBeans.OrderBeanRemoteHome;
+import entityBeans.ProductBeanRemoteHome;
+import entityBeans.RoleBeanRemote;
+import entityBeans.RoleBeanRemoteHome;
 import entityBeans.UserBeanRemote;
 import entityBeans.UserBeanRemoteHome;
 import java.rmi.RemoteException;
@@ -52,6 +58,11 @@ public class XmlBean implements SessionBean {
     private SessionContext context;
     private UserBeanRemoteHome userHome;
     private CatalogBeanRemoteHome catalogHome;
+    private RoleBeanRemoteHome roleHome;
+    private ProductBeanRemoteHome productHome;
+    private ImageBeanRemoteHome imageHome;
+    private OrderBeanRemoteHome orderHome;
+    private OpinionBeanRemoteHome opinionHome;
 
     // <editor-fold defaultstate="collapsed" desc="EJB infrastructure methods. Click the + sign on the left to edit the code.">;
     // TODO Add code to acquire and use other enterprise resources (DataSource, JMS, enterprise bean, Web services)
@@ -93,14 +104,21 @@ public class XmlBean implements SessionBean {
         // and data sources.
     }
 
-    public String exportToXML(ArrayList users) throws EJBException {
+    public String exportToXML(ArrayList users, boolean needExportAll) throws EJBException {
         String result = "<error message = \"Sorry\" />";
         Document doc = new Document();
         Element root = new Element("EXPORT");
         doc.setRootElement(root);
+        Set rids = new TreeSet();
         SimpleDateFormat formt = new SimpleDateFormat("yyyy-MM-dd");
         try {
             userHome = (UserBeanRemoteHome) Helper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
+            if (needExportAll) {
+                catalogHome = (CatalogBeanRemoteHome) Helper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
+                roleHome = (RoleBeanRemoteHome) Helper.lookupHome("ejb/RoleBean", RoleBeanRemoteHome.class);
+                productHome = (ProductBeanRemoteHome) Helper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
+                opinionHome = (OpinionBeanRemoteHome) Helper.lookupHome("ejb/OpinionBean", OpinionBeanRemoteHome.class);
+            }
         } catch (NamingException ex) {
             throw new EJBException(ex);
         }
@@ -122,12 +140,29 @@ public class XmlBean implements SessionBean {
                     userNode.addContent((new Element("PHONE")).setText(user.getPhone()));
                     userNode.addContent((new Element("EMAIL")).setText(user.getEmail()));
                     userNode.addContent((new Element("ID_ROLE")).setText((new Long(user.getRoleId())).toString()));
-
+                    if(needExportAll){
+                        rids.add(new Long(user.getRoleId()));
+                    }
                 } catch (FinderException ex) {
                     throw new EJBException(ex);
                 } catch (RemoteException ex) {
                     throw new EJBException(ex);
                 }
+            }
+        }
+        Iterator iter = rids.iterator();
+        RoleBeanRemote role = null;
+        while(iter.hasNext()){
+            try {
+                role = roleHome.findByPrimaryKey(new Long(Long.parseLong(iter.next().toString())));
+                Element roleNode = new Element("ROLE");
+                root.addContent(roleNode);
+                roleNode.setAttribute("ID_ROLE",(role.getId()).toString());
+                roleNode.addContent((new Element("NAME")).setText(role.getName()));
+            } catch (FinderException ex) {
+                ex.printStackTrace();
+            } catch (RemoteException ex) {
+                ex.printStackTrace();
             }
         }
         XMLOutputter outputter = new XMLOutputter();

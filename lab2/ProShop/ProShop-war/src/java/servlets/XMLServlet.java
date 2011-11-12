@@ -60,7 +60,7 @@ public class XMLServlet extends HttpServlet {
                 }
                 XmlBeanRemoteHome xmlHome = (XmlBeanRemoteHome) Helper.lookupHome("ejb/XmlBean", XmlBeanRemoteHome.class);
                 XmlBeanRemote xmlBean = xmlHome.create();
-                String xml = xmlBean.exportToXML(list);
+                String xml = xmlBean.exportToXML(list,true);
                 response.setContentType("text/xml");
                 response.setCharacterEncoding("utf-8");
                 out = response.getOutputStream();
