@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema 
-    targetNamespace="https://github.com/daxzel/InternetShop/BD.xsd"
+    targetNamespace="https://github.com/daxzel/InternetShop/DB.xsd"
     xmlns:xs="http://www.w3.org/2001/XMLSchema">   
     <xs:complexType name="USER">
         <xs:sequence>
@@ -10,8 +10,8 @@
             <xs:element name="NIK" type="xs:Name"/>
             <xs:element name="PASSWORD" type="xs:string"/>
             <xs:element name="BORN" type="xs:date"/>
-            <xs:element name="PHONE" type="xs:string"/>
-            <xs:element name="EMAIL" type="xs:string"/>
+            <xs:element name="PHONE" type="xs:string" minoccurs = "0" maxoccurs = "1"/>
+            <xs:element name="EMAIL" type="xs:string"  minoccurs = "0" maxoccurs = "1"/>
             <xs:element name="ID_ROLE" type="xs:ID"/>
         </xs:sequence>
         <xs:attribute name="ID_USER" type="xs:ID"/>
