@@ -4,7 +4,7 @@
  */
 package entityBeans;
 
-import OtherBean.Helper;
+import helpers.EJBHelper;
 import java.sql.*;
 import java.util.Collection;
 import java.util.List;
@@ -81,7 +81,7 @@ public class CatalogBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("DELETE FROM \"CATALOG\" WHERE ID_CATALOG = ?");
             pst.setLong(1, id_catalog);
             if (pst.executeUpdate() < 1) {
@@ -94,7 +94,7 @@ public class CatalogBean implements EntityBean {
             // ex.printStackTrace();
         } finally {
             try {
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -110,7 +110,7 @@ public class CatalogBean implements EntityBean {
         PreparedStatement pst = null;
         ResultSet rs = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM \"CATALOG\" WHERE ID_CATALOG = ?");
             pst.setLong(1, id_catalog);
             rs = pst.executeQuery();
@@ -127,7 +127,7 @@ public class CatalogBean implements EntityBean {
             throw new EJBException("Ошибка SELECT");
         } finally {
             try {
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -141,7 +141,7 @@ public class CatalogBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("UPDATE \"CATALOG\"" + "SET ID_PARENT=?, NAME =? WHERE ID_CATALOG=?");
 
             pst.setLong(1, id_parent);
@@ -156,7 +156,7 @@ public class CatalogBean implements EntityBean {
             throw new EJBException("Ошибка UPDATE");
         } finally {
             try {
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -171,7 +171,7 @@ public class CatalogBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM \"CATALOG\" WHERE ID_CATALOG = ?");
             //id_catalog.longValue();
             pst.setLong(1, id_catalog.longValue());
@@ -186,7 +186,7 @@ public class CatalogBean implements EntityBean {
             throw new EJBException("Ошибка SELECT");
         } finally {
             try {
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -197,7 +197,7 @@ public class CatalogBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("SELECT ID_CATALOG FROM \"CATALOG\" WHERE NAME = ?");
             pst.setString(1, name);
             ResultSet rs = pst.executeQuery();
@@ -211,7 +211,7 @@ public class CatalogBean implements EntityBean {
             throw new EJBException("Ошибка SELECT");
         } finally {
             try {
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -234,7 +234,7 @@ public class CatalogBean implements EntityBean {
         CallableStatement pst = null;
         ResultSet rs = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareCall("BEGIN INSERT INTO \"CATALOG\" " + "(ID_PARENT,NAME)" + "VALUES(?,?) RETURNING ID_CATALOG INTO ?;END;");
             pst.setLong(1, id_parent);
             pst.setString(2, name);
@@ -253,7 +253,7 @@ public class CatalogBean implements EntityBean {
         } finally {
 
             try {
-                Helper.closeConnection(conn, pst, rs);
+                EJBHelper.closeConnection(conn, pst, rs);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -269,7 +269,7 @@ public class CatalogBean implements EntityBean {
         PreparedStatement pst = null;
         ResultSet resultSet = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("SELECT ID_CATALOG FROM \"CATALOG\" WHERE ID_PARENT = ?");
             pst.setLong(1, id_catalog.longValue());
             resultSet = pst.executeQuery();
@@ -287,7 +287,7 @@ public class CatalogBean implements EntityBean {
             throw new EJBException("Ошибка SELECT");
         } finally {
             try {
-                Helper.closeConnection(conn, pst, resultSet);
+                EJBHelper.closeConnection(conn, pst, resultSet);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -298,7 +298,7 @@ public class CatalogBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM \"CATALOG\"");
             ResultSet resultSet = pst.executeQuery();
             Vector keys = new Vector();
@@ -313,7 +313,7 @@ public class CatalogBean implements EntityBean {
             throw new EJBException("Ошибка SELECT");
         } finally {
             try {
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }

@@ -4,7 +4,7 @@
  */
 package entityBeans;
 
-import OtherBean.Helper;
+import helpers.EJBHelper;
 import java.rmi.RemoteException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -55,8 +55,8 @@ public class OrderBean implements EntityBean {
     public void setEntityContext(EntityContext ctx) {
         this.entityContext = ctx;
         try {
-            userHome = (UserBeanRemoteHome) OtherBean.Helper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
-            productHome = (ProductBeanRemoteHome) OtherBean.Helper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
+            userHome = (UserBeanRemoteHome) helpers.EJBHelper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
+            productHome = (ProductBeanRemoteHome) helpers.EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
             //   javax.naming.Context context = new javax.naming.InitialContext();
             try {
                 //  dataSource = (DataSource) context.lookup("jdbc/InternetShop");
@@ -92,7 +92,7 @@ public class OrderBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("DELETE FROM \"ORDER\" WHERE ID_ORDER = ?");
             pst.setLong(1, id_order);
             if (pst.executeUpdate() < 1) {
@@ -106,7 +106,7 @@ public class OrderBean implements EntityBean {
         } finally {
             try {
 
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -126,7 +126,7 @@ public class OrderBean implements EntityBean {
         PreparedStatement pst = null;
         ResultSet rs = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM \"ORDER\" WHERE ID_ORDER = ?");
             pst.setLong(1, id_order);
             rs = pst.executeQuery();
@@ -149,7 +149,7 @@ public class OrderBean implements EntityBean {
             throw new EJBException("Ошибка SELECT");
         } finally {
             try {
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -163,7 +163,7 @@ public class OrderBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("UPDATE \"ORDER\"" + "SET STATUS = ? WHERE ID_ORDER=?");
             pst.setBoolean(1, status);
             pst.setLong(2, id_order);
@@ -176,7 +176,7 @@ public class OrderBean implements EntityBean {
             throw new EJBException("Ошибка UPDATE");
         } finally {
             try {
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -191,7 +191,7 @@ public class OrderBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM \"ORDER\" WHERE ID_ORDER = ?");
             pst.setLong(1, id_order.longValue());
             ResultSet resultSet = pst.executeQuery();
@@ -205,7 +205,7 @@ public class OrderBean implements EntityBean {
             throw new EJBException("Ошибка SELECT");
         } finally {
             try {
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -217,7 +217,7 @@ public class OrderBean implements EntityBean {
         PreparedStatement pst = null;
         ResultSet rs = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM \"ORDER\" WHERE ID_USER = ? AND STATUS = ?");
             pst.setLong(1, id_user.longValue());
             pst.setBoolean(2, status);
@@ -235,7 +235,7 @@ public class OrderBean implements EntityBean {
             throw new EJBException("Ошибка SELECT");
         } finally {
             try {
-                Helper.closeConnection(conn, pst, rs);
+                EJBHelper.closeConnection(conn, pst, rs);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -252,7 +252,7 @@ public class OrderBean implements EntityBean {
         CallableStatement pst = null;
         ResultSet rs = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareCall("BEGIN INSERT INTO \"ORDER\" " + "(ID_USER,ID_PRODUCT,STATUS,KOL_VO)" + "VALUES(?,?,?,?) RETURNING ID_ORDER INTO ?;END;");
             pst.setLong(1, this.id_user);
             pst.setLong(2, this.id_product);
@@ -272,7 +272,7 @@ public class OrderBean implements EntityBean {
         } finally {
 
             try {
-                Helper.closeConnection(conn, pst, rs);
+                EJBHelper.closeConnection(conn, pst, rs);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }

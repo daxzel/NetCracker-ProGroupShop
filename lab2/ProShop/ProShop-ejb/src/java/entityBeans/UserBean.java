@@ -27,7 +27,7 @@ import javax.ejb.FinderException;
 import javax.ejb.NoSuchEntityException;
 import javax.ejb.ObjectNotFoundException;
 import javax.ejb.RemoveException;
-import OtherBean.Helper;
+import helpers.EJBHelper;
 
 /**
  *
@@ -94,7 +94,7 @@ public class UserBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("DELETE FROM \"USER\" WHERE ID_USER = ?");
             pst.setLong(1, id_user);
             if (pst.executeUpdate() < 1) {
@@ -108,7 +108,7 @@ public class UserBean implements EntityBean {
         } finally {
             try {
 //                 conn.commit();
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -128,7 +128,7 @@ public class UserBean implements EntityBean {
         PreparedStatement pst = null;
         ResultSet rs = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM \"USER\" WHERE ID_USER = ?");
             pst.setLong(1, id_user);
             rs = pst.executeQuery();
@@ -152,7 +152,7 @@ public class UserBean implements EntityBean {
             throw new EJBException("Ошибка SELECT");
         } finally {
             try {
-                Helper.closeConnection(conn, pst,rs);
+                EJBHelper.closeConnection(conn, pst,rs);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -166,7 +166,7 @@ public class UserBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("UPDATE \"USER\"" + "SET NAME =?, SURNAME =?, OTCHESTVO =?,NIK=?,  PASSWORD =?, BORN=?,PHONE=?,EMAIL=?,ID_ROLE=? WHERE ID_USER=?");
 
             pst.setString(1, name);
@@ -188,7 +188,7 @@ public class UserBean implements EntityBean {
             throw new EJBException("Ошибка UPDATE");
         } finally {
             try {
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -203,7 +203,7 @@ public class UserBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM \"USER\" WHERE ID_USER = ?");
             pst.setLong(1, id_user.longValue());
             ResultSet resultSet = pst.executeQuery();
@@ -217,7 +217,7 @@ public class UserBean implements EntityBean {
             throw new EJBException("Ошибка SELECT");
         } finally {
             try {
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -228,7 +228,7 @@ public class UserBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("SELECT ID_USER FROM \"USER\" WHERE NIK = ?");
             pst.setString(1, nik);
             ResultSet rs = pst.executeQuery();
@@ -242,7 +242,7 @@ public class UserBean implements EntityBean {
             throw new EJBException("Ошибка SELECT");
         } finally {
             try {
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -253,7 +253,7 @@ public class UserBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("SELECT ID_USER FROM \"USER\" WHERE NIK = ? AND ID_USER <> ?");
             pst.setString(1, nik);
             pst.setLong(2, id_user.longValue());
@@ -268,7 +268,7 @@ public class UserBean implements EntityBean {
             throw new EJBException("Ошибка SELECT");
         } finally {
             try {
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -281,7 +281,7 @@ public class UserBean implements EntityBean {
         java.lang.Long lg = null;
          ResultSet rs = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("SELECT ID_USER FROM \"USER\" WHERE NIK = ? AND PASSWORD=? ");
             pst.setString(1, nik);
             pst.setString(2, password);
@@ -297,7 +297,7 @@ public class UserBean implements EntityBean {
             throw new EJBException("Ошибка SELECT");
         } finally {
             try {
-                Helper.closeConnection(conn, pst,rs);
+                EJBHelper.closeConnection(conn, pst,rs);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -310,7 +310,7 @@ public class UserBean implements EntityBean {
         PreparedStatement pst = null;
         ResultSet rs = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM \"USER\" WHERE ID_ROLE = ?");
             pst.setLong(1, id_role.longValue());
             rs = pst.executeQuery();
@@ -327,7 +327,7 @@ public class UserBean implements EntityBean {
             throw new EJBException("Ошибка SELECT");
         } finally {
             try {
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -338,7 +338,7 @@ public class UserBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM \"USER\"");
             ResultSet resultSet = pst.executeQuery();
             Vector keys = new Vector();
@@ -353,7 +353,7 @@ public class UserBean implements EntityBean {
             throw new EJBException("Ошибка SELECT");
         } finally {
             try {
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -379,7 +379,7 @@ public class UserBean implements EntityBean {
         CallableStatement pst = null;
         ResultSet rs = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareCall("BEGIN INSERT INTO \"USER\" " + "(NAME,SURNAME,OTCHESTVO,NIK,PASSWORD,BORN,PHONE,EMAIL,ID_ROLE)" + "VALUES(?,?,?,?,?,?,?,?,?) RETURNING ID_USER INTO ?;END;");
             pst.setString(1, name);
             pst.setString(2, surname);
@@ -405,7 +405,7 @@ public class UserBean implements EntityBean {
         } finally {
 
             try {
-                Helper.closeConnection(conn, pst, rs);
+                EJBHelper.closeConnection(conn, pst, rs);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }

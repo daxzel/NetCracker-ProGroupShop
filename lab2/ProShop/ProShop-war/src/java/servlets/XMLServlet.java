@@ -4,6 +4,7 @@
  */
 package servlets;
 
+import helpers.EJBHelper;
 import java.io.*;
 import java.lang.*;
 import java.util.*;
@@ -77,7 +78,7 @@ public class XMLServlet extends HttpServlet {
         try {
             PrintWriter out = response.getWriter();
             try {
-                XmlBeanRemoteHome xmlHome = (XmlBeanRemoteHome) Helper.lookupHome("ejb/XmlBean", XmlBeanRemoteHome.class);
+                XmlBeanRemoteHome xmlHome = (XmlBeanRemoteHome) EJBHelper.lookupHome("ejb/XmlBean", XmlBeanRemoteHome.class);
                 XmlBeanRemote xmlBean = xmlHome.create();
                 String xml = xmlBean.exportAllProducts();
                 response.setContentType("text/xml");
@@ -105,7 +106,7 @@ public class XMLServlet extends HttpServlet {
                     } else {
                     }
                 }
-                XmlBeanRemoteHome xmlHome = (XmlBeanRemoteHome) Helper.lookupHome("ejb/XmlBean", XmlBeanRemoteHome.class);
+                XmlBeanRemoteHome xmlHome = (XmlBeanRemoteHome) EJBHelper.lookupHome("ejb/XmlBean", XmlBeanRemoteHome.class);
                 XmlBeanRemote xmlBean = xmlHome.create();
                 String xml = xmlBean.exportToXML(list,true);
                 response.setContentType("text/xml");

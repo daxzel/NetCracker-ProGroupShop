@@ -4,7 +4,7 @@
  */
 package SessionBeans;
 
-import OtherBean.Helper;
+import helpers.EJBHelper;
 import entityBeans.CatalogBeanRemoteHome;
 import entityBeans.ImageBeanRemoteHome;
 import entityBeans.OpinionBeanRemoteHome;
@@ -112,12 +112,12 @@ public class XmlBean implements SessionBean {
         Set rids = new TreeSet();
         SimpleDateFormat formt = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            userHome = (UserBeanRemoteHome) Helper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
+            userHome = (UserBeanRemoteHome) EJBHelper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
             if (needExportAll) {
-                catalogHome = (CatalogBeanRemoteHome) Helper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
-                roleHome = (RoleBeanRemoteHome) Helper.lookupHome("ejb/RoleBean", RoleBeanRemoteHome.class);
-                productHome = (ProductBeanRemoteHome) Helper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
-                opinionHome = (OpinionBeanRemoteHome) Helper.lookupHome("ejb/OpinionBean", OpinionBeanRemoteHome.class);
+                catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
+                roleHome = (RoleBeanRemoteHome) EJBHelper.lookupHome("ejb/RoleBean", RoleBeanRemoteHome.class);
+                productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
+                opinionHome = (OpinionBeanRemoteHome) EJBHelper.lookupHome("ejb/OpinionBean", OpinionBeanRemoteHome.class);
             }
         } catch (NamingException ex) {
             throw new EJBException(ex);
@@ -175,7 +175,7 @@ public class XmlBean implements SessionBean {
 
     public String exportAllProducts() throws Exception
     {
-        entityBeans.ProductBeanRemoteHome productHome = (entityBeans.ProductBeanRemoteHome) Helper.lookupHome("ejb/ProductBean", entityBeans.ProductBeanRemoteHome.class);
+        entityBeans.ProductBeanRemoteHome productHome = (entityBeans.ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", entityBeans.ProductBeanRemoteHome.class);
         java.io.CharArrayWriter arrayWriter = new java.io.CharArrayWriter();
         java.io.PrintWriter writer = new java.io.PrintWriter(arrayWriter);
         helpers.XMLHelper.ProductToXml(productHome.findAll(), writer);

@@ -4,7 +4,7 @@
  */
 package entityBeans;
 
-import OtherBean.Helper;
+import helpers.EJBHelper;
 import java.rmi.RemoteException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -89,7 +89,7 @@ public class OpinionBean implements EntityBean {
         PreparedStatement pst = null;
         ResultSet rs = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM \"OPINION\" WHERE ID_OPINION = ?");
             pst.setLong(1, id_opinion);
             rs = pst.executeQuery();
@@ -106,7 +106,7 @@ public class OpinionBean implements EntityBean {
             throw new EJBException("Ошибка SELECT");
         } finally {
             try {
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -120,7 +120,7 @@ public class OpinionBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("UPDATE \"OPINION\"" + "SET TEXT=? WHERE ID_OPINION=?");
             pst.setString(1, text);
             pst.setLong(2, id_opinion);
@@ -134,7 +134,7 @@ public class OpinionBean implements EntityBean {
             throw new EJBException("Ошибка UPDATE");
         } finally {
             try {
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -145,7 +145,7 @@ public class OpinionBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("DELETE FROM \"OPINION\" WHERE ID_OPINION = ?");
             pst.setLong(1, id_opinion);
             if (pst.executeUpdate() < 1) {
@@ -159,7 +159,7 @@ public class OpinionBean implements EntityBean {
         } finally {
             try {
 //                 conn.commit();
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -174,7 +174,7 @@ public class OpinionBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("SELECT ID_OPINION FROM \"OPINION\" WHERE ID_OPINION = ?");
             //id_op.longValue();
             pst.setLong(1, id_op.longValue());
@@ -189,7 +189,7 @@ public class OpinionBean implements EntityBean {
             throw new EJBException("Ошибка SELECT");
         } finally {
             try {
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -202,7 +202,7 @@ public class OpinionBean implements EntityBean {
         ResultSet rs = null;
         Connection conn = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("SELECT ID_OPINION FROM \"OPINION\" WHERE ID_PRODUCT = ?");
             pst.setLong(1, id_pr.longValue());
             rs = pst.executeQuery();
@@ -218,7 +218,7 @@ public class OpinionBean implements EntityBean {
             throw new EJBException("Ошибка SELECT");
         } finally {
             try {
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -233,7 +233,7 @@ public class OpinionBean implements EntityBean {
         CallableStatement pst = null;
         ResultSet rs = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareCall("BEGIN INSERT INTO \"OPINION\" " + "(ID_PRODUCT, ID_USER, TEXT)" + "VALUES(?, ?, ?) RETURNING ID_OPINION INTO ?;END;");
             pst.setLong(1, id_prod.longValue());
             pst.setLong(2, id_user.longValue());
@@ -251,7 +251,7 @@ public class OpinionBean implements EntityBean {
             throw new EJBException("Произошла ошибка добавления");
         } finally {
             try {
-                Helper.closeConnection(conn, pst, rs);
+                EJBHelper.closeConnection(conn, pst, rs);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -298,7 +298,7 @@ public class OpinionBean implements EntityBean {
         UserBeanRemote user = null;
         String name = "";
         try {
-            UserBeanRemoteHome userHome = (UserBeanRemoteHome) OtherBean.Helper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
+            UserBeanRemoteHome userHome = (UserBeanRemoteHome) helpers.EJBHelper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
             user = userHome.findByPrimaryKey(new Long(this.id_user));
             name = user.getNik();
         } catch (FinderException ex) {

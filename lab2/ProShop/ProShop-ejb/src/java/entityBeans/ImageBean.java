@@ -5,6 +5,7 @@
 
 package entityBeans;
 
+import helpers.EJBHelper;
 import javax.ejb.CreateException;
 import javax.ejb.EntityBean;
 import javax.ejb.EntityContext;
@@ -12,7 +13,6 @@ import javax.naming.NamingException;
 import javax.ejb.*;
 import java.sql.*;
 import java.util.*;
-import OtherBean.*;
 import java.awt.*;
 import java.io.*;
 /**
@@ -63,7 +63,7 @@ public class ImageBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM IMAGE WHERE ID_IMG = ?");
             //id_catalog.longValue();
             pst.setLong(1, i_id_image.longValue());
@@ -78,7 +78,7 @@ public class ImageBean implements EntityBean {
             throw new EJBException("Ошибка SELECT");
         } finally {
             try {
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -89,7 +89,7 @@ public class ImageBean implements EntityBean {
          Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("DELETE FROM IMAGE WHERE ID_IMG = ?");
             pst.setLong(1, id_img);
             if (pst.executeUpdate() < 1) {
@@ -103,7 +103,7 @@ public class ImageBean implements EntityBean {
         } finally {
             try {
 //                 conn.commit();
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -121,7 +121,7 @@ public class ImageBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM IMAGE");
             ResultSet resultSet = pst.executeQuery();
             Vector keys = new Vector();
@@ -136,7 +136,7 @@ public class ImageBean implements EntityBean {
             throw new EJBException("Ошибка SELECT");
         } finally {
             try {
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -153,7 +153,7 @@ public class ImageBean implements EntityBean {
         PreparedStatement pst = null;
         ResultSet rs = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM IMAGE WHERE ID_IMG = ?");
             pst.setLong(1, id_img);
             rs = pst.executeQuery();
@@ -171,7 +171,7 @@ public class ImageBean implements EntityBean {
             throw new EJBException("Ошибка SELECT");
         } finally {
             try {
-                Helper.closeConnection(conn, pst,rs);
+                EJBHelper.closeConnection(conn, pst,rs);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -185,7 +185,7 @@ public class ImageBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("UPDATE IMAGE SET ID_PRODUCT =?, NAME =?, WIDTH=?, HEIGHT =? WHERE ID_IMG=?");
             pst.setLong(1, id_product);
             pst.setString(2, name);
@@ -201,7 +201,7 @@ public class ImageBean implements EntityBean {
             throw new EJBException("Ошибка UPDATE");
         } finally {
             try {
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -278,7 +278,7 @@ public class ImageBean implements EntityBean {
         CallableStatement pst = null;
         ResultSet rs = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareCall("BEGIN INSERT INTO IMAGE (ID_PRODUCT, NAME, IMAGE, WIDTH, HEIGHT)" + "VALUES(?,?,empty_blob(),?,?) RETURNING ID_IMG INTO ?;END;");
             pst.setLong(1, id_product);
             pst.setString(2, name);
@@ -312,7 +312,7 @@ public class ImageBean implements EntityBean {
         } finally {
 
             try {
-                Helper.closeConnection(conn, pst, rs);
+                EJBHelper.closeConnection(conn, pst, rs);
             } catch (SQLException ex1) {
               //  throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -340,7 +340,7 @@ public class ImageBean implements EntityBean {
         {
             Connection conn = null;
             PreparedStatement pst = null;
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
 
             pst=conn.prepareCall("select IMAGE from IMAGE where ID_IMG="+id_img);
             ResultSet rs = pst.executeQuery();
@@ -362,7 +362,7 @@ public class ImageBean implements EntityBean {
         {
             Connection conn = null;
             PreparedStatement pst = null;
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("UPDATE IMAGE SET IMAGE =? WHERE ID_IMG=?");
             pst.setBytes(1, image);
             pst.setLong(2, id_img);
@@ -378,7 +378,7 @@ public class ImageBean implements EntityBean {
     {
         Connection conn = null;
         PreparedStatement pst = null;
-        conn = Helper.getConnection();
+        conn = EJBHelper.getConnection();
 
         pst=conn.prepareCall("select IMAGE from IMAGE where ID_IMG="+id_img);
         ResultSet rs = pst.executeQuery();
@@ -391,7 +391,7 @@ public class ImageBean implements EntityBean {
         {
             Connection conn = null;
             PreparedStatement pst = null;
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("UPDATE IMAGE SET IMAGE =? WHERE ID_IMG=?");
             pst.setBinaryStream(1, imageToStream(image));
             pst.setLong(2, id_img);

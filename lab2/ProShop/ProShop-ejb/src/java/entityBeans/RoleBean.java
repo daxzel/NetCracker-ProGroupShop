@@ -23,7 +23,7 @@ import javax.ejb.FinderException;
 import javax.ejb.NoSuchEntityException;
 import javax.ejb.ObjectNotFoundException;
 import javax.ejb.RemoveException;
-import OtherBean.Helper;
+import helpers.EJBHelper;
 import javax.ejb.CreateException;
 import javax.ejb.*;
 
@@ -83,7 +83,7 @@ public class RoleBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("DELETE FROM \"ROLE\" WHERE ID_ROLE = ?");
             pst.setLong(1, id_role);
             if (pst.executeUpdate() < 1) {
@@ -95,7 +95,7 @@ public class RoleBean implements EntityBean {
             throw new EJBException("Ошибка DELETE");
         } finally {
             try {
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -114,7 +114,7 @@ public class RoleBean implements EntityBean {
         PreparedStatement pst = null;
         ResultSet rs = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM \"ROLE\" WHERE ID_ROLE = ?");
             pst.setLong(1, id_role);
             rs = pst.executeQuery();
@@ -130,7 +130,7 @@ public class RoleBean implements EntityBean {
             throw new EJBException("Ошибка SELECT");
         } finally {
             try {
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -144,7 +144,7 @@ public class RoleBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("UPDATE \"ROLE\"" + "SET NAME =? WHERE ID_ROLE=?");
             pst.setString(1, name);
             pst.setLong(2, id_role);
@@ -157,7 +157,7 @@ public class RoleBean implements EntityBean {
             throw new EJBException("Ошибка UPDATE");
         } finally {
             try {
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -172,7 +172,7 @@ public class RoleBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM \"ROLE\" WHERE ID_ROLE = ?");
             pst.setLong(1, id_role.longValue());
             ResultSet resultSet = pst.executeQuery();
@@ -186,7 +186,7 @@ public class RoleBean implements EntityBean {
             throw new EJBException("Ошибка SELECT");
         } finally {
             try {
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -197,7 +197,7 @@ public class RoleBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("SELECT ID_ROLE FROM \"ROLE\" WHERE NAME = ?");
             pst.setString(1, name);
             ResultSet rs = pst.executeQuery();
@@ -211,7 +211,7 @@ public class RoleBean implements EntityBean {
             throw new EJBException("Ошибка SELECT");
         } finally {
             try {
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -222,7 +222,7 @@ public class RoleBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM \"ROLE\"");
             ResultSet resultSet = pst.executeQuery();
             Vector keys = new Vector();
@@ -237,7 +237,7 @@ public class RoleBean implements EntityBean {
             throw new EJBException("Ошибка SELECT");
         } finally {
             try {
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }

@@ -31,7 +31,7 @@ import javax.naming.InitialContext;
 import java.sql.*;
 import javax.sql.*;
 import javax.ejb.*;
-import OtherBean.Helper;
+import helpers.EJBHelper;
 import java.io.*;
 import javax.ejb.*;
 
@@ -104,7 +104,7 @@ public class ExecServlet extends HttpServlet {
 
 
             //DBManager.addUser(name, surname, otchestvo, nik, password, bornDate, phone, email, Integer.parseInt(role));
-            UserBeanRemoteHome userHome = (UserBeanRemoteHome) Helper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
+            UserBeanRemoteHome userHome = (UserBeanRemoteHome) EJBHelper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
             java.sql.Date sqlDate = new java.sql.Date(bornDate.getTime());
             java.lang.Long idRole = new Long(Long.parseLong(role));
 
@@ -142,7 +142,7 @@ public class ExecServlet extends HttpServlet {
         homepage = session.getAttribute("homepage").toString();
         String nik = request.getParameter("NIK");
         try {
-            UserBeanRemoteHome userHome = (UserBeanRemoteHome) Helper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
+            UserBeanRemoteHome userHome = (UserBeanRemoteHome) EJBHelper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
             UserBeanRemote user = userHome.findByNik(nik);
             //request.setAttribute("DO", "upUser");
             session.setAttribute("userOld", user);
@@ -204,7 +204,7 @@ public class ExecServlet extends HttpServlet {
             }
 
             price = Double.parseDouble(priceS);
-            ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) Helper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
+            ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
             productHome.create(description, name_catalog, name, price);
             result = "Продукт добавлен";
             request.setAttribute("NAME", name);
@@ -293,7 +293,7 @@ public class ExecServlet extends HttpServlet {
             String email = request.getParameter("EMAIL");
             SimpleDateFormat formt = new SimpleDateFormat("yyyy-MM-dd");
             Date born = formt.parse(brn);
-            UserBeanRemoteHome userHome = (UserBeanRemoteHome) Helper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
+            UserBeanRemoteHome userHome = (UserBeanRemoteHome) EJBHelper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
             try {
                 userHome.findByNikAndId(nik, new Long(usr.getId()));
                 throw new UpdateException("Пользователь с таким ником уже существует");
@@ -406,7 +406,7 @@ public class ExecServlet extends HttpServlet {
                     }
                 }
             }
-            UserBeanRemoteHome userHome = (UserBeanRemoteHome) Helper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
+            UserBeanRemoteHome userHome = (UserBeanRemoteHome) EJBHelper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
             Collection list = userHome.findByRole(new Long(role_id));
 
             request.setAttribute("result", list);
@@ -432,7 +432,7 @@ public class ExecServlet extends HttpServlet {
         }
         try {
             String nik = request.getParameter("NIK");
-            UserBeanRemoteHome userHome = (UserBeanRemoteHome) Helper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
+            UserBeanRemoteHome userHome = (UserBeanRemoteHome) EJBHelper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
             UserBeanRemote user = userHome.findByNik(nik);
 
             userHome.remove(new Long(user.getId()));
@@ -464,17 +464,17 @@ public class ExecServlet extends HttpServlet {
         try {
             List list = null;
             if ("PRODUCT".equals(table)) {
-                ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) Helper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
+                ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
                 list = productHome.findAll();
             } else {
                 UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
 
                 if ("USER".equals(table)) {
-                    UserBeanRemoteHome userHome = (UserBeanRemoteHome) Helper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
+                    UserBeanRemoteHome userHome = (UserBeanRemoteHome) EJBHelper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
                     list = userHome.findAll();
                 } else {
                     if ("ROLE".equals(table)) {
-                        RoleBeanRemoteHome roleHome = (RoleBeanRemoteHome) Helper.lookupHome("ejb/RoleBean", RoleBeanRemoteHome.class);
+                        RoleBeanRemoteHome roleHome = (RoleBeanRemoteHome) EJBHelper.lookupHome("ejb/RoleBean", RoleBeanRemoteHome.class);
                         list = roleHome.findAll();
                     }
                 }
@@ -507,7 +507,7 @@ public class ExecServlet extends HttpServlet {
             if ("".equals(nik) || "".equals(password)) {
                 throw new LoginException("Не указанны поля пользователя или пароля");
             }
-            UserBeanRemoteHome userHome = (UserBeanRemoteHome) Helper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
+            UserBeanRemoteHome userHome = (UserBeanRemoteHome) EJBHelper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
             UserBeanRemote usr = userHome.findByNikAndPassword(nik, password);
 
             session.setAttribute("user", usr);
@@ -545,7 +545,7 @@ public class ExecServlet extends HttpServlet {
         try {
             ProductBeanRemote product = (ProductBeanRemote) session.getAttribute("product");
             String text = request.getParameter("COMMENT");
-            OpinionBeanRemoteHome opinionHome = (OpinionBeanRemoteHome) Helper.lookupHome("ejb/OpinionBean", OpinionBeanRemoteHome.class);
+            OpinionBeanRemoteHome opinionHome = (OpinionBeanRemoteHome) EJBHelper.lookupHome("ejb/OpinionBean", OpinionBeanRemoteHome.class);
             opinionHome.create(new Long(product.getId()), new Long(usr.getId()), text);
             rd = request.getRequestDispatcher("getOpinion.jsp");
             request.setAttribute("result", product);
@@ -576,7 +576,7 @@ public class ExecServlet extends HttpServlet {
         try {
             ProductBeanRemote product = (ProductBeanRemote) session.getAttribute("product");
             String id_op = request.getParameter("ID");
-            OpinionBeanRemoteHome opinionHome = (OpinionBeanRemoteHome) Helper.lookupHome("ejb/OpinionBean", OpinionBeanRemoteHome.class);
+            OpinionBeanRemoteHome opinionHome = (OpinionBeanRemoteHome) EJBHelper.lookupHome("ejb/OpinionBean", OpinionBeanRemoteHome.class);
             opinionHome.remove(new Long(Long.parseLong(id_op)));
             rd = request.getRequestDispatcher("getOpinion.jsp");
             request.setAttribute("result", product);
@@ -606,7 +606,7 @@ public class ExecServlet extends HttpServlet {
         try {
             String id_pr = request.getParameter("ID");
             Long id_product = new Long(Long.parseLong(id_pr));
-            ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) Helper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
+            ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
             ProductBeanRemote prd = productHome.findByPrimaryKey(id_product);
             request.setAttribute("result", prd);
             rd = request.getRequestDispatcher("getOpinion.jsp");
@@ -646,7 +646,7 @@ public class ExecServlet extends HttpServlet {
             if ("".equals(name)) {
                 throw new CatalogException("Название каталога не может быть пустым");
             }
-            CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) Helper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
+            CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
             catalogHome.create(nameParent, name);
             //  DBManager.addCatalog(nameParent, name);
             result = "Добавление каталога завершено";
@@ -683,7 +683,7 @@ public class ExecServlet extends HttpServlet {
             if ("".equals(name)) {
                 throw new CatalogException("Имя каталога не может быть пустым");
             }
-            CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) Helper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
+            CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
             CatalogBeanRemote ctg = catalogHome.findByName(name);
             ctg.remove();
             result = "Удаление завершено";
@@ -712,10 +712,10 @@ public class ExecServlet extends HttpServlet {
             if (request.getParameter("pid") != null) {
                 i = Long.parseLong(request.getParameter("pid"));
             }
-            CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) Helper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
+            CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
             List list = catalogHome.findCatalogByPid(new Long(i));
             if (list.isEmpty()) {
-                ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) Helper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
+                ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
                 list = productHome.findByCatalog(new Long(i));
             }
             request.setAttribute("result", list);
@@ -741,7 +741,7 @@ public class ExecServlet extends HttpServlet {
             kol_vo = request.getParameter("KOL");
             String status = request.getParameter("STATUS");
             String id_product = session.getAttribute("ID_PRODUCT").toString();
-            OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) Helper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
+            OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
             OrderBeanRemote order = orderHome.create(new Long(usr.getId()), new Long(Long.parseLong(id_product)), new Boolean(Boolean.parseBoolean(status)), new Integer(Integer.parseInt(kol_vo)));
             if ("false".equals(status)) {
                 result = "Заказ добавлен в корзину";
@@ -771,7 +771,7 @@ public class ExecServlet extends HttpServlet {
         HttpSession session = request.getSession();
         UserBeanRemote usr = JSPHelper.getUser2(session);
         try {
-            OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) Helper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
+            OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
             List list = orderHome.findByUserAndStatus(new Long(usr.getId()), status);
             request.setAttribute("result", list);
             rd = request.getRequestDispatcher("getBasket.jsp");
@@ -793,7 +793,7 @@ public class ExecServlet extends HttpServlet {
         String result2 = "Заказ не оформлен";
         try {
             String id_order = request.getParameter("id_order");
-            OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) Helper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
+            OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
             OrderBeanRemote order = orderHome.findByPrimaryKey(new Long(Long.parseLong(id_order)));
             order.setStatus(true);
             result2 = "Заказ оформлен";
@@ -822,7 +822,7 @@ public class ExecServlet extends HttpServlet {
         String result2 = "Заказ не удален";
         try {
             String id_order = request.getParameter("id_order");
-            OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) Helper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
+            OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
             OrderBeanRemote order = orderHome.findByPrimaryKey(new Long(Long.parseLong(id_order)));
             orderHome.remove(new Long(order.getId()));
             request.setAttribute("result", orderHome.findByUserAndStatus(new Long(usr.getId()), false));

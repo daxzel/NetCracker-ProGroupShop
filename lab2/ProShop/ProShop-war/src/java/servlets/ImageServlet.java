@@ -34,7 +34,7 @@ import javax.naming.InitialContext;
 import java.sql.*;
 import javax.sql.*;
 import javax.ejb.*;
-import OtherBean.Helper;
+import helpers.EJBHelper;
 import java.io.*;
 
 /**
@@ -139,7 +139,7 @@ public class ImageServlet extends HttpServlet {
             id_product=Long.parseLong(id_productS);
             width=Integer.parseInt(widthS);
 
-            ImageBeanRemoteHome imageHome = (ImageBeanRemoteHome) Helper.lookupHome("ejb/ImageBean", ImageBeanRemoteHome.class);
+            ImageBeanRemoteHome imageHome = (ImageBeanRemoteHome) EJBHelper.lookupHome("ejb/ImageBean", ImageBeanRemoteHome.class);
 
             ImageBeanRemote imageBean=imageHome.create(id_product, name, im , width, height);
 
@@ -180,7 +180,7 @@ public class ImageServlet extends HttpServlet {
         try
         {
             long id = Long.parseLong(request.getParameter("ID"));
-            ImageBeanRemoteHome imageHome = (ImageBeanRemoteHome) Helper.lookupHome("ejb/ImageBean", ImageBeanRemoteHome.class);
+            ImageBeanRemoteHome imageHome = (ImageBeanRemoteHome) EJBHelper.lookupHome("ejb/ImageBean", ImageBeanRemoteHome.class);
             ImageBeanRemote imageBean=imageHome.findByPrimaryKey(new Long(id));
             moreTools.SerializbleImage image = imageBean.getImageI();
             response.setContentType("text/html;charset=UTF-8");

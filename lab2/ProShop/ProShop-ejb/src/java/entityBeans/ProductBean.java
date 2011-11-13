@@ -4,7 +4,7 @@
  */
 package entityBeans;
 
-import OtherBean.Helper;
+import helpers.EJBHelper;
 import java.rmi.RemoteException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -54,8 +54,8 @@ public class ProductBean implements EntityBean {
     public void setEntityContext(EntityContext ctx) {
         this.entityContext = ctx;
         try {
-            opinionHome = (OpinionBeanRemoteHome) OtherBean.Helper.lookupHome("ejb/OpinionBean", OpinionBeanRemoteHome.class);
-            catalogHome = (CatalogBeanRemoteHome) OtherBean.Helper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
+            opinionHome = (OpinionBeanRemoteHome) helpers.EJBHelper.lookupHome("ejb/OpinionBean", OpinionBeanRemoteHome.class);
+            catalogHome = (CatalogBeanRemoteHome) helpers.EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
             //   javax.naming.Context context = new javax.naming.InitialContext();
             try {
            //     conn = Helper.getConnection();
@@ -93,7 +93,7 @@ public class ProductBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("DELETE FROM \"PRODUCT\" WHERE ID_PRODUCT = ?");
             pst.setLong(1, id_product);
             if (pst.executeUpdate() < 1) {
@@ -107,7 +107,7 @@ public class ProductBean implements EntityBean {
         } finally {
             try {
 //                 conn.commit();
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -123,7 +123,7 @@ public class ProductBean implements EntityBean {
         PreparedStatement pst = null;
         ResultSet rs = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM \"PRODUCT\" WHERE ID_PRODUCT = ?");
             pst.setLong(1, id_product);
             rs = pst.executeQuery();
@@ -141,7 +141,7 @@ public class ProductBean implements EntityBean {
             throw new EJBException("Ошибка SELECT");
         } finally {
             try {
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -155,7 +155,7 @@ public class ProductBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("UPDATE \"PRODUCT\"" + "SET DESCRIPTION = ?,ID_CATALOG =?,NAME=?,PRICE=?   WHERE ID_PRODUCT=?");
             pst.setString(1, description);
             pst.setLong(2, id_catalog);
@@ -171,7 +171,7 @@ public class ProductBean implements EntityBean {
             throw new EJBException("Ошибка UPDATE");
         } finally {
             try {
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -192,10 +192,10 @@ public class ProductBean implements EntityBean {
         CallableStatement pst = null;
         ResultSet rs = null;
         try {
-            CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) OtherBean.Helper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
+            CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) helpers.EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
             CatalogBeanRemote ctg = catalogHome.findByName(name_catalog);
             this.id_catalog = ctg.getId();
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareCall("BEGIN INSERT INTO \"PRODUCT\" " + "(DESCRIPTION,ID_CATALOG,NAME,PRICE)" + "VALUES(?,?,?,?) RETURNING ID_PRODUCT INTO ?;END;");
             pst.setString(1, this.description);
             pst.setLong(2, this.id_catalog);
@@ -217,7 +217,7 @@ public class ProductBean implements EntityBean {
         } finally {
 
             try {
-                Helper.closeConnection(conn, pst, rs);
+                EJBHelper.closeConnection(conn, pst, rs);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -236,7 +236,7 @@ public class ProductBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM \"PRODUCT\" WHERE ID_PRODUCT = ?");
             pst.setLong(1, id_product.longValue());
             ResultSet resultSet = pst.executeQuery();
@@ -250,7 +250,7 @@ public class ProductBean implements EntityBean {
             throw new EJBException("Ошибка SELECT");
         } finally {
             try {
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -262,7 +262,7 @@ public class ProductBean implements EntityBean {
         PreparedStatement pst = null;
         ResultSet rs = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("SELECT ID_PRODUCT FROM \"PRODUCT\" WHERE ID_CATALOG = ?");
             pst.setLong(1, id_catalog.longValue());
             // rs = pst.executeQuery();
@@ -281,7 +281,7 @@ public class ProductBean implements EntityBean {
             // e.printStackTrace();
         } finally {
             try {
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -293,7 +293,7 @@ public class ProductBean implements EntityBean {
         PreparedStatement pst = null;
         ResultSet rs = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("SELECT ID_PRODUCT FROM \"PRODUCT\"");
             //   pst.setLong(1, id_catalog.longValue());
             // rs = pst.executeQuery();
@@ -312,7 +312,7 @@ public class ProductBean implements EntityBean {
             // e.printStackTrace();
         } finally {
             try {
-                Helper.closeConnection(conn, pst,rs);
+                EJBHelper.closeConnection(conn, pst,rs);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -323,7 +323,7 @@ public class ProductBean implements EntityBean {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = Helper.getConnection();
+            conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("SELECT * FROM \"PRODUCT\" WHERE NAME = ?");
             pst.setString(1, name);
             ResultSet resultSet = pst.executeQuery();
@@ -337,7 +337,7 @@ public class ProductBean implements EntityBean {
             throw new EJBException("Ошибка SELECT");
         } finally {
             try {
-                Helper.closeConnection(conn, pst);
+                EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }

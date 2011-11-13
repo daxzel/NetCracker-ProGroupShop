@@ -13,6 +13,7 @@ import javax.xml.transform.dom.*;
 import javax.xml.transform.stream.*;
 import javax.xml.validation.*;
 import javax.xml.*;
+import java.util.*;
 /**
  *
  * @author Admin
@@ -116,5 +117,11 @@ public class XMLHelper
         {
             throw new Exception("Ошибка в методе CheckSheme");
         }
+    }
+
+    public void importOfXML(InputStream xml, Collection products, Collection catalogs,
+            Collection images, Collection opinions, Collection orders, Collection roles, Collection users)
+    {
+
     }
 }
