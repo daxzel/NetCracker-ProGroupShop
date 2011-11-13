@@ -6,7 +6,7 @@
 
 
 <%@page import="exceptions.LoginException"%>
-<%@page import="Other.JSPHelper"%>
+<%@page import="helpers.*"%>
 <%@page import="entityBeans.UserBeanRemote"%>
 <%@page import= "entityBeans.ProductBeanRemote,entityBeans.OpinionBeanRemote,java.util.List;"%>
 

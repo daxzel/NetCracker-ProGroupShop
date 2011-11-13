@@ -5,7 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import= "java.util.*,java.text.SimpleDateFormat,Other.JSPHelper,entityBeans.UserBeanRemote;"%>
+<%@page import= "java.util.*,java.text.SimpleDateFormat, helpers.*,entityBeans.UserBeanRemote;"%>
 <%@page errorPage="errorPage.jsp"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     "http://www.w3.org/TR/html4/loose.dtd">
@@ -39,6 +39,7 @@
                                         Collection list = (Collection) request.getAttribute("result");
                                         SimpleDateFormat formt = new SimpleDateFormat("yyyy-MM-dd");
             %>
+        <form action="XML/exportUser">
         <table align="center"  border="1" width="80%">
             <tr align="center">
                 <%if (usr.getRoleId() == 1) {%>
@@ -51,6 +52,9 @@
                 <td width="30%" align="center">Born</td>
                 <td width="30%" align="center">Phone</td>
                 <td width="30%" align="center">Email</td>
+                <%if (usr.getRoleId() == 1) {%>
+                <td width="30%" align="center">Export</td>
+                <%}%>
             </tr>
             <%
                                                     Iterator iter = list.iterator();
@@ -75,9 +79,17 @@
                 <%} else {%>
                 <td></td>
                 <%}
-                                                        }%>
+                %>
+                <%if (usr.getRoleId() == 1) {%>
+                <td><input type="checkbox" name="<%=user.getId()%>" value="ON" /></td>
+                    <%}
+                                                            }%>
             </tr>
+            <%if (usr.getRoleId() == 1) {%>
+            <tr><td><input type="submit" value="input" name="input" /></td></tr>
+                    <%}%>
         </table>
+        </form>
         <p align="center"><a href ="index.jsp">index</a><br></p>
             <%  }
                         }

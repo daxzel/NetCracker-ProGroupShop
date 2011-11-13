@@ -5,7 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import= "entityBeans.*,java.util.List,java.util.Iterator,java.text.SimpleDateFormat,Other.JSPHelper,exceptions.LoginException;"%>
+<%@page import= "entityBeans.*,java.util.List,java.util.Iterator,java.text.SimpleDateFormat, helpers.*,exceptions.LoginException;"%>
 <%@page errorPage="errorPage.jsp"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     "http://www.w3.org/TR/html4/loose.dtd">
@@ -45,7 +45,7 @@
                                                         UserBeanRemote user;
                                                         SimpleDateFormat formt = new SimpleDateFormat("yyyy-MM-dd");
         %>
-        <form action="exportUser">
+        <form action="XML/exportUser">
 
             <table align="center"  border="1" width="80%">
                 <tr align="center">
@@ -58,7 +58,9 @@
                     <td width="30%" align="center">Phone</td>
                     <td width="30%" align="center">Email</td>
                     <td width="30%" align="center">Role</td>
+                    <%if (usr.getRoleId() == 1) {%>
                     <td width="30%" align="center">Export</td>
+                    <%}%>
                 </tr>
                 <% for (int i = 0; i <= (list1.size() - 1); i++) {
                                                                             user = (UserBeanRemote) list1.get(i);
@@ -75,7 +77,7 @@
                     <%} else {%>
                     <td></td>
                     <%}
-                     if (user.getEmail() != null) {%>
+                         if (user.getEmail() != null) {%>
                     <td><%= user.getEmail()%></td>
                     <%} else {%>
                     <td></td>
@@ -85,10 +87,14 @@
                         <%} else {%>
                         user
                         <%}%></td>
-                    <td><a href ="XML/exportUser?ID=<%=usr.getId() %>">Export</a></td>
+                        <%if (usr.getRoleId() == 1) {%>
+                    <td><input type="checkbox" name="<%=user.getId()%>" value="ON" /></td>
+                        <%}%>
                 </tr>
                 <%}%>
-
+                <%if (usr.getRoleId() == 1) {%>
+                <tr><td><input type="submit" value="input" name="input" /></td></tr>
+                        <%}%>
             </table>
         </form>
         <p align="center"><a href ="index.jsp">index</a><br></p>

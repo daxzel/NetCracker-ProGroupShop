@@ -19,6 +19,7 @@ import entityBeans.*;
 import OtherBean.*;
 import SessionBeans.*;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletOutputStream;
 import helpers.*;
@@ -94,13 +95,19 @@ public class XMLServlet extends HttpServlet {
         {
             ServletOutputStream out = null;
             try {
-                String id = request.getParameter("ID");
-                Long id_user = new Long(Long.parseLong(id));
+                Enumeration enumer = request.getParameterNames();
                 ArrayList list = new ArrayList();
-                list.add(id_user);
+                while (enumer.hasMoreElements()) {
+                    String str = enumer.nextElement().toString();
+                    if (!"input".equals(str)) {
+                        Long id_user = new Long(Long.parseLong(str));
+                        list.add(id_user);
+                    } else {
+                    }
+                }
                 XmlBeanRemoteHome xmlHome = (XmlBeanRemoteHome) Helper.lookupHome("ejb/XmlBean", XmlBeanRemoteHome.class);
                 XmlBeanRemote xmlBean = xmlHome.create();
-                String xml = xmlBean.exportToXML(list);
+                String xml = xmlBean.exportToXML(list,true);
                 response.setContentType("text/xml");
                 response.setCharacterEncoding("utf-8");
                 out = response.getOutputStream();
@@ -119,13 +126,13 @@ public class XMLServlet extends HttpServlet {
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
-              /*  RequestDispatcher dispatcher = request.getRequestDispatcher("xml");
+                /*  RequestDispatcher dispatcher = request.getRequestDispatcher("xml");
                 try {
-                    dispatcher.forward(request, response);
+                dispatcher.forward(request, response);
                 } catch (ServletException ex) {
-                    ex.printStackTrace();
+                ex.printStackTrace();
                 } catch (IOException ex) {
-                    ex.printStackTrace();
+                ex.printStackTrace();
                 }*/
             }
         }

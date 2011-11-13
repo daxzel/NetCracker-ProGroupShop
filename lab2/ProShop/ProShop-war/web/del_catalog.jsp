@@ -4,7 +4,7 @@
     Author     : Pushok
 --%>
 
-<%@page import="Other.JSPHelper"%>
+<%@page import="helpers.*"%>
 <%@page import="exceptions.LoginException"%>
 <%@page import="entityBeans.UserBeanRemote"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>

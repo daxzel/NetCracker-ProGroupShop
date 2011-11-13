@@ -7,7 +7,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="java.sql.*,javax.sql.*,javax.naming.*,javax.sql.DataSource, Other.JSPHelper,entityBeans.UserBeanRemote;" %>
+<%@page import="java.sql.*,javax.sql.*,javax.naming.*,javax.sql.DataSource, helpers.*,entityBeans.UserBeanRemote;" %>
 <%@page errorPage="errorPage.jsp"%>
 <%@page import="exceptions.LoginException"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"

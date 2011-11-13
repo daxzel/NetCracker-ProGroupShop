@@ -6,7 +6,7 @@
 
 <%@page import="exceptions.LoginException"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import = "entityBeans.UserBeanRemote,Other.*;"%>
+<%@page import = "entityBeans.UserBeanRemote, helpers.*;"%>
 <%@page errorPage="errorPage.jsp"%>
 <!DOCTYPE html>
 <html>
