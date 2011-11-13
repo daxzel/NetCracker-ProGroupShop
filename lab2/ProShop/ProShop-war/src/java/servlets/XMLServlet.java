@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import entityBeans.*;
-import OtherBean.*;
 import SessionBeans.*;
 import java.util.ArrayList;
 import java.util.Enumeration;
