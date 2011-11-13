@@ -220,7 +220,7 @@ public class ImageBean implements EntityBean {
         setId_img(key.longValue());
     }
     
-    private InputStream imageToStream(Tools.SerializbleImage image) throws IOException, SQLException
+    private InputStream imageToStream(moreTools.SerializbleImage image) throws IOException, SQLException
     {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
@@ -238,7 +238,7 @@ public class ImageBean implements EntityBean {
 
     }
 
-    private byte[] imageToBytes(Tools.SerializbleImage image) throws IOException, SQLException
+    private byte[] imageToBytes(moreTools.SerializbleImage image) throws IOException, SQLException
     {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
@@ -252,7 +252,7 @@ public class ImageBean implements EntityBean {
 
     }
 
-    private void imageToBlob2(Tools.SerializbleImage image, oracle.sql.BLOB blob) throws IOException, SQLException
+    private void imageToBlob2(moreTools.SerializbleImage image, oracle.sql.BLOB blob) throws IOException, SQLException
     {
         ObjectOutputStream oos = new ObjectOutputStream(blob.getBinaryOutputStream(1L));
 
@@ -262,14 +262,14 @@ public class ImageBean implements EntityBean {
 
     }
 
-    private Tools.SerializbleImage blobToImage( oracle.sql.BLOB blob) throws IOException, SQLException, java.lang.ClassNotFoundException
+    private moreTools.SerializbleImage blobToImage( oracle.sql.BLOB blob) throws IOException, SQLException, java.lang.ClassNotFoundException
     {
         ObjectInputStream ois = new ObjectInputStream(blob.getBinaryStream(1L));
 
-        return (Tools.SerializbleImage)ois.readObject();
+        return (moreTools.SerializbleImage)ois.readObject();
     }
 
-    public java.lang.Long ejbCreate(long i_id_product,String i_name, Tools.SerializbleImage image,  int i_width, int i_heaight)  throws CreateException {
+    public java.lang.Long ejbCreate(long i_id_product,String i_name, moreTools.SerializbleImage image,  int i_width, int i_heaight)  throws CreateException {
         this.id_product=i_id_product;
         this.name = i_name;
         this.width = i_width;
@@ -321,7 +321,7 @@ public class ImageBean implements EntityBean {
 
     }
 
-    public void ejbPostCreate(long i_id_product,String i_name,  Tools.SerializbleImage image, int i_width, int i_heaight)  throws CreateException {
+    public void ejbPostCreate(long i_id_product,String i_name,  moreTools.SerializbleImage image, int i_width, int i_heaight)  throws CreateException {
     }
 
     public long getId_product()
@@ -374,7 +374,7 @@ public class ImageBean implements EntityBean {
         }
     }
     
-    public Tools.SerializbleImage getImageI() throws SQLException,IOException, NamingException, ClassNotFoundException
+    public moreTools.SerializbleImage getImageI() throws SQLException,IOException, NamingException, ClassNotFoundException
     {
         Connection conn = null;
         PreparedStatement pst = null;
@@ -385,7 +385,7 @@ public class ImageBean implements EntityBean {
         rs.next();
         return this.blobToImage((oracle.sql.BLOB)rs.getBlob(1));
     }
-    public void setImageI(Tools.SerializbleImage image)
+    public void setImageI(moreTools.SerializbleImage image)
     {
         try
         {

@@ -24,9 +24,9 @@ import java.util.*;
 import exceptions.*;
 import javax.servlet.http.HttpSession;
 
-import Other.JSPHelper;
+import helpers.JSPHelper;
 import entityBeans.*;
-import Other.JSPHelper;
+import helpers.JSPHelper;
 import javax.naming.InitialContext;
 import java.sql.*;
 import javax.sql.*;

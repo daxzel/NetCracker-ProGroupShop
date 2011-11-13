@@ -138,4 +138,18 @@ public class XmlBean implements SessionBean {
     }
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method" or "Web Service > Add Operation")
+
+    public String exportAllProducts() throws Exception
+    {
+        entityBeans.ProductBeanRemoteHome productHome = (entityBeans.ProductBeanRemoteHome) Helper.lookupHome("ejb/ProductBean", entityBeans.ProductBeanRemoteHome.class);
+        java.io.CharArrayWriter arrayWriter = new java.io.CharArrayWriter();
+        java.io.PrintWriter writer = new java.io.PrintWriter(arrayWriter);
+        helpers.XMLHelper.ProductToXml(productHome.findAll(), writer);
+        return arrayWriter.toString();
+    }
+
+    public String importOfXML()
+    {
+        return null;
+    }
 }

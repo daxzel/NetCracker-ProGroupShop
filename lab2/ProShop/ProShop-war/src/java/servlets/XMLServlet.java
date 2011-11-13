@@ -4,8 +4,9 @@
  */
 package servlets;
 
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.lang.*;
+import java.util.*;
 import java.rmi.RemoteException;
 import javax.ejb.CreateException;
 import javax.naming.NamingException;
@@ -20,6 +21,7 @@ import SessionBeans.*;
 import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletOutputStream;
+import helpers.*;
 
 /**
  *
@@ -27,14 +29,59 @@ import javax.servlet.ServletOutputStream;
  */
 public class XMLServlet extends HttpServlet {
 
+    protected void importXML(HttpServletRequest request,
+            HttpServletResponse response)
+    {
+        try
+        {
+            java.io.InputStream xml= null;
+
+            org.apache.commons.fileupload.disk.DiskFileItemFactory factory = new org.apache.commons.fileupload.disk.DiskFileItemFactory();
+
+            factory.setSizeThreshold(1024*1024);
+
+            File tempDir = (File)getServletContext().getAttribute("javax.servlet.context.tempdir");
+
+            factory.setRepository(tempDir);
+            
+            org.apache.commons.fileupload.servlet.ServletFileUpload upload = new org.apache.commons.fileupload.servlet.ServletFileUpload(factory);
+
+            upload.setSizeMax(1024 * 1024 * 10);
+
+            List items = upload.parseRequest(request);
+            
+            Iterator iter = items.iterator();
+
+            while (iter.hasNext())
+            {
+                org.apache.commons.fileupload.FileItem item = (org.apache.commons.fileupload.FileItem) iter.next();
+                if (!item.isFormField())
+                {
+                     xml= item.getInputStream();
+                }
+            }
+
+            File schema  = new File(StaticResourceHelper.getStaticDirectory(request)+StaticResourceHelper.getProdudctsXSD());
+
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
+        }
+     
+    }
+
     protected void getProducts(HttpServletRequest request,
             HttpServletResponse response) {
         try {
             PrintWriter out = response.getWriter();
             try {
-                java.io.PrintWriter writer = new java.io.PrintWriter("c:\\1.xml");
-                ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) Helper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
-                Tools.XMLHelper.ProductToXml(productHome.findAll(), out);
+                XmlBeanRemoteHome xmlHome = (XmlBeanRemoteHome) Helper.lookupHome("ejb/XmlBean", XmlBeanRemoteHome.class);
+                XmlBeanRemote xmlBean = xmlHome.create();
+                String xml = xmlBean.exportAllProducts();
+                response.setContentType("text/xml");
+                response.setCharacterEncoding("utf-8");
+                out.println(xml);
             } catch (Exception ex) {
                 out.write(ex.getMessage());
             }
@@ -98,10 +145,18 @@ public class XMLServlet extends HttpServlet {
             getProducts(request, response);
             return;
         }
+
         if (request.getRequestURI().equals("/ProShop-war/XML/exportUser")) {
             exportUsers(request, response);
             return;
         }
+
+        if (request.getRequestURI().equals("/ProShop-war/XML/import")) {
+            exportUsers(request, response);
+            return;
+        }
+
+       
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

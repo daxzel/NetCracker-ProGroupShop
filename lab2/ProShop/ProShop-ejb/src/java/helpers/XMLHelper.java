@@ -3,13 +3,16 @@
  * and open the template in the editor.
  */
 
-package Tools;
+package helpers;
 import java.io.*;
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
+import org.xml.sax.*;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.*;
 import javax.xml.transform.stream.*;
+import javax.xml.validation.*;
+import javax.xml.*;
 /**
  *
  * @author Admin
@@ -20,7 +23,7 @@ public class XMLHelper
     {
         try
         {
-            result.write("<?xml-stylesheet  type=\"text/xsl\" href=\"http://localhost:32722/ProShop-war/static/Products.xslt\"?>");
+            result.write("<?xml-stylesheet  type=\"text/xsl\" href=\"/ProShop-war/static/Products.xslt\"?>");
 
             DocumentBuilderFactory factory
               = DocumentBuilderFactory.newInstance();
@@ -86,5 +89,32 @@ public class XMLHelper
             throw new Exception("Ощибка в реализации XMLHelper");
         }
 
+    }
+
+    public static boolean CheckSchema(InputStream xml, File schemeFiles) throws Exception
+    {
+        try
+        {
+            DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            Document document = parser.parse(xml);
+
+            SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+
+            Source schemaFile = new StreamSource(schemeFiles);
+            Schema schema = factory.newSchema(schemaFile);
+
+            Validator validator = schema.newValidator();
+
+            try {
+                validator.validate(new DOMSource(document));
+                return true;
+            } catch (SAXException e) {
+                return false;
+            }
+        }
+        catch(Exception ex)
+        {
+            throw new Exception("Ошибка в методе CheckSheme");
+        }
     }
 }

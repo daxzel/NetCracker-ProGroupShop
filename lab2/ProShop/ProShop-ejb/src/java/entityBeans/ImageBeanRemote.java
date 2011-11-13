@@ -39,8 +39,8 @@ public interface ImageBeanRemote extends EJBObject {
 
     void setHeaight(int i_heaight) throws RemoteException;
 
-    public Tools.SerializbleImage getImageI() throws RemoteException;
+    public moreTools.SerializbleImage getImageI() throws RemoteException;
 
-    public void setImageI(Tools.SerializbleImage image) throws RemoteException;
+    public void setImageI(moreTools.SerializbleImage image) throws RemoteException;
 
 }

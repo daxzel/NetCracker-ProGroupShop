@@ -27,9 +27,9 @@ import java.util.*;
 import exceptions.*;
 import javax.servlet.http.HttpSession;
 
-import Other.JSPHelper;
+import helpers.JSPHelper;
 import entityBeans.*;
-import Other.JSPHelper;
+import helpers.JSPHelper;
 import javax.naming.InitialContext;
 import java.sql.*;
 import javax.sql.*;
@@ -65,7 +65,7 @@ public class ImageServlet extends HttpServlet {
 
         upload.setSizeMax(1024 * 1024 * 10);
 
-        Tools.SerializbleImage im = null;
+        moreTools.SerializbleImage im = null;
 
         try
         {
@@ -76,7 +76,7 @@ public class ImageServlet extends HttpServlet {
                 org.apache.commons.fileupload.FileItem item = (org.apache.commons.fileupload.FileItem) iter.next();
                 if (!item.isFormField())
                 {
-                    im = new Tools.SerializbleImage(item.getInputStream());
+                    im = new moreTools.SerializbleImage(item.getInputStream());
                 }
                 else
                 {
@@ -111,7 +111,6 @@ public class ImageServlet extends HttpServlet {
         }
         catch (Exception e)
         {
-            int x = 0;
         }
 
         long id_product;
@@ -183,7 +182,7 @@ public class ImageServlet extends HttpServlet {
             long id = Long.parseLong(request.getParameter("ID"));
             ImageBeanRemoteHome imageHome = (ImageBeanRemoteHome) Helper.lookupHome("ejb/ImageBean", ImageBeanRemoteHome.class);
             ImageBeanRemote imageBean=imageHome.findByPrimaryKey(new Long(id));
-            Tools.SerializbleImage image = imageBean.getImageI();
+            moreTools.SerializbleImage image = imageBean.getImageI();
             response.setContentType("text/html;charset=UTF-8");
             
             com.sun.image.codec.jpeg.JPEGImageEncoder jie = com.sun.image.codec.jpeg.JPEGCodec.createJPEGEncoder(out);

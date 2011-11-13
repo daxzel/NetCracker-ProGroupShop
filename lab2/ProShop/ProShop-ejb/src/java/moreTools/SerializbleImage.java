@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package Tools;
+package moreTools;
 import java.awt.*;
 import java.awt.image.*;
 import java.io.*;
