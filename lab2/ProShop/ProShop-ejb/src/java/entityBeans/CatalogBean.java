@@ -261,7 +261,102 @@ public class CatalogBean implements EntityBean {
         }
     }
 
+    public java.lang.Long ejbCreate(long id, String parent_name, String name) throws CreateException {
+        try
+        {
+            ejbFindByName(name);
+            throw new DuplicateKeyException("Каталог с таким названием уже существует");
+        } 
+        catch (ObjectNotFoundException ex)
+        {
+        }
+        try
+        {
+            this.id_parent = ejbFindByName(parent_name).longValue();
+        } 
+        catch (ObjectNotFoundException ex)
+        {
+            throw new CreateException("Родительский каталог не найден");
+        }
+        this.id_catalog=id;
+        this.name = name;
+        Connection conn = null;
+        CallableStatement pst = null;
+        ResultSet rs = null;
+        try {
+            conn = EJBHelper.getConnection();
+            pst = conn.prepareCall("INSERT INTO \"CATALOG\" " + "(ID_CATALOG,ID_PARENT,NAME)" + "VALUES(?,?,?)");
+            pst.setLong(1, id);
+            pst.setLong(2, id_parent);
+            pst.setString(3, name);
+            rs = pst.executeQuery();
+            if (!rs.next()) {
+                throw new CreateException("Ошибка вставки");
+            }
+            return new Long(id_catalog);
+        } catch (NamingException ex) {
+            throw new EJBException("Произошла ошибка добавления");
+        } catch (SQLException ex) {
+            throw new EJBException("Произошла ошибка добавления");
+        } finally {
+
+            try {
+                EJBHelper.closeConnection(conn, pst, rs);
+            } catch (SQLException ex1) {
+                throw new EJBException("Ошибка закрытии соединия с базой");
+            }
+
+        }
+    }
+
+    public java.lang.Long ejbCreate(long id, long parent_id, String name) throws CreateException {
+        try
+        {
+            ejbFindByName(name);
+            throw new DuplicateKeyException("Каталог с таким названием уже существует");
+        }
+        catch (ObjectNotFoundException ex)
+        {
+        }
+        this.id_parent=parent_id;
+        this.id_catalog=id;
+        this.name = name;
+        Connection conn = null;
+        CallableStatement pst = null;
+        ResultSet rs = null;
+        try {
+            conn = EJBHelper.getConnection();
+            pst = conn.prepareCall("INSERT INTO \"CATALOG\" " + "(ID_CATALOG,ID_PARENT,NAME)" + "VALUES(?,?,?)");
+            pst.setLong(1, id);
+            pst.setLong(2, id_parent);
+            pst.setString(3, name);
+            rs = pst.executeQuery();
+            if (!rs.next()) {
+                throw new CreateException("Ошибка вставки");
+            }
+            return new Long(id_catalog);
+        } catch (NamingException ex) {
+            throw new EJBException("Произошла ошибка добавления");
+        } catch (SQLException ex) {
+            throw new EJBException("Произошла ошибка добавления");
+        } finally {
+
+            try {
+                EJBHelper.closeConnection(conn, pst, rs);
+            } catch (SQLException ex1) {
+                throw new EJBException("Ошибка закрытии соединия с базой");
+            }
+
+        }
+    }
+
     public void ejbPostCreate(String parent_name, String name) throws CreateException {
+    }
+
+    public void ejbPostCreate(long id, String parent_name, String name) throws CreateException {
+    }
+
+    public void ejbPostCreate(long id, long parent_id, String name) throws CreateException {
     }
 
     public Collection ejbFindCatalogByPid(java.lang.Long id_catalog) {

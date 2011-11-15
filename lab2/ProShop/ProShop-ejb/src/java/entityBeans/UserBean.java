@@ -413,7 +413,65 @@ public class UserBean implements EntityBean {
         }
     }
 
+    public java.lang.Long ejbCreate(java.lang.Long id,String name, String surname, String otchestvo, String nik, String password, java.sql.Date born, String phone, String email, java.lang.Long id_role) throws CreateException {
+        try
+        {
+            ejbFindByNik(nik);
+            throw new DuplicateKeyException("Пользователь с таким ником уже существует");
+        } 
+        catch (ObjectNotFoundException ex)
+        {
+        }
+        this.id_user = id.longValue();
+        this.name = name;
+        this.surname = surname;
+        this.otchestvo = otchestvo;
+        this.nik = nik;
+        this.password = password;
+        this.born = born;
+        this.phone = phone;
+        this.email = email;
+        this.id_role = id_role.longValue();
+        Connection conn = null;
+        CallableStatement pst = null;
+        ResultSet rs = null;
+        try {
+            conn = EJBHelper.getConnection();
+            pst = conn.prepareCall("INSERT INTO \"USER\" " + "(ID_USER,NAME,SURNAME,OTCHESTVO,NIK,PASSWORD,BORN,PHONE,EMAIL,ID_ROLE)" + "VALUES(?,?,?,?,?,?,?,?,?,?)");
+            pst.setLong(1, id.longValue());
+            pst.setString(2, name);
+            pst.setString(3, surname);
+            pst.setString(4, otchestvo);
+            pst.setString(5, nik);
+            pst.setString(6, password);
+            pst.setDate(7, born);
+            pst.setString(8, phone);
+            pst.setString(9, email);
+            pst.setLong(10, id_role.longValue());
+            rs = pst.executeQuery();
+            if (!rs.next()) {
+                throw new CreateException("Ошибка вставки");
+            }
+            return new Long(id_user);
+        } catch (NamingException ex) {
+            throw new EJBException("Произошла ошибка добавления");
+        } catch (SQLException ex) {
+            throw new EJBException("Произошла ошибка добавления");
+        } finally {
+
+            try {
+                EJBHelper.closeConnection(conn, pst, rs);
+            } catch (SQLException ex1) {
+                throw new EJBException("Ошибка закрытии соединия с базой");
+            }
+
+        }
+    }
+
     public void ejbPostCreate(String name, String surname, String otchestvo, String nik, String password, java.sql.Date born, String phone, String email, java.lang.Long id_role) throws CreateException {
+    }
+
+     public void ejbPostCreate(java.lang.Long id,String name, String surname, String otchestvo, String nik, String password, java.sql.Date born, String phone, String email, java.lang.Long id_role) throws CreateException {
     }
 
     public long getId() {

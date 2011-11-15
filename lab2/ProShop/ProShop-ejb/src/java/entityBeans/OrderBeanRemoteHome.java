@@ -28,4 +28,6 @@ public interface OrderBeanRemoteHome extends EJBHome {
     public java.util.List findByUserAndStatus(java.lang.Long id_user, boolean status) throws FinderException, RemoteException;
 
     public entityBeans.OrderBeanRemote create(java.lang.Long id_user, java.lang.Long id_product, java.lang.Boolean status, java.lang.Integer amount) throws CreateException, RemoteException;
+
+    public entityBeans.OrderBeanRemote create(java.lang.Long id, java.lang.Long id_user, java.lang.Long id_product, java.lang.Boolean status, java.lang.Integer amount) throws CreateException, RemoteException;
 }

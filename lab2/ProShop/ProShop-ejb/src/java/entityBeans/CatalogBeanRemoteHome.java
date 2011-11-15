@@ -24,4 +24,8 @@ public interface CatalogBeanRemoteHome extends EJBHome {
     public java.util.List findCatalogByPid(java.lang.Long id_parent) throws FinderException, RemoteException;
 
     public entityBeans.CatalogBeanRemote create(String parent_name, String name) throws CreateException, RemoteException;
+
+    public entityBeans.CatalogBeanRemote create(long id,String parent_name, String name) throws CreateException, RemoteException;
+
+    public entityBeans.CatalogBeanRemote create(long id, long parent_id, String name) throws CreateException, RemoteException;
 }
