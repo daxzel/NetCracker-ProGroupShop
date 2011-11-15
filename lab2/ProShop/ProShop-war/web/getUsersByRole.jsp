@@ -86,7 +86,7 @@
                                                             }%>
             </tr>
             <%if (usr.getRoleId() == 1) {%>
-            <tr><td><input type="submit" value="input" name="input" /></td></tr>
+            <tr><td colspan="5"><input type="submit" value="Экспортировать пользователей и роли связанные с ними" name="input" /></td><td colspan="4"><input type="submit" value="Экспортировать только пользователей" name="input2" /></td></tr>
                     <%}%>
         </table>
         </form>

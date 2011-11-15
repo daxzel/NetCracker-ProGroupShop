@@ -4,6 +4,7 @@
         <servlet-name>ExecServlet</servlet-name>
         <servlet-class>servlets.ExecServlet</servlet-class>
     </servlet>
+
     <servlet>
         <servlet-name>ImageServlet</servlet-name>
         <servlet-class>servlets.ImageServlet</servlet-class>

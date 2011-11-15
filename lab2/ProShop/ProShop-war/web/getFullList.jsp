@@ -71,8 +71,11 @@
                     <td><%= user.getSurname()%></td>
                     <td><%= user.getOtchestvo()%></td>
                     <td><%= user.getNik()%></td>
+                    <%if (user.getBorn() != null) {%>
                     <td><%=formt.format(user.getBorn())%></td>
-                    <%if (user.getPhone() != null) {%>
+                    <%} else {%>
+                     <td></td>
+                    <%}if (user.getPhone() != null) {%>
                     <td><%= user.getPhone()%></td>
                     <%} else {%>
                     <td></td>
@@ -93,7 +96,7 @@
                 </tr>
                 <%}%>
                 <%if (usr.getRoleId() == 1) {%>
-                <tr><td><input type="submit" value="input" name="input" /></td></tr>
+                <tr><td colspan="5"><input type="submit" value="Экспортировать пользователей и роли связанные с ними" name="input" /></td><td colspan="4"><input type="submit" value="Экспортировать только пользователей" name="input2" /></td></tr>
                         <%}%>
             </table>
         </form>
@@ -102,7 +105,7 @@
                                                         if (list1.get(0) instanceof ProductBeanRemote) {
                                                             ProductBeanRemote prd;
                                                             //  SimpleDateFormat formt = new SimpleDateFormat("dd MM yyyy");
-%>
+            %>
         <table align="center"  border="1" width="80%">
             <tr align="center">
                 <td width="15%" align="center">Name</td>

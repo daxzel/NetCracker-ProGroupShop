@@ -3,7 +3,7 @@
     targetNamespace="https://github.com/daxzel/InternetShop/export.xsd"
     xmlns:db="https://github.com/daxzel/InternetShop/DB.xsd"
     xmlns:xs="http://www.w3.org/2001/XMLSchema">  
-    <xs:complexType name="export">
+    <xs:complexType name="EXPORT">
 		<xs:sequence>
 			 <xs:element name="USER" type="db:USER" minOccurs="0" maxOccurs="unbounded"/>
 			 <xs:element name="ROLE" type="db:ROLE" minOccurs="0" maxOccurs="unbounded"/>

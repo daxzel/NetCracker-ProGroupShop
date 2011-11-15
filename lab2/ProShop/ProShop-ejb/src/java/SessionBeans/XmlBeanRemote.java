@@ -14,7 +14,7 @@ import javax.ejb.EJBObject;
  */
 public interface XmlBeanRemote extends EJBObject {
 
-    public String exportToXML(ArrayList users, boolean needExportAll) throws RemoteException;
+    public String exportToXMLUser(ArrayList users, boolean needExportAll) throws RemoteException;
 
     public String exportAllProducts() throws RemoteException,Exception;
 
