@@ -60,6 +60,16 @@ public class EJBHelper {
         return namingContext.lookup(name);
     }
 
+    public static UserBeanRemoteHome  getUserRemoteHome() throws NamingException
+    {
+        return (UserBeanRemoteHome) lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
+    }
+
+    public static RoleBeanRemoteHome  getRoleRemoteHome() throws NamingException
+    {
+        return (RoleBeanRemoteHome) lookupHome("ejb/RoleBean", RoleBeanRemoteHome.class);
+    }
+
     public static CatalogBeanRemoteHome  getCatlogRemoteHome() throws NamingException
     {
         return (CatalogBeanRemoteHome) lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
@@ -115,6 +125,19 @@ public class EJBHelper {
                 double price) throws NamingException,CreateException,RemoteException,FinderException
         {
             return EJBHelper.getProductRemoteHome().create(description, nameCatalog, name, price);
+        }
+
+        public static UserBeanRemote  User(String name,String surName,String otchestvo,
+                String nik, String password,Date born, String phone,String email, Long idRole ) throws NamingException,CreateException,RemoteException
+        {
+            return EJBHelper.getUserRemoteHome().create(name, surName, otchestvo, nik,
+                    password, born, phone, email, idRole);
+        }
+
+        public static RoleBeanRemote  Role(String name) throws NamingException,CreateException,RemoteException,FinderException,Exception
+        {
+            throw new java.lang.Exception();
+           // return EJBHelper.getRoleRemoteHome().
         }
     }
 
