@@ -22,8 +22,14 @@
                         RequestDispatcher rd = request.getRequestDispatcher("login.jsp");
                         rd.forward(request, response);
                     } else {
+                        if (request.getAttribute("exception") == null) {
         %>
         <%=exception.getMessage()%>
-        <%}%>
+        <%} else {
+                                    Exception ex = (Exception) request.getAttribute("exception");%>
+        <%=ex.getMessage()%>  
+        <%}
+                    }%>
+        <p align="left"><a href ="/ProShop-war/index.jsp">index</a><br></p>
     </body>
 </html>

@@ -104,7 +104,7 @@ public class XmlBean implements SessionBean {
         // and data sources.
     }
 
-    public String exportToXML(ArrayList users, boolean needExportAll) throws EJBException {
+    public String exportToXMLUsers(ArrayList users, boolean needExportRole) throws EJBException {
         String result = "<error message = \"Sorry\" />";
         Document doc = new Document();
         Element root = new Element("EXPORT");
@@ -113,11 +113,8 @@ public class XmlBean implements SessionBean {
         SimpleDateFormat formt = new SimpleDateFormat("yyyy-MM-dd");
         try {
             userHome = (UserBeanRemoteHome) EJBHelper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
-            if (needExportAll) {
-                catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
-                roleHome = (RoleBeanRemoteHome) EJBHelper.lookupHome("ejb/RoleBean", RoleBeanRemoteHome.class);
-                productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
-                opinionHome = (OpinionBeanRemoteHome) EJBHelper.lookupHome("ejb/OpinionBean", OpinionBeanRemoteHome.class);
+            if (needExportRole) {
+               roleHome = (RoleBeanRemoteHome) EJBHelper.lookupHome("ejb/RoleBean", RoleBeanRemoteHome.class);
             }
         } catch (NamingException ex) {
             throw new EJBException(ex);
@@ -140,7 +137,7 @@ public class XmlBean implements SessionBean {
                     userNode.addContent((new Element("PHONE")).setText(user.getPhone()));
                     userNode.addContent((new Element("EMAIL")).setText(user.getEmail()));
                     userNode.addContent((new Element("ID_ROLE")).setText((new Long(user.getRoleId())).toString()));
-                    if(needExportAll){
+                    if(needExportRole){
                         rids.add(new Long(user.getRoleId()));
                     }
                 } catch (FinderException ex) {

@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import entityBeans.*;
 import helpers.*;
 import SessionBeans.*;
+import exceptions.ExportException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import javax.servlet.RequestDispatcher;
@@ -32,45 +33,39 @@ import helpers.*;
 public class XMLServlet extends HttpServlet {
 
     protected void importXML(HttpServletRequest request,
-            HttpServletResponse response)
-    {
-        try
-        {
-            java.io.InputStream xml= null;
+            HttpServletResponse response) {
+        try {
+            java.io.InputStream xml = null;
 
             org.apache.commons.fileupload.disk.DiskFileItemFactory factory = new org.apache.commons.fileupload.disk.DiskFileItemFactory();
 
-            factory.setSizeThreshold(1024*1024);
+            factory.setSizeThreshold(1024 * 1024);
 
-            File tempDir = (File)getServletContext().getAttribute("javax.servlet.context.tempdir");
+            File tempDir = (File) getServletContext().getAttribute("javax.servlet.context.tempdir");
 
             factory.setRepository(tempDir);
-            
+
             org.apache.commons.fileupload.servlet.ServletFileUpload upload = new org.apache.commons.fileupload.servlet.ServletFileUpload(factory);
 
             upload.setSizeMax(1024 * 1024 * 10);
 
             List items = upload.parseRequest(request);
-            
+
             Iterator iter = items.iterator();
 
-            while (iter.hasNext())
-            {
+            while (iter.hasNext()) {
                 org.apache.commons.fileupload.FileItem item = (org.apache.commons.fileupload.FileItem) iter.next();
-                if (!item.isFormField())
-                {
-                     xml= item.getInputStream();
+                if (!item.isFormField()) {
+                    xml = item.getInputStream();
                 }
             }
 
-            File schema  = new File(StaticResourceHelper.getStaticDirectory(request)+StaticResourceHelper.getProdudctsXSD());
+            File schema = new File(StaticResourceHelper.getStaticDirectory(request) + StaticResourceHelper.getProdudctsXSD());
 
-        }
-        catch(Exception ex)
-        {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
-     
+
     }
 
     protected void getProducts(HttpServletRequest request,
@@ -92,23 +87,34 @@ public class XMLServlet extends HttpServlet {
         }
     }
 
-    protected void exportUsers(HttpServletRequest request, HttpServletResponse response) {
+    protected void exportUsers(HttpServletRequest request, HttpServletResponse response) throws ExportException {
         {
             ServletOutputStream out = null;
             try {
+                boolean flag = true;
                 Enumeration enumer = request.getParameterNames();
                 ArrayList list = new ArrayList();
                 while (enumer.hasMoreElements()) {
                     String str = enumer.nextElement().toString();
-                    if (!"input".equals(str)) {
+                    try {
                         Long id_user = new Long(Long.parseLong(str));
                         list.add(id_user);
-                    } else {
+                    } catch (NumberFormatException ex) {
+                        if("input".equals(str)){
+
+                        }
+                        if("input2".equals(str)){
+                            flag = false;
+                        }
                     }
+
+                }
+                if (list.isEmpty()) {
+                    throw new ExportException("Не выбранны пользователи");
                 }
                 XmlBeanRemoteHome xmlHome = (XmlBeanRemoteHome) EJBHelper.lookupHome("ejb/XmlBean", XmlBeanRemoteHome.class);
                 XmlBeanRemote xmlBean = xmlHome.create();
-                String xml = xmlBean.exportToXML(list,true);
+                String xml = xmlBean.exportToXMLUser(list, flag);
                 response.setContentType("text/xml");
                 response.setCharacterEncoding("utf-8");
                 out = response.getOutputStream();
@@ -123,7 +129,9 @@ public class XMLServlet extends HttpServlet {
                 ex.printStackTrace();
             } finally {
                 try {
-                    out.close();
+                    if (out != null) {
+                        out.close();
+                    }
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -149,22 +157,31 @@ public class XMLServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        if (request.getRequestURI().equals("/ProShop-war/XML/Products.xml")) {
-            getProducts(request, response);
-            return;
+        RequestDispatcher rd;
+        try {
+            if (request.getRequestURI().equals("/ProShop-war/XML/Products.xml")) {
+                getProducts(request, response);
+                return;
+            }
+
+            if (request.getRequestURI().equals("/ProShop-war/XML/exportUser")) {
+
+                exportUsers(request, response);
+                return;
+
+            }
+
+            if (request.getRequestURI().equals("/ProShop-war/XML/import")) {
+                exportUsers(request, response);
+                return;
+            }
+        } catch (ExportException ex) {
+
+            rd = request.getRequestDispatcher("/errorPage.jsp");
+            request.setAttribute("exception", ex);
+            rd.forward(request, response);
         }
 
-        if (request.getRequestURI().equals("/ProShop-war/XML/exportUser")) {
-            exportUsers(request, response);
-            return;
-        }
-
-        if (request.getRequestURI().equals("/ProShop-war/XML/import")) {
-            exportUsers(request, response);
-            return;
-        }
-
-       
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
