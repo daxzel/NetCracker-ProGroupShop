@@ -26,6 +26,30 @@ public class StaticResourceHelper {
     {
         return "\\static\\Products.xslt";
     }
+        public static String getRolesXSLT()
+    {
+        return "\\static\\Roles.xslt";
+    }
+            public static String getUsersXSLT()
+    {
+        return "\\static\\Users.xslt";
+    }
+                public static String getCatalogsXSLT()
+    {
+        return "\\static\\Catalogs.xslt";
+    }
+                    public static String getOpinionsXSLT()
+    {
+        return "\\static\\Opinions.xslt";
+    }
+               public static String getImagesXSLT()
+    {
+        return "\\static\\Images.xslt";
+    }
+                    public static String getOrdersXSLT()
+    {
+        return "\\static\\Orders.xslt";
+    }
 
      public static String getDBXSD()
     {
