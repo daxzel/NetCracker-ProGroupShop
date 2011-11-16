@@ -18,7 +18,7 @@
             <table>
                 <tr><td>Введите цену</td><td> <input type="text" name="price" value="" /></td></tr>
                 <tr><td>Экспортировать продукты с ценой больше заданной</td><td><input type="checkbox" name="more" value="ON" /> </td></tr>
-                <tr><td>Экспортировать продукты с ценой больше заданной</td><td><input type="checkbox" name="less" value="ON" /> </td></tr>
+                <tr><td>Экспортировать продукты с ценой меньше заданной</td><td><input type="checkbox" name="less" value="ON" /> </td></tr>
                 <tr><td>Экспортировать продукты с каталогами</td><td><input type="checkbox" name="exportCatalog" value="ON" /> </td></tr>
                 <tr><td>Экспортировать продукты, заказы этих продуктов и пользователей которые эти заказы сделали</td><td><input type="checkbox" name="exportOrder" value="ON" /> </td></tr>
                 <tr><td>Экспортировать продукты, комментарии и пользователей</td><td><input type="checkbox" name="exportComment" value="ON" /> </td></tr>

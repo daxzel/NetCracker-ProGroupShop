@@ -9,6 +9,7 @@ import entityBeans.CatalogBeanRemoteHome;
 import entityBeans.ImageBeanRemoteHome;
 import entityBeans.OpinionBeanRemote;
 import entityBeans.OpinionBeanRemoteHome;
+import entityBeans.OrderBeanRemote;
 import entityBeans.OrderBeanRemoteHome;
 import entityBeans.ProductBeanRemote;
 import entityBeans.ProductBeanRemoteHome;
@@ -173,7 +174,7 @@ public class XmlBean implements SessionBean {
 
     public String exportToXMLProduct(double price, boolean flag, boolean allFlag, boolean catalogFlag, boolean orderFlag, boolean commentFlag) throws EJBException {
         String result = "<error message = \"Sorry\" />";
-       /* return result;
+       
         Document doc = new Document();
         Element root = new Element("EXPORT");
         doc.setRootElement(root);
@@ -190,7 +191,7 @@ public class XmlBean implements SessionBean {
                 roleHome = (RoleBeanRemoteHome) EJBHelper.lookupHome("ejb/RoleBean", RoleBeanRemoteHome.class);
                 catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
                 orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
-                opinionHome = (OpinionBeanRemoteHome) EJBHelper.lookupHome("ejb/OpinionBean", OrderBeanRemoteHome.class);
+                opinionHome = (OpinionBeanRemoteHome) EJBHelper.lookupHome("ejb/OpinionBean", OpinionBeanRemoteHome.class);
             } else {
                 if (catalogFlag) {
                     catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
@@ -205,43 +206,48 @@ public class XmlBean implements SessionBean {
                         userHome = (UserBeanRemoteHome) EJBHelper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
                         roleHome = (RoleBeanRemoteHome) EJBHelper.lookupHome("ejb/RoleBean", RoleBeanRemoteHome.class);
                     }
-                    opinionHome = (OpinionBeanRemoteHome) EJBHelper.lookupHome("ejb/OpinionBean", OrderBeanRemoteHome.class);
+                    opinionHome = (OpinionBeanRemoteHome) EJBHelper.lookupHome("ejb/OpinionBean", OpinionBeanRemoteHome.class);
                 }
             }
 
         } catch (NamingException ex) {
             throw new EJBException(ex);
         }
-        List products = productHome.findByPrice(price, flag);
-        for (int i = 0; i < products.size(); i++) {
-            ProductBeanRemote product = (ProductBeanRemote)products.get(i);
-            {
+        try {
+            List products = productHome.findByPrice(price, flag);
+            for (int i = 0; i < products.size(); i++) {
+                ProductBeanRemote product = (ProductBeanRemote) products.get(i);
+                {
 
-                try {
+
                     List opinions = opinionHome.findOpinionByProduct(new Long(product.getId()));
                     List orders = orderHome.findByProduct(new Long(product.getId()));
-                    user = userHome.findByPrimaryKey((Long) users.get(i));
+                    uids.addAll(findUsersByOpinions(opinions, uids));
+                    uids.addAll(findUsersByOrders(orders, uids));
                     Element userNode = new Element("USER");
                     root.addContent(userNode);
-                    userNode.setAttribute("ID_USER", (new Long(user.getId())).toString());
-                    userNode.addContent((new Element("NAME")).setText(user.getName()));
-                    userNode.addContent((new Element("SURNAME")).setText(user.getSurname()));
-                    userNode.addContent((new Element("OTCHESTVO")).setText(user.getOtchestvo()));
-                    userNode.addContent((new Element("NIK")).setText(user.getNik()));
-                    userNode.addContent((new Element("PASSWORD")).setText(user.getPassword()));
-                    userNode.addContent((new Element("BORN")).setText(formt.format(user.getBorn())));
-                    userNode.addContent((new Element("PHONE")).setText(user.getPhone()));
-                    userNode.addContent((new Element("EMAIL")).setText(user.getEmail()));
-                    userNode.addContent((new Element("ID_ROLE")).setText((new Long(user.getRoleId())).toString()));
-                    if (needExportRole) {
-                        rids.add(new Long(user.getRoleId()));
-                    }
-                } catch (FinderException ex) {
-                    throw new EJBException(ex);
-                } catch (RemoteException ex) {
-                    throw new EJBException(ex);
+                    userNode.setAttribute("ID_USER", "1");
+          //          userNode.addContent((new Element("NAME")).setText(user.getName()));
+            //        userNode.addContent((new Element("SURNAME")).setText(user.getSurname()));
+              //      userNode.addContent((new Element("OTCHESTVO")).setText(user.getOtchestvo()));
+                //    userNode.addContent((new Element("NIK")).setText(user.getNik()));
+                  //  userNode.addContent((new Element("PASSWORD")).setText(user.getPassword()));
+                    //userNode.addContent((new Element("BORN")).setText(formt.format(user.getBorn())));
+                    //userNode.addContent((new Element("PHONE")).setText(user.getPhone()));
+                    //userNode.addContent((new Element("EMAIL")).setText(user.getEmail()));
+                    //userNode.addContent((new Element("ID_ROLE")).setText((new Long(user.getRoleId())).toString()));
+                    //if (needExportRole) {
+                      //  rids.add(new Long(user.getRoleId()));
+                        
+                    //}
+
+
                 }
             }
+        } catch (FinderException ex) {
+            throw new EJBException(ex);
+        } catch (RemoteException ex) {
+            throw new EJBException(ex);
         }
         Iterator iter = rids.iterator();
         RoleBeanRemote role = null;
@@ -260,20 +266,27 @@ public class XmlBean implements SessionBean {
         }
         XMLOutputter outputter = new XMLOutputter();
         outputter.setFormat(Format.getPrettyFormat());
-        result = outputter.outputString(doc).toString();*/
+        result = outputter.outputString(doc).toString();
         return result;
-  }
+    }
 
-    protected List findUsersByOpinions(List opinions) throws RemoteException, FinderException {
-        Set uids = new TreeSet();
+    protected Set findUsersByOpinions(List opinions, Set uids) throws RemoteException, FinderException {
         for (int i = 0; i < opinions.size(); i++) {
             OpinionBeanRemote opinion = (OpinionBeanRemote) opinions.get(i);
             uids.add(new Long(opinion.getIdUser()));
         }
-        return getListBySet(uids);
+        return uids;
     }
 
-    protected List getListBySet(Set set) throws FinderException, RemoteException {
+    protected Set findUsersByOrders(List orders, Set uids) throws RemoteException, FinderException {
+        for (int i = 0; i < orders.size(); i++) {
+            OrderBeanRemote order = (OrderBeanRemote) orders.get(i);
+            uids.add(new Long(order.getIdUser()));
+        }
+        return uids;
+    }
+
+    protected List getListObjectBySet(Set set) throws FinderException, RemoteException {
         ArrayList list = new ArrayList();
         Iterator iter = set.iterator();
         while (iter.hasNext()) {
@@ -288,7 +301,7 @@ public class XmlBean implements SessionBean {
             UserBeanRemote user = (UserBeanRemote) users.get(i);
             rids.add(new Long(user.getRoleId()));
         }
-        return getListBySet(rids);
+        return getListObjectBySet(rids);
     }
 
     // Add business logic below. (Right-click in editor and choose

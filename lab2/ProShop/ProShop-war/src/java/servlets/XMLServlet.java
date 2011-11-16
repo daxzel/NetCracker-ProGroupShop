@@ -142,13 +142,13 @@ public class XMLServlet extends HttpServlet {
     protected void exportProductByPrice(HttpServletRequest request, HttpServletResponse response) throws ExportException, IOException, ServletException {
         RequestDispatcher rd;
         ServletOutputStream out = null;
-        boolean catalogFlag, orderFlag, commentFlag, allFlag;
-        catalogFlag = orderFlag = commentFlag = allFlag = false;
+        boolean flag,catalogFlag, orderFlag, commentFlag, allFlag;
+        flag=catalogFlag = orderFlag = commentFlag = allFlag = false;
         String result, price, name, more, less, exportCatalog, exportOrder, exportComment, exportAll;
-        double priceDouble;
+        double priceDouble=0;
         result = "Произошла ошибка";
         try {
-            Enumeration enumer = request.getParameterNames();
+       
             ArrayList list = new ArrayList();
             price = request.getParameter("price");
             if (price == null) {
@@ -160,6 +160,8 @@ public class XMLServlet extends HttpServlet {
                 more = request.getParameter("more");
                 less = request.getParameter("less");
 
+            } if(request.getParameter("more")!=null){
+                flag=true;
             }
             exportCatalog = request.getParameter("exportCatalog");
             exportOrder = request.getParameter("exportOrder");
@@ -180,7 +182,7 @@ public class XMLServlet extends HttpServlet {
             }
             XmlBeanRemoteHome xmlHome = (XmlBeanRemoteHome) EJBHelper.lookupHome("ejb/XmlBean", XmlBeanRemoteHome.class);
             XmlBeanRemote xmlBean = xmlHome.create();
-            String xml = xmlBean.exportToXMLUser(list, true);
+            String xml = xmlBean.exportToXMLProduct(priceDouble,flag, allFlag, catalogFlag, orderFlag, commentFlag);
             response.setContentType("text/xml");
             response.setCharacterEncoding("utf-8");
             out = response.getOutputStream();
