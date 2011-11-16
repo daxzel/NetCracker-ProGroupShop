@@ -310,7 +310,48 @@ public class OrderBean implements EntityBean {
         }
     }
 
+      public java.lang.Long ejbCreate(java.lang.Long id, java.lang.Long id_user, java.lang.Long id_product, java.lang.Boolean status, java.lang.Integer amount) throws CreateException {
+
+        this.id_order = id.longValue();
+        this.id_user = id_user.longValue();
+        this.id_product = id_product.longValue();
+        this.status = status.booleanValue();
+        this.amount = amount.intValue();
+        Connection conn = null;
+        CallableStatement pst = null;
+        ResultSet rs = null;
+        try {
+            conn = EJBHelper.getConnection();
+            pst = conn.prepareCall("INSERT INTO \"ORDER\" " + "(ID_ORDER, ID_USER,ID_PRODUCT,STATUS,KOL_VO)" + "VALUES(?,?,?,?,?)");
+            pst.setLong(1, this.id_order);
+            pst.setLong(2, this.id_user);
+            pst.setLong(3, this.id_product);
+            pst.setBoolean(4, this.status);
+            pst.setInt(5, this.amount);
+            rs = pst.executeQuery();
+            if (!rs.next()) {
+                throw new CreateException("Ошибка вставки");
+            }
+            return new Long(this.id_order);
+        } catch (NamingException ex) {
+            throw new EJBException("Произошла ошибка добавления");
+        } catch (SQLException ex) {
+            throw new EJBException("Произошла ошибка добавления");
+        } finally {
+
+            try {
+                EJBHelper.closeConnection(conn, pst, rs);
+            } catch (SQLException ex1) {
+                throw new EJBException("Ошибка закрытии соединия с базой");
+            }
+
+        }
+    }
+
     public void ejbPostCreate(java.lang.Long id_user, java.lang.Long id_product, java.lang.Boolean status, java.lang.Integer amount) throws CreateException {
+    }
+
+     public void ejbPostCreate(java.lang.Long id,java.lang.Long id_user, java.lang.Long id_product, java.lang.Boolean status, java.lang.Integer amount) throws CreateException {
     }
 
     public void setId(java.lang.Long id_order) {

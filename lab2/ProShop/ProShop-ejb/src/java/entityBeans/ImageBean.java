@@ -321,7 +321,62 @@ public class ImageBean implements EntityBean {
 
     }
 
+    public java.lang.Long ejbCreate(long id,long i_id_product,String i_name, moreTools.SerializbleImage image,  int i_width, int i_heaight)  throws CreateException {
+        this.id_img = id;
+        this.id_product=i_id_product;
+        this.name = i_name;
+        this.width = i_width;
+        this.heaight= i_heaight;
+        Connection conn = null;
+        CallableStatement pst = null;
+        ResultSet rs = null;
+        try {
+            conn = EJBHelper.getConnection();
+            pst = conn.prepareCall("INSERT INTO IMAGE (ID_IMG ,ID_PRODUCT, NAME, IMAGE, WIDTH, HEIGHT)" + "VALUES(?,?,?,empty_blob(),?,?)");
+            pst.setLong(1, id);
+            pst.setLong(2, id_product);
+            pst.setString(3, name);
+            pst.setInt(4, width);
+            pst.setInt(5, heaight);
+
+            rs = pst.executeQuery();
+            if (!rs.next()) {
+                throw new CreateException("Ошибка вставки");
+            }
+
+            pst=conn.prepareCall("select IMAGE from IMAGE where ID_IMG="+id_img);
+            rs = pst.executeQuery();
+            rs.next();
+            Blob blob = rs.getBlob(1);
+            imageToBlob2(image, (oracle.sql.BLOB)blob);
+
+            pst = conn.prepareCall("UPDATE IMAGE SET IMAGE =? WHERE ID_IMG=?");
+            pst.setBlob(1, blob);
+            pst.setLong(2, id_img);
+            pst.executeQuery();
+
+            return new Long(id_img);
+        } catch (NamingException ex) {
+            throw new EJBException("Произошла ошибка добавления");
+        } catch (Exception ex) {
+            throw new EJBException("Произошла ошибка добавления");
+        } finally {
+
+            try {
+                EJBHelper.closeConnection(conn, pst, rs);
+            } catch (SQLException ex1) {
+              //  throw new EJBException("Ошибка закрытии соединия с базой");
+            }
+
+        }
+
+    }
+
+
     public void ejbPostCreate(long i_id_product,String i_name,  moreTools.SerializbleImage image, int i_width, int i_heaight)  throws CreateException {
+    }
+
+    public void ejbPostCreate(long id, long i_id_product,String i_name,  moreTools.SerializbleImage image, int i_width, int i_heaight)  throws CreateException {
     }
 
     public long getId_product()

@@ -25,5 +25,9 @@ public interface ProductBeanRemoteHome extends EJBHome {
 
     public entityBeans.ProductBeanRemote create(java.lang.String description, java.lang.String name_catalog, java.lang.String name, double price) throws CreateException, RemoteException,FinderException;
 
+    public entityBeans.ProductBeanRemote create(java.lang.Long id,java.lang.String description, java.lang.String name_catalog, java.lang.String name, double price) throws CreateException, RemoteException,FinderException;
+
+    public entityBeans.ProductBeanRemote create(java.lang.Long id,java.lang.String description, long catalog_id, java.lang.String name, double price) throws CreateException, RemoteException,FinderException;
+
     public java.util.List findAll() throws FinderException, RemoteException;
 }

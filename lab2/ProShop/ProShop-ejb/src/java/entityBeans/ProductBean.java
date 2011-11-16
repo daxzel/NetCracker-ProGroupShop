@@ -225,7 +225,117 @@ public class ProductBean implements EntityBean {
         }
     }
 
+     public java.lang.Long ejbCreate(java.lang.Long id, java.lang.String description,
+             java.lang.String name_catalog, java.lang.String name, double price) throws CreateException, FinderException {
+        //try {
+        //  ejbFindByName(name);
+        //throw new DuplicateKeyException("Продукт с таким именем уже существует");
+        //} catch (ObjectNotFoundException ex) {
+        //}
+        this.id_product = id.longValue();
+        this.description = description;
+        this.name_catalog = name_catalog;
+        this.name = name;
+        this.price = price;
+        Connection conn = null;
+        CallableStatement pst = null;
+        ResultSet rs = null;
+        try {
+            CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) helpers.EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
+            CatalogBeanRemote ctg = catalogHome.findByName(name_catalog);
+            this.id_catalog = ctg.getId();
+            conn = EJBHelper.getConnection();
+            pst = conn.prepareCall("INSERT INTO \"PRODUCT\" " + "(ID_PRODUCT,DESCRIPTION,ID_CATALOG,NAME,PRICE)" + "VALUES(?,?,?,?,?)");
+            pst.setLong(1, this.id_product);
+            pst.setString(2, this.description);
+            pst.setLong(3, this.id_catalog);
+            pst.setString(4, this.name);
+            pst.setDouble(5, this.price);
+            rs = pst.executeQuery();
+            if (!rs.next()) {
+                throw new CreateException("Ошибка вставки");
+            }
+            return new Long(this.id_product);
+        } catch (RemoteException ex) {
+            throw new EJBException("Произошла ошибка добавления");
+        } catch (NamingException ex) {
+            throw new EJBException("Произошла ошибка добавления");
+        } catch (SQLException ex) {
+            throw new EJBException("Произошла ошибка добавления");
+        } finally {
+
+            try {
+                EJBHelper.closeConnection(conn, pst, rs);
+            } catch (SQLException ex1) {
+                throw new EJBException("Ошибка закрытии соединия с базой");
+            }
+
+        }
+    }
+
+     public java.lang.Long ejbCreate(java.lang.Long id, java.lang.String description,
+             long catalog_id, java.lang.String name, double price) throws CreateException, FinderException {
+        //try {
+        //  ejbFindByName(name);
+        //throw new DuplicateKeyException("Продукт с таким именем уже существует");
+        //} catch (ObjectNotFoundException ex) {
+        //}
+        this.id_product = id.longValue();
+        this.description = description;
+        
+         Connection conn = null;
+         CallableStatement pst = null;
+         ResultSet rs = null;
+        
+         try {
+            conn = EJBHelper.getConnection();
+            CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) helpers.EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
+            CatalogBeanRemote ctg = catalogHome.findByPrimaryKey(new java.lang.Long(catalog_id));
+            this.name_catalog = ctg.getName();
+
+            this.name_catalog = name_catalog;
+            this.name = name;
+            this.price = price;
+
+       
+
+            conn = EJBHelper.getConnection();
+            pst = conn.prepareCall("INSERT INTO \"PRODUCT\" " + "(ID_PRODUCT,DESCRIPTION,ID_CATALOG,NAME,PRICE)" + "VALUES(?,?,?,?,?)");
+            pst.setLong(1, this.id_product);
+            pst.setString(2, this.description);
+            pst.setLong(3, this.id_catalog);
+            pst.setString(4, this.name);
+            pst.setDouble(5, this.price);
+            rs = pst.executeQuery();
+            if (!rs.next()) {
+                throw new CreateException("Ошибка вставки");
+            }
+            return new Long(this.id_product);
+        } catch (RemoteException ex) {
+            throw new EJBException("Произошла ошибка добавления");
+        } catch (NamingException ex) {
+            throw new EJBException("Произошла ошибка добавления");
+        } catch (SQLException ex) {
+            throw new EJBException("Произошла ошибка добавления");
+        } finally {
+
+            try {
+                EJBHelper.closeConnection(conn, pst, rs);
+            } catch (SQLException ex1) {
+                throw new EJBException("Ошибка закрытии соединия с базой");
+            }
+
+        }
+    }
+
+
     public void ejbPostCreate(java.lang.String description, java.lang.String name_catalog, java.lang.String name, double price) throws CreateException {
+    }
+
+    public void ejbPostCreate(java.lang.Long id, java.lang.String description, java.lang.String name_catalog, java.lang.String name, double price) throws CreateException {
+    }
+
+    public void ejbPostCreate(java.lang.Long id, java.lang.String description, long catalog_id, java.lang.String name, double price) throws CreateException {
     }
 
     // </editor-fold>

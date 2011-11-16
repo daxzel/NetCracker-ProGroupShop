@@ -259,7 +259,45 @@ public class OpinionBean implements EntityBean {
         }
     }
 
+    public java.lang.Long ejbCreate(java.lang.Long id, java.lang.Long id_prod, java.lang.Long id_user, String txt) throws CreateException {
+        this.id_opinion = id.longValue();
+        this.id_product = id_prod.longValue();
+        this.id_user = id_user.longValue();
+        this.text = txt;
+        Connection conn = null;
+        CallableStatement pst = null;
+        ResultSet rs = null;
+        try {
+            conn = EJBHelper.getConnection();
+            pst = conn.prepareCall("INSERT INTO \"OPINION\" " + "(ID_OPINION,ID_PRODUCT, ID_USER, TEXT)" + "VALUES(?,?,?,?)");
+            pst.setLong(1, id_prod.longValue());
+            pst.setLong(2, id_user.longValue());
+            pst.setString(3, txt);
+            pst.registerOutParameter(4, Types.INTEGER);
+            rs = pst.executeQuery();
+            if (!rs.next()) {
+                throw new CreateException("Ошибка вставки");
+            }
+            id_opinion = pst.getLong(4);
+            return new Long(id_opinion);
+        } catch (NamingException ex) {
+            throw new EJBException("Произошла ошибка добавления");
+        } catch (SQLException ex) {
+            throw new EJBException("Произошла ошибка добавления");
+        } finally {
+            try {
+                EJBHelper.closeConnection(conn, pst, rs);
+            } catch (SQLException ex1) {
+                throw new EJBException("Ошибка закрытии соединия с базой");
+            }
+
+        }
+    }
+
     public void ejbPostCreate(java.lang.Long id_prod, java.lang.Long id_user, String txt) throws CreateException {
+    }
+
+    public void ejbPostCreate(java.lang.Long id, java.lang.Long id_prod, java.lang.Long id_user, String txt) throws CreateException {
     }
 
     public long getIdOpinion() {
