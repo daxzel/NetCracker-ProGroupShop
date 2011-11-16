@@ -58,7 +58,7 @@ public class ProductBean implements EntityBean {
             catalogHome = (CatalogBeanRemoteHome) helpers.EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
             //   javax.naming.Context context = new javax.naming.InitialContext();
             try {
-           //     conn = Helper.getConnection();
+                //     conn = Helper.getConnection();
             } catch (Exception e) {
                 throw new EJBException("Проблема с подключением к базе");
             }
@@ -288,6 +288,41 @@ public class ProductBean implements EntityBean {
         }
     }
 
+    public Collection ejbFindByPrice(double price, boolean flag) {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            conn = EJBHelper.getConnection();
+            if (flag) {
+                pst = conn.prepareStatement("SELECT ID_PRODUCT FROM \"PRODUCT\" WHERE PRICE >= ?");
+            } else {
+                 pst = conn.prepareStatement("SELECT ID_PRODUCT FROM \"PRODUCT\" WHERE PRICE <= ?");
+            }
+            pst.setDouble(1, price);
+            // rs = pst.executeQuery();
+            ResultSet resultSet = pst.executeQuery();
+            Vector keys = new Vector();
+            while (resultSet.next()) {
+                long id_product = resultSet.getLong(1);
+                keys.addElement(new Long(id_product));
+            }
+            return keys;
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new EJBException("Ошибка SELECT");
+            // e.printStackTrace();
+        } finally {
+            try {
+                EJBHelper.closeConnection(conn, pst);
+            } catch (SQLException ex1) {
+                throw new EJBException("Ошибка закрытии соединия с базой");
+            }
+        }
+    }
+
     public Collection ejbFindAll() {
         Connection conn = null;
         PreparedStatement pst = null;
@@ -312,7 +347,7 @@ public class ProductBean implements EntityBean {
             // e.printStackTrace();
         } finally {
             try {
-                EJBHelper.closeConnection(conn, pst,rs);
+                EJBHelper.closeConnection(conn, pst, rs);
             } catch (SQLException ex1) {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
@@ -399,11 +434,11 @@ public class ProductBean implements EntityBean {
         price = nprice.doubleValue();
     }
 
-  /*  public List getOpinions() throws NamingException, FinderException, RemoteException {
-        List list = null;
-        OpinionBeanRemoteHome opinionHome = (OpinionBeanRemoteHome) OtherBean.Helper.lookupHome("ejb/OpinionBean", OpinionBeanRemoteHome.class);
-        list = opinionHome.findOpinionByProduct(new Long(this.id_product));
-        return list;
+    /*  public List getOpinions() throws NamingException, FinderException, RemoteException {
+    List list = null;
+    OpinionBeanRemoteHome opinionHome = (OpinionBeanRemoteHome) OtherBean.Helper.lookupHome("ejb/OpinionBean", OpinionBeanRemoteHome.class);
+    list = opinionHome.findOpinionByProduct(new Long(this.id_product));
+    return list;
 
 
     }*/

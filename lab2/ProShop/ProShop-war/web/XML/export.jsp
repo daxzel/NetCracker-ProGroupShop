@@ -14,8 +14,6 @@
         <title>Export entities into XML</title>
     </head>
     <body>
-        <%if("exportUser".equals(request.getParameter("DO"))){%>
-
-        <%}%>
+       <p align="center"><a href="exportProduct.jsp">Экспорт продуктов</a></p>
     </body>
 </html>

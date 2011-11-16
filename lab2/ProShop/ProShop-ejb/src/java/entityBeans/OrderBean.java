@@ -242,6 +242,36 @@ public class OrderBean implements EntityBean {
         }
     }
 
+    public Collection ejbFindByProduct(java.lang.Long id_product) {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            conn = EJBHelper.getConnection();
+            pst = conn.prepareStatement("SELECT * FROM \"ORDER\" WHERE ID_PRODUCT = ?");
+            pst.setLong(1, id_product.longValue());
+
+            rs = pst.executeQuery();
+            ResultSet resultSet = pst.executeQuery();
+            Vector keys = new Vector();
+            while (resultSet.next()) {
+                long id_order = resultSet.getLong(1);
+                keys.addElement(new Long(id_order));
+            }
+            return keys;
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
+        } catch (SQLException e) {
+            throw new EJBException("Ошибка SELECT");
+        } finally {
+            try {
+                EJBHelper.closeConnection(conn, pst, rs);
+            } catch (SQLException ex1) {
+                throw new EJBException("Ошибка закрытии соединия с базой");
+            }
+        }
+    }
+
     public java.lang.Long ejbCreate(java.lang.Long id_user, java.lang.Long id_product, java.lang.Boolean status, java.lang.Integer amount) throws CreateException {
 
         this.id_user = id_user.longValue();

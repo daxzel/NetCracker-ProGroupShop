@@ -1,27 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<EXPORT xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://github.com/daxzel/InternetShop/export.xsd">
-  <USER ID_USER="3">
-    <NAME>Jura</NAME>
-    <SURNAME>Bernatskiy</SURNAME>
-    <OTCHESTVO>Igorevicha</OTCHESTVO>
-    <NIK>JuraPro</NIK>
-    <PASSWORD>123</PASSWORD>
-    <BORN>1990-09-14</BORN>
-    <PHONE />
-    <EMAIL />
-    <ID_ROLE>1</ID_ROLE>
-  </USER>
-  <USER ID_USER="4">
-    <NAME>Pavel</NAME>
-    <SURNAME>Pecherskih</SURNAME>
-    <OTCHESTVO>Victorovich</OTCHESTVO>
-    <NIK>Pech</NIK>
-    <PASSWORD>123</PASSWORD>
-    <BORN>1990-11-06</BORN>
-    <PHONE />
-    <EMAIL />
-    <ID_ROLE>3</ID_ROLE>
-  </USER>
+<BASE>
+
   <USER ID_USER="5">
     <NAME>Evgeni</NAME>
     <SURNAME>Poliakov</SURNAME>
@@ -44,6 +23,9 @@
     <EMAIL />
     <ID_ROLE>2</ID_ROLE>
   </USER>
-</EXPORT>
+ <ROLE ID_ROLE="2">
+    <NAME>manager</NAME>
+  </ROLE>
+</BASE>
 
 

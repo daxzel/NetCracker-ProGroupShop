@@ -849,6 +849,7 @@ public class ExecServlet extends HttpServlet {
         RequestDispatcher rd;
         String result, homepage, forwardAddress;
         String ee = request.getRequestURI();
+        response.setContentType("UTF-8");
         try {
 
 
