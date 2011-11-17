@@ -81,7 +81,7 @@
                 <%}
                 %>
                 <%if (usr.getRoleId() == 1) {%>
-                <td><input type="checkbox" name="<%=user.getId()%>" value="ON" /></td>
+                <td><input type="checkbox" name="DEL" value="<%=user.getId()%>" /></td>
                     <%}
                                                             }%>
             </tr>

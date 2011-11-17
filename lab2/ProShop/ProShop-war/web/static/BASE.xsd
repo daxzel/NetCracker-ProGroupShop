@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">  
+	<xsd:element name ="BASE" type="BASEType"/>
+	<xsd:complexType name="BASEType">	
+		<xsd:sequence>
+			
+			<xsd:element name="USER" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="NAME" type="xsd:Name"/>
+							<xsd:element name="SURNAME" type="xsd:Name"/>
+							<xsd:element name="OTCHESTVO" type="xsd:Name"/>
+							<xsd:element name="NIK" type="xsd:Name"/>
+							<xsd:element name="PASSWORD" type="xsd:string"/>
+							<xsd:element name="BORN" type="xsd:date"/>
+							<xsd:element name="PHONE" type="xsd:string" />
+							<xsd:element name="EMAIL" type="xsd:string" />
+							<xsd:element name="ID_ROLE" type="xsd:int"/>
+						</xsd:sequence>
+						<xsd:attribute name="ID_USER" type="xsd:int"/>
+					</xsd:complexType>
+			</xsd:element>	
+			
+			<xsd:element name="ROLE" minOccurs="0" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="NAME" type="xsd:Name"/>       
+					</xsd:sequence>
+					<xsd:attribute name="ID_ROLE" type="xsd:int"/>
+				</xsd:complexType>
+			</xsd:element>	
+		
+			<xsd:element name="CATALOG" minOccurs="0" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="ID_PARENT" type="xsd:int"/>
+						<xsd:element name="NAME" type="xsd:string"/>
+					</xsd:sequence>
+					<xsd:attribute name="ID_CATALOG" type="xsd:int"/>
+				</xsd:complexType>
+			</xsd:element>	
+			
+			<xsd:element name="PRODUCT" minOccurs="0" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="DESCRIPTION" type="xsd:string"/>
+						<xsd:element name="ID_CATALOG" type="xsd:int"/>
+						<xsd:element name="NAME" type="xsd:string"/>
+						<xsd:element name="PRICE" type="xsd:decimal"/>
+					</xsd:sequence>
+					<xsd:attribute name="ID_PRODUCT" type="xsd:int"/>
+				</xsd:complexType>
+			</xsd:element>	
+			
+			<xsd:element name="OPINION" minOccurs="0" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="ID_USER" type="xsd:int"/>
+						<xsd:element name="ID_PRODUCT" type="xsd:int"/>
+						<xsd:element name="TEXT" type="xsd:string"/>
+					</xsd:sequence>
+					<xsd:attribute name="ID_OPINION" type="xsd:int"/>
+				</xsd:complexType>
+			</xsd:element>	
+			<xsd:element name="IMAGE" minOccurs="0" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="ID_PRODUCT" type="xsd:int"/>
+						<xsd:element name="NAME" type="xsd:string"/>
+						<xsd:element name="IMAGE" type="xsd:base64Binary"/>
+						<xsd:element name="WIDTH" type="xsd:int"/>
+						<xsd:element name="HEIGHT" type="xsd:int"/>
+					</xsd:sequence>
+					<xsd:attribute name="ID_IMG" type="xsd:int"/>
+				</xsd:complexType>
+			</xsd:element>	
+
+			<xsd:element name="ORDER" minOccurs="0" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="ID_USER" type="xsd:int"/>
+						<xsd:element name="ID_PRODUCT" type="xsd:int"/>
+						<xsd:element name="STATUS" type="xsd:string"/>
+						<xsd:element name="KOL_VO" type="xsd:int"/>
+					</xsd:sequence>
+					<xsd:attribute name="ID_ORDER" type="xsd:int"/>
+				</xsd:complexType>
+			</xsd:element>
+
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>

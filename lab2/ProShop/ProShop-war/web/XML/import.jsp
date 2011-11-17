@@ -14,8 +14,8 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <form name="import" method="post" action="XML/importProducts" enctype="multipart/form-data">
-            Картинка <input type="file" name="IMAGE" value="" />
+        <form name="import" method="post" action="import" enctype="multipart/form-data">
+            Картинка <input type="file" name="xml" value="" />
             <input type="submit"  value="Input" />
         </form>
     </body>

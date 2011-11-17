@@ -33,7 +33,8 @@
         <p align="center"><a href="deleteUser.jsp">Удалить пользователя</a></p>
         <p align="center"><a href="getFullList.jsp">Вывод всего</a></p>
         <p align="center"><a href="add_image.jsp">Добавить картинку</a></p>
-        <p align="center"><a href="export.jsp?DO=exportUser">Экспортировать пользователей</a></p>
+        <p align="center"><a href="XML/export.jsp">Экспорт</a></p>
+        <p align="center"><a href="XML/import.jsp">Импорт</a></p>
         <p align="center"><a href="logout">Выход</a></p>
 
         <%} else {

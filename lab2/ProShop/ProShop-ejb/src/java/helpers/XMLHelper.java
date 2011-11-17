@@ -555,7 +555,7 @@ public static void ImageToXml(java.util.Collection images, PrintWriter result) t
         }
 
     }
-    public static boolean CheckSchema(InputStream xml, File schemeFiles) throws Exception
+    public static boolean CheckSchema(InputStream xml, java.net.URL url) throws Exception
     {
         try
         {
@@ -564,8 +564,7 @@ public static void ImageToXml(java.util.Collection images, PrintWriter result) t
 
             SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
-            Source schemaFile = new StreamSource(schemeFiles);
-            Schema schema = factory.newSchema(schemaFile);
+            Schema schema = factory.newSchema(url);
 
             Validator validator = schema.newValidator();
 

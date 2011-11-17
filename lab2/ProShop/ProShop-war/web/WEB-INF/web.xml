@@ -4,7 +4,6 @@
         <servlet-name>ExecServlet</servlet-name>
         <servlet-class>servlets.ExecServlet</servlet-class>
     </servlet>
-
     <servlet>
         <servlet-name>ImageServlet</servlet-name>
         <servlet-class>servlets.ImageServlet</servlet-class>
@@ -13,7 +12,6 @@
         <servlet-name>XMLServlet</servlet-name>
         <servlet-class>servlets.XMLServlet</servlet-class>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>ExecServlet</servlet-name>
         <url-pattern>/registration</url-pattern>
@@ -133,6 +131,14 @@
     <servlet-mapping>
         <servlet-name>XMLServlet</servlet-name>
         <url-pattern>/XML/exportUser</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>XMLServlet</servlet-name>
+        <url-pattern>/XML/ExportProductByPrice</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>XMLServlet</servlet-name>
+        <url-pattern>/XML/import</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

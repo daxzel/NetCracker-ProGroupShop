@@ -60,11 +60,12 @@ public class XMLServlet extends HttpServlet {
                 }
             }
 
-            File schema = new File(StaticResourceHelper.getStaticDirectory(request) + StaticResourceHelper.getProdudctsXSD());
 
-            XMLHelper.CheckSchema(xml, tempDir);
+            XMLHelper.CheckSchema(xml,StaticResourceHelper.getBASEXSD(request));
 
             XMLHelper.importOfXML(xml);
+
+
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -98,20 +99,19 @@ public class XMLServlet extends HttpServlet {
                 boolean flag = true;
                 Enumeration enumer = request.getParameterNames();
                 ArrayList list = new ArrayList();
-                while (enumer.hasMoreElements()) {
-                    String str = enumer.nextElement().toString();
+                String[] del = request.getParameterValues("DEL");
+
+                for (int i = 0; i < del.length; i++) {
+                    // String str = enumer.nextElement().toString();
                     try {
-                        Long id_user = new Long(Long.parseLong(str));
+                        Long id_user = new Long(del[i]);
                         list.add(id_user);
                     } catch (NumberFormatException ex) {
-                        if("input".equals(str)){
-
-                        }
-                        if("input2".equals(str)){
-                            flag = false;
-                        }
                     }
 
+                }
+                if (request.getParameter("input2") != null) {
+                    flag = false;
                 }
                 if (list.isEmpty()) {
                     throw new ExportException("Не выбранны пользователи");
@@ -139,19 +139,90 @@ public class XMLServlet extends HttpServlet {
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
-                /*  RequestDispatcher dispatcher = request.getRequestDispatcher("xml");
-                try {
-                dispatcher.forward(request, response);
-                } catch (ServletException ex) {
-                ex.printStackTrace();
-                } catch (IOException ex) {
-                ex.printStackTrace();
-                }*/
+
             }
         }
     }
 
-    /** 
+    protected void exportProductByPrice(HttpServletRequest request, HttpServletResponse response) throws ExportException, IOException, ServletException {
+        RequestDispatcher rd;
+        ServletOutputStream out = null;
+        boolean flag,catalogFlag, orderFlag, commentFlag, allFlag;
+        flag=catalogFlag = orderFlag = commentFlag = allFlag = false;
+        String result, price, name, more, less, exportCatalog, exportOrder, exportComment, exportAll;
+        double priceDouble=0;
+        result = "Произошла ошибка";
+        try {
+       
+            ArrayList list = new ArrayList();
+            price = request.getParameter("price");
+            if (price == null) {
+
+                name = request.getParameter("name");
+            } else {
+
+                priceDouble = Double.parseDouble(price);
+                more = request.getParameter("more");
+                less = request.getParameter("less");
+
+            } if(request.getParameter("more")!=null){
+                flag=true;
+            }
+            exportCatalog = request.getParameter("exportCatalog");
+            exportOrder = request.getParameter("exportOrder");
+            exportComment = request.getParameter("exportComment");
+            exportAll = request.getParameter("exportAll");
+            if ("ON".equals(exportAll)) {
+                allFlag = true;
+            } else {
+                if ("ON".equals(exportCatalog)) {
+                    catalogFlag = true;
+                }
+                if ("ON".equals(exportOrder)) {
+                    orderFlag = true;
+                }
+                if ("ON".equals(exportComment)) {
+                    commentFlag = true;
+                }
+            }
+            XmlBeanRemoteHome xmlHome = (XmlBeanRemoteHome) EJBHelper.lookupHome("ejb/XmlBean", XmlBeanRemoteHome.class);
+            XmlBeanRemote xmlBean = xmlHome.create();
+            String xml = xmlBean.exportToXMLProduct(priceDouble,flag, allFlag, catalogFlag, orderFlag, commentFlag);
+            response.setContentType("text/xml");
+            response.setCharacterEncoding("utf-8");
+            out = response.getOutputStream();
+            out.println(xml);
+            out.flush();
+        } catch (NumberFormatException ex) {
+            result = "Не правильно ввдена цена продукта";
+            rd = request.getRequestDispatcher("exportProduct.jsp");
+            request.setAttribute("result", result);
+            rd.forward(request, response);
+        } catch (IOException ex) {
+            rd = request.getRequestDispatcher("exportProduct.jsp");
+            request.setAttribute("result", result);
+            rd.forward(request, response);
+        } catch (CreateException ex) {
+            rd = request.getRequestDispatcher("exportProduct.jsp");
+            request.setAttribute("result", result);
+            rd.forward(request, response);
+        } catch (NamingException ex) {
+            rd = request.getRequestDispatcher("exportProduct.jsp");
+            request.setAttribute("result", result);
+            rd.forward(request, response);
+        } finally {
+            try {
+                if (out != null) {
+                    out.close();
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
+        }
+    }
+
+    /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
      * @param response servlet response
@@ -175,8 +246,15 @@ public class XMLServlet extends HttpServlet {
 
             }
 
+            if (request.getRequestURI().equals("/ProShop-war/XML/ExportProductByPrice")) {
+
+                exportProductByPrice(request, response);
+                return;
+
+            }
+
             if (request.getRequestURI().equals("/ProShop-war/XML/import")) {
-                exportUsers(request, response);
+                importXML(request, response);
                 return;
             }
         } catch (ExportException ex) {
