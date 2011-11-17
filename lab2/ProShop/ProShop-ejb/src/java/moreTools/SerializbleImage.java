@@ -44,7 +44,7 @@ public class SerializbleImage implements Serializable {
        }
    }
 
-    public SerializbleImage(java.io.InputStream stream) throws Exception
+   public SerializbleImage(java.io.InputStream stream) throws Exception
    {
        try
        {
@@ -55,9 +55,7 @@ public class SerializbleImage implements Serializable {
            throw new Exception("Ошибка чтения картинки");
        }
    }
-
-
-
+   
    public BufferedImage getImage() {
        BufferedImage result = new BufferedImage(width,
                height, BufferedImage.TYPE_INT_RGB);

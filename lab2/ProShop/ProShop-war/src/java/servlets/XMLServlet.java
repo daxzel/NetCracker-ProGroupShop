@@ -62,6 +62,10 @@ public class XMLServlet extends HttpServlet {
 
             File schema = new File(StaticResourceHelper.getStaticDirectory(request) + StaticResourceHelper.getProdudctsXSD());
 
+            XMLHelper.CheckSchema(xml, tempDir);
+
+            XMLHelper.importOfXML(xml);
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }

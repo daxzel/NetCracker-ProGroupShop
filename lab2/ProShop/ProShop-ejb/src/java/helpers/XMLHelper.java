@@ -582,13 +582,13 @@ public static void ImageToXml(java.util.Collection images, PrintWriter result) t
         }
     }
 
-//    public void importOfXML(InputStream xml) throws Exception
-//    {
-//        SAXParserFactory factory = SAXParserFactory.newInstance();
-//	SAXParser saxParser = factory.newSAXParser();
-//
-//	ImportSAXHandler handler = new ImportSAXHandler();
-//
-//        saxParser.parse(xml, handler);
-//    }
+    public static void importOfXML(InputStream xml) throws Exception
+    {
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+	SAXParser saxParser = factory.newSAXParser();
+
+	ImportSAXHandler handler = new ImportSAXHandler();
+
+        saxParser.parse(xml, handler);
+    }
 }
