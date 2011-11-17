@@ -13,7 +13,7 @@ import javax.xml.parsers.*;
  *
  * @author Admin
  */
-public class ImportSAXHandler  extends DefaultHandler
+public class ImportSAXHandler extends DefaultHandler
 {
     boolean error=false;
 
@@ -93,7 +93,8 @@ public class ImportSAXHandler  extends DefaultHandler
 
 
     public void startElement(String uri, String localName,String qName,
-            Attributes attributes) throws SAXException {
+            Attributes attributes) throws SAXException
+    {
 
         if (image)
             {
@@ -266,49 +267,49 @@ public class ImportSAXHandler  extends DefaultHandler
             if (qName.equalsIgnoreCase("IMAGE"))
             {
                     image = true;
-                    id = Long.valueOf(attributes.getValue("id"));
+                    id = Long.valueOf(attributes.getValue("ID_IMAGE"));
                     return;
             }
 
             if (qName.equalsIgnoreCase("PRODUCT"))
             {
                     productBool = true;
-                    id = Long.valueOf(attributes.getValue("id"));
+                    id = Long.valueOf(attributes.getValue("ID_PRODUCT"));
                     return;
             }
 
             if (qName.equalsIgnoreCase("USER"))
             {
                     userBool = true;
-                    id = Long.valueOf(attributes.getValue("id"));
+                    id = Long.valueOf(attributes.getValue("ID_USER"));
                     return;
             }
 
             if (qName.equalsIgnoreCase("ROLE"))
             {
                     roleBool = true;
-                    id = Long.valueOf(attributes.getValue("id"));
+                    id = Long.valueOf(attributes.getValue("ID_ROLE"));
                     return;
             }
 
             if (qName.equalsIgnoreCase("ORDER"))
             {
                     orderBool = true;
-                    id = Long.valueOf(attributes.getValue("id"));
+                    id = Long.valueOf(attributes.getValue("ID_ORDER"));
                     return;
             }
 
             if (qName.equalsIgnoreCase("CATALOG"))
             {
                     catalogBool = true;
-                    id = Long.valueOf(attributes.getValue("id"));
+                    id = Long.valueOf(attributes.getValue("ID_CATALOG"));
                     return;
             }
 
             if (qName.equalsIgnoreCase("OPINION"))
             {
                     opinionBool = true;
-                    id = Long.valueOf(attributes.getValue("id"));
+                    id = Long.valueOf(attributes.getValue("ID_OPINION"));
                     return;
             }
     }
@@ -735,7 +736,7 @@ public class ImportSAXHandler  extends DefaultHandler
             }
             if (userIdRoleBool)
             {
-                userIdRole=Long.getLong(str);
+                userIdRole=Long.valueOf(str);
                 return;
             }
         }
@@ -753,7 +754,7 @@ public class ImportSAXHandler  extends DefaultHandler
         {
             if (catalogIdParentBool)
             {
-                catalogIdParent=Long.getLong(str);
+                catalogIdParent=Long.valueOf(str);
                 return;
             }
             if (catalogNameBool)
@@ -767,12 +768,12 @@ public class ImportSAXHandler  extends DefaultHandler
         {
             if (orderIdUserBool)
             {
-                orderIdUser=Long.getLong(str);
+                orderIdUser=Long.valueOf(str);
                 return;
             }
             if (orderIdProductBool)
             {
-                orderIdProduct=Long.getLong(str);
+                orderIdProduct=Long.valueOf(str);
                 return;
             }
             if (orderStatusBool)
@@ -791,12 +792,12 @@ public class ImportSAXHandler  extends DefaultHandler
         {
             if (opinionIdUserBool)
             {
-                opinionIdUser=Long.getLong(str);
+                opinionIdUser=Long.valueOf(str);
                 return;
             }
             if (opinionIdProductBool)
             {
-                opinionIdProduct=Long.getLong(str);
+                opinionIdProduct=Long.valueOf(str);
                 return;
             }
             if (opinionTextBool)

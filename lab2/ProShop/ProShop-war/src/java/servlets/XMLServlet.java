@@ -36,10 +36,11 @@ public class XMLServlet extends HttpServlet {
             HttpServletResponse response) {
         try {
             java.io.InputStream xml = null;
+            java.io.InputStream xml2 = null;
 
             org.apache.commons.fileupload.disk.DiskFileItemFactory factory = new org.apache.commons.fileupload.disk.DiskFileItemFactory();
 
-            factory.setSizeThreshold(1024 * 1024);
+            //factory.setSizeThreshold(1024 * 1024);
 
             File tempDir = (File) getServletContext().getAttribute("javax.servlet.context.tempdir");
 
@@ -47,7 +48,9 @@ public class XMLServlet extends HttpServlet {
 
             org.apache.commons.fileupload.servlet.ServletFileUpload upload = new org.apache.commons.fileupload.servlet.ServletFileUpload(factory);
 
-            upload.setSizeMax(1024 * 1024 * 10);
+            upload.setSizeMax(java.lang.Long.MAX_VALUE);
+
+            upload.setFileSizeMax(java.lang.Long.MAX_VALUE);
 
             List items = upload.parseRequest(request);
 
@@ -57,15 +60,13 @@ public class XMLServlet extends HttpServlet {
                 org.apache.commons.fileupload.FileItem item = (org.apache.commons.fileupload.FileItem) iter.next();
                 if (!item.isFormField()) {
                     xml = item.getInputStream();
+                    xml2 = item.getInputStream();
                 }
             }
 
-
             XMLHelper.CheckSchema(xml,StaticResourceHelper.getBASEXSD(request));
 
-            XMLHelper.importOfXML(xml);
-
-
+            XMLHelper.importOfXML(xml2);
 
         } catch (Exception ex) {
             ex.printStackTrace();
