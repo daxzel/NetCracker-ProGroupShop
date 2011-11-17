@@ -112,7 +112,7 @@ public class XmlBean implements SessionBean {
     public String exportToXMLUser(ArrayList users, boolean needExportRole) throws EJBException {
         String result = "<error message = \"Sorry\" />";
         Document doc = new Document();
-        Element root = new Element("EXPORT");
+        Element root = new Element("BASE");
         doc.setRootElement(root);
         Set rids = new TreeSet();
         SimpleDateFormat formt = new SimpleDateFormat("yyyy-MM-dd");
@@ -222,13 +222,21 @@ public class XmlBean implements SessionBean {
             for (int i = 0; i < products.size(); i++) {
                 ProductBeanRemote product = (ProductBeanRemote) products.get(i);
                 {
-                    List opinionsList = opinionHome.findOpinionByProduct(new Long(product.getId()));
-                    opinions.addAll(opinionsList);
+                    if (allFlag || commentFlag) {
+                        List opinionsList = opinionHome.findOpinionByProduct(new Long(product.getId()));
+
+                        opinions.addAll(opinionsList);
+                        uids.addAll(findUsersByOpinions(opinionsList, uids));
+                    }
+                    if(allFlag||orderFlag){
                     List ordersList = orderHome.findByProduct(new Long(product.getId()));
                     orders.addAll(ordersList);
-                    uids.addAll(findUsersByOpinions(opinionsList, uids));
+
                     uids.addAll(findUsersByOrders(ordersList, uids));
+                    }
+                    if(allFlag||catalogFlag){
                     catids.add(new Long(product.getIdCatalog()));
+                    }
                 }
             }
             Iterator iter = uids.iterator();
@@ -259,12 +267,12 @@ public class XmlBean implements SessionBean {
             }
             iter = opinions.iterator();
             while (iter.hasNext()) {
-                Element opinionNode = createOpinionNode((OpinionBeanRemote)iter.next());
+                Element opinionNode = createOpinionNode((OpinionBeanRemote) iter.next());
                 root.addContent(opinionNode);
             }
             iter = orders.iterator();
             while (iter.hasNext()) {
-                Element orderNode = createOrderNode((OrderBeanRemote)iter.next());
+                Element orderNode = createOrderNode((OrderBeanRemote) iter.next());
                 root.addContent(orderNode);
             }
         } catch (FinderException ex) {
@@ -272,9 +280,6 @@ public class XmlBean implements SessionBean {
         } catch (RemoteException ex) {
             throw new EJBException(ex);
         }
-
-
-
         XMLOutputter outputter = new XMLOutputter();
         outputter.setFormat(Format.getPrettyFormat());
         result = outputter.outputString(doc).toString();

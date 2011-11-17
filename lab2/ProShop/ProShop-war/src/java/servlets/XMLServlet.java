@@ -162,9 +162,7 @@ public class XMLServlet extends HttpServlet {
             } else {
 
                 priceDouble = Double.parseDouble(price);
-                more = request.getParameter("more");
-                less = request.getParameter("less");
-
+               
             } if(request.getParameter("more")!=null){
                 flag=true;
             }
