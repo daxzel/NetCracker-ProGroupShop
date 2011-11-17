@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <BASE>
-
   <USER ID_USER="5">
     <NAME>Evgeni</NAME>
     <SURNAME>Poliakov</SURNAME>
@@ -23,6 +22,7 @@
     <EMAIL />
     <ID_ROLE>2</ID_ROLE>
   </USER>
+
  <ROLE ID_ROLE="2">
     <NAME>manager</NAME>
   </ROLE>
