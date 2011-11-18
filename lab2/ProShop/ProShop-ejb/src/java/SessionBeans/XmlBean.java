@@ -173,7 +173,7 @@ public class XmlBean implements SessionBean {
         return result;
     }
 
-    public String exportToXMLProduct(double price, boolean flag, boolean allFlag, boolean catalogFlag, boolean orderFlag, boolean commentFlag) throws EJBException {
+    public String exportToXMLProduct(List products,  boolean allFlag, boolean catalogFlag, boolean orderFlag, boolean commentFlag) throws EJBException {
         String result = "<error message = \"Sorry\" />";
 
         Document doc = new Document();
@@ -218,7 +218,7 @@ public class XmlBean implements SessionBean {
             throw new EJBException(ex);
         }
         try {
-            List products = productHome.findByPrice(price, flag);
+          
             for (int i = 0; i < products.size(); i++) {
                 ProductBeanRemote product = (ProductBeanRemote) products.get(i);
                 {

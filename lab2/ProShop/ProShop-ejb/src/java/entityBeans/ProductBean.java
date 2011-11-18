@@ -464,7 +464,7 @@ public class ProductBean implements EntityBean {
         }
     }
 
-    public String ejbFindByName(java.lang.String name) throws ObjectNotFoundException {
+    public java.lang.Long ejbFindByName(java.lang.String name) throws ObjectNotFoundException {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
@@ -475,7 +475,8 @@ public class ProductBean implements EntityBean {
             if (!resultSet.next()) {
                 throw new ObjectNotFoundException("Запись не найдена");
             }
-            return name;
+            Long id = new Long(resultSet.getLong(2) );
+            return id;
         } catch (NamingException ex) {
             throw new EJBException("Ошибка SELECT");
         } catch (SQLException e) {
