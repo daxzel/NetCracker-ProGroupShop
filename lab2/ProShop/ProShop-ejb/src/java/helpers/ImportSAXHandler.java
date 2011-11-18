@@ -551,7 +551,7 @@ public class ImportSAXHandler extends DefaultHandler
             {
                     try
                     {
-                      //  EJBHelper.Add.Catalog(this.ro, imageWidth, qName)
+                        EJBHelper.AddOrUpdate.Role(id.longValue(), roleName);
                     }
                     catch(Exception ex)
                     {
@@ -806,25 +806,6 @@ public class ImportSAXHandler extends DefaultHandler
                 return;
             }
         }
-    //                            System.out.println("First Name : " + new String(ch, start, length));
-    //                            bfname = false;
-    //                    }
-    //
-    //                    if (blname) {
-    //                            System.out.println("Last Name : " + new String(ch, start, length));
-    //                            blname = false;
-    //                    }
-    //
-    //                    if (bnname) {
-    //                            System.out.println("Nick Name : " + new String(ch, start, length));
-    //                            bnname = false;
-    //                    }
-    //
-    //                    if (bsalary) {
-    //                            System.out.println("Salary : " + new String(ch, start, length));
-    //                            bsalary = false;
-    //                    }
-
     }
 }
 

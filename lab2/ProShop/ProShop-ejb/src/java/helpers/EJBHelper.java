@@ -151,6 +151,11 @@ public class EJBHelper {
             return EJBHelper.getOrderRemoteHome().create(new java.lang.Long(id),idUser, idProduct ,status, amount);
         }
 
+         public static RoleBeanRemote  Role(long id, String name) throws NamingException,CreateException,RemoteException
+        {
+            return EJBHelper.getRoleRemoteHome().create(id,name);
+        }
+
 //        public static ProductBeanRemote  Product(String description, String nameCatalog, String name,
 //                double price) throws NamingException,CreateException,RemoteException,FinderException
 //        {

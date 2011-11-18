@@ -69,6 +69,7 @@ public class XMLServlet extends HttpServlet {
             XMLHelper.importOfXML(xml2);
 
         } catch (Exception ex) {
+
             ex.printStackTrace();
         }
 
