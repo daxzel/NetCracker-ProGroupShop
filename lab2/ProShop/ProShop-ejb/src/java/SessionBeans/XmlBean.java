@@ -242,9 +242,10 @@ public class XmlBean implements SessionBean {
             Iterator iter = uids.iterator();
             while (iter.hasNext()) {
                 user = userHome.findByPrimaryKey(new Long(iter.next().toString()));
-                Element userNode = createUserNode(user);
-                root.addContent(userNode);
                 rids.add(new Long(user.getRoleId()));
+                if(rids.size()==3){
+                    
+                }
             }
             iter = rids.iterator();
             while (iter.hasNext()) {
@@ -252,6 +253,13 @@ public class XmlBean implements SessionBean {
                 Element roleNode = createRoleNode(role);
                 root.addContent(roleNode);
 
+            }
+            iter = uids.iterator();
+            while (iter.hasNext()) {
+                user = userHome.findByPrimaryKey(new Long(iter.next().toString()));
+                Element userNode = createUserNode(user);
+                root.addContent(userNode);
+                rids.add(new Long(user.getRoleId()));
             }
             iter = catids.iterator();
             while (iter.hasNext()) {

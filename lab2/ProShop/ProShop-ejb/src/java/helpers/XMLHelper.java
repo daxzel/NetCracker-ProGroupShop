@@ -577,6 +577,7 @@ public static void ImageToXml(java.util.Collection images, PrintWriter result) t
         }
         catch(Exception ex)
         {
+            ex.printStackTrace();
             throw new Exception("Ошибка в методе CheckSheme");
         }
     }

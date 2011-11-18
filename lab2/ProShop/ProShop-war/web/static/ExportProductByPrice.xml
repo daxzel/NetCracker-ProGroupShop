@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <BASE>
+  <ROLE ID_ROLE="1">
+    <NAME>super_admin</NAME>
+  </ROLE>
+  <ROLE ID_ROLE="2">
+    <NAME>manager</NAME>
+  </ROLE>
+  <ROLE ID_ROLE="3">
+    <NAME>user</NAME>
+  </ROLE>
   <USER ID_USER="3">
     <NAME>Jura</NAME>
     <SURNAME>Bernatskiy</SURNAME>
@@ -12,7 +21,7 @@
     <ID_ROLE>1</ID_ROLE>
   </USER>
   <USER ID_USER="5">
-    <NAME>Evgeni</NAME>
+    <NAME>Evgenissss</NAME>
     <SURNAME>Poliakov</SURNAME>
     <OTCHESTVO>Alekseevich</OTCHESTVO>
     <NIK>Evgendos</NIK>
@@ -33,15 +42,6 @@
     <EMAIL />
     <ID_ROLE>3</ID_ROLE>
   </USER>
-  <ROLE ID_ROLE="1">
-    <NAME>super_admin</NAME>
-  </ROLE>
-  <ROLE ID_ROLE="2">
-    <NAME>manager</NAME>
-  </ROLE>
-  <ROLE ID_ROLE="3">
-    <NAME>user</NAME>
-  </ROLE>
   <CATALOG ID_CATALOG="3">
     <ID_PARENT>2</ID_PARENT>
     <NAME>Холодильники</NAME>
@@ -470,34 +470,6 @@
     <NAME>AEG LS 84840</NAME>
     <PRICE>39900.0</PRICE>
   </PRODUCT>
-  <OPINION ID_OPINION="5">
-    <ID_USER>5</ID_USER>
-    <ID_PRODUCT>0</ID_PRODUCT>
-    <TEXT>fsddsfsd</TEXT>
-  </OPINION>
-  <OPINION ID_OPINION="4">
-    <ID_USER>9</ID_USER>
-    <ID_PRODUCT>0</ID_PRODUCT>
-    <TEXT>Horoshi holodilniik</TEXT>
-  </OPINION>
-  <ORDER ID_ORDER="1">
-    <ID_USER>9</ID_USER>
-    <ID_PRODUCT>23</ID_PRODUCT>
-    <STATUS>true</STATUS>
-    <KOL_VO>1</KOL_VO>
-  </ORDER>
-  <ORDER ID_ORDER="21">
-    <ID_USER>3</ID_USER>
-    <ID_PRODUCT>0</ID_PRODUCT>
-    <STATUS>false</STATUS>
-    <KOL_VO>12</KOL_VO>
-  </ORDER>
-  <ORDER ID_ORDER="3">
-    <ID_USER>9</ID_USER>
-    <ID_PRODUCT>2</ID_PRODUCT>
-    <STATUS>false</STATUS>
-    <KOL_VO>1</KOL_VO>
-  </ORDER>
-</BASE>
+ </BASE>
 
 
