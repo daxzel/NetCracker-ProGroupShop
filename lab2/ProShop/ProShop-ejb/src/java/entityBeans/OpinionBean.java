@@ -348,4 +348,11 @@ public class OpinionBean implements EntityBean {
         }
         return name;
     }
+
+    public void setAll( long id_prod, long id_user, String txt)
+    {
+        this.id_product = id_prod;
+        this.id_user = id_user;
+        this.text = txt;
+    }
 }

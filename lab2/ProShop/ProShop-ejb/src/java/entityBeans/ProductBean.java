@@ -545,6 +545,20 @@ public class ProductBean implements EntityBean {
         price = nprice.doubleValue();
     }
 
+    public void setAll(java.lang.String description, long id_catalog, java.lang.String name, double price) throws FinderException,SQLException,NamingException,RemoteException
+    {
+        this.description = description;
+        this.id_catalog = id_catalog;
+
+        Connection conn = EJBHelper.getConnection();
+        CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) helpers.EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
+        CatalogBeanRemote ctg = catalogHome.findByPrimaryKey(new java.lang.Long(id_catalog));
+        this.name_catalog = ctg.getName();
+
+        this.name = name;
+        this.price = price;
+    }
+
     /*  public List getOpinions() throws NamingException, FinderException, RemoteException {
     List list = null;
     OpinionBeanRemoteHome opinionHome = (OpinionBeanRemoteHome) OtherBean.Helper.lookupHome("ejb/OpinionBean", OpinionBeanRemoteHome.class);

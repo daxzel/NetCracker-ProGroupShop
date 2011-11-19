@@ -15,8 +15,6 @@ import javax.xml.parsers.*;
  */
 public class ImportSAXHandler extends DefaultHandler
 {
-    boolean error=false;
-
     Long id=null;
 
     boolean image = false;
@@ -494,7 +492,7 @@ public class ImportSAXHandler extends DefaultHandler
                     }
                     catch(Exception ex)
                     {
-                        error=true;
+                        throw new SAXException(ex.getMessage());
                     }
                     image = false;
                     imageIdProduct=null;
@@ -514,7 +512,7 @@ public class ImportSAXHandler extends DefaultHandler
                     }
                     catch(Exception ex)
                     {
-                        error=true;
+                        throw new SAXException(ex.getMessage());
                     }
                     productBool = false;
                     productDescription=null;
@@ -532,7 +530,7 @@ public class ImportSAXHandler extends DefaultHandler
                     }
                     catch(Exception ex)
                     {
-                        error=true;
+                        throw new SAXException(ex.getMessage());
                     }
                     userBool = false;
                     userName = null;
@@ -555,7 +553,7 @@ public class ImportSAXHandler extends DefaultHandler
                     }
                     catch(Exception ex)
                     {
-                        error=true;
+                        throw new SAXException(ex.getMessage());
                     }
                     roleBool = false;
                     roleName = null;
@@ -566,11 +564,11 @@ public class ImportSAXHandler extends DefaultHandler
             {
                     try
                     {
-                        EJBHelper.AddOrUpdate.Order(id.longValue(),orderIdUser, orderIdProduct, orderStatus, orderCount);
+                        EJBHelper.AddOrUpdate.Order(id.longValue(),orderIdUser.longValue(), orderIdProduct.longValue(), orderStatus, orderCount.intValue());
                     }
                     catch(Exception ex)
                     {
-                        error=true;
+                        throw new SAXException(ex.getMessage());
                     }
                     orderIdUser = null;
                     orderIdProduct = null;
@@ -589,7 +587,7 @@ public class ImportSAXHandler extends DefaultHandler
                     }
                     catch(Exception ex)
                     {
-                        error=true;
+                        throw new SAXException(ex.getMessage());
                     }
                     catalogBool = false;
                     catalogIdParent = null;
@@ -601,11 +599,11 @@ public class ImportSAXHandler extends DefaultHandler
             {
                     try
                     {
-                        EJBHelper.AddOrUpdate.Opinion(id.longValue(),opinionIdProduct, opinionIdUser, opinionText);
+                        EJBHelper.AddOrUpdate.Opinion(id.longValue(),opinionIdProduct.longValue(), opinionIdUser.longValue(), opinionText);
                     }
                     catch(Exception ex)
                     {
-                        error=true;
+                        throw new SAXException(ex.getMessage());
                     }
                     opinionBool = false;
                     opinionIdUser = null;
@@ -623,7 +621,7 @@ public class ImportSAXHandler extends DefaultHandler
         {
             if (imageIdProductBool)
             {
-                imageIdProduct=Long.getLong(str);
+                imageIdProduct=Long.valueOf(str);
                 return;
             }
             if (imageNameBool)
@@ -639,14 +637,13 @@ public class ImportSAXHandler extends DefaultHandler
                 }
                 catch(Exception ex)
                 {
-                    error=true;
-                    throw new SAXException("ошибка в image парсере");
+                    throw new SAXException(ex.getMessage());
                 }
                 return;
             }
             if (imageIdProductBool)
             {
-                imageIdProduct=Long.getLong(str);
+                imageIdProduct=Long.valueOf(str);
                 return;
             }
             if (imageWidthBool)
@@ -670,7 +667,7 @@ public class ImportSAXHandler extends DefaultHandler
             }
             if (productIdCatalogBool)
             {
-                productIdCatalog=Long.getLong(str);
+                productIdCatalog=Long.valueOf(str);
                 return;
             }
             if (productIdNameBool)
@@ -721,6 +718,7 @@ public class ImportSAXHandler extends DefaultHandler
                 }
                 catch(Exception ex)
                 {
+                    throw new SAXException(ex.getMessage());
                 }
                 return;
             }

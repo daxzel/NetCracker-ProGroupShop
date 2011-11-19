@@ -553,4 +553,18 @@ public class UserBean implements EntityBean {
     public void setRoleId(java.lang.Long nid_role) {
         id_role = nid_role.longValue();
     }
+
+    public void setAll(String name, String surname, String otchestvo, String nik, String password,
+            java.sql.Date born, String phone, String email, long id_role)
+    {
+        this.name=name;
+        this.surname=surname;
+        this.otchestvo=otchestvo;
+        this.nik = nik;
+        this.password = password;
+        this.born = born;
+        this.phone=phone;
+        this.email=email;
+        this.id_role =id_role;
+    }
 }

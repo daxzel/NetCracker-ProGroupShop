@@ -14,30 +14,33 @@ import javax.ejb.EJBObject;
  */
 public interface ProductBeanRemote extends EJBObject {
 
-    public long getIdCatalog() throws RemoteException;
+    long getIdCatalog() throws RemoteException;
 
-    public void setIdCatalog(java.lang.Long nid) throws RemoteException;
+    void setIdCatalog(java.lang.Long nid) throws RemoteException;
 
-    public String getNameCatalog() throws RemoteException;
+    String getNameCatalog() throws RemoteException;
 
-    public void setNameCatalog(String nid) throws RemoteException;
+    void setNameCatalog(String nid) throws RemoteException;
 
-    public long getId() throws RemoteException;
+    long getId() throws RemoteException;
 
-    public void setId(java.lang.Long nid) throws RemoteException;
+    void setId(java.lang.Long nid) throws RemoteException;
 
-    public String getDescription() throws RemoteException;
+    String getDescription() throws RemoteException;
 
-    public void setDescription(String nDescription) throws RemoteException;
+    void setDescription(String nDescription) throws RemoteException;
 
-    public String getName() throws RemoteException;
+    String getName() throws RemoteException;
 
-    public void setName(String nname) throws RemoteException;
+    void setName(String nname) throws RemoteException;
 
-    public double getPrice() throws RemoteException;
+    double getPrice() throws RemoteException;
 
-    public void setPrice(java.lang.Double nprice) throws RemoteException;
+    void setPrice(java.lang.Double nprice) throws RemoteException;
 
-    public java.util.List getOpinionList()  throws RemoteException;
+    java.util.List getOpinionList()  throws RemoteException;
+
+    void setAll(java.lang.String description, long id_catalog,
+            java.lang.String name, double price) throws RemoteException;
     
 }

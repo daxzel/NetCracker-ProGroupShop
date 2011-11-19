@@ -21,7 +21,7 @@ public interface ImageBeanRemote extends EJBObject {
 
     long getId_img() throws RemoteException;
 
-    public void setId_img(long id) throws RemoteException;
+    void setId_img(long id) throws RemoteException;
 
     long getId_product() throws RemoteException;
 
@@ -39,8 +39,10 @@ public interface ImageBeanRemote extends EJBObject {
 
     void setHeaight(int i_heaight) throws RemoteException;
 
-    public moreTools.SerializbleImage getImageI() throws RemoteException;
+    moreTools.SerializbleImage getImageI() throws RemoteException;
 
-    public void setImageI(moreTools.SerializbleImage image) throws RemoteException;
+    void setImageI(moreTools.SerializbleImage image) throws RemoteException;
+
+    void setAll(long i_id_product,String i_name, moreTools.SerializbleImage image,  int i_width, int i_heaight) throws RemoteException;
 
 }

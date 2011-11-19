@@ -491,4 +491,13 @@ public class ImageBean implements EntityBean {
         id_img=id;
     }
 
+    public void setAll(long i_id_product,String i_name, moreTools.SerializbleImage image,  int i_width, int i_heaight)
+    {
+        this.id_product=i_id_product;
+        this.name = i_name;
+        this.setImageI(image);
+        this.width = i_width;
+        this.heaight = i_heaight;
+    }
+
 }

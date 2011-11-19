@@ -97,95 +97,161 @@ public class EJBHelper {
 
     public static class AddOrUpdate
     {
-//        public static CatalogBeanRemote Catalog(String parent,
-//                String name ) throws NamingException, CreateException, RemoteException
-//        {
-//            return EJBHelper.getCatlogRemoteHome().create(parent, name);
-//        }
-
-//        public static CatalogBeanRemote Catalog(long id, String parent,
-//                String name ) throws NamingException, CreateException, RemoteException
-//        {
-//            return EJBHelper.getCatlogRemoteHome().create(id, parent, name);
-//        }
-
-        public static CatalogBeanRemote Catalog(long id, long parentId,
+        public static void Catalog(long id, long parentId,
                 String name ) throws NamingException, CreateException, RemoteException
         {
-            return EJBHelper.getCatlogRemoteHome().create(id, parentId, name);
+            CatalogBeanRemote catalog = null;
+            try
+            {
+                catalog = EJBHelper.getCatlogRemoteHome().findByPrimaryKey(new java.lang.Long(id));
+            }
+            catch(FinderException ex)
+            {
+            }
+
+            if (catalog!=null)
+            {
+                catalog.setAll(parentId, name);
+            }
+            else
+            {
+                EJBHelper.getCatlogRemoteHome().create(id, parentId, name);
+            }
         }
 
-//        public static ImageBeanRemote Image(long idProduct, String name, SerializbleImage image,
-//                int width, int heaight) throws NamingException,CreateException,RemoteException
-//        {
-//            return EJBHelper.getImageRemoteHome().create(idProduct, name, image, width, heaight);
-//        }
-
-         public static ImageBeanRemote Image(long id, long idProduct, String name, SerializbleImage image,
+         public static void Image(long id, long idProduct, String name, SerializbleImage imageS,
                 int width, int heaight) throws NamingException,CreateException,RemoteException
+         {
+            ImageBeanRemote image = null;
+            try
+            {
+                image = EJBHelper.getImageRemoteHome().findByPrimaryKey(new java.lang.Long(id));
+            }
+            catch(FinderException ex)
+            {
+            }
+
+            if (image!=null)
+            {
+                image.setAll(idProduct, name, imageS, width, heaight);
+            }
+            else
+            {
+                EJBHelper.getImageRemoteHome().create(id, idProduct, name, imageS, width, heaight);
+            }
+         }
+
+        public static void  Opinion(long id,long idProduct,
+                long idUser, String text) throws NamingException,CreateException,RemoteException
         {
-            return EJBHelper.getImageRemoteHome().create(id,idProduct, name, image, width, heaight);
+            OpinionBeanRemote opinion = null;
+            try
+            {
+                opinion = EJBHelper.getOpinionRemoteHome().findByPrimaryKey(new java.lang.Long(id));
+            }
+            catch(FinderException ex)
+            {
+            }
+
+            if (opinion!=null)
+            {
+                opinion.setAll(idProduct, idUser, text);
+            }
+            else
+            {
+                EJBHelper.getOpinionRemoteHome().create(new java.lang.Long(id), new java.lang.Long(idProduct),
+                        new java.lang.Long(idUser), text);
+            }
         }
 
-//        public static OpinionBeanRemote  Opinion(java.lang.Long idProduct,
-//                java.lang.Long idUser, String text) throws NamingException,CreateException,RemoteException
-//        {
-//            return EJBHelper.getOpinionRemoteHome().create(idProduct, idUser, text);
-//        }
-
-        public static OpinionBeanRemote  Opinion(long id,java.lang.Long idProduct,
-                java.lang.Long idUser, String text) throws NamingException,CreateException,RemoteException
+        public static void  Order(long id, long idUser, long idProduct,
+                Boolean status, int amount) throws NamingException,CreateException,RemoteException
         {
-            return EJBHelper.getOpinionRemoteHome().create(new java.lang.Long(id),idProduct, idUser, text);
+            OrderBeanRemote order = null;
+            try
+            {
+                order = EJBHelper.getOrderRemoteHome().findByPrimaryKey(new java.lang.Long(id));
+            }
+            catch(FinderException ex)
+            {
+            }
+
+            if (order!=null)
+            {
+                order.setAll(idUser, idProduct, true, amount);
+            }
+            else
+            {
+                EJBHelper.getOrderRemoteHome().create(new java.lang.Long(id),new java.lang.Long(idUser),
+                        new java.lang.Long(idProduct) ,status,new java.lang.Integer(amount));
+            }
         }
 
-//        public static OrderBeanRemote  Order(Long idUser, Long idProduct,
-//                Boolean status, Integer amount) throws NamingException,CreateException,RemoteException
-//        {
-//            return EJBHelper.getOrderRemoteHome().create(idUser, idProduct ,status, amount);
-//        }
-
-        public static OrderBeanRemote  Order(long id, Long idUser, Long idProduct,
-                Boolean status, Integer amount) throws NamingException,CreateException,RemoteException
+         public static void  Role(long id, String name) throws NamingException,CreateException,RemoteException
         {
-            return EJBHelper.getOrderRemoteHome().create(new java.lang.Long(id),idUser, idProduct ,status, amount);
+            RoleBeanRemote role = null;
+            try
+            {
+                role = EJBHelper.getRoleRemoteHome().findByPrimaryKey(new java.lang.Long(id));
+            }
+            catch(FinderException ex)
+            {
+            }
+
+            if (role!=null)
+            {
+                role.setAll(name);
+            }
+            else
+            {
+                EJBHelper.getRoleRemoteHome().create(id, name);
+            }
         }
 
-         public static RoleBeanRemote  Role(long id, String name) throws NamingException,CreateException,RemoteException
-        {
-            return EJBHelper.getRoleRemoteHome().create(id,name);
-        }
-
-//        public static ProductBeanRemote  Product(String description, String nameCatalog, String name,
-//                double price) throws NamingException,CreateException,RemoteException,FinderException
-//        {
-//            return EJBHelper.getProductRemoteHome().create(description, nameCatalog, name, price);
-//        }
-//
-//        public static ProductBeanRemote  Product(long  id, String description, String nameCatalog, String name,
-//                double price) throws NamingException,CreateException,RemoteException,FinderException
-//        {
-//            return EJBHelper.getProductRemoteHome().create(new java.lang.Long(id),description, nameCatalog, name, price);
-//        }
-
-        public static ProductBeanRemote  Product(long  id, String description, long  idCatalog, String name,
+        public static void  Product(long  id, String description, long  idCatalog, String name,
                 double price) throws NamingException,CreateException,RemoteException,FinderException
         {
-            return EJBHelper.getProductRemoteHome().create(new java.lang.Long(id),description, idCatalog, name, price);
+            ProductBeanRemote product = null;
+            try
+            {
+                product = EJBHelper.getProductRemoteHome().findByPrimaryKey(new java.lang.Long(id));
+            }
+            catch(FinderException ex)
+            {
+            }
+
+            if (product!=null)
+            {
+                product.setAll(description, idCatalog, name, price);
+            }
+            else
+            {
+                EJBHelper.getProductRemoteHome().create(new java.lang.Long(id),description, idCatalog, name, price);
+            }
+
+            
         }
 
-//        public static UserBeanRemote  User(String name,String surName,String otchestvo,
-//                String nik, String password,Date born, String phone,String email, Long idRole ) throws NamingException,CreateException,RemoteException
-//        {
-//            return EJBHelper.getUserRemoteHome().create(name, surName, otchestvo, nik,
-//                    password, born, phone, email, idRole);
-//        }
-
-        public static UserBeanRemote  User(long id, String name,String surName,String otchestvo,
+        public static void  User(long id, String name,String surName,String otchestvo,
                 String nik, String password,Date born, String phone,String email, Long idRole ) throws NamingException,CreateException,RemoteException
         {
-            return EJBHelper.getUserRemoteHome().create(new java.lang.Long(id),name, surName, otchestvo, nik,
-                    password, born, phone, email, idRole);
+            UserBeanRemote user = null;
+            try
+            {
+                user = EJBHelper.getUserRemoteHome().findByPrimaryKey(new java.lang.Long(id));
+            }
+            catch(FinderException ex)
+            {
+            }
+
+            if (user!=null)
+            {
+                user.setAll(name, surName, otchestvo, nik, password, born, phone, email, idRole.longValue());
+            }
+            else
+            {
+                EJBHelper.getUserRemoteHome().create(new java.lang.Long(id), name, surName, otchestvo, nik, password, born, phone, email, idRole);
+            }
         }
     }
 

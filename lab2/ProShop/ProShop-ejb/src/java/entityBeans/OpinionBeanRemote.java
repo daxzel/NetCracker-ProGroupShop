@@ -13,21 +13,23 @@ import javax.ejb.EJBObject;
  */
 public interface OpinionBeanRemote extends EJBObject {
 
-    public long getIdOpinion() throws RemoteException;
+    long getIdOpinion() throws RemoteException;
 
-    public void setIdOpinion(java.lang.Long id_op) throws RemoteException;
+    void setIdOpinion(java.lang.Long id_op) throws RemoteException;
 
-    public long getIdProduct() throws RemoteException;
+    long getIdProduct() throws RemoteException;
 
-    public void setIdProduct(java.lang.Long id_pr) throws RemoteException;
+    void setIdProduct(java.lang.Long id_pr) throws RemoteException;
 
-    public long getIdUser() throws RemoteException;
+    long getIdUser() throws RemoteException;
 
-    public void setIdUser(java.lang.Long id_usr) throws RemoteException;
+    void setIdUser(java.lang.Long id_usr) throws RemoteException;
 
-    public String getText() throws RemoteException;
+    String getText() throws RemoteException;
 
-    public void setText(String text) throws RemoteException;
+    void setText(String text) throws RemoteException;
 
-    public String getUserName() throws RemoteException;
+    String getUserName() throws RemoteException;
+
+    void setAll( long id_prod, long id_user, String txt) throws RemoteException;
 }

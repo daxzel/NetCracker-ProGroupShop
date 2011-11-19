@@ -26,4 +26,6 @@ public interface ImageBeanRemoteHome extends EJBHome {
 
     entityBeans.ImageBeanRemote create(long id, long i_id_product,String i_name, moreTools.SerializbleImage image,  int i_width, int i_heaight) throws CreateException, RemoteException;
 
+
+
 }

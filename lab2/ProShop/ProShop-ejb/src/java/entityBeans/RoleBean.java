@@ -287,4 +287,9 @@ public class RoleBean implements EntityBean {
     public String getName() {
         return name;
     }
+
+    public void setAll(String name)
+    {
+        this.name=name;
+    }
 }
