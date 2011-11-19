@@ -550,7 +550,7 @@ public class ProductBean implements EntityBean {
         this.description = description;
         this.id_catalog = id_catalog;
 
-        Connection conn = EJBHelper.getConnection();
+        //Connection conn = EJBHelper.getConnection();
         CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) helpers.EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
         CatalogBeanRemote ctg = catalogHome.findByPrimaryKey(new java.lang.Long(id_catalog));
         this.name_catalog = ctg.getName();
