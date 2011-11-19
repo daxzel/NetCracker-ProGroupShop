@@ -173,7 +173,7 @@ public class XmlBean implements SessionBean {
         return result;
     }
 
-    public String exportToXMLProduct(double price, boolean flag, boolean allFlag, boolean catalogFlag, boolean orderFlag, boolean commentFlag) throws EJBException {
+    public String exportToXMLProduct(List products,  boolean allFlag, boolean catalogFlag, boolean orderFlag, boolean commentFlag) throws EJBException {
         String result = "<error message = \"Sorry\" />";
 
         Document doc = new Document();
@@ -218,7 +218,7 @@ public class XmlBean implements SessionBean {
             throw new EJBException(ex);
         }
         try {
-            List products = productHome.findByPrice(price, flag);
+          
             for (int i = 0; i < products.size(); i++) {
                 ProductBeanRemote product = (ProductBeanRemote) products.get(i);
                 {
@@ -242,9 +242,10 @@ public class XmlBean implements SessionBean {
             Iterator iter = uids.iterator();
             while (iter.hasNext()) {
                 user = userHome.findByPrimaryKey(new Long(iter.next().toString()));
-                Element userNode = createUserNode(user);
-                root.addContent(userNode);
                 rids.add(new Long(user.getRoleId()));
+                if(rids.size()==3){
+                    
+                }
             }
             iter = rids.iterator();
             while (iter.hasNext()) {
@@ -252,6 +253,13 @@ public class XmlBean implements SessionBean {
                 Element roleNode = createRoleNode(role);
                 root.addContent(roleNode);
 
+            }
+            iter = uids.iterator();
+            while (iter.hasNext()) {
+                user = userHome.findByPrimaryKey(new Long(iter.next().toString()));
+                Element userNode = createUserNode(user);
+                root.addContent(userNode);
+                rids.add(new Long(user.getRoleId()));
             }
             iter = catids.iterator();
             while (iter.hasNext()) {

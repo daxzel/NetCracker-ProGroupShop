@@ -14,6 +14,6 @@ public class StaticResourceHelper {
 
     public static java.net.URL getBASEXSD(HttpServletRequest request) throws Exception
     {
-        return new java.net.URL ("http://"+request.getRemoteHost()+":32722"+request.getContextPath()+"/static/BASE.xsd");
+        return new java.net.URL ("http://"+request.getRemoteHost()+":"+request.getLocalPort()+request.getContextPath()+"/static/BASE.xsd");
     }
 }

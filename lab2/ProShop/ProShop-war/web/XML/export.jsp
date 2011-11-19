@@ -6,7 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-   "http://www.w3.org/TR/html4/loose.dtd">
+    "http://www.w3.org/TR/html4/loose.dtd">
 
 <html>
     <head>
@@ -14,6 +14,7 @@
         <title>Export entities into XML</title>
     </head>
     <body>
-       <p align="center"><a href="exportProduct.jsp">Экспорт продуктов</a></p>
+        <p align="center"><a href="exportProduct.jsp?poiskType=byPrice">Экспортировать продукты используя поиск по цене </a></p>
+        <p align="center"><a href="exportProduct.jsp?poiskType=byName">Экспортировать продукты используя поиск по имени </a></p>
     </body>
 </html>

@@ -6,6 +6,7 @@ package SessionBeans;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.List;
 import javax.ejb.EJBObject;
 
 /**
@@ -16,7 +17,7 @@ public interface XmlBeanRemote extends EJBObject {
 
     public String exportToXMLUser(ArrayList users, boolean needExportAll) throws RemoteException;
 
-    public String exportToXMLProduct(double price,boolean flag, boolean allFlag, boolean catalogFlag, boolean orderFlag, boolean commentFlag) throws RemoteException;
+    public String exportToXMLProduct(List products, boolean allFlag, boolean catalogFlag, boolean orderFlag, boolean commentFlag) throws RemoteException;
 
     public String exportAllProducts() throws RemoteException,Exception;
 

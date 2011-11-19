@@ -5,6 +5,15 @@
 	<xsd:complexType name="BASEType">	
 		<xsd:sequence>
 			
+			<xsd:element name="ROLE" minOccurs="0" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="NAME" type="xsd:Name"/>       
+					</xsd:sequence>
+					<xsd:attribute name="ID_ROLE" type="xsd:int"/>
+				</xsd:complexType>
+			</xsd:element>	
+			
 			<xsd:element name="USER" minOccurs="0" maxOccurs="unbounded">
 					<xsd:complexType>
 						<xsd:sequence>
@@ -22,15 +31,6 @@
 					</xsd:complexType>
 			</xsd:element>	
 			
-			<xsd:element name="ROLE" minOccurs="0" maxOccurs="unbounded">
-				<xsd:complexType>
-					<xsd:sequence>
-						<xsd:element name="NAME" type="xsd:Name"/>       
-					</xsd:sequence>
-					<xsd:attribute name="ID_ROLE" type="xsd:int"/>
-				</xsd:complexType>
-			</xsd:element>	
-		
 			<xsd:element name="CATALOG" minOccurs="0" maxOccurs="unbounded">
 				<xsd:complexType>
 					<xsd:sequence>
