@@ -18,8 +18,6 @@ public interface ProductBeanRemote extends EJBObject {
 
     void setIdCatalog(java.lang.Long nid) throws RemoteException;
 
-    String getNameCatalog() throws RemoteException;
-
     void setNameCatalog(String nid) throws RemoteException;
 
     long getId() throws RemoteException;

@@ -35,7 +35,10 @@ public class XMLServlet extends HttpServlet {
 
     protected void importXML(HttpServletRequest request,
             HttpServletResponse response) {
+        PrintWriter out =null;
         try {
+            out = response.getWriter();
+
             java.io.InputStream xml = null;
             java.io.InputStream xml2 = null;
 
@@ -69,9 +72,10 @@ public class XMLServlet extends HttpServlet {
 
             XMLHelper.importOfXML(xml2);
 
-        } catch (Exception ex) {
+            out.write("Импорт успешно завершён");
 
-            ex.printStackTrace();
+        } catch (Exception ex) {
+            out.write(ex.getMessage());
         }
 
     }
