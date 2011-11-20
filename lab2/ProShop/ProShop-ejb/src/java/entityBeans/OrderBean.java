@@ -212,6 +212,34 @@ public class OrderBean implements EntityBean {
         }
     }
 
+    public Collection ejbFindOrderByUser(java.lang.Long id_user) {
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        Connection conn = null;
+        try {
+            conn = EJBHelper.getConnection();
+            pst = conn.prepareStatement("SELECT ID_ORDER FROM \"ORDER\" WHERE ID_USER = ?");
+            pst.setLong(1, id_user.longValue());
+            rs = pst.executeQuery();
+            Vector keys = new Vector();
+            while (rs.next()) {
+                long id_opinion = rs.getLong(1);
+                keys.addElement(new Long(id_opinion));
+            }
+            return keys;
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
+        } catch (SQLException e) {
+            throw new EJBException("Ошибка SELECT");
+        } finally {
+            try {
+                EJBHelper.closeConnection(conn, pst);
+            } catch (SQLException ex1) {
+                throw new EJBException("Ошибка закрытии соединия с базой");
+            }
+        }
+    }
+    
     public Collection ejbFindByUserAndStatus(java.lang.Long id_user, boolean status) {
         Connection conn = null;
         PreparedStatement pst = null;

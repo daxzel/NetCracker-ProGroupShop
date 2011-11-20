@@ -21,6 +21,10 @@ public interface UserBeanRemoteHome extends EJBHome {
 
     public entityBeans.UserBeanRemote findByNik(String nik) throws FinderException, RemoteException;
 
+     public java.util.Collection findByName(String name) throws FinderException, RemoteException;
+    
+    public java.util.Collection findByNameAndRole(String name, int id_role) throws FinderException, RemoteException;
+    
     public entityBeans.UserBeanRemote findByNikAndId(String nik,java.lang.Long id_user) throws FinderException, RemoteException;
 
     public entityBeans.UserBeanRemote findByNikAndPassword(String nik, String password) throws FinderException, RemoteException;

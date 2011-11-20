@@ -108,6 +108,181 @@ public class XmlBean implements SessionBean {
         // spanning all methods can be performed here such as home interfaces
         // and data sources.
     }
+    
+    public String exportToXMLUsersP(String name, int id_role, boolean flag1, boolean flag2, 
+            boolean rolesFlag, boolean opinionsFlag, boolean productsFlag, boolean ordersFlag, boolean catalogsFlag) throws EJBException {
+        String result = "<error message = \"Sorry\" />";
+        Document doc = new Document();
+        Element root = new Element("BASE"); 
+        doc.setRootElement(root);        
+        try {
+            userHome = (UserBeanRemoteHome) EJBHelper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
+            if (rolesFlag) {
+                roleHome = (RoleBeanRemoteHome) EJBHelper.lookupHome("ejb/RoleBean", RoleBeanRemoteHome.class);
+            }
+            if (opinionsFlag) {
+                opinionHome = (OpinionBeanRemoteHome) EJBHelper.lookupHome("ejb/OpinionBean", OpinionBeanRemoteHome.class);
+            }
+            if (productsFlag) {
+                productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
+                opinionHome = (OpinionBeanRemoteHome) EJBHelper.lookupHome("ejb/OpinionBean", OpinionBeanRemoteHome.class);
+                orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
+            }
+            if (ordersFlag) {
+                orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
+            }
+            if (catalogsFlag) {
+                catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
+                productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
+                opinionHome = (OpinionBeanRemoteHome) EJBHelper.lookupHome("ejb/OpinionBean", OpinionBeanRemoteHome.class);
+                orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
+            }
+        } catch (NamingException ex) {
+            throw new EJBException(ex);
+        }
+        try {
+            if (flag1 & flag2) {
+                List users = (List) userHome.findByNameAndRole(name, id_role);
+                if (rolesFlag) {
+                    List rls = findRoleByUsers(users);
+                    for (int i = 0; i < rls.size(); i++) {
+                        RoleBeanRemote rl = (RoleBeanRemote) rls.get(i);
+                        root.addContent(createRoleNode(rl));
+                    }
+                }
+                for (int i = 0; i < users.size(); i++) {
+                    UserBeanRemote usr = (UserBeanRemote) users.get(i);
+                    {
+                        root.addContent(createUserNode(usr));
+                    }
+                }
+                if (catalogsFlag) {
+                    List ctls = findCatalogByUsers(users);
+                    for (int i = 0; i < ctls.size(); i++) {
+                        CatalogBeanRemote ctl = (CatalogBeanRemote) ctls.get(i);
+                        root.addContent(createCatalogNode(ctl));
+                    }
+                }
+                if (productsFlag) {
+                    List prds = findProductByUsers(users);
+                    for (int i = 0; i < prds.size(); i++) {
+                        ProductBeanRemote prd = (ProductBeanRemote) prds.get(i);
+                        root.addContent(createProductNode(prd));
+                    }
+                }
+                if (opinionsFlag) {
+                    List opns = findOpinionByUsers(users);
+                    for (int i = 0; i < opns.size(); i++) {
+                        OpinionBeanRemote opn = (OpinionBeanRemote) opns.get(i);
+                        root.addContent(createOpinionNode(opn));
+                    }
+                }
+                if (ordersFlag) {
+                    List ords = findOrderByUsers(users);
+                    for (int i = 0; i < ords.size(); i++) {
+                        OrderBeanRemote ord = (OrderBeanRemote) ords.get(i);
+                        root.addContent(createOrderNode(ord));
+                    }
+                }
+            }    
+            if (flag1 & !flag2) {
+                List users = (List) userHome.findByName(name);
+                if (rolesFlag) {
+                    List rls = findRoleByUsers(users);
+                    for (int i = 0; i < rls.size(); i++) {
+                        RoleBeanRemote rl = (RoleBeanRemote) rls.get(i);
+                        root.addContent(createRoleNode(rl));
+                    }
+                }
+                for (int i = 0; i < users.size(); i++) {
+                    UserBeanRemote usr = (UserBeanRemote) users.get(i);
+                    {
+                        root.addContent(createUserNode(usr));
+                    }
+                }
+                if (catalogsFlag) {
+                    List ctls = findCatalogByUsers(users);
+                    for (int i = 0; i < ctls.size(); i++) {
+                        CatalogBeanRemote ctl = (CatalogBeanRemote) ctls.get(i);
+                        root.addContent(createCatalogNode(ctl));
+                    }
+                }
+                if (productsFlag) {
+                    List prds = findProductByUsers(users);
+                    for (int i = 0; i < prds.size(); i++) {
+                        ProductBeanRemote prd = (ProductBeanRemote) prds.get(i);
+                        root.addContent(createProductNode(prd));
+                    }
+                }
+                if (opinionsFlag) {
+                    List opns = findOpinionByUsers(users);
+                    for (int i = 0; i < opns.size(); i++) {
+                        OpinionBeanRemote opn = (OpinionBeanRemote) opns.get(i);
+                        root.addContent(createOpinionNode(opn));
+                    }
+                }
+                if (ordersFlag) {
+                    List ords = findOrderByUsers(users);
+                    for (int i = 0; i < ords.size(); i++) {
+                        OrderBeanRemote ord = (OrderBeanRemote) ords.get(i);
+                        root.addContent(createOrderNode(ord));
+                    }
+                }
+            }
+            if (!flag1 & flag2) {
+                List users = (List) userHome.findByRole(new Long(id_role));
+                if (rolesFlag) {
+                    List rls = findRoleByUsers(users);
+                    for (int i = 0; i < rls.size(); i++) {
+                        RoleBeanRemote rl = (RoleBeanRemote) rls.get(i);
+                        root.addContent(createRoleNode(rl));
+                    }
+                }
+                for (int i = 0; i < users.size(); i++) {
+                    UserBeanRemote usr = (UserBeanRemote) users.get(i);
+                    {
+                        root.addContent(createUserNode(usr));
+                    }
+                }
+                if (catalogsFlag) {
+                    List ctls = findCatalogByUsers(users);
+                    for (int i = 0; i < ctls.size(); i++) {
+                        CatalogBeanRemote ctl = (CatalogBeanRemote) ctls.get(i);
+                        root.addContent(createCatalogNode(ctl));
+                    }
+                }
+                if (productsFlag) {
+                    List prds = findProductByUsers(users);
+                    for (int i = 0; i < prds.size(); i++) {
+                        ProductBeanRemote prd = (ProductBeanRemote) prds.get(i);
+                        root.addContent(createProductNode(prd));
+                    }
+                }
+                if (opinionsFlag) {
+                    List opns = findOpinionByUsers(users);
+                    for (int i = 0; i < opns.size(); i++) {
+                        OpinionBeanRemote opn = (OpinionBeanRemote) opns.get(i);
+                        root.addContent(createOpinionNode(opn));
+                    }
+                }
+                if (ordersFlag) {
+                    List ords = findOrderByUsers(users);
+                    for (int i = 0; i < ords.size(); i++) {
+                        OrderBeanRemote ord = (OrderBeanRemote) ords.get(i);
+                        root.addContent(createOrderNode(ord));
+                    }
+                }
+            }
+        } catch (FinderException ex) {
+            ex.printStackTrace();
+        } catch (RemoteException ex) {
+            ex.printStackTrace();
+        }   
+        XMLOutputter outputter = new XMLOutputter();
+        outputter.setFormat(Format.getPrettyFormat());
+        result = outputter.outputString(doc).toString();
+        return result;
+    }
 
     public String exportToXMLUser(ArrayList users, boolean needExportRole) throws EJBException {
         String result = "<error message = \"Sorry\" />";
@@ -348,7 +523,7 @@ public class XmlBean implements SessionBean {
     }
 
     protected Element createRoleNode(RoleBeanRemote role) throws RemoteException {
-        Element roleNode = new Element("ROLE");
+        Element roleNode = new Element("ROLE");        
         roleNode.setAttribute("ID_ROLE", (role.getId()).toString());
         roleNode.addContent((new Element("NAME")).setText(role.getName()));
         return roleNode;
@@ -370,22 +545,128 @@ public class XmlBean implements SessionBean {
         return uids;
     }
 
-    protected List getListObjectBySet(Set set) throws FinderException, RemoteException {
+    protected List getListRolesBySet(Set set) throws FinderException, RemoteException {
         ArrayList list = new ArrayList();
         Iterator iter = set.iterator();
         while (iter.hasNext()) {
-            list.add(userHome.findByPrimaryKey((Long) iter.next()));
+            list.add(roleHome.findByPrimaryKey((Long) iter.next()));
+        }
+        return list;
+    }
+    
+    protected List getListOpinionsBySet(Set set) throws FinderException, RemoteException {
+        ArrayList list = new ArrayList();
+        Iterator iter = set.iterator();
+        while (iter.hasNext()) {
+            list.add(opinionHome.findByPrimaryKey((Long) iter.next()));
+        }
+        return list;
+    }
+    
+    protected List getListOrdersBySet(Set set) throws FinderException, RemoteException {
+        ArrayList list = new ArrayList();
+        Iterator iter = set.iterator();
+        while (iter.hasNext()) {
+            list.add(orderHome.findByPrimaryKey((Long) iter.next()));
+        }
+        return list;
+    }
+    
+    protected List getListProductsBySet(Set set) throws FinderException, RemoteException {
+        ArrayList list = new ArrayList();
+        Iterator iter = set.iterator();
+        while (iter.hasNext()) {
+            list.add(productHome.findByPrimaryKey((Long) iter.next()));
+        }
+        return list;
+    }
+    
+    protected List getListCatalogsBySet(Set set) throws FinderException, RemoteException {
+        ArrayList list = new ArrayList();
+        Iterator iter = set.iterator();
+        while (iter.hasNext()) {
+            list.add(catalogHome.findByPrimaryKey((Long) iter.next()));
         }
         return list;
     }
 
     protected List findRoleByUsers(List users) throws RemoteException, FinderException {
         Set rids = new TreeSet();
+        UserBeanRemote user;
         for (int i = 0; i < users.size(); i++) {
-            UserBeanRemote user = (UserBeanRemote) users.get(i);
+            user = (UserBeanRemote) users.get(i);
             rids.add(new Long(user.getRoleId()));
         }
-        return getListObjectBySet(rids);
+        return getListRolesBySet(rids);
+    }
+    
+    protected List findOpinionByUsers(List users) throws RemoteException, FinderException {
+        Set oids = new TreeSet();
+        long id_user = 0; 
+        List opinions;
+        UserBeanRemote user;
+        OpinionBeanRemote opinion;
+        for (int i = 0; i < users.size(); i++) {
+            user = (UserBeanRemote) users.get(i);
+            id_user = user.getId();
+            opinions = opinionHome.findOpinionByUser(new Long (id_user));
+            for (int t = 0; t < opinions.size(); t++) {
+                opinion = (OpinionBeanRemote) opinions.get(t);  
+                oids.add(new Long(opinion.getIdOpinion()));
+            }            
+        }        
+        return getListOpinionsBySet(oids);
+    }
+    
+    protected List findOrderByUsers(List users) throws RemoteException, FinderException {
+        Set oids = new TreeSet();
+        long id_user = 0; 
+        List orders;
+        UserBeanRemote user;
+        OrderBeanRemote order;
+        for (int i = 0; i < users.size(); i++) {
+            user = (UserBeanRemote) users.get(i);
+            id_user = user.getId();
+            orders = orderHome.findOrderByUser(new Long (id_user));
+            for (int t = 0; t < orders.size(); t++) {
+                order = (OrderBeanRemote) orders.get(t);  
+                oids.add(new Long(order.getId()));
+            }            
+        }        
+        return getListOrdersBySet(oids);
+    }
+    
+    protected List findProductByUsers(List users) throws RemoteException, FinderException {
+        Set pids = new TreeSet();
+        List orders = findOrderByUsers(users);
+        List opinions = findOpinionByUsers(users);
+        OrderBeanRemote order;
+        OpinionBeanRemote opinion;
+        List products;
+        for (int i = 0; i < orders.size(); i++) {
+            order = (OrderBeanRemote) orders.get(i);             
+            //productHome.findByPrimaryKey(order.getIdProduct()).getId();
+            pids.add(order.getIdProduct());
+        }
+        for (int t = 0; t < opinions.size(); t++) {
+            opinion = (OpinionBeanRemote) opinions.get(t);             
+            //productHome.findByPrimaryKey(order.getIdProduct()).getId();
+            pids.add(new Long (opinion.getIdProduct()));
+        }
+        return getListProductsBySet(pids);
+    }
+    
+     protected List findCatalogByUsers(List users) throws RemoteException, FinderException {
+        Set cids = new TreeSet();
+        List products = findProductByUsers(users);        
+        ProductBeanRemote product;        
+        List catalogs;
+        for (int i = 0; i < products.size(); i++) {
+            product = (ProductBeanRemote) products.get(i);             
+            //productHome.findByPrimaryKey(order.getIdProduct()).getId();
+            cids.add(new Long (product.getIdCatalog()));
+        }        
+        return getListCatalogsBySet(cids);
     }
 
     // Add business logic below. (Right-click in editor and choose

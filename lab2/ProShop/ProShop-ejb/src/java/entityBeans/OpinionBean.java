@@ -224,6 +224,34 @@ public class OpinionBean implements EntityBean {
             }
         }
     }
+    
+    public Collection ejbFindOpinionByUser(java.lang.Long id_user) {
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        Connection conn = null;
+        try {
+            conn = EJBHelper.getConnection();
+            pst = conn.prepareStatement("SELECT ID_OPINION FROM \"OPINION\" WHERE ID_USER = ?");
+            pst.setLong(1, id_user.longValue());
+            rs = pst.executeQuery();
+            Vector keys = new Vector();
+            while (rs.next()) {
+                long id_opinion = rs.getLong(1);
+                keys.addElement(new Long(id_opinion));
+            }
+            return keys;
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
+        } catch (SQLException e) {
+            throw new EJBException("Ошибка SELECT");
+        } finally {
+            try {
+                EJBHelper.closeConnection(conn, pst);
+            } catch (SQLException ex1) {
+                throw new EJBException("Ошибка закрытии соединия с базой");
+            }
+        }
+    }
 
     public java.lang.Long ejbCreate(java.lang.Long id_prod, java.lang.Long id_user, String txt) throws CreateException {
         this.id_product = id_prod.longValue();

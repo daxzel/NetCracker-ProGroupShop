@@ -144,6 +144,86 @@ public class XMLServlet extends HttpServlet {
             }
         }
     }
+    
+     protected void exportUsersP(HttpServletRequest request, HttpServletResponse response) throws ExportException, IOException, ServletException {
+        RequestDispatcher rd;
+        ServletOutputStream out = null;
+        boolean flag1, flag2, usersFlag, rolesFlag, opinionsFlag, productsFlag, ordersFlag, catalogsFlag;
+        flag1 = flag2 = rolesFlag = opinionsFlag = productsFlag = ordersFlag = catalogsFlag = false;
+        int id_role = 0;
+        String result, name, role, exportRoles, searchByName, searchByRole, exportOpinions, exportProducts, exportOrders, exportCatalogs;
+        result = "Произошла ошибка";
+        try {
+            ArrayList list = new ArrayList();
+            name = request.getParameter("NAME").toString();
+            role = request.getParameter("ROLE").toString();
+            if ("admin".equals(role)){
+                id_role = 1;
+            } else {
+                if ("manager".equals(role)) {
+                    id_role = 2;                    
+                } else {
+                    if ("user".equals(role)) {
+                        id_role = 3;
+                    }                    
+                }                    
+            }
+            searchByName = request.getParameter("USERSBYNAME");
+            searchByRole = request.getParameter("USERSBYROLE");
+            if (request.getParameter("USERSBYNAME") != null) {
+                flag1 = true;
+            }
+            if (request.getParameter("USERSBYROLE") != null) {
+                flag2 = true;
+            }            
+            exportRoles = request.getParameter("ROLES");            
+            if ("ON".equals(exportRoles)) {
+                rolesFlag = true;
+            }
+            exportOpinions = request.getParameter("OPINIONS");            
+            if ("ON".equals(exportOpinions)) {
+                opinionsFlag = true;
+            }
+            exportProducts = request.getParameter("PRODUCTS");            
+            if ("ON".equals(exportProducts)) {
+                productsFlag = true;
+            }
+            exportCatalogs = request.getParameter("CATALOGS");            
+            if ("ON".equals(exportCatalogs)) {
+                catalogsFlag = true;
+            }
+            exportOrders = request.getParameter("ORDERS");            
+            if ("ON".equals(exportOrders)) {
+                ordersFlag = true;
+            }
+            ////////////////////////////////
+            XmlBeanRemoteHome xmlHome = (XmlBeanRemoteHome) EJBHelper.lookupHome("ejb/XmlBean", XmlBeanRemoteHome.class);
+            XmlBeanRemote xmlBean = xmlHome.create();
+            String xml = xmlBean.exportToXMLUsersP(name, id_role, flag1, flag2, rolesFlag, opinionsFlag, productsFlag, ordersFlag, catalogsFlag);
+            response.setContentType("text/xml");
+            response.setCharacterEncoding("utf-8");
+            out = response.getOutputStream();
+            out.println(xml);
+            out.flush();
+        } catch (NumberFormatException ex) {
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } catch (CreateException ex) {
+            ex.printStackTrace();
+        } catch (NamingException ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (out != null) {
+                    out.close();
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
+        }
+    }
 
     protected void exportProductByPrice(HttpServletRequest request, HttpServletResponse response) throws ExportException, IOException, ServletException {
         RequestDispatcher rd;
@@ -250,6 +330,11 @@ public class XMLServlet extends HttpServlet {
                 exportProductByPrice(request, response);
                 return;
 
+            }
+            
+            if (request.getRequestURI().equals("/ProShop-war/XML/exportUsersP")) {
+                exportUsersP(request, response);
+                return;
             }
 
             if (request.getRequestURI().equals("/ProShop-war/XML/import")) {

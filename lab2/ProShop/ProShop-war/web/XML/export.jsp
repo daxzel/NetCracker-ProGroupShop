@@ -14,6 +14,7 @@
         <title>Export entities into XML</title>
     </head>
     <body>
-       <p align="center"><a href="exportProduct.jsp">Экспорт продуктов</a></p>
+       <p align="center"><a href="exportProduct.jsp">Экспорт продуктов </a></p>
+       <p align="center"><a href="exportUser.jsp">Экспорт пользователей</a></p>
     </body>
 </html>

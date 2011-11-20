@@ -223,6 +223,69 @@ public class UserBean implements EntityBean {
             }
         }
     }
+    
+    public Collection ejbFindByName(String name) throws ObjectNotFoundException {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            conn = EJBHelper.getConnection();
+            pst = conn.prepareStatement("SELECT * FROM \"USER\" WHERE NAME = ?");
+            pst.setString(1, name);
+            rs = pst.executeQuery();
+            ResultSet resultSet = pst.executeQuery();
+            Vector keys = new Vector();
+            while (resultSet.next()) {
+                long id_user = resultSet.getLong(1);                
+                keys.addElement(new Long(id_user));
+            }
+            return keys;
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
+        } catch (SQLException e) {
+            throw new EJBException("Ошибка SELECT");
+        } finally {
+            try {
+                EJBHelper.closeConnection(conn, pst);
+            } catch (SQLException ex1) {
+                throw new EJBException("Ошибка закрытии соединия с базой");
+            }
+        }
+    }
+    
+    public java.util.Collection ejbFindByNameAndRole(String name, int id_role) throws ObjectNotFoundException {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        java.lang.Long lg = null;
+        ResultSet rs = null;        
+        try {
+            conn = EJBHelper.getConnection();
+            pst = conn.prepareStatement("SELECT ID_USER FROM \"USER\" WHERE NAME = ? AND ID_ROLE = ? ");
+            pst.setString(1, name);
+            pst.setInt(2, id_role);
+            rs = pst.executeQuery();
+            if (!rs.next()) {
+                throw new ObjectNotFoundException("Запись не найдена");
+            }
+            ResultSet resultSet = pst.executeQuery();
+            Vector keys = new Vector();
+            while (resultSet.next()) {
+                long id_user = resultSet.getLong(1);
+                keys.addElement(new Long(id_user));
+            }
+            return keys;
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
+        } catch (SQLException e) {
+            throw new EJBException("Ошибка SELECT");
+        } finally {
+            try {
+                EJBHelper.closeConnection(conn, pst);
+            } catch (SQLException ex1) {
+                throw new EJBException("Ошибка закрытии соединия с базой");
+            }
+        }
+    }
 
     public java.lang.Long ejbFindByNik(String nik) throws ObjectNotFoundException {
         Connection conn = null;
