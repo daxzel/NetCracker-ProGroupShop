@@ -14,6 +14,8 @@
         <title>Export products to XML</title>
     </head>
     <body>
+        <%%>
+        <%if (request.getParameter("poisk") != null) {%>
         <form action="ExportProductByPrice">
             <table>
                 <tr><td>Введите цену</td><td> <input type="text" name="price" value="" /></td></tr>
@@ -26,8 +28,9 @@
                 <tr><td>Показать записи</td><td><input type="submit" value="Input" /></td></tr>
             </table>
             <%Object obj = request.getAttribute("result");
-                        if (obj != null) {%>
+                if (obj != null) {%>
             <%=obj.toString()%>
+            <%}%>
             <%}%>
         </form>
     </body>

@@ -138,6 +138,10 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>XMLServlet</servlet-name>
+        <url-pattern>/XML/exportUsersP</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>XMLServlet</servlet-name>
         <url-pattern>/XML/import</url-pattern>
     </servlet-mapping>
     <session-config>

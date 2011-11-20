@@ -21,6 +21,8 @@ public interface OpinionBeanRemoteHome extends EJBHome {
     public java.util.List findOpinionByProduct(java.lang.Long id_pr) throws FinderException, RemoteException;
 
     public java.util.List findOpinionByProductName(java.lang.Long id_prod) throws FinderException, RemoteException;
+    
+    public java.util.List findOpinionByUser(java.lang.Long id_user) throws FinderException, RemoteException;
 
     public entityBeans.OpinionBeanRemote create(java.lang.Long id_pr, java.lang.Long id_usr, String text) throws CreateException, RemoteException;
 
