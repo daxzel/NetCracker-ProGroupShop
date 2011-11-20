@@ -20,25 +20,27 @@ public interface OrderBeanRemote extends EJBObject {
     public long getId() throws RemoteException;
 
     //public void setIdUser(java.lang.Long id_order) throws RemoteException;
-    public long getIdUser() throws RemoteException;
+    long getIdUser() throws RemoteException;
 
-    public void setNameUser() throws NamingException, FinderException, RemoteException;
+    void setNameUser() throws NamingException, FinderException, RemoteException;
 
-    public void setIdProduct(java.lang.Long id_product) throws RemoteException;
+    void setIdProduct(java.lang.Long id_product) throws RemoteException;
 
-    public java.lang.Long getIdProduct() throws RemoteException;
+    java.lang.Long getIdProduct() throws RemoteException;
 
-    public String getNameProduct() throws RemoteException;
+    String getNameProduct() throws RemoteException;
 
-    public int getAmount() throws RemoteException;
+    int getAmount() throws RemoteException;
 
-    public boolean getStatus() throws RemoteException;
+    boolean getStatus() throws RemoteException;
 
-    public void setStatus(boolean status) throws RemoteException;
+    void setStatus(boolean status) throws RemoteException;
 
-    public double getPriceProduct() throws RemoteException;
+    double getPriceProduct() throws RemoteException;
 
-    public double getPrice() throws RemoteException;
+    double getPrice() throws RemoteException;
 
-    public String getNameUser() throws FinderException, RemoteException;
+    String getNameUser() throws FinderException, RemoteException;
+
+    void setAll(long id_user, long id_product,boolean status, int amount) throws RemoteException;;
 }

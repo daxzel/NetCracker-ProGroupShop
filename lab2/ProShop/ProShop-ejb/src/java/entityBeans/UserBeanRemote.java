@@ -14,45 +14,48 @@ import java.rmi.RemoteException;
  */
 public interface UserBeanRemote extends EJBObject {
 
-    public long getId() throws RemoteException;
+    long getId() throws RemoteException;
 
-    public void setId(java.lang.Long nid_user) throws RemoteException;
+    void setId(java.lang.Long nid_user) throws RemoteException;
 
-    public String getName() throws RemoteException;
+    String getName() throws RemoteException;
 
-    public void setName(String nname) throws RemoteException;
+    void setName(String nname) throws RemoteException;
 
-    public String getSurname() throws RemoteException;
+    String getSurname() throws RemoteException;
 
-    public void setSurname(String nsurname) throws RemoteException;
+    void setSurname(String nsurname) throws RemoteException;
 
-    public String getOtchestvo() throws RemoteException;
+    String getOtchestvo() throws RemoteException;
 
-    public void setOtchestvo(String notchestvo) throws RemoteException;
+    void setOtchestvo(String notchestvo) throws RemoteException;
 
-    public String getNik() throws RemoteException;
+    String getNik() throws RemoteException;
 
-    public void setNik(String nnik) throws RemoteException;
+    void setNik(String nnik) throws RemoteException;
 
-    public Date getBorn() throws RemoteException;
+    Date getBorn() throws RemoteException;
 
-    public void setBorn(Date nborn) throws RemoteException;
+    void setBorn(Date nborn) throws RemoteException;
 
-    public String getPhone() throws RemoteException;
+    String getPhone() throws RemoteException;
 
-    public void setPhone(String nphone) throws RemoteException;
+    void setPhone(String nphone) throws RemoteException;
 
-    public String getEmail() throws RemoteException;
+    String getEmail() throws RemoteException;
 
-    public void setEmail(String nemail) throws RemoteException;
+    void setEmail(String nemail) throws RemoteException;
 
     //public String getRoleName();
-    public void setRoleId(java.lang.Long nid_role) throws RemoteException;
+    void setRoleId(java.lang.Long nid_role) throws RemoteException;
 
-    public long getRoleId() throws RemoteException;
+    long getRoleId() throws RemoteException;
 
-    public String getPassword() throws RemoteException;
+    String getPassword() throws RemoteException;
 
-     public void setPassword(String npassword) throws RemoteException;
+    void setPassword(String npassword) throws RemoteException;
+
+    void setAll(String name, String surname, String otchestvo, String nik, String password,
+            java.sql.Date born, String phone, String email, long id_role) throws RemoteException;
 
 }

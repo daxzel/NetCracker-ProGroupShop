@@ -12,7 +12,9 @@ import java.rmi.RemoteException;
  */
 public interface RoleBeanRemote extends EJBObject {
 
-    public Long getId() throws RemoteException;
+    Long getId() throws RemoteException;
 
-    public String getName() throws RemoteException;
+    String getName() throws RemoteException;
+
+    void setAll(String name) throws RemoteException;
 }

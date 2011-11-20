@@ -431,11 +431,17 @@ public class CatalogBean implements EntityBean {
         this.name = name;
     }
 
-    public void setId(java.lang.Long id_catalog) {
-        this.id_catalog = id_catalog.longValue();
+    public void setId(long id_catalog) {
+        this.id_catalog = id_catalog;
     }
 
-    public void setParentId(java.lang.Long id_parent) {
-        this.id_parent = id_parent.longValue();
+    public void setParentId(long id_parent) {
+        this.id_parent = id_parent;
+    }
+
+    public void setAll(long parent_id, String name)
+    {
+        this.id_parent = parent_id;
+        this.name = name;
     }
 }

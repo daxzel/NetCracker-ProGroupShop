@@ -244,11 +244,52 @@ public class RoleBean implements EntityBean {
         }
     }
 
+     public java.lang.Long ejbCreate(long id, String name) throws CreateException {
+
+        this.id_role = id;
+        this.name=name;
+        Connection conn = null;
+        CallableStatement pst = null;
+        ResultSet rs = null;
+        try {
+            conn = EJBHelper.getConnection();
+            pst = conn.prepareCall("INSERT INTO \"ROLE\" " + "(ID_ROLE, NAME)" + "VALUES(?,?)");
+            pst.setLong(1, id);
+            pst.setString(2, name);
+            rs = pst.executeQuery();
+            if (!rs.next()) {
+                throw new CreateException("Ошибка вставки");
+            }
+            return new Long(id);
+        } catch (NamingException ex) {
+            throw new EJBException("Произошла ошибка добавления");
+        } catch (SQLException ex) {
+            throw new EJBException("Произошла ошибка добавления");
+        } finally {
+
+            try {
+                EJBHelper.closeConnection(conn, pst, rs);
+            } catch (SQLException ex1) {
+                throw new EJBException("Ошибка закрытии соединия с базой");
+            }
+
+        }
+    }
+
+    public void ejbPostCreate(long id, String name) throws CreateException {
+    }
+
+
     public long getId() {
         return id_role;
     }
 
     public String getName() {
         return name;
+    }
+
+    public void setAll(String name)
+    {
+        this.name=name;
     }
 }

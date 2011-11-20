@@ -51,6 +51,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import org.jdom.Document;
 import org.jdom.Element;
+import org.jdom.ProcessingInstruction;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
@@ -348,11 +349,14 @@ public class XmlBean implements SessionBean {
         return result;
     }
 
-    public String exportToXMLProduct(double price, boolean flag, boolean allFlag, boolean catalogFlag, boolean orderFlag, boolean commentFlag) throws EJBException {
+    public String exportToXMLProduct(List products,  boolean allFlag, boolean catalogFlag, boolean orderFlag, boolean commentFlag) throws EJBException {
         String result = "<error message = \"Sorry\" />";
 
         Document doc = new Document();
+        ProcessingInstruction instr = new ProcessingInstruction("xml-stylesheet","type=\"text/xsl\" href=\"/ProShop-war/static/Products.xsl\"");
+
         Element root = new Element("BASE");
+        doc.addContent(instr);
         doc.setRootElement(root);
         Set uids = new TreeSet();
         List opinions = new ArrayList();
@@ -393,7 +397,7 @@ public class XmlBean implements SessionBean {
             throw new EJBException(ex);
         }
         try {
-            List products = productHome.findByPrice(price, flag);
+          
             for (int i = 0; i < products.size(); i++) {
                 ProductBeanRemote product = (ProductBeanRemote) products.get(i);
                 {
@@ -463,6 +467,7 @@ public class XmlBean implements SessionBean {
         } catch (RemoteException ex) {
             throw new EJBException(ex);
         }
+ 
         XMLOutputter outputter = new XMLOutputter();
         outputter.setFormat(Format.getPrettyFormat());
         result = outputter.outputString(doc).toString();

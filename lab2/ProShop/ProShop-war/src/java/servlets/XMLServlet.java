@@ -25,6 +25,7 @@ import java.util.Enumeration;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletOutputStream;
 import helpers.*;
+import javax.ejb.FinderException;
 
 /**
  *
@@ -34,7 +35,10 @@ public class XMLServlet extends HttpServlet {
 
     protected void importXML(HttpServletRequest request,
             HttpServletResponse response) {
+        PrintWriter out =null;
         try {
+            out = response.getWriter();
+
             java.io.InputStream xml = null;
             java.io.InputStream xml2 = null;
 
@@ -64,12 +68,14 @@ public class XMLServlet extends HttpServlet {
                 }
             }
 
-            XMLHelper.CheckSchema(xml,StaticResourceHelper.getBASEXSD(request));
+            XMLHelper.CheckSchema(xml, StaticResourceHelper.getBASEXSD(request));
 
             XMLHelper.importOfXML(xml2);
 
+            out.write("Импорт успешно завершён");
+
         } catch (Exception ex) {
-            ex.printStackTrace();
+            out.write(ex.getMessage());
         }
 
     }
@@ -228,13 +234,14 @@ public class XMLServlet extends HttpServlet {
     protected void exportProductByPrice(HttpServletRequest request, HttpServletResponse response) throws ExportException, IOException, ServletException {
         RequestDispatcher rd;
         ServletOutputStream out = null;
-        boolean flag,catalogFlag, orderFlag, commentFlag, allFlag;
-        flag=catalogFlag = orderFlag = commentFlag = allFlag = false;
+        boolean flag, catalogFlag, orderFlag, commentFlag, allFlag;
+        flag = catalogFlag = orderFlag = commentFlag = allFlag = false;
         String result, price, name, more, less, exportCatalog, exportOrder, exportComment, exportAll;
-        double priceDouble=0;
+        double priceDouble = 0;
         result = "Произошла ошибка";
+        name=null;
         try {
-       
+
             ArrayList list = new ArrayList();
             price = request.getParameter("price");
             if (price == null) {
@@ -243,9 +250,10 @@ public class XMLServlet extends HttpServlet {
             } else {
 
                 priceDouble = Double.parseDouble(price);
-               
-            } if(request.getParameter("more")!=null){
-                flag=true;
+
+            }
+            if (request.getParameter("more") != null) {
+                flag = true;
             }
             exportCatalog = request.getParameter("exportCatalog");
             exportOrder = request.getParameter("exportOrder");
@@ -264,14 +272,29 @@ public class XMLServlet extends HttpServlet {
                     commentFlag = true;
                 }
             }
+            List products = null;
+            ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
+            if (price != null) {
+                products = productHome.findByPrice(priceDouble, flag);
+            }
+            if(name!=null){
+                ProductBeanRemote product = productHome.findByName(name);
+                products = new ArrayList();
+                products.add(product);
+            }
             XmlBeanRemoteHome xmlHome = (XmlBeanRemoteHome) EJBHelper.lookupHome("ejb/XmlBean", XmlBeanRemoteHome.class);
             XmlBeanRemote xmlBean = xmlHome.create();
-            String xml = xmlBean.exportToXMLProduct(priceDouble,flag, allFlag, catalogFlag, orderFlag, commentFlag);
+            String xml = xmlBean.exportToXMLProduct(products, allFlag, catalogFlag, orderFlag, commentFlag);
             response.setContentType("text/xml");
             response.setCharacterEncoding("utf-8");
             out = response.getOutputStream();
             out.println(xml);
             out.flush();
+        } catch (FinderException ex) {
+            result = "Не найдены записи";
+            rd = request.getRequestDispatcher("exportProduct.jsp");
+            request.setAttribute("result", result);
+            rd.forward(request, response);
         } catch (NumberFormatException ex) {
             result = "Не правильно ввдена цена продукта";
             rd = request.getRequestDispatcher("exportProduct.jsp");
@@ -331,10 +354,21 @@ public class XMLServlet extends HttpServlet {
                 return;
 
             }
+
             
             if (request.getRequestURI().equals("/ProShop-war/XML/exportUsersP")) {
                 exportUsersP(request, response);
                 return;
+            }
+            if (request.getRequestURI().equals("/ProShop-war/XML/ExportProductByName")) {
+
+
+
+
+
+                exportProductByPrice(request, response);
+                return;
+
             }
 
             if (request.getRequestURI().equals("/ProShop-war/XML/import")) {

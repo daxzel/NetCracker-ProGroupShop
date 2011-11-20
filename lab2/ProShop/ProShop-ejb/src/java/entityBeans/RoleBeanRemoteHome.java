@@ -8,6 +8,7 @@ package entityBeans;
 import java.rmi.RemoteException;
 import javax.ejb.EJBHome;
 import javax.ejb.FinderException;
+import javax.ejb.CreateException;
 
 /**
  *
@@ -20,5 +21,7 @@ public interface RoleBeanRemoteHome extends EJBHome {
     entityBeans.RoleBeanRemote findByName(String name) throws FinderException, RemoteException;
 
     java.util.List findAll() throws FinderException, RemoteException;
+
+    RoleBeanRemote create(long id, String name) throws CreateException, RemoteException;
 
 }

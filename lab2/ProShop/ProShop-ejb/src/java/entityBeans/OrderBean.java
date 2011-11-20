@@ -445,4 +445,12 @@ public class OrderBean implements EntityBean {
     public double getPrice() {
         return price_product * amount;
     }
+
+    public void setAll(long id_user, long id_product,boolean status, int amount)
+    {
+        this.id_user =id_user;
+        this.id_product = id_product;
+        this.status = status;
+        this.amount = amount;
+    }
 }

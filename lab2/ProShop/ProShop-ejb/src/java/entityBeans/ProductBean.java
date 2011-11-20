@@ -42,7 +42,6 @@ public class ProductBean implements EntityBean {
     private long id_catalog;
     private String name;
     private double price;
-    private String name_catalog;
 
     // <editor-fold defaultstate="collapsed" desc="EJB infrastructure methods. Click the + sign on the left to edit the code.">
     // TODO Add code to acquire and use other enterprise resources (DataSource, JMS, enterprise beans, Web services)
@@ -179,13 +178,7 @@ public class ProductBean implements EntityBean {
     }
 
     public java.lang.Long ejbCreate(java.lang.String description, java.lang.String name_catalog, java.lang.String name, double price) throws CreateException, FinderException {
-        //try {
-        //  ejbFindByName(name);
-        //throw new DuplicateKeyException("Продукт с таким именем уже существует");
-        //} catch (ObjectNotFoundException ex) {
-        //}
         this.description = description;
-        this.name_catalog = name_catalog;
         this.name = name;
         this.price = price;
         Connection conn = null;
@@ -234,7 +227,6 @@ public class ProductBean implements EntityBean {
         //}
         this.id_product = id.longValue();
         this.description = description;
-        this.name_catalog = name_catalog;
         this.name = name;
         this.price = price;
         Connection conn = null;
@@ -289,11 +281,7 @@ public class ProductBean implements EntityBean {
         
          try {
             conn = EJBHelper.getConnection();
-            CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) helpers.EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
-            CatalogBeanRemote ctg = catalogHome.findByPrimaryKey(new java.lang.Long(catalog_id));
-            this.name_catalog = ctg.getName();
-
-            this.name_catalog = name_catalog;
+            this.id_catalog = catalog_id;
             this.name = name;
             this.price = price;
 
@@ -311,9 +299,7 @@ public class ProductBean implements EntityBean {
                 throw new CreateException("Ошибка вставки");
             }
             return new Long(this.id_product);
-        } catch (RemoteException ex) {
-            throw new EJBException("Произошла ошибка добавления");
-        } catch (NamingException ex) {
+        }  catch (NamingException ex) {
             throw new EJBException("Произошла ошибка добавления");
         } catch (SQLException ex) {
             throw new EJBException("Произошла ошибка добавления");
@@ -464,7 +450,7 @@ public class ProductBean implements EntityBean {
         }
     }
 
-    public String ejbFindByName(java.lang.String name) throws ObjectNotFoundException {
+    public java.lang.Long ejbFindByName(java.lang.String name) throws ObjectNotFoundException {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
@@ -475,7 +461,8 @@ public class ProductBean implements EntityBean {
             if (!resultSet.next()) {
                 throw new ObjectNotFoundException("Запись не найдена");
             }
-            return name;
+            Long id = new Long(resultSet.getLong(2) );
+            return id;
         } catch (NamingException ex) {
             throw new EJBException("Ошибка SELECT");
         } catch (SQLException e) {
@@ -500,10 +487,6 @@ public class ProductBean implements EntityBean {
     public String getNameCatalog() throws FinderException, RemoteException {
         CatalogBeanRemote ctg = catalogHome.findByPrimaryKey(new Long(this.id_catalog));
         return ctg.getName();
-    }
-
-    public void setNameCatalog(String nid) {
-        name_catalog = nid;
     }
 
     public long getId() {
@@ -544,12 +527,11 @@ public class ProductBean implements EntityBean {
         price = nprice.doubleValue();
     }
 
-    /*  public List getOpinions() throws NamingException, FinderException, RemoteException {
-    List list = null;
-    OpinionBeanRemoteHome opinionHome = (OpinionBeanRemoteHome) OtherBean.Helper.lookupHome("ejb/OpinionBean", OpinionBeanRemoteHome.class);
-    list = opinionHome.findOpinionByProduct(new Long(this.id_product));
-    return list;
-
-
-    }*/
+    public void setAll(java.lang.String description, long id_catalog, java.lang.String name, double price) throws FinderException,SQLException,NamingException,RemoteException
+    {
+        this.description = description;
+        this.id_catalog = id_catalog;
+        this.name = name;
+        this.price = price;
+    }
 }

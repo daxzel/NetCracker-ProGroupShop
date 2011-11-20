@@ -138,9 +138,15 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>XMLServlet</servlet-name>
-        <url-pattern>/XML/exportUsersP</url-pattern>
+        <url-pattern>/XML/ExportProductByName</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+  <servlet-mapping>
+        <servlet-name>XMLServlet</servlet-name>
+
+        <url-pattern>/XML/exportUsersP</url-pattern>
+    </servlet-mapping>
+
         <servlet-name>XMLServlet</servlet-name>
         <url-pattern>/XML/import</url-pattern>
     </servlet-mapping>
