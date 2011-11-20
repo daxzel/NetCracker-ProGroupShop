@@ -17,23 +17,26 @@
     
 	<xsl:template match="BASE">
     	<div style=" padding-left:100px; width:1000px; border-color:#666">
-			Экспортируемые роли:
+			
 			<xsl:apply-templates select="ROLE"/>
-			Экспортируемые пользователи:
+			
 			<xsl:apply-templates select="USER"/>
-			Экспортируемые катаоги:
+			
 			<xsl:apply-templates select="CATALOG"/>
-			Экспортируемые продукты:
+			
         	<xsl:apply-templates select="PRODUCT"/> 
-			Экспортируемые комментарии:
+			
 			<xsl:apply-templates select="OPINION"/>  			
-			Экспортируемые заказы:
+			
 			<xsl:apply-templates select="ORDER"/>  
         </div>     
  	</xsl:template>
 
 	<xsl:template match="ROLE">  
     	<div style=" border-width:2px; border-style:groove; margin:20px; padding:20px; background-color:#CCC">
+			<div style="text-align:left">
+            	<p><strong>Роль</strong></p>	
+            </div>
         	   	<div>
         			 <p><strong>Название роли:   </strong>  <xsl:value-of select="./NAME"/></p>  <p><strong> Ид роли : </strong> <xsl:value-of select="./attribute::ID_ROLE"/> </p>
                 </div>
@@ -43,6 +46,9 @@
 	<xsl:template match="USER">  
     	<div style=" border-width:2px; border-style:groove; margin:20px; padding:20px; background-color:#CCC">
         	<div>
+				<div style="text-align:left">
+					<p><strong>Пользователь</strong></p>	
+				</div>
             	<div style="border-bottom-style:double; border-width:2px;">
         			<h4><xsl:value-of select="./NIK"/> (<xsl:value-of select="./attribute::ID_USER"/>) </h4>
 					
@@ -64,6 +70,9 @@
 	<xsl:template match="CATALOG">  
     	<div style=" border-width:2px; border-style:groove; margin:20px; padding:20px; background-color:#CCC">
         	<div>
+				<div style="text-align:left">
+					<p><strong>Каталог</strong></p>	
+				</div>
             	<div style="border-bottom-style:double; border-width:2px;">
         			<h4><xsl:value-of select="./NAME"/> (<xsl:value-of select="./attribute::ID_CATALOG"/>) </h4>
 					
@@ -79,6 +88,9 @@
 	<xsl:template match="PRODUCT">  
     	<div style=" border-width:2px; border-style:groove; margin:20px; padding:20px; background-color:#CCC">
         	<div>
+				<div style="text-align:left">
+					<p><strong>Продукт</strong></p>	
+				</div>
             	<div style="border-bottom-style:double; border-width:2px;">
         			<h4><xsl:value-of select="./NAME"/> (<xsl:value-of select="./attribute::ID_PRODUCT"/>) </h4>
                 </div>
@@ -92,7 +104,9 @@
 	
 	<xsl:template match="OPINION">  
     	<div style=" border-width:2px; border-style:groove; margin:20px; padding:20px; background-color:#CCC">
-        	<div>
+				<div style="text-align:left">
+					<p><strong>Комментарии</strong></p>	
+				</div>
             	<div style="border-bottom-style:double; border-width:2px;">
         			<p><strong>Ид комментария:  </strong><xsl:value-of select="./attribute::ID_OPINION"/></p> 
 					<p><strong>Ид пользователя:  </strong><xsl:value-of select="./ID_USER"/></p>
@@ -100,12 +114,14 @@
 					
 	            </div>
 				<p><xsl:value-of select="./TEXT"/></p> 
-			</div>
-        </div>   
+		</div>
     </xsl:template>  
 	
 	<xsl:template match="ORDER">  
     	<div style=" border-width:2px; border-style:groove; margin:20px; padding:20px; background-color:#CCC">
+			<div style="text-align:left">
+					<p><strong>Заказ</strong></p>	
+			</div>
             <p><strong>Ид заказа:  </strong><xsl:value-of select="./attribute::ID_ORDER"/> </p>
 			<p><strong>Ид пользователя:  </strong><xsl:value-of select="./ID_USER"/></p>
 			<p><strong>Ид продукта:   </strong><xsl:value-of select="./ID_PRODUCT"/> </p>
