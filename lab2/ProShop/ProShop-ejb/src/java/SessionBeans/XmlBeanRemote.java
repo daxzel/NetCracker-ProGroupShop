@@ -18,6 +18,8 @@ public interface XmlBeanRemote extends EJBObject {
 
     public String exportToXMLProduct(double price,boolean flag, boolean allFlag, boolean catalogFlag, boolean orderFlag, boolean commentFlag) throws RemoteException;
 
+    public String exportToXMLUsersP(String name, int id_role, boolean flag1, boolean flag2, boolean rolesFlag, boolean opinionsFlag, boolean productsFlag, boolean ordersFlag, boolean catalogsFlag) throws RemoteException;
+    
     public String exportAllProducts() throws RemoteException,Exception;
 
     public String importOfXML() throws RemoteException;
