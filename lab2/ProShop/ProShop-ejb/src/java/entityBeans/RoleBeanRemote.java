@@ -17,4 +17,6 @@ public interface RoleBeanRemote extends EJBObject {
     String getName() throws RemoteException;
 
     void setAll(String name) throws RemoteException;
+
+    
 }

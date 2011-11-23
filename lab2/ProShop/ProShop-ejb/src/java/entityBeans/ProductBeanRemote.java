@@ -40,5 +40,7 @@ public interface ProductBeanRemote extends EJBObject {
 
     void setAll(java.lang.String description, long id_catalog,
             java.lang.String name, double price) throws RemoteException;
+
+    String getNameCatalog() throws RemoteException;
     
 }

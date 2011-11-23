@@ -534,4 +534,5 @@ public class ProductBean implements EntityBean {
         this.name = name;
         this.price = price;
     }
+    
 }

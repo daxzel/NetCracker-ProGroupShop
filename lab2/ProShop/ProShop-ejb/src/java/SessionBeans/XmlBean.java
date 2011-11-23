@@ -113,7 +113,10 @@ public class XmlBean implements SessionBean {
     public String exportToXMLUsersP(String name, int id_role, boolean flag1, boolean flag2, 
             boolean rolesFlag, boolean opinionsFlag, boolean productsFlag, boolean ordersFlag, boolean catalogsFlag) throws EJBException {
         String result = "<error message = \"Sorry\" />";
+        ProcessingInstruction instr = new ProcessingInstruction("xml-stylesheet","type=\"text/xsl\" href=\"/ProShop-war/static/Products.xsl\"");
+
         Document doc = new Document();
+        doc.addContent(instr);
         Element root = new Element("BASE"); 
         doc.setRootElement(root);        
         try {
