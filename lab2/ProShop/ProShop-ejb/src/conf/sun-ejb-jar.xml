@@ -34,5 +34,12 @@
       <ejb-name>XmlBean</ejb-name>
       <jndi-name>ejb/XmlBean</jndi-name>
     </ejb>
+    <ejb>
+      <ejb-name>NewMessageBean</ejb-name>
+      <jndi-name>jms/HistoryQueue</jndi-name>
+      <mdb-connection-factory>
+        <jndi-name>jms/HistoryQueueFactory</jndi-name>
+      </mdb-connection-factory>
+    </ejb>
   </enterprise-beans>
 </sun-ejb-jar>
