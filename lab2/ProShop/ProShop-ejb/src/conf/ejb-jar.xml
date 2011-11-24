@@ -12,6 +12,17 @@
             <session-type>Stateless</session-type>
             <transaction-type>Container</transaction-type>
         </session>
+        <session>
+            <display-name>HistoryBeanSB</display-name>
+            <ejb-name>HistoryBean</ejb-name>
+            <home>SessionBeans.HistoryBeanRemoteHome</home>
+            <remote>SessionBeans.HistoryBeanRemote</remote>
+            <local-home>SessionBeans.HistoryBeanLocalHome</local-home>
+            <local>SessionBeans.HistoryBeanLocal</local>
+            <ejb-class>SessionBeans.HistoryBean</ejb-class>
+            <session-type>Stateless</session-type>
+            <transaction-type>Container</transaction-type>
+        </session>
         <entity>
             <display-name>UserBeanEB</display-name>
             <ejb-name>UserBean</ejb-name>
@@ -177,6 +188,13 @@
         <container-transaction>
             <method>
                 <ejb-name>NewMessageBean</ejb-name>
+                <method-name>*</method-name>
+            </method>
+            <trans-attribute>Required</trans-attribute>
+        </container-transaction>
+        <container-transaction>
+            <method>
+                <ejb-name>HistoryBean</ejb-name>
                 <method-name>*</method-name>
             </method>
             <trans-attribute>Required</trans-attribute>

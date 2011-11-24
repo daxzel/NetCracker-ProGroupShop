@@ -38,8 +38,12 @@
       <ejb-name>NewMessageBean</ejb-name>
       <jndi-name>jms/HistoryQueue</jndi-name>
       <mdb-connection-factory>
-        <jndi-name>jms/HistoryQueueFactory</jndi-name>
+        <jndi-name>jms/HistoryFabricQueue</jndi-name>
       </mdb-connection-factory>
+    </ejb>
+    <ejb>
+      <ejb-name>HistoryBean</ejb-name>
+      <jndi-name>ejb/HistoryBean</jndi-name>
     </ejb>
   </enterprise-beans>
 </sun-ejb-jar>
