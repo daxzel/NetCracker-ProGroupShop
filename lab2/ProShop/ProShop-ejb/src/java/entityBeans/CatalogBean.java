@@ -12,6 +12,7 @@ import java.util.Vector;
 import javax.ejb.CreateException;
 import javax.ejb.DuplicateKeyException;
 import javax.ejb.EJBException;
+import javax.jms.JMSException;
 import javax.naming.NamingException;
 import javax.sql.*;
 import javax.ejb.EntityBean;
@@ -20,6 +21,8 @@ import javax.ejb.FinderException;
 import javax.ejb.NoSuchEntityException;
 import javax.ejb.ObjectNotFoundException;
 import javax.ejb.RemoveException;
+import moreTools.HistoryMessage;
+import java.sql.Date;
 
 /**
  *
@@ -32,6 +35,7 @@ public class CatalogBean implements EntityBean {
     private long id_catalog;
     private long id_parent;
     private String name;
+    private long objId;
     // <editor-fold defaultstate="collapsed" desc="EJB infrastructure methods. Click the + sign on the left to edit the code.">
 
     // TODO Add code to acquire and use other enterprise resources (DataSource, JMS, enterprise beans, Web services)
@@ -218,7 +222,7 @@ public class CatalogBean implements EntityBean {
         }
     }
 
-    public java.lang.Long ejbCreate(String parent_name, String name) throws CreateException {
+    public java.lang.Long ejbCreate(long userId, String parent_name, String name) throws CreateException, JMSException {
         try {
             ejbFindByName(name);
             throw new DuplicateKeyException("Каталог с таким названием уже существует");
@@ -240,11 +244,17 @@ public class CatalogBean implements EntityBean {
             pst.setString(2, name);
             pst.registerOutParameter(3, Types.INTEGER);
             rs = pst.executeQuery();
+           id_catalog = pst.getLong(3); 
+           objId = id_catalog;
+            
+          
+                EJBHelper.sendMessage(new HistoryMessage(userId,"CATALOG","Добавлена каталог",objId));
+         
             if (!rs.next()) {
                 throw new CreateException("Ошибка вставки");
             }
 
-            id_catalog = pst.getLong(3);
+            
             return new Long(id_catalog);
         } catch (NamingException ex) {
             throw new EJBException("Произошла ошибка добавления");
@@ -261,7 +271,7 @@ public class CatalogBean implements EntityBean {
         }
     }
 
-    public java.lang.Long ejbCreate(long id, String parent_name, String name) throws CreateException {
+    public java.lang.Long ejbCreate(long userId, long id, String parent_name, String name) throws CreateException {
         try
         {
             ejbFindByName(name);

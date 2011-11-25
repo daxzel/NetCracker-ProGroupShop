@@ -4,13 +4,23 @@
  */
 package helpers;
 
+import javax.jms.JMSException;
 import javax.naming.NamingException;
 import javax.sql.*;
 import java.sql.*;
 import entityBeans.*;
+import java.io.Serializable;
 import java.rmi.RemoteException;
+import javax.jms.Queue;
 import javax.ejb.CreateException;
 import javax.ejb.*;
+import javax.jms.ObjectMessage;
+import javax.jms.QueueConnection;
+import javax.jms.QueueConnectionFactory;
+import javax.jms.QueueSender;
+import javax.jms.QueueSession;
+import javax.jms.Session;
+import javax.naming.InitialContext;
 import moreTools.SerializbleImage;
 
 /**
@@ -21,6 +31,43 @@ public class EJBHelper {
 
     private static DataSource dataSource = null;
 
+    private static QueueSender queue_sender = null;
+    private static QueueSession queue_session = null;
+    private static boolean canSendMessage = true;
+
+        public static void setMessageSending(boolean allowed) {
+        canSendMessage = allowed;
+    }
+public static void sendMessage(Object msgContent) throws EJBException, JMSException{
+        if (canSendMessage) {
+            if (queue_sender == null) {
+                try {
+                    // Create initial context and look up QueueConnectionFactory and Queue.
+                    InitialContext ctx = new InitialContext();
+                    QueueConnectionFactory qcf = (QueueConnectionFactory) ctx.lookup("jms/historyQueueFactory");
+                    Queue queue = (Queue) ctx.lookup("jms/historyQueue");
+                    // Create connection, session, and sender.
+                    QueueConnection queue_conn = qcf.createQueueConnection();
+                    queue_session = queue_conn.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
+                    queue_sender = queue_session.createSender(queue);
+                } catch (JMSException ex) {
+                    throw new EJBException(ex);
+                } catch (NamingException ex) {
+                    throw new EJBException(ex);
+                }
+            }
+
+            // Create the message and send.
+            ObjectMessage message;
+            try {
+                message = queue_session.createObjectMessage();
+                message.setObject((Serializable) msgContent);
+                queue_sender.send(message);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
     public static void closeConnection(Connection conn, PreparedStatement pst, ResultSet rs) throws SQLException {
         if (rs != null) {
             pst.close();
