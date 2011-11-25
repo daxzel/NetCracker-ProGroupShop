@@ -108,6 +108,18 @@
             <prim-key-class>java.lang.Long</prim-key-class>
             <reentrant>false</reentrant>
         </entity>
+        <entity>
+            <display-name>HistoryEntityBeanEB</display-name>
+            <ejb-name>HistoryEntityBean</ejb-name>
+            <home>entityBeans.HistoryEntityBeanRemoteHome</home>
+            <remote>entityBeans.HistoryEntityBeanRemote</remote>
+            <local-home>entityBeans.HistoryEntityBeanLocalHome</local-home>
+            <local>entityBeans.HistoryEntityBeanLocal</local>
+            <ejb-class>entityBeans.HistoryEntityBean</ejb-class>
+            <persistence-type>Bean</persistence-type>
+            <prim-key-class>java.lang.Long</prim-key-class>
+            <reentrant>false</reentrant>
+        </entity>
         <message-driven>
             <display-name>NewMessageBeanMDB</display-name>
             <ejb-name>NewMessageBean</ejb-name>
@@ -195,6 +207,13 @@
         <container-transaction>
             <method>
                 <ejb-name>HistoryBean</ejb-name>
+                <method-name>*</method-name>
+            </method>
+            <trans-attribute>Required</trans-attribute>
+        </container-transaction>
+        <container-transaction>
+            <method>
+                <ejb-name>HistoryEntityBean</ejb-name>
                 <method-name>*</method-name>
             </method>
             <trans-attribute>Required</trans-attribute>
