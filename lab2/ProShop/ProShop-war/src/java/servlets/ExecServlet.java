@@ -647,7 +647,7 @@ public class ExecServlet extends HttpServlet {
                 throw new CatalogException("Название каталога не может быть пустым");
             }
             CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
-            catalogHome.create(nameParent, name);
+            catalogHome.create(usr.getId(),nameParent, name);
             //  DBManager.addCatalog(nameParent, name);
             result = "Добавление каталога завершено";
             request.setAttribute("result", result);
