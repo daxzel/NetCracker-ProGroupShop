@@ -126,7 +126,7 @@
             <ejb-class>messageBean.NewMessageBean</ejb-class>
             <transaction-type>Container</transaction-type>
             <message-destination-type>javax.jms.Queue</message-destination-type>
-            <message-destination-link>jms/HistoryQueue</message-destination-link>
+            <message-destination-link>jms/historyQueue</message-destination-link>
             <activation-config>
                 <activation-config-property>
                     <activation-config-property-name>acknowledgeMode</activation-config-property-name>
@@ -138,7 +138,7 @@
                 </activation-config-property>
             </activation-config>
         </message-driven>
-        </enterprise-beans>
+   </enterprise-beans>
     <assembly-descriptor>
         <container-transaction>
             <method>
@@ -220,7 +220,7 @@
         </container-transaction>
         <message-destination>
             <display-name>Destination for NewMessageBeanMDB</display-name>
-            <message-destination-name>jms/HistoryQueue</message-destination-name>
+            <message-destination-name>jms/historyQueue</message-destination-name>
         </message-destination>
-        </assembly-descriptor>
+    </assembly-descriptor>
 </ejb-jar>

@@ -36,9 +36,9 @@
     </ejb>
     <ejb>
       <ejb-name>NewMessageBean</ejb-name>
-      <jndi-name>jms/HistoryQueue</jndi-name>
+      <jndi-name>jms/historyQueue</jndi-name>
       <mdb-connection-factory>
-        <jndi-name>jms/HistoryFabricQueue</jndi-name>
+        <jndi-name>jms/historyQueueFactory</jndi-name>
       </mdb-connection-factory>
     </ejb>
     <ejb>
@@ -49,5 +49,9 @@
       <ejb-name>HistoryEntityBean</ejb-name>
       <jndi-name>ejb/HistoryEntityBean</jndi-name>
     </ejb>
+    <message-destination>
+      <message-destination-name>historyQueue</message-destination-name>
+      <jndi-name>jms/historyQueue</jndi-name>
+    </message-destination>
   </enterprise-beans>
 </sun-ejb-jar>

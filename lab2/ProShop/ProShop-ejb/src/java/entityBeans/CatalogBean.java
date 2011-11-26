@@ -248,7 +248,7 @@ public class CatalogBean implements EntityBean {
            objId = id_catalog;
             
           
-                EJBHelper.sendMessage(new HistoryMessage(userId,"CATALOG","Добавлена каталог",objId));
+            EJBHelper.sendMessage(new HistoryMessage(userId,"CATALOG","Добавлена каталог",objId));
          
             if (!rs.next()) {
                 throw new CreateException("Ошибка вставки");
@@ -259,6 +259,7 @@ public class CatalogBean implements EntityBean {
         } catch (NamingException ex) {
             throw new EJBException("Произошла ошибка добавления");
         } catch (SQLException ex) {
+            ex.printStackTrace();
             throw new EJBException("Произошла ошибка добавления");
         } finally {
 
@@ -360,10 +361,10 @@ public class CatalogBean implements EntityBean {
         }
     }
 
-    public void ejbPostCreate(String parent_name, String name) throws CreateException {
+    public void ejbPostCreate(long userId, String parent_name, String name) throws CreateException {
     }
 
-    public void ejbPostCreate(long id, String parent_name, String name) throws CreateException {
+    public void ejbPostCreate(long userId, long id, String parent_name, String name) throws CreateException {
     }
 
     public void ejbPostCreate(long id, long parent_id, String name) throws CreateException {

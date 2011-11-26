@@ -650,9 +650,8 @@ public class ExecServlet extends HttpServlet {
             catalogHome.create(usr.getId(),nameParent, name);
             //  DBManager.addCatalog(nameParent, name);
             result = "Добавление каталога завершено";
-            request.setAttribute("result", result);
-            rd = request.getRequestDispatcher("add_catalog.jsp");
-            rd.forward(request, response);
+        
+          
         } catch (CreateException ex) {
             result = ex.getMessage();
         } catch (RemoteException ex) {

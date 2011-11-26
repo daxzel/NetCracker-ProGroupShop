@@ -206,6 +206,7 @@ public class ProductBean implements EntityBean {
         } catch (NamingException ex) {
             throw new EJBException("Произошла ошибка добавления");
         } catch (SQLException ex) {
+            ex.printStackTrace();
             throw new EJBException("Произошла ошибка добавления");
         } finally {
 
