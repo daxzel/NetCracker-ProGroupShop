@@ -334,6 +334,8 @@ public class XMLServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
+        
         RequestDispatcher rd;
         try {
             if (request.getRequestURI().equals("/ProShop-war/XML/Products.xml")) {
