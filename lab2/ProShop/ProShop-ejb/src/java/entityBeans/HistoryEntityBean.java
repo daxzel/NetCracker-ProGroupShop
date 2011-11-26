@@ -5,6 +5,7 @@
 package entityBeans;
 
 import helpers.EJBHelper;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import javax.ejb.EntityBean;
@@ -13,6 +14,8 @@ import javax.ejb.FinderException;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
+import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 import javax.ejb.NoSuchEntityException;
 import javax.ejb.ObjectNotFoundException;
@@ -185,7 +188,8 @@ public class HistoryEntityBean implements EntityBean {
             }
         }
     }
-      public java.lang.Long ejbFindByIdObjAndNameTable(java.lang.Long id, String nameTable) throws FinderException {
+
+    public java.lang.Long ejbFindByIdObjAndNameTable(java.lang.Long id, String nameTable) throws FinderException {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
@@ -211,18 +215,64 @@ public class HistoryEntityBean implements EntityBean {
             }
         }
     }
-   public String getStatus(){
-       return status;
-   }
+
+    public java.lang.Long ejbCreate(long id_user, String name_table, String status, long id_obj) throws CreateException {
+
+
+        this.id_user = id_user;
+        this.name_table = name_table;
+        this.status = status;
+        this.id_obj = id_obj;
+
+        Connection conn = null;
+        CallableStatement pst = null;
+        ResultSet rs = null;
+        try {
+            conn = EJBHelper.getConnection();
+            pst = conn.prepareCall("BEGIN INSERT INTO \"HISTORY\" " + "(ID_USER,NAME_TABLE,STATUS,ID_OBJ)" + "VALUES(?,?,?,?) RETURNING ID_HIS INTO ?;END;");
+            pst.setLong(1, id_user);
+            pst.setString(2, name_table);
+            pst.setString(3, status);
+            pst.setLong(4, id_obj);
+            pst.registerOutParameter(5, Types.INTEGER);
+            rs = pst.executeQuery();
+            if (!rs.next()) {
+                throw new CreateException("Ошибка вставки");
+            }
+
+            id_his = pst.getLong(5);
+            return new Long(id_his);
+        } catch (NamingException ex) {
+            throw new EJBException("Произошла ошибка добавления");
+        } catch (SQLException ex) {
+            throw new EJBException("Произошла ошибка добавления");
+        } finally {
+
+            try {
+                EJBHelper.closeConnection(conn, pst, rs);
+            } catch (SQLException ex1) {
+                throw new EJBException("Ошибка закрытии соединия с базой");
+            }
+
+
+        }
+    }
+     public void ejbPostCreate(long id_user, String name_table, String status, long id_obj) throws CreateException {
+    }
+
+    public String getStatus() {
+        return status;
+    }
 
     public long getRecordId() {
         return id_his;
     }
+
     public long getObjId() {
         return id_obj;
     }
 
-    public long getUserId(){
+    public long getUserId() {
         return id_user;
     }
 
