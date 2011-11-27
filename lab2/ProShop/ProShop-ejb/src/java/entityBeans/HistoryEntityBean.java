@@ -229,7 +229,7 @@ public class HistoryEntityBean implements EntityBean {
         ResultSet rs = null;
         try {
             conn = EJBHelper.getConnection();
-            pst = conn.prepareCall("BEGIN INSERT INTO \"HISTORY\" " + "(ID_USER,NAME_TABLE,STATUS,ID_OBJ)" + "VALUES(?,?,?,?) RETURNING ID_HIS INTO ?;END;");
+            pst = conn.prepareCall("BEGIN INSERT INTO \"HISTORY\" " + "(ID_HIS,ID_USER,NAME_TABLE,STATUS,ID_OBJ)" + "VALUES(MY_SEQ_H.NEXTVAL,?,?,?,?) RETURNING ID_HIS INTO ?;END;");
             pst.setLong(1, id_user);
             pst.setString(2, name_table);
             pst.setString(3, status);
