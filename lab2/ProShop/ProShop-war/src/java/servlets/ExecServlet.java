@@ -204,7 +204,9 @@ public class ExecServlet extends HttpServlet {
             }
 
             price = Double.parseDouble(priceS);
+
             ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
+            productHome.setParamMessage(usr.getId());
             productHome.create(description, name_catalog, name, price);
             result = "Продукт добавлен";
             request.setAttribute("NAME", name);
