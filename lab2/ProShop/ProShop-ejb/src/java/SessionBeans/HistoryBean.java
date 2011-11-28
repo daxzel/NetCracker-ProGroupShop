@@ -5,8 +5,13 @@
 
 package SessionBeans;
 
+import entityBeans.HistoryEntityBeanRemoteHome;
+import java.rmi.RemoteException;
+import javax.ejb.CreateException;
 import javax.ejb.SessionBean;
 import javax.ejb.SessionContext;
+import javax.naming.NamingException;
+import moreTools.HistoryMessage;
 
 /**
  *
@@ -15,6 +20,7 @@ import javax.ejb.SessionContext;
 public class HistoryBean implements SessionBean {
     
     private SessionContext context;
+    HistoryEntityBeanRemoteHome historyHome1 = null;
     
     // <editor-fold defaultstate="collapsed" desc="EJB infrastructure methods. Click the + sign on the left to edit the code.">;
 
@@ -56,10 +62,23 @@ public class HistoryBean implements SessionBean {
      * See section 7.11.3 of the EJB 2.1 specification
      */
     public void ejbCreate() {
-        // TODO implement ejbCreate if necessary, acquire resources
-        // This method has access to the JNDI context so resource aquisition
-        // spanning all methods can be performed here such as home interfaces
-        // and data sources.
+        try {
+            historyHome1 = (HistoryEntityBeanRemoteHome) helpers.EJBHelper.lookupHome("ejb/HistoryEntityBean", HistoryEntityBeanRemoteHome.class);
+        } catch (NamingException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void addRecord(HistoryMessage msgobj) throws CreateException, RemoteException {
+        try {
+            historyHome1.create(msgobj.getUserId(), msgobj.getNameTable(), msgobj.getMessage(), msgobj.getObjId());
+        } catch (CreateException ex) {
+            System.out.println("Ошибка при записи истории");
+        }catch (Exception ex) {
+            ex.printStackTrace();
+            return;
+
+        }
     }
     
     // Add business logic below. (Right-click in editor and choose
