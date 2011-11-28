@@ -245,19 +245,25 @@ public class HistoryEntityBean implements EntityBean {
         } catch (NamingException ex) {
             throw new EJBException("Произошла ошибка добавления");
         } catch (SQLException ex) {
+            ex.printStackTrace();
             throw new EJBException("Произошла ошибка добавления");
         } finally {
 
             try {
                 EJBHelper.closeConnection(conn, pst, rs);
             } catch (SQLException ex1) {
+                ex1.printStackTrace();
+                throw new EJBException("Ошибка закрытии соединия с базой");
+            } catch (Exception ex) {
+                ex.printStackTrace();
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
 
 
         }
     }
-     public void ejbPostCreate(long id_user, String name_table, String status, long id_obj) throws CreateException {
+
+    public void ejbPostCreate(long id_user, String name_table, String status, long id_obj) throws CreateException {
     }
 
     public String getStatus() {
