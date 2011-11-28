@@ -23,6 +23,10 @@ public interface ProductBeanRemoteHome extends EJBHome {
 
     public java.util.List findByPrice(double price, boolean flag) throws FinderException, RemoteException;
 
+    public void setParamMessage(long userId, long objId) throws FinderException, RemoteException;
+
+    public void setParamMessage(long userId ) throws FinderException, RemoteException;
+
     public entityBeans.ProductBeanRemote create(java.lang.String description, java.lang.String name_catalog, java.lang.String name, double price) throws CreateException, RemoteException,FinderException;
 
     public entityBeans.ProductBeanRemote create(java.lang.Long id,java.lang.String description, java.lang.String name_catalog, java.lang.String name, double price) throws CreateException, RemoteException,FinderException;

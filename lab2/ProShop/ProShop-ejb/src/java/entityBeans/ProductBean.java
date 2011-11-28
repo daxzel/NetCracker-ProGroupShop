@@ -24,8 +24,10 @@ import javax.ejb.FinderException;
 import javax.ejb.NoSuchEntityException;
 import javax.ejb.ObjectNotFoundException;
 import javax.ejb.RemoveException;
+import javax.jms.JMSException;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+import moreTools.HistoryMessage;
 
 /**
  *
@@ -42,6 +44,8 @@ public class ProductBean implements EntityBean {
     private long id_catalog;
     private String name;
     private double price;
+    private long userId;
+     private long objId;
 
     // <editor-fold defaultstate="collapsed" desc="EJB infrastructure methods. Click the + sign on the left to edit the code.">
     // TODO Add code to acquire and use other enterprise resources (DataSource, JMS, enterprise beans, Web services)
@@ -88,17 +92,23 @@ public class ProductBean implements EntityBean {
         this.entityContext = null;
     }
 
-    public void ejbRemove() throws RemoveException {
+    public void ejbRemove() throws RemoveException, EJBException {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
             conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("DELETE FROM \"PRODUCT\" WHERE ID_PRODUCT = ?");
             pst.setLong(1, id_product);
+
+             EJBHelper.sendMessage(new HistoryMessage(userId,"PRODUCT","Удален продукт",objId));
+
             if (pst.executeUpdate() < 1) {
                 throw new RemoveException("Ошибка удаления");
             }
             // conn.commit();
+
+          } catch (JMSException ex){
+            throw new EJBException("Ошибка");
         } catch (NamingException ex) {
             throw new EJBException("Ошибка при удалении");
         } catch (SQLException ex) {
@@ -134,6 +144,8 @@ public class ProductBean implements EntityBean {
             id_catalog = rs.getLong(3);
             name = rs.getString(4);
             price = rs.getDouble(5);
+
+
         } catch (NamingException ex) {
             throw new EJBException("Ошибка SELECT");
         } catch (SQLException e) {
@@ -150,7 +162,7 @@ public class ProductBean implements EntityBean {
     /**
      * @see javax.ejb.EntityBean#ejbStore()
      */
-    public void ejbStore() {
+    public void ejbStore() throws EJBException {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
@@ -161,9 +173,16 @@ public class ProductBean implements EntityBean {
             pst.setString(3, name);
             pst.setDouble(4, price);
             pst.setLong(5, id_product);
+
+            EJBHelper.sendMessage(new HistoryMessage(userId,"PRODUCT","Изменен продукт",objId));
+
+
+
             if (pst.executeUpdate() < 1) {
                 throw new NoSuchEntityException("Не найдена запись");
             }
+        } catch (JMSException ex){
+            throw new EJBException("Ошибка");
         } catch (NamingException ex) {
             throw new EJBException("Ошибка UPDATE");
         } catch (SQLException e) {
@@ -177,7 +196,7 @@ public class ProductBean implements EntityBean {
         }
     }
 
-    public java.lang.Long ejbCreate(java.lang.String description, java.lang.String name_catalog, java.lang.String name, double price) throws CreateException, FinderException {
+    public java.lang.Long ejbCreate(java.lang.String description, java.lang.String name_catalog, java.lang.String name, double price) throws CreateException, FinderException, EJBException, JMSException {
         this.description = description;
         this.name = name;
         this.price = price;
@@ -200,6 +219,9 @@ public class ProductBean implements EntityBean {
                 throw new CreateException("Ошибка вставки");
             }
             this.id_product = pst.getLong(5);
+
+             EJBHelper.sendMessage(new HistoryMessage(userId,"PRODUCT","Добавлен продукт",objId));
+
             return new Long(this.id_product);
         } catch (RemoteException ex) {
             throw new EJBException("Произошла ошибка добавления");
@@ -475,6 +497,11 @@ public class ProductBean implements EntityBean {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
         }
+    }
+
+    public void setParamMessage(long userId ){
+      this.userId = userId;
+      //this.objId = objId;
     }
 
     public long getIdCatalog() {
