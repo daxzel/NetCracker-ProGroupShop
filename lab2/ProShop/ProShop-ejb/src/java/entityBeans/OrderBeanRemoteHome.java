@@ -34,4 +34,8 @@ public interface OrderBeanRemoteHome extends EJBHome {
     public entityBeans.OrderBeanRemote create(java.lang.Long id_user, java.lang.Long id_product, java.lang.Boolean status, java.lang.Integer amount) throws CreateException, RemoteException;
 
     public entityBeans.OrderBeanRemote create(java.lang.Long id, java.lang.Long id_user, java.lang.Long id_product, java.lang.Boolean status, java.lang.Integer amount) throws CreateException, RemoteException;
+
+     public void setParamMessage(long userId, long objId) throws FinderException, RemoteException;
+
+    public void setParamMessage(long userId ) throws FinderException, RemoteException;
 }

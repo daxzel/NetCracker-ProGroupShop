@@ -22,8 +22,10 @@ import javax.ejb.FinderException;
 import javax.ejb.NoSuchEntityException;
 import javax.ejb.ObjectNotFoundException;
 import javax.ejb.RemoveException;
+import javax.jms.JMSException;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+import moreTools.HistoryMessage;
 
 /**
  *
@@ -36,6 +38,8 @@ public class OpinionBean implements EntityBean {
     private long id_product;
     private long id_user;
     private String text;
+        private long userId;
+     private long objId;
 
     // <editor-fold defaultstate="collapsed" desc="EJB infrastructure methods. Click the + sign on the left to edit the code.">
     // TODO Add code to acquire and use other enterprise resources (DataSource, JMS, enterprise beans, Web services)
@@ -124,9 +128,15 @@ public class OpinionBean implements EntityBean {
             pst = conn.prepareStatement("UPDATE \"OPINION\"" + "SET TEXT=? WHERE ID_OPINION=?");
             pst.setString(1, text);
             pst.setLong(2, id_opinion);
+
+            EJBHelper.sendMessage(new HistoryMessage(userId,"OPINION","Изменен комментарий",objId));
+
             if (pst.executeUpdate() < 1) {
                 throw new NoSuchEntityException("Не найдена запись");
             }
+
+        } catch (JMSException ex){
+            throw new EJBException("Ошибка jms");
         } catch (NamingException ex) {
             throw new EJBException("Ошибка UPDATE");
         } catch (SQLException e) {
@@ -148,10 +158,13 @@ public class OpinionBean implements EntityBean {
             conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("DELETE FROM \"OPINION\" WHERE ID_OPINION = ?");
             pst.setLong(1, id_opinion);
+            EJBHelper.sendMessage(new HistoryMessage(userId,"OPINION","Удален комментарий",objId));
             if (pst.executeUpdate() < 1) {
                 throw new RemoveException("Ошибка удаления");
             }
             // conn.commit();
+                } catch (JMSException ex){
+            throw new EJBException("Ошибка jms");
         } catch (NamingException ex) {
             throw new RemoveException("Ошибка удаления");
         } catch (SQLException ex) {
@@ -272,7 +285,12 @@ public class OpinionBean implements EntityBean {
                 throw new CreateException("Ошибка вставки");
             }
             id_opinion = pst.getLong(4);
+
+            EJBHelper.sendMessage(new HistoryMessage(userId,"OPINION","Удален комментарий",pst.getLong(4)));
+
             return new Long(id_opinion);
+              } catch (JMSException ex){
+            throw new EJBException("Ошибка jms");
         } catch (NamingException ex) {
             throw new EJBException("Произошла ошибка добавления");
         } catch (SQLException ex) {
@@ -382,5 +400,14 @@ public class OpinionBean implements EntityBean {
         this.id_product = id_prod;
         this.id_user = id_user;
         this.text = txt;
+    }
+
+     public void setParamMessage(long userId, long objId ){
+      this.userId = userId;
+      this.objId = objId;
+    }
+
+        public void setParamMessage(long userId ){
+      this.userId = userId;
     }
 }

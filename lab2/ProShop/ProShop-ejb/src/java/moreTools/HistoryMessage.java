@@ -39,4 +39,10 @@ public class HistoryMessage implements java.io.Serializable{
         this.nameTable = nameTable;
         this.message = message;
     }
+
+        public HistoryMessage(String nameTable, String message, long objId ) {
+        this.objId = objId;
+        this.nameTable = nameTable;
+        this.message = message;
+    }
 }

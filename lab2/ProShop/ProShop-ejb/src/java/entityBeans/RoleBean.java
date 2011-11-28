@@ -26,6 +26,8 @@ import javax.ejb.RemoveException;
 import helpers.EJBHelper;
 import javax.ejb.CreateException;
 import javax.ejb.*;
+import javax.jms.JMSException;
+import moreTools.HistoryMessage;
 
 /**
  *
@@ -38,6 +40,8 @@ public class RoleBean implements EntityBean {
     private long id_role;
     private String name;
 
+        private long userId;
+     private long objId;
     // <editor-fold defaultstate="collapsed" desc="EJB infrastructure methods. Click the + sign on the left to edit the code.">
     // TODO Add code to acquire and use other enterprise resources (DataSource, JMS, enterprise beans, Web services)
     // TODO Add business methods
@@ -79,7 +83,7 @@ public class RoleBean implements EntityBean {
     /**
      * @see javax.ejb.EntityBean#ejbRemove()
      */
-    public void ejbRemove() throws RemoveException {
+    public void ejbRemove() throws RemoveException, EJBException {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
@@ -89,6 +93,13 @@ public class RoleBean implements EntityBean {
             if (pst.executeUpdate() < 1) {
                 throw new RemoveException("Ошибка удаления");
             }
+
+            EJBHelper.sendMessage(new HistoryMessage(userId,"ROLE","Удалена роль",objId));
+
+
+
+                         } catch (JMSException ex){
+            throw new EJBException("Ошибка jms");
         } catch (NamingException ex) {
             throw new EJBException("Ошибка DELETE");
         } catch (SQLException e) {
@@ -151,6 +162,10 @@ public class RoleBean implements EntityBean {
             if (pst.executeUpdate() < 1) {
                 throw new NoSuchEntityException("Не найдена запись");
             }
+
+            EJBHelper.sendMessage(new HistoryMessage(userId,"ROLE","Изменена роль",objId));
+        } catch (JMSException ex){
+            throw new EJBException("Ошибка jms");
         } catch (NamingException ex) {
             throw new EJBException("Ошибка UPDATE");
         } catch (SQLException e) {
@@ -260,7 +275,13 @@ public class RoleBean implements EntityBean {
             if (!rs.next()) {
                 throw new CreateException("Ошибка вставки");
             }
+
+            EJBHelper.sendMessage(new HistoryMessage(userId,"ROLE","Добавлена роль",id));
+
             return new Long(id);
+
+         } catch (JMSException ex){
+            throw new EJBException("Ошибка jms");
         } catch (NamingException ex) {
             throw new EJBException("Произошла ошибка добавления");
         } catch (SQLException ex) {
@@ -291,5 +312,13 @@ public class RoleBean implements EntityBean {
     public void setAll(String name)
     {
         this.name=name;
+    }
+     public void setParamMessage(long userId, long objId ){
+      this.userId = userId;
+      this.objId = objId;
+    }
+
+        public void setParamMessage(long userId ){
+      this.userId = userId;
     }
 }

@@ -108,7 +108,7 @@ public class ProductBean implements EntityBean {
             // conn.commit();
 
           } catch (JMSException ex){
-            throw new EJBException("Ошибка");
+            throw new EJBException("Ошибка jms");
         } catch (NamingException ex) {
             throw new EJBException("Ошибка при удалении");
         } catch (SQLException ex) {
@@ -182,7 +182,7 @@ public class ProductBean implements EntityBean {
                 throw new NoSuchEntityException("Не найдена запись");
             }
         } catch (JMSException ex){
-            throw new EJBException("Ошибка");
+            throw new EJBException("Ошибка jms");
         } catch (NamingException ex) {
             throw new EJBException("Ошибка UPDATE");
         } catch (SQLException e) {
@@ -220,7 +220,7 @@ public class ProductBean implements EntityBean {
             }
             this.id_product = pst.getLong(5);
 
-             EJBHelper.sendMessage(new HistoryMessage(userId,"PRODUCT","Добавлен продукт",objId));
+             EJBHelper.sendMessage(new HistoryMessage(userId,"PRODUCT","Добавлен продукт",pst.getLong(5)));
 
             return new Long(this.id_product);
         } catch (RemoteException ex) {
@@ -499,11 +499,14 @@ public class ProductBean implements EntityBean {
         }
     }
 
-    public void setParamMessage(long userId ){
+    public void setParamMessage(long userId, long objId ){
       this.userId = userId;
-      //this.objId = objId;
+      this.objId = objId;
     }
 
+        public void setParamMessage(long userId ){
+      this.userId = userId;
+    }
     public long getIdCatalog() {
         return id_catalog;
     }

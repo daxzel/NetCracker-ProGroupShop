@@ -28,6 +28,8 @@ import javax.ejb.NoSuchEntityException;
 import javax.ejb.ObjectNotFoundException;
 import javax.ejb.RemoveException;
 import helpers.EJBHelper;
+import javax.jms.JMSException;
+import moreTools.HistoryMessage;
 
 /**
  *
@@ -48,6 +50,9 @@ public class UserBean implements EntityBean {
     private String email;
     private long id_role;
     private RoleBeanRemote role;
+
+        private long userId;
+     private long objId;
 
     // <editor-fold defaultstate="collapsed" desc="EJB infrastructure methods. Click the + sign on the left to edit the code.">
     // TODO Add code to acquire and use other enterprise resources (DataSource, JMS, enterprise beans, Web services)
@@ -90,7 +95,7 @@ public class UserBean implements EntityBean {
     /**
      * @see javax.ejb.EntityBean#ejbRemove()
      */
-    public void ejbRemove() throws RemoveException {
+    public void ejbRemove() throws RemoveException, EJBException {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
@@ -100,6 +105,11 @@ public class UserBean implements EntityBean {
             if (pst.executeUpdate() < 1) {
                 throw new RemoveException("Ошибка удаления");
             }
+
+             EJBHelper.sendMessage(new HistoryMessage(userId,"USER","Удален пользователь",objId));
+              } catch (JMSException ex){
+            throw new EJBException("Ошибка jms");
+
             // conn.commit();
         }  catch (NamingException ex) {
             ex.printStackTrace();
@@ -182,6 +192,11 @@ public class UserBean implements EntityBean {
             if (pst.executeUpdate() < 1) {
                 throw new NoSuchEntityException("Не найдена запись");
             }
+
+             EJBHelper.sendMessage(new HistoryMessage(userId,"USER","Изменен пользователь",objId));
+
+        } catch (JMSException ex){
+            throw new EJBException("Ошибка jms");
         } catch (NamingException ex) {
             throw new EJBException("Ошибка UPDATE");
         } catch (SQLException e) {
@@ -460,7 +475,13 @@ public class UserBean implements EntityBean {
             }
 
             id_user = pst.getLong(10);
+
+
+            EJBHelper.sendMessage(new HistoryMessage("USER","Добавлен пользователь",pst.getLong(10)));
+
             return new Long(id_user);
+         } catch (JMSException ex){
+            throw new EJBException("Ошибка jms");
         } catch (NamingException ex) {
             throw new EJBException("Произошла ошибка добавления");
         } catch (SQLException ex) {
@@ -629,5 +650,13 @@ public class UserBean implements EntityBean {
         this.phone=phone;
         this.email=email;
         this.id_role =id_role;
+    }
+     public void setParamMessage(long userId, long objId ){
+      this.userId = userId;
+      this.objId = objId;
+    }
+
+        public void setParamMessage(long userId ){
+      this.userId = userId;
     }
 }

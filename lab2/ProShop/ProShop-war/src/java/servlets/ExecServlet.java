@@ -107,7 +107,7 @@ public class ExecServlet extends HttpServlet {
             UserBeanRemoteHome userHome = (UserBeanRemoteHome) EJBHelper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
             java.sql.Date sqlDate = new java.sql.Date(bornDate.getTime());
             java.lang.Long idRole = new Long(Long.parseLong(role));
-
+          //  userHome.setParamMessage(userId);
             userHome.create(name, surname, otchestvo, nik, password, sqlDate, phone, email, idRole);
             result = "Пользователь зарегестрирован";
         } catch (DuplicateKeyException ex) {
@@ -437,6 +437,7 @@ public class ExecServlet extends HttpServlet {
             UserBeanRemoteHome userHome = (UserBeanRemoteHome) EJBHelper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
             UserBeanRemote user = userHome.findByNik(nik);
 
+            userHome.setParamMessage(usr.getId(), user.getId());
             userHome.remove(new Long(user.getId()));
 
             result = "Удаление завершено";
@@ -540,7 +541,7 @@ public class ExecServlet extends HttpServlet {
     }
 
     protected void addComment(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, IOException, LoginException {
+            HttpServletResponse response) throws ServletException, IOException, LoginException, FinderException {
         RequestDispatcher rd;
         HttpSession session = request.getSession();
         UserBeanRemote usr = JSPHelper.getUser2(session);
@@ -548,6 +549,7 @@ public class ExecServlet extends HttpServlet {
             ProductBeanRemote product = (ProductBeanRemote) session.getAttribute("product");
             String text = request.getParameter("COMMENT");
             OpinionBeanRemoteHome opinionHome = (OpinionBeanRemoteHome) EJBHelper.lookupHome("ejb/OpinionBean", OpinionBeanRemoteHome.class);
+            opinionHome.setParamMessage(usr.getId());
             opinionHome.create(new Long(product.getId()), new Long(usr.getId()), text);
             rd = request.getRequestDispatcher("getOpinion.jsp");
             request.setAttribute("result", product);
@@ -570,7 +572,7 @@ public class ExecServlet extends HttpServlet {
     }
 
     protected void delComment(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, IOException, LoginException {
+            HttpServletResponse response) throws ServletException, IOException, LoginException, FinderException {
 
         RequestDispatcher rd;
         HttpSession session = request.getSession();
@@ -579,6 +581,8 @@ public class ExecServlet extends HttpServlet {
             ProductBeanRemote product = (ProductBeanRemote) session.getAttribute("product");
             String id_op = request.getParameter("ID");
             OpinionBeanRemoteHome opinionHome = (OpinionBeanRemoteHome) EJBHelper.lookupHome("ejb/OpinionBean", OpinionBeanRemoteHome.class);
+
+            opinionHome.setParamMessage(usr.getId(), Long.parseLong(id_op));
             opinionHome.remove(new Long(Long.parseLong(id_op)));
             rd = request.getRequestDispatcher("getOpinion.jsp");
             request.setAttribute("result", product);
@@ -634,7 +638,7 @@ public class ExecServlet extends HttpServlet {
     }
 
     protected void addCatalog(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, ParseException, IOException, LoginException {
+            HttpServletResponse response) throws ServletException, ParseException, IOException, LoginException, FinderException {
         RequestDispatcher rd;
         HttpSession session = request.getSession();
         UserBeanRemote usr = JSPHelper.getUser2(session);
@@ -649,7 +653,9 @@ public class ExecServlet extends HttpServlet {
                 throw new CatalogException("Название каталога не может быть пустым");
             }
             CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
-            catalogHome.create(usr.getId(),nameParent, name);
+            
+            catalogHome.setParamMessage(usr.getId());
+            catalogHome.create(nameParent, name);
             //  DBManager.addCatalog(nameParent, name);
             result = "Добавление каталога завершено";
         
@@ -686,6 +692,7 @@ public class ExecServlet extends HttpServlet {
             }
             CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
             CatalogBeanRemote ctg = catalogHome.findByName(name);
+            catalogHome.setParamMessage(usr.getId(), ctg.getId());
             ctg.remove();
             result = "Удаление завершено";
         } catch (FinderException ex) {
@@ -732,7 +739,7 @@ public class ExecServlet extends HttpServlet {
     }
 
     protected void addOrder(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, ParseException, IOException, LoginException {
+            HttpServletResponse response) throws ServletException, ParseException, IOException, LoginException, FinderException {
         String result = "заказ не добавлен";
         UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
         RequestDispatcher rd;
@@ -743,6 +750,7 @@ public class ExecServlet extends HttpServlet {
             String status = request.getParameter("STATUS");
             String id_product = session.getAttribute("ID_PRODUCT").toString();
             OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
+           orderHome.setParamMessage(usr.getId());
             OrderBeanRemote order = orderHome.create(new Long(usr.getId()), new Long(Long.parseLong(id_product)), new Boolean(Boolean.parseBoolean(status)), new Integer(Integer.parseInt(kol_vo)));
             if ("false".equals(status)) {
                 result = "Заказ добавлен в корзину";
@@ -825,6 +833,7 @@ public class ExecServlet extends HttpServlet {
             String id_order = request.getParameter("id_order");
             OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
             OrderBeanRemote order = orderHome.findByPrimaryKey(new Long(Long.parseLong(id_order)));
+            orderHome.setParamMessage(usr.getId(), order.getId());
             orderHome.remove(new Long(order.getId()));
             request.setAttribute("result", orderHome.findByUserAndStatus(new Long(usr.getId()), false));
             result2 = "Заказ удален из корзины";
@@ -845,7 +854,7 @@ public class ExecServlet extends HttpServlet {
     }
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, FinderException {
         RequestDispatcher rd;
         String result, homepage, forwardAddress;
         String ee = request.getRequestURI();
@@ -984,10 +993,12 @@ public class ExecServlet extends HttpServlet {
     //@Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+       try{
         processRequest(request, response);
+        }  catch (FinderException ex){
+            throw new EJBException("Ошибка doGet");
     }
-
+    }
     /** 
      * Handles the HTTP <code>POST</code> method.
      * @param request servlet request
@@ -999,8 +1010,11 @@ public class ExecServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-
+ try{
         processRequest(request, response);
+   }  catch (FinderException ex){
+            throw new EJBException("Ошибка doPost");
+    }
     }
 
     /** 

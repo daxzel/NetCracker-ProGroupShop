@@ -35,7 +35,8 @@ public class CatalogBean implements EntityBean {
     private long id_catalog;
     private long id_parent;
     private String name;
-    private long objId;
+        private long userId;
+     private long objId;
     // <editor-fold defaultstate="collapsed" desc="EJB infrastructure methods. Click the + sign on the left to edit the code.">
 
     // TODO Add code to acquire and use other enterprise resources (DataSource, JMS, enterprise beans, Web services)
@@ -88,9 +89,15 @@ public class CatalogBean implements EntityBean {
             conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("DELETE FROM \"CATALOG\" WHERE ID_CATALOG = ?");
             pst.setLong(1, id_catalog);
+
+            EJBHelper.sendMessage(new HistoryMessage(userId,"CATALOG","Удален каталог",objId));
+
             if (pst.executeUpdate() < 1) {
                 throw new RemoveException("Ошибка удаления");
             }
+
+                  } catch (JMSException ex){
+            throw new EJBException("Ошибка jms");
         } catch (NamingException ex) {
             throw new EJBException("Ошибка при удалении");
         } catch (SQLException ex) {
@@ -151,9 +158,16 @@ public class CatalogBean implements EntityBean {
             pst.setLong(1, id_parent);
             pst.setString(2, name);
             pst.setLong(3, id_catalog);
+
+             EJBHelper.sendMessage(new HistoryMessage(userId,"CATALOG","Изменен каталог",objId));
+
+
+
             if (pst.executeUpdate() < 1) {
                 throw new NoSuchEntityException("Не найдена запись");
             }
+        } catch (JMSException ex){
+            throw new EJBException("Ошибка jms");
         } catch (NamingException ex) {
             throw new EJBException("Ошибка UPDATE");
         } catch (SQLException e) {
@@ -222,7 +236,7 @@ public class CatalogBean implements EntityBean {
         }
     }
 
-    public java.lang.Long ejbCreate(long userId, String parent_name, String name) throws CreateException, JMSException {
+    public java.lang.Long ejbCreate( String parent_name, String name) throws CreateException, JMSException {
         try {
             ejbFindByName(name);
             throw new DuplicateKeyException("Каталог с таким названием уже существует");
@@ -245,10 +259,10 @@ public class CatalogBean implements EntityBean {
             pst.registerOutParameter(3, Types.INTEGER);
             rs = pst.executeQuery();
            id_catalog = pst.getLong(3); 
-           objId = id_catalog;
+           
             
           
-            EJBHelper.sendMessage(new HistoryMessage(userId,"CATALOG","Добавлена каталог",objId));
+            EJBHelper.sendMessage(new HistoryMessage(userId,"CATALOG","Добавлена каталог",pst.getLong(3)));
          
             if (!rs.next()) {
                 throw new CreateException("Ошибка вставки");
@@ -256,6 +270,9 @@ public class CatalogBean implements EntityBean {
 
             
             return new Long(id_catalog);
+
+        } catch (JMSException ex){
+            throw new EJBException("Ошибка jms");
         } catch (NamingException ex) {
             throw new EJBException("Произошла ошибка добавления");
         } catch (SQLException ex) {
@@ -361,10 +378,10 @@ public class CatalogBean implements EntityBean {
         }
     }
 
-    public void ejbPostCreate(long userId, String parent_name, String name) throws CreateException {
+    public void ejbPostCreate( String parent_name, String name) throws CreateException {
     }
 
-    public void ejbPostCreate(long userId, long id, String parent_name, String name) throws CreateException {
+    public void ejbPostCreate( long id, String parent_name, String name) throws CreateException {
     }
 
     public void ejbPostCreate(long id, long parent_id, String name) throws CreateException {
@@ -454,5 +471,14 @@ public class CatalogBean implements EntityBean {
     {
         this.id_parent = parent_id;
         this.name = name;
+    }
+
+     public void setParamMessage(long userId, long objId ){
+      this.userId = userId;
+      this.objId = objId;
+    }
+
+        public void setParamMessage(long userId ){
+      this.userId = userId;
     }
 }
