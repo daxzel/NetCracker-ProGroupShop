@@ -686,11 +686,17 @@ public class ExecServlet extends HttpServlet {
             }
             CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
             CatalogBeanRemote ctg = catalogHome.findByName(name);
+            Long a =new Long( ctg.getParentId());
+          
             ctg.remove();
+            CatalogBeanRemote parentCtg = catalogHome.findByPrimaryKey(a);
+       
+            parentCtg.sendMessage(usr.getId(), parentCtg.getId(), "\"CATALOG\"", "Удален дочерний каталог");
             result = "Удаление завершено";
         } catch (FinderException ex) {
             result = ex.getMessage();
         } catch (RemoteException ex) {
+            ex.printStackTrace();
             result = "Ошибка при удалении";
         } catch (RemoveException ex) {
             result = "Ошибка при удалении";

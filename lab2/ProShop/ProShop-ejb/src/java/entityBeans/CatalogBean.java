@@ -49,7 +49,7 @@ public class CatalogBean implements EntityBean {
         try {
             //  javax.naming.Context context = new javax.naming.InitialContext();
             try {
-            //    conn = Helper.getConnection();
+                //    conn = Helper.getConnection();
             } catch (Exception e) {
                 e.printStackTrace();
                 throw new EJBException("Проблема с подключением к базе");
@@ -155,9 +155,14 @@ public class CatalogBean implements EntityBean {
                 throw new NoSuchEntityException("Не найдена запись");
             }
         } catch (NamingException ex) {
+            ex.printStackTrace();
             throw new EJBException("Ошибка UPDATE");
         } catch (SQLException e) {
-            throw new EJBException("Ошибка UPDATE");
+            if ("23000".equals(e.getSQLState())) {
+            } else {
+                e.printStackTrace();
+                throw new EJBException("Ошибка UPDATE");
+            }
         } finally {
             try {
                 EJBHelper.closeConnection(conn, pst);
@@ -244,17 +249,17 @@ public class CatalogBean implements EntityBean {
             pst.setString(2, name);
             pst.registerOutParameter(3, Types.INTEGER);
             rs = pst.executeQuery();
-           id_catalog = pst.getLong(3); 
-           objId = id_catalog;
-            
-          
-            EJBHelper.sendMessage(new HistoryMessage(userId,"CATALOG","Добавлена каталог",objId));
-         
+            id_catalog = pst.getLong(3);
+            objId = id_catalog;
+
+
+            EJBHelper.sendMessage(new HistoryMessage(userId, "CATALOG", "Добавлена каталог", objId));
+
             if (!rs.next()) {
                 throw new CreateException("Ошибка вставки");
             }
 
-            
+
             return new Long(id_catalog);
         } catch (NamingException ex) {
             throw new EJBException("Произошла ошибка добавления");
@@ -273,23 +278,17 @@ public class CatalogBean implements EntityBean {
     }
 
     public java.lang.Long ejbCreate(long userId, long id, String parent_name, String name) throws CreateException {
-        try
-        {
+        try {
             ejbFindByName(name);
             throw new DuplicateKeyException("Каталог с таким названием уже существует");
-        } 
-        catch (ObjectNotFoundException ex)
-        {
+        } catch (ObjectNotFoundException ex) {
         }
-        try
-        {
+        try {
             this.id_parent = ejbFindByName(parent_name).longValue();
-        } 
-        catch (ObjectNotFoundException ex)
-        {
+        } catch (ObjectNotFoundException ex) {
             throw new CreateException("Родительский каталог не найден");
         }
-        this.id_catalog=id;
+        this.id_catalog = id;
         this.name = name;
         Connection conn = null;
         CallableStatement pst = null;
@@ -321,16 +320,13 @@ public class CatalogBean implements EntityBean {
     }
 
     public java.lang.Long ejbCreate(long id, long parent_id, String name) throws CreateException {
-        try
-        {
+        try {
             ejbFindByName(name);
             throw new DuplicateKeyException("Каталог с таким названием уже существует");
+        } catch (ObjectNotFoundException ex) {
         }
-        catch (ObjectNotFoundException ex)
-        {
-        }
-        this.id_parent=parent_id;
-        this.id_catalog=id;
+        this.id_parent = parent_id;
+        this.id_catalog = id;
         this.name = name;
         Connection conn = null;
         CallableStatement pst = null;
@@ -450,9 +446,18 @@ public class CatalogBean implements EntityBean {
         this.id_parent = id_parent;
     }
 
-    public void setAll(long parent_id, String name)
-    {
+    public void setAll(long parent_id, String name) {
         this.id_parent = parent_id;
         this.name = name;
+    }
+
+    public void sendMessage(long id_user, long id_obj, String nameTables, String message) {
+        try {
+            EJBHelper.sendMessage(new HistoryMessage(id_user, "CATALOG", "Добавлена каталог", id_obj));
+        } catch (EJBException ex) {
+            ex.printStackTrace();
+        } catch (JMSException ex) {
+            ex.printStackTrace();
+        }
     }
 }

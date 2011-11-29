@@ -30,9 +30,8 @@ public class HistoryMessage implements java.io.Serializable{
         return userId;
     }
         public long getObjId() {
-        return objId;
+         return objId;
     }
-
     public HistoryMessage(long userId, String nameTable, String message, long objId ) {
         this.userId = userId;
         this.objId = objId;
