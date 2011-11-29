@@ -42,5 +42,7 @@ public interface OrderBeanRemote extends EJBObject {
 
     String getNameUser() throws FinderException, RemoteException;
 
-    void setAll(long id_user, long id_product,boolean status, int amount) throws RemoteException;;
+    void setAll(long id_user, long id_product,boolean status, int amount) throws RemoteException;
+
+    void sendMessage(Long id_user,  String nameTables, String message, Long id_obj) throws RemoteException;
 }

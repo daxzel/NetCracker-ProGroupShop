@@ -129,14 +129,14 @@ public class OpinionBean implements EntityBean {
             pst.setString(1, text);
             pst.setLong(2, id_opinion);
 
-            EJBHelper.sendMessage(new HistoryMessage(userId,"OPINION","Изменен комментарий",objId));
+   //         EJBHelper.sendMessage(new HistoryMessage(userId,"OPINION","Изменен комментарий",objId));
 
             if (pst.executeUpdate() < 1) {
                 throw new NoSuchEntityException("Не найдена запись");
             }
 
-        } catch (JMSException ex){
-            throw new EJBException("Ошибка jms");
+     //   } catch (JMSException ex){
+     //       throw new EJBException("Ошибка jms");
         } catch (NamingException ex) {
             throw new EJBException("Ошибка UPDATE");
         } catch (SQLException e) {
@@ -158,14 +158,13 @@ public class OpinionBean implements EntityBean {
             conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("DELETE FROM \"OPINION\" WHERE ID_OPINION = ?");
             pst.setLong(1, id_opinion);
-            EJBHelper.sendMessage(new HistoryMessage(userId,"OPINION","Удален комментарий",objId));
+         //   EJBHelper.sendMessage(new HistoryMessage(userId,"OPINION","Удален комментарий",objId));
             if (pst.executeUpdate() < 1) {
                 throw new RemoveException("Ошибка удаления");
             }
             // conn.commit();
-                } catch (JMSException ex){
-            throw new EJBException("Ошибка jms");
-        } catch (NamingException ex) {
+             //   } catch (JMSException ex){
+         } catch (NamingException ex) {
             throw new RemoveException("Ошибка удаления");
         } catch (SQLException ex) {
             throw new RemoveException("Ошибка удаления");
@@ -286,11 +285,11 @@ public class OpinionBean implements EntityBean {
             }
             id_opinion = pst.getLong(4);
 
-            EJBHelper.sendMessage(new HistoryMessage(userId,"OPINION","Удален комментарий",pst.getLong(4)));
+           // EJBHelper.sendMessage(new HistoryMessage(userId,"OPINION","Удален комментарий",pst.getLong(4)));
 
             return new Long(id_opinion);
-              } catch (JMSException ex){
-            throw new EJBException("Ошибка jms");
+            //  } catch (JMSException ex){
+           // throw new EJBException("Ошибка jms");
         } catch (NamingException ex) {
             throw new EJBException("Произошла ошибка добавления");
         } catch (SQLException ex) {
@@ -409,5 +408,15 @@ public class OpinionBean implements EntityBean {
 
         public void setParamMessage(long userId ){
       this.userId = userId;
+    }
+
+         public void sendMessage(Long id_user,  String nameTables, String message, Long id_obj) {
+        try {
+            EJBHelper.sendMessage(new HistoryMessage(id_user, nameTables, message, id_obj));
+        } catch (EJBException ex) {
+            ex.printStackTrace();
+        } catch (JMSException ex) {
+            ex.printStackTrace();
+        }
     }
 }

@@ -94,12 +94,12 @@ public class RoleBean implements EntityBean {
                 throw new RemoveException("Ошибка удаления");
             }
 
-            EJBHelper.sendMessage(new HistoryMessage(userId,"ROLE","Удалена роль",objId));
+         //   EJBHelper.sendMessage(new HistoryMessage(userId,"ROLE","Удалена роль",objId));
 
 
 
-                         } catch (JMSException ex){
-            throw new EJBException("Ошибка jms");
+          //               } catch (JMSException ex){
+          //  throw new EJBException("Ошибка jms");
         } catch (NamingException ex) {
             throw new EJBException("Ошибка DELETE");
         } catch (SQLException e) {
@@ -163,9 +163,9 @@ public class RoleBean implements EntityBean {
                 throw new NoSuchEntityException("Не найдена запись");
             }
 
-            EJBHelper.sendMessage(new HistoryMessage(userId,"ROLE","Изменена роль",objId));
-        } catch (JMSException ex){
-            throw new EJBException("Ошибка jms");
+         //   EJBHelper.sendMessage(new HistoryMessage(userId,"ROLE","Изменена роль",objId));
+     //   } catch (JMSException ex){
+       //     throw new EJBException("Ошибка jms");
         } catch (NamingException ex) {
             throw new EJBException("Ошибка UPDATE");
         } catch (SQLException e) {
@@ -276,12 +276,12 @@ public class RoleBean implements EntityBean {
                 throw new CreateException("Ошибка вставки");
             }
 
-            EJBHelper.sendMessage(new HistoryMessage(userId,"ROLE","Добавлена роль",id));
+          //  EJBHelper.sendMessage(new HistoryMessage(userId,"ROLE","Добавлена роль",id));
 
             return new Long(id);
 
-         } catch (JMSException ex){
-            throw new EJBException("Ошибка jms");
+         //} catch (JMSException ex){
+         //   throw new EJBException("Ошибка jms");
         } catch (NamingException ex) {
             throw new EJBException("Произошла ошибка добавления");
         } catch (SQLException ex) {
@@ -320,5 +320,15 @@ public class RoleBean implements EntityBean {
 
         public void setParamMessage(long userId ){
       this.userId = userId;
+    }
+
+         public void sendMessage(Long id_user,  String nameTables, String message, Long id_obj) {
+        try {
+            EJBHelper.sendMessage(new HistoryMessage(id_user, nameTables, message, id_obj));
+        } catch (EJBException ex) {
+            ex.printStackTrace();
+        } catch (JMSException ex) {
+            ex.printStackTrace();
+        }
     }
 }

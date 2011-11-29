@@ -104,11 +104,11 @@ public class OrderBean implements EntityBean {
                 throw new RemoveException("Ошибка удаления");
             }
 
-            EJBHelper.sendMessage(new HistoryMessage(userId,"ORDER","Удален заказ",objId));
+        //    EJBHelper.sendMessage(new HistoryMessage(userId,"ORDER","Удален заказ",objId));
 
 
-         } catch (JMSException ex){
-            throw new EJBException("Ошибка jms");
+       //  } catch (JMSException ex){
+       //     throw new EJBException("Ошибка jms");
         } catch (NamingException ex) {
             throw new EJBException("Ошибка при удалении");
         } catch (SQLException ex) {
@@ -181,10 +181,10 @@ public class OrderBean implements EntityBean {
                 throw new NoSuchEntityException("Не найдена запись");
             }
 
-            EJBHelper.sendMessage(new HistoryMessage(userId,"ORDER","Изменен заказ",objId));
+        //    EJBHelper.sendMessage(new HistoryMessage(userId,"ORDER","Изменен заказ",objId));
 
-                 } catch (JMSException ex){
-            throw new EJBException("Ошибка jms");
+         //        } catch (JMSException ex){
+        //    throw new EJBException("Ошибка jms");
         } catch (NamingException ex) {
             throw new EJBException("Ошибка UPDATE");
         } catch (SQLException e) {
@@ -338,12 +338,12 @@ public class OrderBean implements EntityBean {
             }
             this.id_order = pst.getLong(5);
 
-            EJBHelper.sendMessage(new HistoryMessage(userId,"ORDER","Добавлен заказ",pst.getLong(5)));
+           /// EJBHelper.sendMessage(new HistoryMessage(userId,"ORDER","Добавлен заказ",pst.getLong(5)));
 
             return new Long(this.id_order);
 
-                         } catch (JMSException ex){
-            throw new EJBException("Ошибка jms");
+           // //             } catch (JMSException ex){
+           // throw new EJBException("Ошибка jms");
         } catch (NamingException ex) {
             throw new EJBException("Произошла ошибка добавления");
         } catch (SQLException ex) {
@@ -482,5 +482,15 @@ public class OrderBean implements EntityBean {
 
         public void setParamMessage(long userId ){
       this.userId = userId;
+    }
+
+         public void sendMessage(Long id_user,  String nameTables, String message, Long id_obj) {
+        try {
+            EJBHelper.sendMessage(new HistoryMessage(id_user, nameTables, message, id_obj));
+        } catch (EJBException ex) {
+            ex.printStackTrace();
+        } catch (JMSException ex) {
+            ex.printStackTrace();
+        }
     }
 }

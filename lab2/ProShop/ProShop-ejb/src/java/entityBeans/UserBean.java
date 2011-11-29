@@ -106,8 +106,8 @@ public class UserBean implements EntityBean {
                 throw new RemoveException("Ошибка удаления");
             }
 
-             EJBHelper.sendMessage(new HistoryMessage(userId,"USER","Удален пользователь",objId));
-              } catch (JMSException ex){
+       //      EJBHelper.sendMessage(new HistoryMessage(userId,"USER","Удален пользователь",objId));
+          //    } catch (JMSException ex){
             throw new EJBException("Ошибка jms");
 
             // conn.commit();
@@ -193,9 +193,9 @@ public class UserBean implements EntityBean {
                 throw new NoSuchEntityException("Не найдена запись");
             }
 
-             EJBHelper.sendMessage(new HistoryMessage(userId,"USER","Изменен пользователь",objId));
+          //   EJBHelper.sendMessage(new HistoryMessage(userId,"USER","Изменен пользователь",objId));
 
-        } catch (JMSException ex){
+      //  } catch (JMSException ex){
             throw new EJBException("Ошибка jms");
         } catch (NamingException ex) {
             throw new EJBException("Ошибка UPDATE");
@@ -477,11 +477,11 @@ public class UserBean implements EntityBean {
             id_user = pst.getLong(10);
 
 
-            EJBHelper.sendMessage(new HistoryMessage("USER","Добавлен пользователь",pst.getLong(10)));
+           // EJBHelper.sendMessage(new HistoryMessage("USER","Добавлен пользователь",pst.getLong(10)));
 
             return new Long(id_user);
-         } catch (JMSException ex){
-            throw new EJBException("Ошибка jms");
+      //   } catch (JMSException ex){
+         //   throw new EJBException("Ошибка jms");
         } catch (NamingException ex) {
             throw new EJBException("Произошла ошибка добавления");
         } catch (SQLException ex) {
@@ -658,5 +658,15 @@ public class UserBean implements EntityBean {
 
         public void setParamMessage(long userId ){
       this.userId = userId;
+    }
+
+         public void sendMessage(Long id_user,  String nameTables, String message, Long id_obj) {
+        try {
+            EJBHelper.sendMessage(new HistoryMessage(id_user, nameTables, message, id_obj));
+        } catch (EJBException ex) {
+            ex.printStackTrace();
+        } catch (JMSException ex) {
+            ex.printStackTrace();
+        }
     }
 }

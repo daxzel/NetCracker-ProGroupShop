@@ -45,4 +45,6 @@ public interface ImageBeanRemote extends EJBObject {
 
     void setAll(long i_id_product,String i_name, moreTools.SerializbleImage image,  int i_width, int i_heaight) throws RemoteException;
 
+    void sendMessage(Long id_user,  String nameTables, String message, Long id_obj) throws RemoteException;
+
 }

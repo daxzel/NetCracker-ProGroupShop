@@ -227,7 +227,7 @@ public class CatalogBean implements EntityBean {
         }
     }
 
-    public java.lang.Long ejbCreate(long userId, String parent_name, String name) throws CreateException, JMSException {
+    public java.lang.Long ejbCreate(String parent_name, String name) throws CreateException, JMSException {
         try {
             ejbFindByName(name);
             throw new DuplicateKeyException("Каталог с таким названием уже существует");
@@ -249,11 +249,11 @@ public class CatalogBean implements EntityBean {
             pst.setString(2, name);
             pst.registerOutParameter(3, Types.INTEGER);
             rs = pst.executeQuery();
-            id_catalog = pst.getLong(3);
-            objId = id_catalog;
+           // id_catalog = pst.getLong(3);
+           // objId = id_catalog;
 
 
-            EJBHelper.sendMessage(new HistoryMessage(userId, "CATALOG", "Добавлена каталог", objId));
+          //  EJBHelper.sendMessage(new HistoryMessage(userId, "CATALOG", "Добавлена каталог", objId));
 
             if (!rs.next()) {
                 throw new CreateException("Ошибка вставки");
@@ -451,9 +451,9 @@ public class CatalogBean implements EntityBean {
         this.name = name;
     }
 
-    public void sendMessage(long id_user, long id_obj, String nameTables, String message) {
+    public void sendMessage(Long id_user,  String nameTables, String message, Long id_obj) {
         try {
-            EJBHelper.sendMessage(new HistoryMessage(id_user, "CATALOG", "Добавлена каталог", id_obj));
+            EJBHelper.sendMessage(new HistoryMessage(id_user, nameTables, message, id_obj));
         } catch (EJBException ex) {
             ex.printStackTrace();
         } catch (JMSException ex) {

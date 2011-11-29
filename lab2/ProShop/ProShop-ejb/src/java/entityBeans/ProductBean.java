@@ -100,15 +100,15 @@ public class ProductBean implements EntityBean {
             pst = conn.prepareStatement("DELETE FROM \"PRODUCT\" WHERE ID_PRODUCT = ?");
             pst.setLong(1, id_product);
 
-             EJBHelper.sendMessage(new HistoryMessage(userId,"PRODUCT","Удален продукт",objId));
+           //  EJBHelper.sendMessage(new HistoryMessage(userId,"PRODUCT","Удален продукт",objId));
 
             if (pst.executeUpdate() < 1) {
                 throw new RemoveException("Ошибка удаления");
             }
             // conn.commit();
 
-          } catch (JMSException ex){
-            throw new EJBException("Ошибка jms");
+        //  } catch (JMSException ex){
+       //     throw new EJBException("Ошибка jms");
         } catch (NamingException ex) {
             throw new EJBException("Ошибка при удалении");
         } catch (SQLException ex) {
@@ -174,15 +174,15 @@ public class ProductBean implements EntityBean {
             pst.setDouble(4, price);
             pst.setLong(5, id_product);
 
-            EJBHelper.sendMessage(new HistoryMessage(userId,"PRODUCT","Изменен продукт",objId));
+          //  EJBHelper.sendMessage(new HistoryMessage(userId,"PRODUCT","Изменен продукт",objId));
 
 
 
             if (pst.executeUpdate() < 1) {
                 throw new NoSuchEntityException("Не найдена запись");
             }
-        } catch (JMSException ex){
-            throw new EJBException("Ошибка jms");
+       // } catch (JMSException ex){
+        //    throw new EJBException("Ошибка jms");
         } catch (NamingException ex) {
             throw new EJBException("Ошибка UPDATE");
         } catch (SQLException e) {
@@ -220,7 +220,7 @@ public class ProductBean implements EntityBean {
             }
             this.id_product = pst.getLong(5);
 
-             EJBHelper.sendMessage(new HistoryMessage(userId,"PRODUCT","Добавлен продукт",pst.getLong(5)));
+           //  EJBHelper.sendMessage(new HistoryMessage(userId,"PRODUCT","Добавлен продукт",pst.getLong(5)));
 
             return new Long(this.id_product);
         } catch (RemoteException ex) {
@@ -564,6 +564,16 @@ public class ProductBean implements EntityBean {
         this.id_catalog = id_catalog;
         this.name = name;
         this.price = price;
+    }
+
+     public void sendMessage(Long id_user,  String nameTables, String message, Long id_obj) {
+        try {
+            EJBHelper.sendMessage(new HistoryMessage(id_user, nameTables, message, id_obj));
+        } catch (EJBException ex) {
+            ex.printStackTrace();
+        } catch (JMSException ex) {
+            ex.printStackTrace();
+        }
     }
     
 }

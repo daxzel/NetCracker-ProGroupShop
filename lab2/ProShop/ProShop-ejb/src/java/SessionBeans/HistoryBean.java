@@ -71,7 +71,7 @@ public class HistoryBean implements SessionBean {
 
     public void addRecord(HistoryMessage msgobj) throws CreateException, RemoteException {
         try {
-            historyHome1.create(msgobj.getUserId(), msgobj.getNameTable(), msgobj.getMessage(), msgobj.getObjId());
+            historyHome1.create(msgobj.getUserId().longValue(), msgobj.getNameTable(), msgobj.getMessage(), msgobj.getObjId().longValue());
         } catch (CreateException ex) {
             System.out.println("Ошибка при записи истории");
         }catch (Exception ex) {

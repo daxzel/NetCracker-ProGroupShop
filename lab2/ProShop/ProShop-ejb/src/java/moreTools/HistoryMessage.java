@@ -12,8 +12,8 @@ package moreTools;
  */
 public class HistoryMessage implements java.io.Serializable{
 
-    private long userId;
-    private long objId;
+    private Long userId;
+    private Long objId;
     private String nameTable;
     private String message;
 
@@ -26,20 +26,20 @@ public class HistoryMessage implements java.io.Serializable{
         return nameTable;
     }
 
-    public long getUserId() {
+    public Long getUserId() {
         return userId;
     }
-        public long getObjId() {
+        public Long getObjId() {
          return objId;
     }
-    public HistoryMessage(long userId, String nameTable, String message, long objId ) {
+    public HistoryMessage(Long userId, String nameTable, String message, Long objId ) {
         this.userId = userId;
         this.objId = objId;
         this.nameTable = nameTable;
         this.message = message;
     }
 
-        public HistoryMessage(String nameTable, String message, long objId ) {
+        public HistoryMessage(String nameTable, String message, Long objId ) {
         this.objId = objId;
         this.nameTable = nameTable;
         this.message = message;

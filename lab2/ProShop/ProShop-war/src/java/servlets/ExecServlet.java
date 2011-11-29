@@ -107,8 +107,13 @@ public class ExecServlet extends HttpServlet {
             UserBeanRemoteHome userHome = (UserBeanRemoteHome) EJBHelper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
             java.sql.Date sqlDate = new java.sql.Date(bornDate.getTime());
             java.lang.Long idRole = new Long(Long.parseLong(role));
+  
+            UserBeanRemote usr = userHome.create(name, surname, otchestvo, nik, password, sqlDate, phone, email, idRole);
 
-            userHome.create(name, surname, otchestvo, nik, password, sqlDate, phone, email, idRole);
+            Long ido = new  Long(usr.getId());
+            usr.sendMessage(null, "\"USER\"", "Зарегестрирован пользователь " + nik, ido);
+            
+            
             result = "Пользователь зарегестрирован";
         } catch (DuplicateKeyException ex) {
             result = ex.getMessage();
@@ -206,8 +211,13 @@ public class ExecServlet extends HttpServlet {
             price = Double.parseDouble(priceS);
 
             ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
-            productHome.setParamMessage(usr.getId());
-            productHome.create(description, name_catalog, name, price);
+           // productHome.setParamMessage(usr.getId());
+            ProductBeanRemote pbr = productHome.create(description, name_catalog, name, price);
+
+            Long idu = new  Long(usr.getId());
+            Long ido = new Long(pbr.getId());
+            pbr.sendMessage(idu,"PRODUCT" , "Добавлен продукт" + name, ido);
+
             result = "Продукт добавлен";
             request.setAttribute("NAME", name);
             request.setAttribute("DESCRIPTION", description);
@@ -316,6 +326,9 @@ public class ExecServlet extends HttpServlet {
             usr.setBorn(new java.sql.Date(born.getTime()));
             usr.setPhone(phone);
             usr.setEmail(email);
+
+
+
             if (type.equals("updateUser")) {
                 long id_role = Long.parseLong(request.getParameter("ID_ROLE"));
                 usr.setRoleId(new Long(id_role));
@@ -329,6 +342,9 @@ public class ExecServlet extends HttpServlet {
                 request.setAttribute("DO", "upUser");
                 session.setAttribute("usrOld", usr);
             }
+
+          //  usr.sendMessage(null, "\"USER\"", "Отредактирован пользователь " + usr.getNik(), null);
+
             result = "профиль отредактирован";
         } catch (UpdateException ex) {
             result = ex.getMessage();
@@ -438,6 +454,7 @@ public class ExecServlet extends HttpServlet {
             UserBeanRemote user = userHome.findByNik(nik);
 
             userHome.remove(new Long(user.getId()));
+            user.sendMessage(new Long(usr.getId()), "\"USER\"", "Удален пользователь " + nik, null);
 
             result = "Удаление завершено";
         } catch (ObjectNotFoundException ex) {
@@ -548,7 +565,12 @@ public class ExecServlet extends HttpServlet {
             ProductBeanRemote product = (ProductBeanRemote) session.getAttribute("product");
             String text = request.getParameter("COMMENT");
             OpinionBeanRemoteHome opinionHome = (OpinionBeanRemoteHome) EJBHelper.lookupHome("ejb/OpinionBean", OpinionBeanRemoteHome.class);
-            opinionHome.create(new Long(product.getId()), new Long(usr.getId()), text);
+            OpinionBeanRemote obr =  opinionHome.create(new Long(product.getId()), new Long(usr.getId()), text);
+          
+           
+
+            obr.sendMessage(new Long(usr.getId()), "\"OPINION\"", "Добавлен коментарий о продукте " +product.getName()  , new Long (obr.getIdOpinion()));
+
             rd = request.getRequestDispatcher("getOpinion.jsp");
             request.setAttribute("result", product);
             rd.forward(request, response);
@@ -579,7 +601,11 @@ public class ExecServlet extends HttpServlet {
             ProductBeanRemote product = (ProductBeanRemote) session.getAttribute("product");
             String id_op = request.getParameter("ID");
             OpinionBeanRemoteHome opinionHome = (OpinionBeanRemoteHome) EJBHelper.lookupHome("ejb/OpinionBean", OpinionBeanRemoteHome.class);
+            OpinionBeanRemote obr = null;
             opinionHome.remove(new Long(Long.parseLong(id_op)));
+            
+            obr.sendMessage(new Long(usr.getId()), "\"OPINION\"", "Удален комментарий", null);
+
             rd = request.getRequestDispatcher("getOpinion.jsp");
             request.setAttribute("result", product);
             rd.forward(request, response);
@@ -649,7 +675,13 @@ public class ExecServlet extends HttpServlet {
                 throw new CatalogException("Название каталога не может быть пустым");
             }
             CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
-            catalogHome.create(usr.getId(),nameParent, name);
+            CatalogBeanRemote ctg = catalogHome.create(nameParent, name); 
+            //catalogHome.create(nameParent, name);
+            
+            Long idu  =new Long (usr.getId());
+            Long ido  =new Long (ctg.getId());
+            
+            ctg.sendMessage(idu, "\"CATALOG\"", "Добавлен каталог "+ name, ido );
             //  DBManager.addCatalog(nameParent, name);
             result = "Добавление каталога завершено";
         
@@ -686,12 +718,14 @@ public class ExecServlet extends HttpServlet {
             }
             CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
             CatalogBeanRemote ctg = catalogHome.findByName(name);
-            Long a =new Long( ctg.getParentId());
+            Long idp =new Long( ctg.getParentId());
+            Long idu  =new Long (usr.getId());
           
             ctg.remove();
-            CatalogBeanRemote parentCtg = catalogHome.findByPrimaryKey(a);
+            CatalogBeanRemote parentCtg = catalogHome.findByPrimaryKey(idp);
        
-            parentCtg.sendMessage(usr.getId(), parentCtg.getId(), "\"CATALOG\"", "Удален дочерний каталог");
+            Long ido = new Long (parentCtg.getId());
+            parentCtg.sendMessage(idu, "\"CATALOG\"", "Удален дочерний каталог "+ name, ido );
             result = "Удаление завершено";
         } catch (FinderException ex) {
             result = ex.getMessage();
@@ -750,6 +784,9 @@ public class ExecServlet extends HttpServlet {
             String id_product = session.getAttribute("ID_PRODUCT").toString();
             OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
             OrderBeanRemote order = orderHome.create(new Long(usr.getId()), new Long(Long.parseLong(id_product)), new Boolean(Boolean.parseBoolean(status)), new Integer(Integer.parseInt(kol_vo)));
+
+            order.sendMessage(new Long (usr.getId()), "\"ORDER\"", "Добавлен заказ", new Long ( order.getId()));
+
             if ("false".equals(status)) {
                 result = "Заказ добавлен в корзину";
             } else {
@@ -832,6 +869,9 @@ public class ExecServlet extends HttpServlet {
             OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
             OrderBeanRemote order = orderHome.findByPrimaryKey(new Long(Long.parseLong(id_order)));
             orderHome.remove(new Long(order.getId()));
+            
+            order.sendMessage(new Long (usr.getId()), "\"ORDER\"", "Удален заказ", null);
+
             request.setAttribute("result", orderHome.findByUserAndStatus(new Long(usr.getId()), false));
             result2 = "Заказ удален из корзины";
         } catch (RemoveException ex) {
