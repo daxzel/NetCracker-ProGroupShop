@@ -27,5 +27,8 @@ public interface OpinionBeanRemoteHome extends EJBHome {
     public entityBeans.OpinionBeanRemote create(java.lang.Long id_pr, java.lang.Long id_usr, String text) throws CreateException, RemoteException;
 
     public entityBeans.OpinionBeanRemote create(java.lang.Long id, java.lang.Long id_pr, java.lang.Long id_usr, String text) throws CreateException, RemoteException;
-    
+
+     public void setParamMessage(long userId, long objId) throws FinderException, RemoteException;
+
+    public void setParamMessage(long userId ) throws FinderException, RemoteException;
 }

@@ -15,6 +15,8 @@ import java.sql.*;
 import java.util.*;
 import java.awt.*;
 import java.io.*;
+import javax.jms.JMSException;
+import moreTools.HistoryMessage;
 /**
  *
  * @author Admin
@@ -28,6 +30,8 @@ public class ImageBean implements EntityBean {
     private String name;
     private int width;
     private int heaight;
+        private long userId;
+     private long objId;
     
     // <editor-fold defaultstate="collapsed" desc="EJB infrastructure methods. Click on the + sign on the left to edit the code.">
 
@@ -92,10 +96,16 @@ public class ImageBean implements EntityBean {
             conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("DELETE FROM IMAGE WHERE ID_IMG = ?");
             pst.setLong(1, id_img);
+            
+            EJBHelper.sendMessage(new HistoryMessage(userId,"IMAGE","Удалено изображение",objId));
+            
             if (pst.executeUpdate() < 1) {
                 throw new RemoveException("Ошибка удаления");
             }
             // conn.commit();
+               
+        } catch (JMSException ex){
+            throw new EJBException("Ошибка jms");    
         }  catch (NamingException ex) {
             ex.printStackTrace();
         } catch (SQLException ex) {
@@ -192,9 +202,14 @@ public class ImageBean implements EntityBean {
             pst.setInt(3, width);
             pst.setInt(4, heaight);
             pst.setLong(5, id_img);
+            
+            EJBHelper.sendMessage(new HistoryMessage(userId,"IMAGE","Изменено изображение",objId));
+            
             if (pst.executeUpdate() < 1) {
                 throw new NoSuchEntityException("Не найдена запись");
             }
+                } catch (JMSException ex){
+            throw new EJBException("Ошибка jms");    
         } catch (NamingException ex) {
             throw new EJBException("Ошибка UPDATE");
         } catch (SQLException e) {
@@ -304,7 +319,13 @@ public class ImageBean implements EntityBean {
             pst.setLong(2, id_img);
             pst.executeQuery();
 
+            EJBHelper.sendMessage(new HistoryMessage(userId,"IMAGE","Добавлено изображение",pst.getLong(5)));
+                   
+
             return new Long(id_img);
+
+        } catch (JMSException ex){
+            throw new EJBException("Ошибка jms");    
         } catch (NamingException ex) {
             throw new EJBException("Произошла ошибка добавления");
         } catch (Exception ex) {
@@ -498,6 +519,15 @@ public class ImageBean implements EntityBean {
         this.setImageI(image);
         this.width = i_width;
         this.heaight = i_heaight;
+    }
+
+     public void setParamMessage(long userId, long objId ){
+      this.userId = userId;
+      this.objId = objId;
+    }
+
+        public void setParamMessage(long userId ){
+      this.userId = userId;
     }
 
 }
