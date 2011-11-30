@@ -71,7 +71,7 @@ public class HistoryEntityBean implements EntityBean {
         PreparedStatement pst = null;
         try {
             conn = EJBHelper.getConnection();
-            pst = conn.prepareStatement("DELETE FROM \"HISTORY\" WHERE ID_ROLE = ?");
+            pst = conn.prepareStatement("DELETE FROM \"HISTORY\" WHERE ID_HIS = ?");
             pst.setLong(1, id_his);
             if (pst.executeUpdate() < 1) {
                 throw new RemoveException("Ошибка удаления");
@@ -137,6 +137,7 @@ public class HistoryEntityBean implements EntityBean {
         PreparedStatement pst = null;
         try {
             conn = EJBHelper.getConnection();
+
             pst = conn.prepareStatement("UPDATE \"HISTORY\"" + "SET ID_USER =?, NAME_TABLE=?,STATUS=?,DATE_UPDATE=?,ID_OBJ=? WHERE ID_HIS=?");
             pst.setLong(1, id_user);
             pst.setString(2, name_table);
@@ -144,6 +145,7 @@ public class HistoryEntityBean implements EntityBean {
             pst.setDate(4, date_update);
             pst.setLong(5, id_obj);
             pst.setLong(6, id_his);
+         
             if (pst.executeUpdate() < 1) {
                 throw new NoSuchEntityException("Не найдена запись");
             }

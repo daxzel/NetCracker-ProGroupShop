@@ -111,7 +111,7 @@ public class ExecServlet extends HttpServlet {
             UserBeanRemote usr = userHome.create(name, surname, otchestvo, nik, password, sqlDate, phone, email, idRole);
 
             Long ido = new  Long(usr.getId());
-            usr.sendMessage(null, "\"USER\"", "Зарегестрирован пользователь " + nik, ido);
+            usr.sendMessage(new Long(usr.getId()), "\"USER\"", "Зарегестрирован пользователь " + nik, ido);
             
             
             result = "Пользователь зарегестрирован";
@@ -452,9 +452,10 @@ public class ExecServlet extends HttpServlet {
             String nik = request.getParameter("NIK");
             UserBeanRemoteHome userHome = (UserBeanRemoteHome) EJBHelper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
             UserBeanRemote user = userHome.findByNik(nik);
-
+         //   Long a =
+          //  user.sendMessage(new Long(usr.getId()), "\"USER\"", "Удален пользователь " + nik, null);
             userHome.remove(new Long(user.getId()));
-            user.sendMessage(new Long(usr.getId()), "\"USER\"", "Удален пользователь " + nik, null);
+            usr.sendMessage(new Long(usr.getId()), "\"USER\"", "Удален пользователь " + nik, null);
 
             result = "Удаление завершено";
         } catch (ObjectNotFoundException ex) {
@@ -604,7 +605,7 @@ public class ExecServlet extends HttpServlet {
             OpinionBeanRemote obr = null;
             opinionHome.remove(new Long(Long.parseLong(id_op)));
             
-            obr.sendMessage(new Long(usr.getId()), "\"OPINION\"", "Удален комментарий", null);
+            usr.sendMessage(new Long(usr.getId()), "\"OPINION\"", "Удален комментарий", null);
 
             rd = request.getRequestDispatcher("getOpinion.jsp");
             request.setAttribute("result", product);
@@ -719,14 +720,15 @@ public class ExecServlet extends HttpServlet {
             }
             CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
             CatalogBeanRemote ctg = catalogHome.findByName(name);
+            Long idc =new Long( ctg.getId());
             Long idp =new Long( ctg.getParentId());
             Long idu  =new Long (usr.getId());
            
             ctg.remove();
             CatalogBeanRemote parentCtg = catalogHome.findByPrimaryKey(idp);
        
-            Long ido = new Long (parentCtg.getId());
-            parentCtg.sendMessage(idu, "\"CATALOG\"", "Удален дочерний каталог название: "+name+"  id: "+ctg.getId(), ido );
+           
+            parentCtg.sendMessage(idu, "\"CATALOG\"", "Удален дочерний каталог название: "+name+"  id: "+idc, idp );
             result = "Удаление завершено";
         } catch (FinderException ex) {
             result = ex.getMessage();
@@ -871,7 +873,7 @@ public class ExecServlet extends HttpServlet {
             OrderBeanRemote order = orderHome.findByPrimaryKey(new Long(Long.parseLong(id_order)));
             orderHome.remove(new Long(order.getId()));
             
-            order.sendMessage(new Long (usr.getId()), "\"ORDER\"", "Удален заказ", null);
+            usr.sendMessage(new Long (usr.getId()), "\"ORDER\"", "Удален заказ", null);
 
             request.setAttribute("result", orderHome.findByUserAndStatus(new Long(usr.getId()), false));
             result2 = "Заказ удален из корзины";
