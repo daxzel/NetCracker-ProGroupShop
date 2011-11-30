@@ -19,5 +19,9 @@ public interface HistoryEntityBeanRemoteHome extends EJBHome {
 
     entityBeans.HistoryEntityBeanRemote findByIdObjAndNameTable(java.lang.Long id, String nameTable) throws FinderException, RemoteException;
 
-    public entityBeans.HistoryEntityBean create (long id_user, String name_table, String status, long id_obj) throws CreateException, RemoteException;
+    public entityBeans.HistoryEntityBean create(long id_user, String name_table, String status, long id_obj) throws CreateException, RemoteException;
+
+    public entityBeans.HistoryEntityBean create(String name_table, String status, long id_obj) throws CreateException, RemoteException;
+
+    public entityBeans.HistoryEntityBean create(long id_user, String name_table, String status) throws CreateException, RemoteException;
 }

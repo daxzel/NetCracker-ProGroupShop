@@ -24,7 +24,5 @@ public interface RoleBeanRemoteHome extends EJBHome {
 
     RoleBeanRemote create(long id, String name) throws CreateException, RemoteException;
 
-     public void setParamMessage(long userId, long objId) throws FinderException, RemoteException;
-
-    public void setParamMessage(long userId ) throws FinderException, RemoteException;
+  
 }

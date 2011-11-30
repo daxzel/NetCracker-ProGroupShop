@@ -682,6 +682,7 @@ public class ExecServlet extends HttpServlet {
             Long ido  =new Long (ctg.getId());
             
             ctg.sendMessage(idu, "\"CATALOG\"", "Добавлен каталог "+ name, ido );
+            ctg.sendMessage(idu,  "\"CATALOG\"", "Добавлен дочерний каталог название: "+name+"  id: "+ctg.getId(), new Long(ctg.getParentId()));
             //  DBManager.addCatalog(nameParent, name);
             result = "Добавление каталога завершено";
         
@@ -720,12 +721,12 @@ public class ExecServlet extends HttpServlet {
             CatalogBeanRemote ctg = catalogHome.findByName(name);
             Long idp =new Long( ctg.getParentId());
             Long idu  =new Long (usr.getId());
-          
+           
             ctg.remove();
             CatalogBeanRemote parentCtg = catalogHome.findByPrimaryKey(idp);
        
             Long ido = new Long (parentCtg.getId());
-            parentCtg.sendMessage(idu, "\"CATALOG\"", "Удален дочерний каталог "+ name, ido );
+            parentCtg.sendMessage(idu, "\"CATALOG\"", "Удален дочерний каталог название: "+name+"  id: "+ctg.getId(), ido );
             result = "Удаление завершено";
         } catch (FinderException ex) {
             result = ex.getMessage();

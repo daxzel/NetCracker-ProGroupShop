@@ -266,6 +266,105 @@ public class HistoryEntityBean implements EntityBean {
     public void ejbPostCreate(long id_user, String name_table, String status, long id_obj) throws CreateException {
     }
 
+    public java.lang.Long ejbCreate(String name_table, String status, long id_obj) throws CreateException {
+
+
+        // this.id_user = id_user;
+        this.name_table = name_table;
+        this.status = status;
+        this.id_obj = id_obj;
+
+        Connection conn = null;
+        CallableStatement pst = null;
+        ResultSet rs = null;
+        try {
+            conn = EJBHelper.getConnection();
+            pst = conn.prepareCall("BEGIN INSERT INTO \"HISTORY\" " + "(ID_HIS,NAME_TABLE,STATUS,ID_OBJ)" + "VALUES(MY_SEQ_H.NEXTVAL,?,?,?) RETURNING ID_HIS INTO ?;END;");
+            pst.setString(1, name_table);
+            pst.setString(2, status);
+            pst.setLong(3, id_obj);
+            pst.registerOutParameter(4, Types.INTEGER);
+            rs = pst.executeQuery();
+            if (!rs.next()) {
+                throw new CreateException("Ошибка вставки");
+            }
+
+            id_his = pst.getLong(4);
+            return new Long(id_his);
+        } catch (NamingException ex) {
+            throw new EJBException("Произошла ошибка добавления");
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new EJBException("Произошла ошибка добавления");
+        } finally {
+
+            try {
+                EJBHelper.closeConnection(conn, pst, rs);
+            } catch (SQLException ex1) {
+                ex1.printStackTrace();
+                throw new EJBException("Ошибка закрытии соединия с базой");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                throw new EJBException("Ошибка закрытии соединия с базой");
+            }
+
+
+        }
+    }
+
+    public void ejbPostCreate(String name_table, String status, long id_obj) throws CreateException {
+    }
+
+    public java.lang.Long ejbCreate(long id_user, String name_table, String status) throws CreateException {
+
+
+        this.id_user = id_user;
+        this.name_table = name_table;
+        this.status = status;
+        // this.id_obj = id_obj;
+
+        Connection conn = null;
+        CallableStatement pst = null;
+        ResultSet rs = null;
+        try {
+            conn = EJBHelper.getConnection();
+            pst = conn.prepareCall("BEGIN INSERT INTO \"HISTORY\" " + "(ID_HIS,ID_USER,NAME_TABLE,STATUS)" + "VALUES(MY_SEQ_H.NEXTVAL,?,?,?) RETURNING ID_HIS INTO ?;END;");
+            pst.setLong(1, id_user);
+            pst.setString(2, name_table);
+            pst.setString(3, status);
+
+            pst.registerOutParameter(4, Types.INTEGER);
+            rs = pst.executeQuery();
+            if (!rs.next()) {
+                throw new CreateException("Ошибка вставки");
+            }
+
+            id_his = pst.getLong(4);
+            return new Long(id_his);
+        } catch (NamingException ex) {
+            throw new EJBException("Произошла ошибка добавления");
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new EJBException("Произошла ошибка добавления");
+        } finally {
+
+            try {
+                EJBHelper.closeConnection(conn, pst, rs);
+            } catch (SQLException ex1) {
+                ex1.printStackTrace();
+                throw new EJBException("Ошибка закрытии соединия с базой");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                throw new EJBException("Ошибка закрытии соединия с базой");
+            }
+
+
+        }
+    }
+
+    public void ejbPostCreate(long id_user, String name_table, String status) throws CreateException {
+    }
+
     public String getStatus() {
         return status;
     }

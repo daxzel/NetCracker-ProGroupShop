@@ -196,7 +196,7 @@ public class UserBean implements EntityBean {
           //   EJBHelper.sendMessage(new HistoryMessage(userId,"USER","Изменен пользователь",objId));
 
       //  } catch (JMSException ex){
-            throw new EJBException("Ошибка jms");
+     
         } catch (NamingException ex) {
             throw new EJBException("Ошибка UPDATE");
         } catch (SQLException e) {

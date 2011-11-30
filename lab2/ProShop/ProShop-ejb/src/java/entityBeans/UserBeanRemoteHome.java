@@ -34,8 +34,4 @@ public interface UserBeanRemoteHome extends EJBHome {
     public entityBeans.UserBeanRemote create(String name, String surname, String otchestvo, String nik, String password, java.sql.Date born, String phone, String email, java.lang.Long id_role) throws CreateException, RemoteException;
 
     public entityBeans.UserBeanRemote create(java.lang.Long id,String name, String surname, String otchestvo, String nik, String password, java.sql.Date born, String phone, String email, java.lang.Long id_role) throws CreateException, RemoteException;
-
-     public void setParamMessage(long userId, long objId) throws FinderException, RemoteException;
-
-    public void setParamMessage(long userId ) throws FinderException, RemoteException;
 }

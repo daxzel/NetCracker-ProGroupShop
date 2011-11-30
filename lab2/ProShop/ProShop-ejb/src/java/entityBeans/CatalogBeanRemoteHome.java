@@ -29,8 +29,5 @@ public interface CatalogBeanRemoteHome extends EJBHome {
 
     public entityBeans.CatalogBeanRemote create(long id, long parent_id, String name) throws CreateException, RemoteException;
 
-     public void setParamMessage(long userId, long objId) throws FinderException, RemoteException;
-
-    public void setParamMessage(long userId ) throws FinderException, RemoteException;
-
+   
 }

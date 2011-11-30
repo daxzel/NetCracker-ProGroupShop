@@ -249,8 +249,8 @@ public class CatalogBean implements EntityBean {
             pst.setString(2, name);
             pst.registerOutParameter(3, Types.INTEGER);
             rs = pst.executeQuery();
-           // id_catalog = pst.getLong(3);
-           // objId = id_catalog;
+            id_catalog = pst.getLong(3);
+           
 
 
           //  EJBHelper.sendMessage(new HistoryMessage(userId, "CATALOG", "Добавлена каталог", objId));
@@ -357,7 +357,7 @@ public class CatalogBean implements EntityBean {
         }
     }
 
-    public void ejbPostCreate(long userId, String parent_name, String name) throws CreateException {
+    public void ejbPostCreate(String parent_name, String name) throws CreateException {
     }
 
     public void ejbPostCreate(long userId, long id, String parent_name, String name) throws CreateException {
