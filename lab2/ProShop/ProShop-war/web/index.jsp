@@ -67,6 +67,7 @@
         <p align="center"><a href="registration.jsp">Регистрация</a></p>
         <p align="center"><a href="login.jsp">Вход</a></p>
         <p align="center"><a href="getFull_catalog">Каталог</a></p>
+         <p align="center"><a href="getFull_catalogNew">Каталог</a></p>
         <%}%>
     </body>
 </html>

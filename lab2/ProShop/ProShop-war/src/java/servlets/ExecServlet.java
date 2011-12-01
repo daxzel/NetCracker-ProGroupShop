@@ -4,7 +4,6 @@
  */
 package servlets;
 
-
 import java.rmi.RemoteException;
 
 import java.text.ParseException;
@@ -34,6 +33,7 @@ import javax.ejb.*;
 import helpers.EJBHelper;
 import java.io.*;
 import javax.ejb.*;
+import moreTools.CatalogNode;
 
 /**
  *
@@ -107,13 +107,13 @@ public class ExecServlet extends HttpServlet {
             UserBeanRemoteHome userHome = (UserBeanRemoteHome) EJBHelper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
             java.sql.Date sqlDate = new java.sql.Date(bornDate.getTime());
             java.lang.Long idRole = new Long(Long.parseLong(role));
-  
+
             UserBeanRemote usr = userHome.create(name, surname, otchestvo, nik, password, sqlDate, phone, email, idRole);
 
-            Long ido = new  Long(usr.getId());
+            Long ido = new Long(usr.getId());
             usr.sendMessage(new Long(usr.getId()), "\"USER\"", "Зарегестрирован пользователь " + nik, ido);
-            
-            
+
+
             result = "Пользователь зарегестрирован";
         } catch (DuplicateKeyException ex) {
             result = ex.getMessage();
@@ -211,12 +211,12 @@ public class ExecServlet extends HttpServlet {
             price = Double.parseDouble(priceS);
 
             ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
-           // productHome.setParamMessage(usr.getId());
+            // productHome.setParamMessage(usr.getId());
             ProductBeanRemote pbr = productHome.create(description, name_catalog, name, price);
 
-            Long idu = new  Long(usr.getId());
+            Long idu = new Long(usr.getId());
             Long ido = new Long(pbr.getId());
-            pbr.sendMessage(idu,"PRODUCT" , "Добавлен продукт" + name, ido);
+            pbr.sendMessage(idu, "PRODUCT", "Добавлен продукт" + name, ido);
 
             result = "Продукт добавлен";
             request.setAttribute("NAME", name);
@@ -343,7 +343,7 @@ public class ExecServlet extends HttpServlet {
                 session.setAttribute("usrOld", usr);
             }
 
-          //  usr.sendMessage(null, "\"USER\"", "Отредактирован пользователь " + usr.getNik(), null);
+            //  usr.sendMessage(null, "\"USER\"", "Отредактирован пользователь " + usr.getNik(), null);
 
             result = "профиль отредактирован";
         } catch (UpdateException ex) {
@@ -452,8 +452,8 @@ public class ExecServlet extends HttpServlet {
             String nik = request.getParameter("NIK");
             UserBeanRemoteHome userHome = (UserBeanRemoteHome) EJBHelper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
             UserBeanRemote user = userHome.findByNik(nik);
-         //   Long a =
-          //  user.sendMessage(new Long(usr.getId()), "\"USER\"", "Удален пользователь " + nik, null);
+            //   Long a =
+            //  user.sendMessage(new Long(usr.getId()), "\"USER\"", "Удален пользователь " + nik, null);
             userHome.remove(new Long(user.getId()));
             usr.sendMessage(new Long(usr.getId()), "\"USER\"", "Удален пользователь " + nik, null);
 
@@ -566,11 +566,11 @@ public class ExecServlet extends HttpServlet {
             ProductBeanRemote product = (ProductBeanRemote) session.getAttribute("product");
             String text = request.getParameter("COMMENT");
             OpinionBeanRemoteHome opinionHome = (OpinionBeanRemoteHome) EJBHelper.lookupHome("ejb/OpinionBean", OpinionBeanRemoteHome.class);
-            OpinionBeanRemote obr =  opinionHome.create(new Long(product.getId()), new Long(usr.getId()), text);
-          
-           
+            OpinionBeanRemote obr = opinionHome.create(new Long(product.getId()), new Long(usr.getId()), text);
 
-            obr.sendMessage(new Long(usr.getId()), "\"OPINION\"", "Добавлен коментарий о продукте " +product.getName()  , new Long (obr.getIdOpinion()));
+
+
+            obr.sendMessage(new Long(usr.getId()), "\"OPINION\"", "Добавлен коментарий о продукте " + product.getName(), new Long(obr.getIdOpinion()));
 
             rd = request.getRequestDispatcher("getOpinion.jsp");
             request.setAttribute("result", product);
@@ -604,7 +604,7 @@ public class ExecServlet extends HttpServlet {
             OpinionBeanRemoteHome opinionHome = (OpinionBeanRemoteHome) EJBHelper.lookupHome("ejb/OpinionBean", OpinionBeanRemoteHome.class);
             OpinionBeanRemote obr = null;
             opinionHome.remove(new Long(Long.parseLong(id_op)));
-            
+
             usr.sendMessage(new Long(usr.getId()), "\"OPINION\"", "Удален комментарий", null);
 
             rd = request.getRequestDispatcher("getOpinion.jsp");
@@ -676,18 +676,18 @@ public class ExecServlet extends HttpServlet {
                 throw new CatalogException("Название каталога не может быть пустым");
             }
             CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
-            CatalogBeanRemote ctg = catalogHome.create(nameParent, name); 
+            CatalogBeanRemote ctg = catalogHome.create(nameParent, name);
             //catalogHome.create(nameParent, name);
-            
-            Long idu  =new Long (usr.getId());
-            Long ido  =new Long (ctg.getId());
-            
-            ctg.sendMessage(idu, "\"CATALOG\"", "Добавлен каталог "+ name, ido );
-            ctg.sendMessage(idu,  "\"CATALOG\"", "Добавлен дочерний каталог название: "+name+"  id: "+ctg.getId(), new Long(ctg.getParentId()));
+
+            Long idu = new Long(usr.getId());
+            Long ido = new Long(ctg.getId());
+
+            ctg.sendMessage(idu, "\"CATALOG\"", "Добавлен каталог " + name, ido);
+            ctg.sendMessage(idu, "\"CATALOG\"", "Добавлен дочерний каталог название: " + name + "  id: " + ctg.getId(), new Long(ctg.getParentId()));
             //  DBManager.addCatalog(nameParent, name);
             result = "Добавление каталога завершено";
-        
-          
+
+
         } catch (CreateException ex) {
             result = ex.getMessage();
         } catch (RemoteException ex) {
@@ -720,15 +720,15 @@ public class ExecServlet extends HttpServlet {
             }
             CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
             CatalogBeanRemote ctg = catalogHome.findByName(name);
-            Long idc =new Long( ctg.getId());
-            Long idp =new Long( ctg.getParentId());
-            Long idu  =new Long (usr.getId());
-           
+            Long idc = new Long(ctg.getId());
+            Long idp = new Long(ctg.getParentId());
+            Long idu = new Long(usr.getId());
+
             ctg.remove();
             CatalogBeanRemote parentCtg = catalogHome.findByPrimaryKey(idp);
-       
-           
-            parentCtg.sendMessage(idu, "\"CATALOG\"", "Удален дочерний каталог название: "+name+"  id: "+idc, idp );
+
+
+            parentCtg.sendMessage(idu, "\"CATALOG\"", "Удален дочерний каталог название: " + name + "  id: " + idc, idp);
             result = "Удаление завершено";
         } catch (FinderException ex) {
             result = ex.getMessage();
@@ -774,6 +774,48 @@ public class ExecServlet extends HttpServlet {
         }
     }
 
+    protected void getFullCtgNew(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException {
+        RequestDispatcher rd;
+        long i = 1;
+        try {
+            CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
+            List list = catalogHome.findAll();
+            HashMap map = new HashMap();
+            CatalogNode initialCatalog = new CatalogNode((CatalogBeanRemote) list.get(0));
+            for (int j = 0; j < list.size(); j++) {
+                CatalogNode catalog = new CatalogNode((CatalogBeanRemote) list.get(j));
+                catalog.accept(map);
+            }
+            CatalogNode ctg = (CatalogNode) map.get(new Long(1));
+            String html = "<li><a href=\"" + "getProductsByCatalog?ID=" + ctg.ctg.getId() + "\">" + ctg.ctg.getName() + "</a></li>" + "\r\n";
+            for (int j = 0; j < ctg.children.size(); j++) {
+                CatalogNode ctg1 = (CatalogNode) ctg.children.get(j);
+                //     html = html+"<li><a href=\""+ "getProductsByCatalog?ID="+ctg1.ctg.getId() +"\">"+ctg1.ctg.getName()+"</a>"+"\r\n";
+                html = html + ctg1.getHtml();
+                //   html=html+"</li>"+"\r\n";
+            }
+            response.setContentType("text/html; charset=utf-8");
+            PrintWriter out = response.getWriter();
+            String h = "<html>\r\n<head>\r\n<title>Horizontal Drop Down Menus</title>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\r\n<style type=\"text/css\">\r\n@import \"/ProShop-war/static/css3.css\";\r\n</style>\r\n<body>\r\n <ul id=\"nav\">\r\n"
+                        + html
+                        + "</ul>\r\n</body>\r\n</html>";
+            try {
+
+                out.print(h);
+            } finally {
+                out.close();
+            }
+
+        } catch (FinderException ex) {
+            ex.printStackTrace();
+        } catch (RemoteException ex) {
+            ex.printStackTrace();
+        } catch (NamingException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     protected void addOrder(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, ParseException, IOException, LoginException {
         String result = "заказ не добавлен";
@@ -788,7 +830,7 @@ public class ExecServlet extends HttpServlet {
             OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
             OrderBeanRemote order = orderHome.create(new Long(usr.getId()), new Long(Long.parseLong(id_product)), new Boolean(Boolean.parseBoolean(status)), new Integer(Integer.parseInt(kol_vo)));
 
-            order.sendMessage(new Long (usr.getId()), "\"ORDER\"", "Добавлен заказ", new Long ( order.getId()));
+            order.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Добавлен заказ", new Long(order.getId()));
 
             if ("false".equals(status)) {
                 result = "Заказ добавлен в корзину";
@@ -872,8 +914,8 @@ public class ExecServlet extends HttpServlet {
             OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
             OrderBeanRemote order = orderHome.findByPrimaryKey(new Long(Long.parseLong(id_order)));
             orderHome.remove(new Long(order.getId()));
-            
-            usr.sendMessage(new Long (usr.getId()), "\"ORDER\"", "Удален заказ", null);
+
+            usr.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Удален заказ", null);
 
             request.setAttribute("result", orderHome.findByUserAndStatus(new Long(usr.getId()), false));
             result2 = "Заказ удален из корзины";
@@ -899,7 +941,7 @@ public class ExecServlet extends HttpServlet {
         String result, homepage, forwardAddress;
         String ee = request.getRequestURI();
         request.setCharacterEncoding("UTF-8");
-        response.setContentType("UTF-8");
+       // response.setContentType("UTF-8");
         try {
 
 
@@ -981,6 +1023,10 @@ public class ExecServlet extends HttpServlet {
             }
             if (request.getRequestURI().equals("/ProShop-war/getFull_catalog")) {
                 getFullCtg(request, response);
+                return;
+            }
+            if (request.getRequestURI().equals("/ProShop-war/getFull_catalogNew")) {
+                getFullCtgNew(request, response);
                 return;
             }
             if (request.getRequestURI().equals("/ProShop-war/order")) {

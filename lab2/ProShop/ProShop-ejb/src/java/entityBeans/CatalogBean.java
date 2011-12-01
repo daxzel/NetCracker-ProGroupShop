@@ -401,7 +401,7 @@ public class CatalogBean implements EntityBean {
         PreparedStatement pst = null;
         try {
             conn = EJBHelper.getConnection();
-            pst = conn.prepareStatement("SELECT * FROM \"CATALOG\"");
+            pst = conn.prepareStatement("SELECT ID_CATALOG FROM CATALOG START WITH ID_PARENT is NULL CONNECT BY PRIOR ID_CATALOG=ID_PARENT ORDER SIBLINGS BY NAME");
             ResultSet resultSet = pst.executeQuery();
             Vector keys = new Vector();
             while (resultSet.next()) {

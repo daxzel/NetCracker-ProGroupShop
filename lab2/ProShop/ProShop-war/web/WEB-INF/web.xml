@@ -94,6 +94,10 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ExecServlet</servlet-name>
+        <url-pattern>/getFull_catalogNew</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ExecServlet</servlet-name>
         <url-pattern>/getChild_catalog</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
