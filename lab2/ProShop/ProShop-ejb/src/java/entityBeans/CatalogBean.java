@@ -451,9 +451,9 @@ public class CatalogBean implements EntityBean {
         this.name = name;
     }
 
-    public void sendMessage(Long id_user,  String nameTables, String message, Long id_obj) {
+    public void sendMessage(Long id_user,  String nameTables, String message, Long id_obj, int  prior) {
         try {
-            EJBHelper.sendMessage(new HistoryMessage(id_user, nameTables, message, id_obj));
+            EJBHelper.sendMessage(new HistoryMessage(id_user, nameTables, message, id_obj), prior);
         } catch (EJBException ex) {
             ex.printStackTrace();
         } catch (JMSException ex) {

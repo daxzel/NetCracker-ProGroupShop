@@ -44,5 +44,5 @@ public interface OrderBeanRemote extends EJBObject {
 
     void setAll(long id_user, long id_product,boolean status, int amount) throws RemoteException;
 
-    void sendMessage(Long id_user,  String nameTables, String message, Long id_obj) throws RemoteException;
+    void sendMessage(Long id_user,  String nameTables, String message, Long id_obj, int prior) throws RemoteException;
 }

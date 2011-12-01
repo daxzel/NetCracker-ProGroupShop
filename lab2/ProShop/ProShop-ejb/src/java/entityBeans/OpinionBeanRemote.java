@@ -33,5 +33,5 @@ public interface OpinionBeanRemote extends EJBObject {
 
     void setAll( long id_prod, long id_user, String txt) throws RemoteException;
 
-    void sendMessage(Long id_user,  String nameTables, String message, Long id_obj) throws RemoteException;
+    void sendMessage(Long id_user,  String nameTables, String message, Long id_obj, int prior) throws RemoteException;
 }
