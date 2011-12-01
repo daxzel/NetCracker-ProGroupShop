@@ -38,7 +38,7 @@ public class EJBHelper {
         public static void setMessageSending(boolean allowed) {
         canSendMessage = allowed;
     }
-public static void sendMessage(Object msgContent) throws EJBException, JMSException{
+public static void sendMessage(Object msgContent, int prior) throws EJBException, JMSException{
         if (canSendMessage) {
             if (queue_sender == null) {
                 try {
@@ -49,7 +49,19 @@ public static void sendMessage(Object msgContent) throws EJBException, JMSExcept
                     // Create connection, session, and sender.
                     QueueConnection queue_conn = qcf.createQueueConnection();
                     queue_session = queue_conn.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
+                    if (prior ==1){
+                    queue_sender.setPriority(9);
                     queue_sender = queue_session.createSender(queue);
+                    } else
+                     if (prior ==2){
+                    queue_sender.setPriority(4);
+                    queue_sender = queue_session.createSender(queue);
+                    } else
+                     if (prior ==3){
+                    queue_sender.setPriority(1);
+                    queue_sender = queue_session.createSender(queue);
+                    }
+
                 } catch (JMSException ex) {
                     throw new EJBException(ex);
                 } catch (NamingException ex) {

@@ -58,6 +58,6 @@ public interface UserBeanRemote extends EJBObject {
     void setAll(String name, String surname, String otchestvo, String nik, String password,
             java.sql.Date born, String phone, String email, long id_role) throws RemoteException;
 
-    void sendMessage(Long id_user,  String nameTables, String message, Long id_obj) throws RemoteException;
+    void sendMessage(Long id_user,  String nameTables, String message, Long id_obj, int prior) throws RemoteException;
 
 }

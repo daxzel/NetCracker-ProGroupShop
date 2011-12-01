@@ -27,5 +27,5 @@ public interface CatalogBeanRemote extends EJBObject {
 
     void setAll(long parent_id, String name) throws RemoteException;
 
-    void sendMessage(Long id_user,  String nameTables, String message, Long id_obj) throws RemoteException;
+    void sendMessage(Long id_user,  String nameTables, String message, Long id_obj, int prior) throws RemoteException;
 }

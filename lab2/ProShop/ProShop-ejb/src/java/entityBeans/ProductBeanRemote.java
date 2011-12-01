@@ -43,6 +43,6 @@ public interface ProductBeanRemote extends EJBObject {
 
     String getNameCatalog() throws RemoteException;
 
-    void sendMessage(Long id_user,  String nameTables, String message, Long id_obj) throws RemoteException;
+    void sendMessage(Long id_user,  String nameTables, String message, Long id_obj, int prior) throws RemoteException;
     
 }
