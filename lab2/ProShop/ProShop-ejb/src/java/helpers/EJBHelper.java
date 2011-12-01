@@ -50,16 +50,19 @@ public static void sendMessage(Object msgContent, int prior) throws EJBException
                     QueueConnection queue_conn = qcf.createQueueConnection();
                     queue_session = queue_conn.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
                     if (prior ==1){
-                    queue_sender.setPriority(9);
+                  
                     queue_sender = queue_session.createSender(queue);
+                      queue_sender.setPriority(9);
                     } else
                      if (prior ==2){
-                    queue_sender.setPriority(4);
+                    
                     queue_sender = queue_session.createSender(queue);
+                    queue_sender.setPriority(4);
                     } else
                      if (prior ==3){
-                    queue_sender.setPriority(1);
+                   
                     queue_sender = queue_session.createSender(queue);
+                     queue_sender.setPriority(1);
                     }
 
                 } catch (JMSException ex) {
