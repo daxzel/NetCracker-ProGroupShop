@@ -145,7 +145,7 @@ public class HistoryEntityBean implements EntityBean {
             pst.setDate(4, date_update);
             pst.setLong(5, id_obj);
             pst.setLong(6, id_his);
-         
+
             if (pst.executeUpdate() < 1) {
                 throw new NoSuchEntityException("Не найдена запись");
             }
@@ -231,18 +231,21 @@ public class HistoryEntityBean implements EntityBean {
         ResultSet rs = null;
         try {
             conn = EJBHelper.getConnection();
-            pst = conn.prepareCall("BEGIN INSERT INTO \"HISTORY\" " + "(ID_HIS,ID_USER,NAME_TABLE,STATUS,ID_OBJ)" + "VALUES(MY_SEQ_H.NEXTVAL,?,?,?,?) RETURNING ID_HIS INTO ?;END;");
+            pst = conn.prepareCall("BEGIN INSERT INTO \"HISTORY\" " + "(ID_HIS,ID_USER,NAME_TABLE,STATUS,DATE_UPDATE,ID_OBJ)" + "VALUES(MY_SEQ_H.NEXTVAL,?,?,?,?,?) RETURNING ID_HIS INTO ?;END;");
             pst.setLong(1, id_user);
             pst.setString(2, name_table);
             pst.setString(3, status);
-            pst.setLong(4, id_obj);
-            pst.registerOutParameter(5, Types.INTEGER);
+            java.sql.Date f = new java.sql.Date((new java.util.Date()).getTime());
+            this.date_update = f;
+            pst.setDate(4, f);
+            pst.setLong(5, id_obj);
+            pst.registerOutParameter(6, Types.INTEGER);
             rs = pst.executeQuery();
             if (!rs.next()) {
                 throw new CreateException("Ошибка вставки");
             }
 
-            id_his = pst.getLong(5);
+            id_his = pst.getLong(6);
             return new Long(id_his);
         } catch (NamingException ex) {
             throw new EJBException("Произошла ошибка добавления");
@@ -281,17 +284,20 @@ public class HistoryEntityBean implements EntityBean {
         ResultSet rs = null;
         try {
             conn = EJBHelper.getConnection();
-            pst = conn.prepareCall("BEGIN INSERT INTO \"HISTORY\" " + "(ID_HIS,NAME_TABLE,STATUS,ID_OBJ)" + "VALUES(MY_SEQ_H.NEXTVAL,?,?,?) RETURNING ID_HIS INTO ?;END;");
+            pst = conn.prepareCall("BEGIN INSERT INTO \"HISTORY\" " + "(ID_HIS,NAME_TABLE,STATUS,DATE_UPDATE,ID_OBJ)" + "VALUES(MY_SEQ_H.NEXTVAL,?,?,?,?) RETURNING ID_HIS INTO ?;END;");
             pst.setString(1, name_table);
             pst.setString(2, status);
             pst.setLong(3, id_obj);
-            pst.registerOutParameter(4, Types.INTEGER);
+            java.sql.Date f = new java.sql.Date((new java.util.Date()).getTime());
+            this.date_update = f;
+            pst.setDate(4, f);
+            pst.registerOutParameter(5, Types.INTEGER);
             rs = pst.executeQuery();
             if (!rs.next()) {
                 throw new CreateException("Ошибка вставки");
             }
 
-            id_his = pst.getLong(4);
+            id_his = pst.getLong(5);
             return new Long(id_his);
         } catch (NamingException ex) {
             throw new EJBException("Произошла ошибка добавления");
@@ -330,18 +336,20 @@ public class HistoryEntityBean implements EntityBean {
         ResultSet rs = null;
         try {
             conn = EJBHelper.getConnection();
-            pst = conn.prepareCall("BEGIN INSERT INTO \"HISTORY\" " + "(ID_HIS,ID_USER,NAME_TABLE,STATUS)" + "VALUES(MY_SEQ_H.NEXTVAL,?,?,?) RETURNING ID_HIS INTO ?;END;");
+            pst = conn.prepareCall("BEGIN INSERT INTO \"HISTORY\" " + "(ID_HIS,ID_USER,NAME_TABLE,STATUS,DATE_UPDATE)" + "VALUES(MY_SEQ_H.NEXTVAL,?,?,?,?) RETURNING ID_HIS INTO ?;END;");
             pst.setLong(1, id_user);
             pst.setString(2, name_table);
             pst.setString(3, status);
-
-            pst.registerOutParameter(4, Types.INTEGER);
+            java.sql.Date f = new java.sql.Date((new java.util.Date()).getTime());
+            this.date_update = f;
+            pst.setDate(4, f);
+            pst.registerOutParameter(5, Types.INTEGER);
             rs = pst.executeQuery();
             if (!rs.next()) {
                 throw new CreateException("Ошибка вставки");
             }
 
-            id_his = pst.getLong(4);
+            id_his = pst.getLong(5);
             return new Long(id_his);
         } catch (NamingException ex) {
             throw new EJBException("Произошла ошибка добавления");
