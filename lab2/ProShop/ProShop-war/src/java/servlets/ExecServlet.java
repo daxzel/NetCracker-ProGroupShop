@@ -33,6 +33,7 @@ import javax.ejb.*;
 import helpers.EJBHelper;
 import java.io.*;
 import javax.ejb.*;
+import menu.Menu;
 import moreTools.CatalogNode;
 
 /**
@@ -748,20 +749,17 @@ public class ExecServlet extends HttpServlet {
         }
     }
 
-    protected void getFullCtg(HttpServletRequest request,
+    protected void getProductsByCatalog(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         RequestDispatcher rd;
         long i = 1;
         try {
-            if (request.getParameter("pid") != null) {
-                i = Long.parseLong(request.getParameter("pid"));
+            if (request.getParameter("ID") != null) {
+                i = Long.parseLong(request.getParameter("ID"));
             }
-            CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
-            List list = catalogHome.findCatalogByPid(new Long(i));
-            if (list.isEmpty()) {
-                ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
-                list = productHome.findByCatalog(new Long(i));
-            }
+            ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
+            List list = productHome.findByCatalog(new Long(i));
+
             request.setAttribute("result", list);
             rd = request.getRequestDispatcher("getCatalog.jsp");
             rd.forward(request, response);
@@ -777,32 +775,42 @@ public class ExecServlet extends HttpServlet {
     protected void getFullCtgNew(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         RequestDispatcher rd;
+        String htmlOut = "";
         long i = 1;
         try {
-            CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
-            List list = catalogHome.findAll();
-            HashMap map = new HashMap();
-            CatalogNode initialCatalog = new CatalogNode((CatalogBeanRemote) list.get(0));
-            for (int j = 0; j < list.size(); j++) {
-                CatalogNode catalog = new CatalogNode((CatalogBeanRemote) list.get(j));
-                catalog.accept(map);
-            }
-            CatalogNode ctg = (CatalogNode) map.get(new Long(1));
-            String html = "<li><a href=\"" + "getProductsByCatalog?ID=" + ctg.ctg.getId() + "\">" + ctg.ctg.getName() + "</a></li>" + "\r\n";
-            for (int j = 0; j < ctg.children.size(); j++) {
-                CatalogNode ctg1 = (CatalogNode) ctg.children.get(j);
-                //     html = html+"<li><a href=\""+ "getProductsByCatalog?ID="+ctg1.ctg.getId() +"\">"+ctg1.ctg.getName()+"</a>"+"\r\n";
-                html = html + ctg1.getHtml();
-                //   html=html+"</li>"+"\r\n";
+            if (Menu.MenuHtml == null) {
+                CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
+                List list = catalogHome.findAll();
+                HashMap map = new HashMap();
+
+                for (int j = 0; j < list.size(); j++) {
+                    CatalogNode catalog = new CatalogNode((CatalogBeanRemote) list.get(j));
+                    catalog.accept(map);
+                }
+                CatalogNode ctg = (CatalogNode) map.get(new Long(1));
+                String html = "<li>" + ctg.ctg.getName() + "</li>" + "\r\n";
+                for (int j = 0; j < ctg.children.size(); j++) {
+                    CatalogNode ctg1 = (CatalogNode) ctg.children.get(j);
+                    //     html = html+"<li><a href=\""+ "getProductsByCatalog?ID="+ctg1.ctg.getId() +"\">"+ctg1.ctg.getName()+"</a>"+"\r\n";
+                    html = html + ctg1.getHtml();
+                    //   html=html+"</li>"+"\r\n";
+                }
+                map = null;
+                ctg = null;
+
+
+                htmlOut = "<html>\r\n<head>\r\n<title>Horizontal Drop Down Menus</title>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\r\n<link href=\"" + "/ProShop-war/static/dropdown.css" + "\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />\r\n<link href=\"" + "/ProShop-war/static/dropdown.vertical.css" + "\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />\r\n<link href=\"" + "/ProShop-war/static/default.css" + "\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />\r\n</head>\r\n<body>\r\n <ul id=\"nav\"  class=\"dropdown dropdown-vertical\">\r\n"
+                        + html
+                        + "</ul>\r\n</body>\r\n</html>";
+                Menu.MenuHtml = htmlOut;
+            } else {
+                htmlOut = Menu.MenuHtml;
             }
             response.setContentType("text/html; charset=utf-8");
             PrintWriter out = response.getWriter();
-            String h = "<html>\r\n<head>\r\n<title>Horizontal Drop Down Menus</title>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\r\n<style type=\"text/css\">\r\n@import \"/ProShop-war/static/css3.css\";\r\n</style>\r\n<body>\r\n <ul id=\"nav\">\r\n"
-                    + html
-                    + "</ul>\r\n</body>\r\n</html>";
             try {
 
-                out.print(h);
+                out.print(htmlOut);
             } finally {
                 out.close();
             }
@@ -1007,7 +1015,7 @@ public class ExecServlet extends HttpServlet {
                 return;
             }
             if (request.getRequestURI().equals("/ProShop-war/catalog")) {
-                getFullCtg(request, response);
+                //  getFullCtg(request, response);
                 return;
             }
             if (request.getRequestURI().equals("/ProShop-war/add_catalog")) {
@@ -1018,8 +1026,8 @@ public class ExecServlet extends HttpServlet {
                 delCatalog(request, response);
                 return;
             }
-            if (request.getRequestURI().equals("/ProShop-war/getFull_catalog")) {
-                getFullCtg(request, response);
+            if (request.getRequestURI().equals("/ProShop-war/getProductsByCatalog")) {
+                getProductsByCatalog(request, response);
                 return;
             }
             if (request.getRequestURI().equals("/ProShop-war/getFull_catalogNew")) {

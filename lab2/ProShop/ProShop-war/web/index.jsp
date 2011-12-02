@@ -21,7 +21,7 @@
                         if (usr.getRoleId() == 1) {
         %>
 
-        <p align="center"><a href="getFull_catalog">Каталог</a></p>
+        <p align="center"><a href="getFull_catalogNew">Каталог</a></p>
         <p align="center"><a href="basket">Корзина</a></p>
         <p align="center"><a href="getOrders">Заказы</a></p>
         <p align="center"><a href="add_catalog.jsp">Добавление нового каталога</a></p>
@@ -41,7 +41,7 @@
                                     if (usr.getRoleId() == 3) {%>
         <p align="center"><a href="basket">Корзина</a></p>
         <p align="center"><a href="getOrders">Заказы</a></p>
-        <p align="center"><a href="getFull_catalog">Каталог</a></p>
+        <p align="center"><a href="getFull_catalogNew">Каталог</a></p>
         <p align="center"><a href="updateUser.jsp?DO=upProf">Редактирование профиля</a></p>
         <p align="center"><a href="getUsersByRole.jsp">Вывод пользователей по их ролям</a></p>
         <p align="center"><a href="getFullList.jsp">Вывод всего</a></p>
@@ -50,7 +50,7 @@
                                     if (usr.getRoleId() == 2) {%>
         <p align="center"><a href="basket">Корзина</a></p>
         <p align="center"><a href="getOrders">Заказы</a></p>
-        <p align="center"><a href="getFull_catalog">Каталог</a></p>
+        <p align="center"><a href="getFull_catalogNew">Каталог</a></p>
         <p align="center"><a href="add_catalog.jsp">Добавление нового каталога</a></p>
         <p align="center"><a href="del_catalog.jsp">Удаление каталога</a></p>
         <p align="center"><a href ="addProduct.jsp">Добавление продукта</a><br></p>
@@ -62,12 +62,14 @@
         <%}
                                 }
                             } catch (LoginException ex) {%>
-
+ <div style="float:left;">
+        <p align="center"><a href="getFull_catalogNew">Каталог</a></p>
+        </div>
+ <div style="float:none; ">
         <p align="center"><a href="getFullList.jsp">Вывод всех продуктов</a></p>
         <p align="center"><a href="registration.jsp">Регистрация</a></p>
         <p align="center"><a href="login.jsp">Вход</a></p>
-        <p align="center"><a href="getFull_catalog">Каталог</a></p>
-         <p align="center"><a href="getFull_catalogNew">Каталог</a></p>
+</div>
         <%}%>
     </body>
 </html>

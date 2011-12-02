@@ -41,7 +41,7 @@ public class CatalogNode {
         if(children.isEmpty()){
             html = "<li><a href=\""+ "getProductsByCatalog?ID="+ctg.getId() +"\">"+ctg.getName()+"</a></li>"+"\r\n";
         }else{
-            html = "<li><a href=\""+ "getProductsByCatalog?ID="+ctg.getId() +"\">"+ctg.getName()+"</a>"+"\r\n";
+            html = "<li>"+ctg.getName()+"\r\n";
             html = html + "<ul>"+"\r\n";
             for(int i =0;i<children.size();i++){
                 CatalogNode ctg = (CatalogNode) children.get(i);
