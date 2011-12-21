@@ -909,6 +909,119 @@ public class ExecServlet extends HttpServlet {
 
     }
 
+    protected void selectProduct(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, ParseException, IOException, LoginException {
+        UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
+        if (usr.getRoleId() > 2) {
+            throw new LoginException("Вы не обладаете правами администратора");
+        }
+        String result = "Продукт не найден вернитесь назад и введите верное название";
+        String homepage;
+        RequestDispatcher rd;
+
+        String nameProduct = request.getParameter("nameProduct");
+        try {
+            if (nameProduct == null) {
+                result = "введите название продукта";
+                request.setAttribute("result", result);
+            } else {
+
+                // String nameProduct = request.getParameter("nameProduct");
+                ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
+                ProductBeanRemote product = productHome.findByName(nameProduct);
+                //  order.setStatus(true);
+                request.getSession().setAttribute("product",product);
+                request.setAttribute("result", "поиск завершен успешно");
+            }
+        } catch (FinderException ex) {
+            result = "Продукт не найден вернитесь назад и введите верное название";
+            request.setAttribute("result", result);
+        } catch (RemoteException ex) {
+            result = "Произошла ошибка";
+            request.setAttribute("result", result);
+        } catch (NamingException ex) {
+            result = "Произошла ошибка";
+            request.setAttribute("result", result);
+        } finally {
+
+            rd = request.getRequestDispatcher("updateProduct.jsp");
+            rd.forward(request, response);
+        }
+
+    }
+
+    protected void updateProduct(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, ParseException, IOException, LoginException {
+        RequestDispatcher rd;
+        HttpSession session = request.getSession();
+        UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
+        if (usr.getRoleId() > 2) {
+            throw new LoginException("Вы не обладаете правами администратора");
+        }
+        String result = "Продукт не обновлен";
+        try {
+            ProductBeanRemote product = (ProductBeanRemote) request.getSession().getAttribute("product");
+         //   String g1 = product.getName();
+            if (product == null) {
+                result = "Продукт не обновлен";
+                request.setAttribute("result", result);
+            } else {
+                String name = request.getParameter("NAME");
+
+                if (name == null || "".equals(name)) {
+                    result = "Название продукта введено не верно";
+                    request.setAttribute("result", result);
+                } else {
+                    ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
+           //         String g = product.getName();
+                    if (!product.getName().equals(name)) {
+                        try {
+                            productHome.findByName(name);
+                            result = "Такое имя уже используется";
+                            request.setAttribute("result", result);
+                            throw new Exception();
+                        } catch (FinderException ex) {
+                            product.setName(name);
+                        }
+                    }
+                    String description = request.getParameter("DESCRIPTION");
+                    product.setDescription(description);
+                    String price = request.getParameter("PRICE");
+                    double priceDouble = Double.parseDouble(price);
+                    product.setPrice(new Double(priceDouble));
+                    String nameCatalog = request.getParameter("NAME_CATALOG");
+
+                    CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
+                    CatalogBeanRemote ctg = catalogHome.findByName(nameCatalog);
+                    product.setIdCatalog(new Long(ctg.getId()));
+                    result = "Продукт обновлен";
+                    session.removeAttribute("product");
+                    request.setAttribute("result", result);
+                }
+
+
+            }
+        } catch (NumberFormatException ex) {
+            result = "Не верно введена цена";
+            request.setAttribute("result", result);
+        } catch (FinderException ex) {
+            result = "Не найден каталог";
+            request.setAttribute("result", result);
+        } catch (RemoteException ex) {
+            result = "Произошла ошибка";
+            request.setAttribute("result", result);
+        } catch (NamingException ex) {
+            result = "Произошла ошибка";
+            request.setAttribute("result", result);
+        } catch (Exception ex) {
+        } finally {
+
+            rd = request.getRequestDispatcher("updateProduct.jsp");
+            rd.forward(request, response);
+        }
+
+    }
+
     protected void deleteOrder(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException, LoginException {
         HttpSession session = request.getSession();
@@ -1060,6 +1173,14 @@ public class ExecServlet extends HttpServlet {
             }
             if (request.getRequestURI().equals("/ProShop-war/addComment")) {
                 addComment(request, response);
+                return;
+            }
+            if (request.getRequestURI().equals("/ProShop-war/selectProduct")) {
+                selectProduct(request, response);
+                return;
+            }
+            if (request.getRequestURI().equals("/ProShop-war/updateProduct")) {
+                updateProduct(request, response);
                 return;
             }
 

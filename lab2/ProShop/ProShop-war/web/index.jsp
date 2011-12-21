@@ -29,6 +29,7 @@
         <p align="center"><a href ="addProduct.jsp">Добавление продукта</a><br></p>
         <p align="center"><a href="updateUser.jsp?DO=upProf">Редактирование профиля</a></p>
         <p align="center"><a href="updateUser.jsp?DO=upUser">update user</a></p>
+        <p align="center"><a href="updateProduct.jsp">Редактировать продукт</a></p>
         <p align="center"><a href="getUsersByRole.jsp">Вывод пользователей по их ролям</a></p>
         <p align="center"><a href="deleteUser.jsp">Удалить пользователя</a></p>
         <p align="center"><a href="getFullList.jsp">Вывод всего</a></p>
@@ -62,14 +63,14 @@
         <%}
                                 }
                             } catch (LoginException ex) {%>
- <div style="float:left;">
-        <p align="center"><a href="getFull_catalogNew">Каталог</a></p>
+        <div style="float:left;">
+            <p align="center"><a href="getFull_catalogNew">Каталог</a></p>
         </div>
- <div style="float:none; ">
-        <p align="center"><a href="getFullList.jsp">Вывод всех продуктов</a></p>
-        <p align="center"><a href="registration.jsp">Регистрация</a></p>
-        <p align="center"><a href="login.jsp">Вход</a></p>
-</div>
+        <div style="float:none; ">
+            <p align="center"><a href="getFullList.jsp">Вывод всех продуктов</a></p>
+            <p align="center"><a href="registration.jsp">Регистрация</a></p>
+            <p align="center"><a href="login.jsp">Вход</a></p>
+        </div>
         <%}%>
     </body>
 </html>

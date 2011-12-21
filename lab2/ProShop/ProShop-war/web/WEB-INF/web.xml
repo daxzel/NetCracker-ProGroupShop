@@ -116,6 +116,14 @@
         <servlet-name>ExecServlet</servlet-name>
         <url-pattern>/updateStatusOrder</url-pattern>
     </servlet-mapping>
+     <servlet-mapping>
+        <servlet-name>ExecServlet</servlet-name>
+        <url-pattern>/updateProduct</url-pattern>
+    </servlet-mapping>
+     <servlet-mapping>
+        <servlet-name>ExecServlet</servlet-name>
+        <url-pattern>/selectProduct</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ExecServlet</servlet-name>
         <url-pattern>/getOrders</url-pattern>
