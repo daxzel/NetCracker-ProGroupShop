@@ -1,0 +1,79 @@
+body {
+	margin:0;
+	padding:0;
+	background-color:#FFF;
+	font-size: 14px;
+	
+}
+#container{
+margin: 0 auto 40px auto;
+padding: 7px 10px 20px 10px;
+position: relative;
+width: 1000px;
+}
+
+#header 
+{
+	margin-bottom:10px;
+	
+}
+#header div.logo{
+	float:left;
+	width: 182px;
+}
+#header div.login{
+	width: 150px;
+
+	
+}
+#header div.team{
+	width: 60px;
+		
+}
+#header table.top_nav {
+margin: 0 10px 5px 10px;
+width: 980px;
+border-collapse: collapse;
+}
+#header table.top_nav td.logo img{
+padding-right: 5px;
+}
+#header table.top_nav td.logo {
+width: 387px;
+}
+#header table.top_nav td.user_nav {
+vertical-align: top;
+
+font-size: 13px;
+}
+#header table.top_nav td.team {
+vertical-align: top;
+
+font-size: 13px;
+}
+#background_image{
+background-image: url(background.jpg);
+width: 2158px;
+height:1349px;
+}
+* {
+margin: 0;
+padding: 0;
+font-family: Tahoma, Arial, sans-serif;
+}
+td, th {
+display: table-cell;
+vertical-align: inherit;
+}
+div {
+display: block;
+}
+#catalog{
+
+margin-top: 20px;
+margin-right: 20px;
+margin-bottom: 20px;
+margin-left: 0px;
+width: 20%;
+float: left
+}

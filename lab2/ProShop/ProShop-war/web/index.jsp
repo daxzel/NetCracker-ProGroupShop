@@ -4,6 +4,8 @@
     Author     : daxzel
 --%>
 
+<%@page import="java.io.PrintWriter"%>
+<%@page import="menu.Menu"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page errorPage="errorPage.jsp"%>
 <%@page import="java.sql.*,javax.sql.*,javax.naming.*,javax.sql.DataSource,entityBeans.UserBeanRemoteHome,entityBeans.UserBeanRemote, helpers.*,exceptions.LoginException"%>
@@ -11,15 +13,21 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="/ProShop-war/static/main.css">
+        <link href="/ProShop-war/static/dropdown.css" media="all" rel="stylesheet" type="text/css" />
+        <link href="/ProShop-war/static/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
+        <link href="/ProShop-war/static/default.css" media="all" rel="stylesheet" type="text/css" />
         <title>Интернет-магазин</title>
     </head>
     <body>
         <%
+                    //    PrintWriter pw = response.getWriter();
                     UserBeanRemote usr = null;
                     try {
                         usr = JSPHelper.getUser2(session);
                         if (usr.getRoleId() == 1) {
         %>
+
 
         <p align="center"><a href="getFull_catalogNew">Каталог</a></p>
         <p align="center"><a href="basket">Корзина</a></p>
@@ -65,14 +73,27 @@
         <%}
                                 }
                             } catch (LoginException ex) {%>
-        <div style="float:left;">
-            <p align="center"><a href="getFull_catalogNew">Каталог</a></p>
+        <div id="container">
+            <div id="header">
+                <table class="top_nav">
+                    <tbody>
+                        <tr>
+                            <td class="logo">
+                                <img src="/ProShop-war/static/logo.jpg">
+                            </td>
+                            <td class="team" align="center"><a href="aboutTeam.jsp">Команда</a></td>
+                            <td class="user_nav" align="right"><%%><a href="login.jsp">Вход</a>  <a href="login.jsp">Регистрация</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="catalog">
+                <%=Menu.getMenu()%>
+            </div>
         </div>
-        <div style="float:none; ">
-            <p align="center"><a href="getFullList.jsp">Вывод всех продуктов</a></p>
-            <p align="center"><a href="registration.jsp">Регистрация</a></p>
-            <p align="center"><a href="login.jsp">Вход</a></p>
-        </div>
-        <%}%>
+
+        <%} finally {
+                    }
+        %>
     </body>
 </html>

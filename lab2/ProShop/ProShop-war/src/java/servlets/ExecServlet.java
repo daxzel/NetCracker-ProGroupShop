@@ -823,7 +823,7 @@ protected void delProduct(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         RequestDispatcher rd;
         String htmlOut = "";
-        long i = 1;
+      //  long i = 1;
         try {
             if (Menu.MenuHtml == null) {
                 CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
@@ -846,9 +846,9 @@ protected void delProduct(HttpServletRequest request,
                 ctg = null;
 
 
-                htmlOut = "<html>\r\n<head>\r\n<title>Horizontal Drop Down Menus</title>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\r\n<link href=\"" + "/ProShop-war/static/dropdown.css" + "\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />\r\n<link href=\"" + "/ProShop-war/static/dropdown.vertical.css" + "\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />\r\n<link href=\"" + "/ProShop-war/static/default.css" + "\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />\r\n</head>\r\n<body>\r\n <ul id=\"nav\"  class=\"dropdown dropdown-vertical\">\r\n"
+                htmlOut = "<ul id=\"nav\"  class=\"dropdown dropdown-vertical\">\r\n"
                         + html
-                        + "</ul>\r\n</body>\r\n</html>";
+                        + "</ul>\r\n";
                 Menu.MenuHtml = htmlOut;
             } else {
                 htmlOut = Menu.MenuHtml;
