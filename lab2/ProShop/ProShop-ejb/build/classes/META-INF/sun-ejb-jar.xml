@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sun-ejb-jar PUBLIC "-//Sun Microsystems, Inc.//DTD Application Server 8.1 EJB 2.1//EN" "http://www.sun.com/software/appserver/dtds/sun-ejb-jar_2_1-1.dtd">
+<sun-ejb-jar>
+  <enterprise-beans>
+    <ejb>
+      <ejb-name>UserBean</ejb-name>
+      <jndi-name>ejb/UserBean</jndi-name>
+    </ejb>
+    <ejb>
+      <ejb-name>RoleBean</ejb-name>
+      <jndi-name>ejb/RoleBean</jndi-name>
+    </ejb>
+    <ejb>
+      <ejb-name>ProductBean</ejb-name>
+      <jndi-name>ejb/ProductBean</jndi-name>
+    </ejb>
+    <ejb>
+      <ejb-name>OrderBean</ejb-name>
+      <jndi-name>ejb/OrderBean</jndi-name>
+    </ejb>
+    <ejb>
+      <ejb-name>CatalogBean</ejb-name>
+      <jndi-name>ejb/CatalogBean</jndi-name>
+    </ejb>
+    <ejb>
+      <ejb-name>OpinionBean</ejb-name>
+      <jndi-name>ejb/OpinionBean</jndi-name>
+    </ejb>
+    <ejb>
+      <ejb-name>ImageBean</ejb-name>
+      <jndi-name>ejb/ImageBean</jndi-name>
+    </ejb>
+    <ejb>
+      <ejb-name>XmlBean</ejb-name>
+      <jndi-name>ejb/XmlBean</jndi-name>
+    </ejb>
+    <ejb>
+      <ejb-name>NewMessageBean</ejb-name>
+      <jndi-name>jms/historyQueue</jndi-name>
+      <mdb-connection-factory>
+        <jndi-name>jms/historyQueueFactory</jndi-name>
+      </mdb-connection-factory>
+    </ejb>
+    <ejb>
+      <ejb-name>HistoryBean</ejb-name>
+      <jndi-name>ejb/HistoryBean</jndi-name>
+    </ejb>
+    <ejb>
+      <ejb-name>HistoryEntityBean</ejb-name>
+      <jndi-name>ejb/HistoryEntityBean</jndi-name>
+    </ejb>
+    <message-destination>
+      <message-destination-name>historyQueue</message-destination-name>
+      <jndi-name>jms/historyQueue</jndi-name>
+    </message-destination>
+  </enterprise-beans>
+</sun-ejb-jar>

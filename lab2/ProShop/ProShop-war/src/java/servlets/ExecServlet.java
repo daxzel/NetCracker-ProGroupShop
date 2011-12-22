@@ -268,7 +268,54 @@ public class ExecServlet extends HttpServlet {
 
 
     }
+protected void delProduct(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException, LoginException, RemoteException {
+        HttpSession session = request.getSession();
+        RequestDispatcher rd;
+        UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
+        String result = "Продукт не удален";
+        if (usr.getRoleId() >= 2) {
+            throw new LoginException("Вы не обладаете правами администратора");
+        }
+        try {
 
+          try{
+            String value = request.getParameter("VALUE");
+            ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
+            ProductBeanRemote pr = productHome.findByPrimaryKey(new Long (Long.parseLong(value)));
+
+            productHome.remove(new Long (Long.parseLong(value)));
+             result = "Удаление завершено";
+            pr.sendMessage(new Long (Long.parseLong(value)), "PRODUCT", "Удален продукт " + pr.getName(), null, 2);
+
+          } catch (NumberFormatException ex) {
+
+
+            String value = request.getParameter("VALUE");
+            ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
+            ProductBeanRemote pr = productHome.findByName(value);
+            productHome.remove(new Long (pr.getId()));
+             result = "Удаление завершено";
+            pr.sendMessage(new Long (pr.getId()), "PRODUCT", "Удален продукт " + pr.getName(), null, 2);
+          }
+
+
+
+        } catch (ObjectNotFoundException ex) {
+            result = "Продукта не существует";
+        } catch (RemoveException ex) {
+            result = "Ошибка при удалении";
+        } catch (FinderException ex) {
+            result = "Ошибка при поиске";
+        } catch (NamingException ex) {
+            result = "Произошла ошибка";
+        } finally {
+            request.setAttribute("result", result);
+            rd = request.getRequestDispatcher("delProduct.jsp");
+            rd.forward(request, response);
+        }
+
+    }
     protected void updateUser(HttpServletRequest request,
             HttpServletResponse response, String type) throws ServletException, ParseException, IOException, LoginException {
         String result = "порофиль не отредактирован";
@@ -892,6 +939,8 @@ public class ExecServlet extends HttpServlet {
             OrderBeanRemote order = orderHome.findByPrimaryKey(new Long(Long.parseLong(id_order)));
             order.setStatus(true);
             result2 = "Заказ оформлен";
+            order.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Заказ пользователя : " +order.getNameUser()+" на товар: " + order.getNameProduct() + " оформлен", new Long(Long.parseLong(id_order)), 3);
+
 
             request.setAttribute("result", orderHome.findByUserAndStatus(new Long(usr.getId()), false));
 
@@ -1080,6 +1129,10 @@ public class ExecServlet extends HttpServlet {
 
             if (request.getRequestURI().equals("/ProShop-war/addProduct")) {
                 addProduct(request, response);
+                return;
+            }
+             if (request.getRequestURI().equals("/ProShop-war/delProduct")) {
+                delProduct(request, response);
                 return;
             }
             if (request.getRequestURI().equals("/ProShop-war/updateUser")) {
