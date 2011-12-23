@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 /** 
  * Default CSS Drop-Down Menu Theme
  *
@@ -30,7 +32,7 @@
 
 
 ul.dropdown {
- font-weight: bold;
+ font-weight: normal;
 }
 
 	ul.dropdown li {

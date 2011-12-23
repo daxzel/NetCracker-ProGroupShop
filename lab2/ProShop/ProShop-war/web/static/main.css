@@ -34,6 +34,7 @@ width: 1000px;
 margin: 0 10px 5px 10px;
 width: 980px;
 border-collapse: collapse;
+color: #000;
 }
 #header table.top_nav td.logo img{
 padding-right: 5px;
@@ -43,12 +44,29 @@ width: 387px;
 }
 #header table.top_nav td.user_nav {
 vertical-align: top;
-
+width: 401px;
 font-size: 13px;
+}
+#header table.top_nav td.user_nav ul  {
+list-style: none;
+ padding: 0;
+ margin: 0;
+}
+#header table.top_nav td.user_nav ul li.first {
+	padding: 3px 3px;
+	 display: block;
+	  float: left;
+	border-style: solid;
+	border-width: 1px 1px 1px 1px;
+	border-color: #FFFFFF #D9D9D9 #FFFFFF #FFFFFF;
+	background-color:#FFFFFF;
+}
+
+#header  {
 }
 #header table.top_nav td.team {
 vertical-align: top;
-
+width: 192px;
 font-size: 13px;
 }
 #background_image{
@@ -68,12 +86,64 @@ vertical-align: inherit;
 div {
 display: block;
 }
-#catalog{
-
+#menu{
 margin-top: 20px;
 margin-right: 20px;
 margin-bottom: 20px;
 margin-left: 0px;
 width: 20%;
 float: left
+}
+#menu div.catalog{
+margin-top: 20px;
+margin-right: 0px;
+margin-bottom: 20px;
+margin-left: 0px;
+}
+#menu  div.user_menu{
+width:138;
+
+}
+#menu  div.user_menu ul{
+	list-style: none;
+	
+	
+}
+#menu  div.user_menu ul li{
+	list-style: none;
+	padding: 7px 10px;
+	border-style: solid;
+	border-width: 1px 1px 1px 1px;
+	border-color: #D9D9D9 #FFFFFF #FFFFFF;
+	background-color:#FFFFFF;
+	
+}
+#menu  div.user_menu ul li.last{
+	list-style: none;
+	padding: 7px 10px;
+	border-style: solid;
+	border-width: 1px 1px 1px 1px;
+	border-color: #D9D9D9 #FFFFFF #D9D9D9;
+	background-color:#FFFFFF;
+	
+}
+#menu  div.user_menu ul li.first{
+	list-style: none;
+	font-weight: bold;
+	padding: 7px 10px;
+	border-style: solid;
+	border-width: 1px 1px 1px 1px;
+	border-color: #D9D9D9 #FFFFFF #FFFFFF;
+	background-color:#FFFFFF;
+
+}
+#menu  div.user_menu ul li a{
+color: #197DBB;
+
+}
+#menu  div.user_menu ul li :hover{
+background-color:#D9D9D9;
+}
+a {
+	text-decoration:none;
 }
