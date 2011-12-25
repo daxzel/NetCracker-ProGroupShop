@@ -268,7 +268,8 @@ public class ExecServlet extends HttpServlet {
 
 
     }
-protected void delProduct(HttpServletRequest request,
+
+    protected void delProduct(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException, LoginException, RemoteException {
         HttpSession session = request.getSession();
         RequestDispatcher rd;
@@ -279,25 +280,25 @@ protected void delProduct(HttpServletRequest request,
         }
         try {
 
-          try{
-            String value = request.getParameter("VALUE");
-            ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
-            ProductBeanRemote pr = productHome.findByPrimaryKey(new Long (Long.parseLong(value)));
+            try {
+                String value = request.getParameter("VALUE");
+                ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
+                ProductBeanRemote pr = productHome.findByPrimaryKey(new Long(Long.parseLong(value)));
 
-            productHome.remove(new Long (Long.parseLong(value)));
-             result = "Удаление завершено";
-            pr.sendMessage(new Long (Long.parseLong(value)), "PRODUCT", "Удален продукт " + pr.getName(), null, 2);
+                productHome.remove(new Long(Long.parseLong(value)));
+                result = "Удаление завершено";
+                pr.sendMessage(new Long(Long.parseLong(value)), "PRODUCT", "Удален продукт " + pr.getName(), null, 2);
 
-          } catch (NumberFormatException ex) {
+            } catch (NumberFormatException ex) {
 
 
-            String value = request.getParameter("VALUE");
-            ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
-            ProductBeanRemote pr = productHome.findByName(value);
-            productHome.remove(new Long (pr.getId()));
-             result = "Удаление завершено";
-            pr.sendMessage(new Long (pr.getId()), "PRODUCT", "Удален продукт " + pr.getName(), null, 2);
-          }
+                String value = request.getParameter("VALUE");
+                ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
+                ProductBeanRemote pr = productHome.findByName(value);
+                productHome.remove(new Long(pr.getId()));
+                result = "Удаление завершено";
+                pr.sendMessage(new Long(pr.getId()), "PRODUCT", "Удален продукт " + pr.getName(), null, 2);
+            }
 
 
 
@@ -316,6 +317,7 @@ protected void delProduct(HttpServletRequest request,
         }
 
     }
+
     protected void updateUser(HttpServletRequest request,
             HttpServletResponse response, String type) throws ServletException, ParseException, IOException, LoginException {
         String result = "порофиль не отредактирован";
@@ -823,7 +825,7 @@ protected void delProduct(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         RequestDispatcher rd;
         String htmlOut = "";
-      //  long i = 1;
+        //  long i = 1;
         try {
             if (Menu.MenuHtml == null) {
                 CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
@@ -939,7 +941,7 @@ protected void delProduct(HttpServletRequest request,
             OrderBeanRemote order = orderHome.findByPrimaryKey(new Long(Long.parseLong(id_order)));
             order.setStatus(true);
             result2 = "Заказ оформлен";
-            order.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Заказ пользователя : " +order.getNameUser()+" на товар: " + order.getNameProduct() + " оформлен", new Long(Long.parseLong(id_order)), 3);
+            order.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Заказ пользователя : " + order.getNameUser() + " на товар: " + order.getNameProduct() + " оформлен", new Long(Long.parseLong(id_order)), 3);
 
 
             request.setAttribute("result", orderHome.findByUserAndStatus(new Long(usr.getId()), false));
@@ -979,7 +981,7 @@ protected void delProduct(HttpServletRequest request,
                 ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
                 ProductBeanRemote product = productHome.findByName(nameProduct);
                 //  order.setStatus(true);
-                request.getSession().setAttribute("product",product);
+                request.getSession().setAttribute("product", product);
                 request.setAttribute("result", "поиск завершен успешно");
             }
         } catch (FinderException ex) {
@@ -1010,7 +1012,7 @@ protected void delProduct(HttpServletRequest request,
         String result = "Продукт не обновлен";
         try {
             ProductBeanRemote product = (ProductBeanRemote) request.getSession().getAttribute("product");
-         //   String g1 = product.getName();
+            //   String g1 = product.getName();
             if (product == null) {
                 result = "Продукт не обновлен";
                 request.setAttribute("result", result);
@@ -1022,7 +1024,7 @@ protected void delProduct(HttpServletRequest request,
                     request.setAttribute("result", result);
                 } else {
                     ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
-           //         String g = product.getName();
+                    //         String g = product.getName();
                     if (!product.getName().equals(name)) {
                         try {
                             productHome.findByName(name);
@@ -1066,6 +1068,119 @@ protected void delProduct(HttpServletRequest request,
         } finally {
 
             rd = request.getRequestDispatcher("updateProduct.jsp");
+            rd.forward(request, response);
+        }
+
+    }
+
+    protected void selectCatalog(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, ParseException, IOException, LoginException {
+        UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
+        if (usr.getRoleId() > 2) {
+            throw new LoginException("Вы не обладаете правами администратора");
+        }
+        String result = "Каталог не найден вернитесь назад и введите верное название";
+        String homepage;
+        RequestDispatcher rd;
+        rd = request.getRequestDispatcher("updateCatalog.jsp?DO=select");
+        String nameCatalog = request.getParameter("nameCatalog");
+        try {
+            if (nameCatalog == null) {
+                result = "введите название каталога";
+                request.setAttribute("result", result);
+                rd = request.getRequestDispatcher("updateCatalog.jsp?DO=select");
+            } else {
+
+                // String nameProduct = request.getParameter("nameProduct");
+                CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
+                CatalogBeanRemote catalog = catalogHome.findByName(nameCatalog);
+                //  order.setStatus(true);
+                request.getSession().setAttribute("catalog", catalog);
+                request.setAttribute("result", "поиск завершен успешно");
+                rd = request.getRequestDispatcher("updateCatalog.jsp?DO=update");
+            }
+        } catch (FinderException ex) {
+            result = "Каталог не найден, введите верное название";
+            request.setAttribute("result", result);
+            //rd = request.getRequestDispatcher("updateCatalog.jsp?DO=select");
+        } catch (RemoteException ex) {
+            result = "Произошла ошибка";
+            request.setAttribute("result", result);
+            ///rd = request.getRequestDispatcher("updateCatalog.jsp?DO=select");
+        } catch (NamingException ex) {
+            result = "Произошла ошибка";
+            request.setAttribute("result", result);
+            //rd = request.getRequestDispatcher("updateCatalog.jsp?DO=select");
+        } finally {
+            rd.forward(request, response);
+        }
+
+    }
+
+    protected void updateCatalog(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, ParseException, IOException, LoginException {
+        RequestDispatcher rd;
+        HttpSession session = request.getSession();
+        UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
+        if (usr.getRoleId() > 2) {
+            throw new LoginException("Вы не обладаете правами администратора");
+        }
+        String result = "Каталог не обновлен";
+        try {
+            CatalogBeanRemote catalog = (CatalogBeanRemote) request.getSession().getAttribute("catalog");
+            //   String g1 = product.getName();
+            if (catalog == null) {
+                result = "Каталог не обновлен";
+                request.setAttribute("result", result);
+            } else {
+                String name = request.getParameter("NAME");
+
+                if (name == null || "".equals(name)) {
+                    result = "Название продукта введено не верно";
+                    request.setAttribute("result", result);
+                } else {
+                    CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
+                    //         String g = product.getName();
+                    if (!catalog.getName().equals(name)) {
+                        try {
+                            catalogHome.findByName(name);
+                            result = "Такое имя уже используется";
+                            request.setAttribute("result", result);
+                            throw new Exception();
+                        } catch (FinderException ex) {
+                            catalog.setName(name);
+                        }
+                    }
+                    String nameParent = request.getParameter("PARENT");
+                    CatalogBeanRemote parent = null;
+                    try {
+                        parent= catalogHome.findByName(nameParent);
+                    } catch (FinderException ex) {
+                        result = "Родительский каталог не найден";
+                    }
+
+                    // String nameCatalog = request.getParameter("NAME_CATALOG");
+                    catalog.setParentId(parent.getId());
+                    result = "Каталог обновлен";
+                    session.removeAttribute("catalog");
+                    request.setAttribute("result", result);
+                }
+
+
+            }
+        }  catch (FinderException ex) {
+            result = "Не найден каталог";
+            request.setAttribute("result", result);
+        } catch (RemoteException ex) {
+            result = "Произошла ошибка";
+            request.setAttribute("result", result);
+        } catch (NamingException ex) {
+            result = "Произошла ошибка";
+            request.setAttribute("result", result);
+        } catch (Exception ex) {
+        } finally {
+
+            rd = request.getRequestDispatcher("updateCatalog.jsp");
             rd.forward(request, response);
         }
 
@@ -1131,7 +1246,7 @@ protected void delProduct(HttpServletRequest request,
                 addProduct(request, response);
                 return;
             }
-             if (request.getRequestURI().equals("/ProShop-war/delProduct")) {
+            if (request.getRequestURI().equals("/ProShop-war/delProduct")) {
                 delProduct(request, response);
                 return;
             }
@@ -1234,6 +1349,14 @@ protected void delProduct(HttpServletRequest request,
             }
             if (request.getRequestURI().equals("/ProShop-war/updateProduct")) {
                 updateProduct(request, response);
+                return;
+            }
+            if (request.getRequestURI().equals("/ProShop-war/selectCatalog")) {
+                selectCatalog(request, response);
+                return;
+            }
+            if (request.getRequestURI().equals("/ProShop-war/updateCatalog")) {
+                updateCatalog(request, response);
                 return;
             }
 

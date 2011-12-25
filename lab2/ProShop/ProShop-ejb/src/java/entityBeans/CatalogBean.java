@@ -5,6 +5,7 @@
 package entityBeans;
 
 import helpers.EJBHelper;
+import java.rmi.RemoteException;
 import java.sql.*;
 import java.util.Collection;
 import java.util.List;
@@ -250,10 +251,10 @@ public class CatalogBean implements EntityBean {
             pst.registerOutParameter(3, Types.INTEGER);
             rs = pst.executeQuery();
             id_catalog = pst.getLong(3);
-           
 
 
-          //  EJBHelper.sendMessage(new HistoryMessage(userId, "CATALOG", "Добавлена каталог", objId));
+
+            //  EJBHelper.sendMessage(new HistoryMessage(userId, "CATALOG", "Добавлена каталог", objId));
 
             if (!rs.next()) {
                 throw new CreateException("Ошибка вставки");
@@ -451,7 +452,7 @@ public class CatalogBean implements EntityBean {
         this.name = name;
     }
 
-    public void sendMessage(Long id_user,  String nameTables, String message, Long id_obj, int  prior) {
+    public void sendMessage(Long id_user, String nameTables, String message, Long id_obj, int prior) {
         try {
             EJBHelper.sendMessage(new HistoryMessage(id_user, nameTables, message, id_obj), prior);
         } catch (EJBException ex) {
@@ -459,5 +460,16 @@ public class CatalogBean implements EntityBean {
         } catch (JMSException ex) {
             ex.printStackTrace();
         }
+    }
+
+    public String getParentName() throws FinderException, RemoteException {
+        CatalogBeanRemoteHome catalogHome = null;
+        try {
+            catalogHome = (CatalogBeanRemoteHome) helpers.EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
+        } catch (NamingException ex) {
+            throw new RemoteException();
+        }
+        CatalogBeanRemote ctg = catalogHome.findByPrimaryKey(new Long(this.getParentId()));
+        return ctg.getName();
     }
 }
