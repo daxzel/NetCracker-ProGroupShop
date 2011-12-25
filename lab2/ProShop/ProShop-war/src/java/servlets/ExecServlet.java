@@ -1154,9 +1154,10 @@ public class ExecServlet extends HttpServlet {
                     String nameParent = request.getParameter("PARENT");
                     CatalogBeanRemote parent = null;
                     try {
-                        parent= catalogHome.findByName(nameParent);
+                        parent = catalogHome.findByName(nameParent);
                     } catch (FinderException ex) {
                         result = "Родительский каталог не найден";
+                        request.setAttribute("result", result);
                     }
 
                     // String nameCatalog = request.getParameter("NAME_CATALOG");
@@ -1168,7 +1169,7 @@ public class ExecServlet extends HttpServlet {
 
 
             }
-        }  catch (FinderException ex) {
+        } catch (FinderException ex) {
             result = "Не найден каталог";
             request.setAttribute("result", result);
         } catch (RemoteException ex) {
@@ -1180,7 +1181,7 @@ public class ExecServlet extends HttpServlet {
         } catch (Exception ex) {
         } finally {
 
-            rd = request.getRequestDispatcher("updateCatalog.jsp");
+            rd = request.getRequestDispatcher("updateCatalog.jsp?DO=update");
             rd.forward(request, response);
         }
 
