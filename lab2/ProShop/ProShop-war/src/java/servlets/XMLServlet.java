@@ -79,6 +79,69 @@ public class XMLServlet extends HttpServlet {
         }
 
     }
+    
+    protected void history(HttpServletRequest request, HttpServletResponse response) throws ExportException, IOException, ServletException {
+        RequestDispatcher rd;
+        ServletOutputStream out = null;
+        String result, id_s, table = null;
+        long id;
+        String t;
+        result = "Произошла ошибка";
+        try {
+            
+            ArrayList list = new ArrayList();
+            t = request.getParameter("TABLE").toString();
+            id_s = request.getParameter("ID").toString();
+            id = Long.parseLong(id_s);
+            if ("1".equals(t)){
+                table = "\"CATALOG\"";
+            }
+            if ("2".equals(t)){
+                table = "\"IMAGE\"";
+            }
+            if ("3".equals(t)){
+                table = "\"OPINION\"";
+            }
+            if ("4".equals(t)){
+                table = "\"ORDER\"";
+            }
+            if ("5".equals(t)){
+                table = "PRODUCT";
+            }
+            if ("6".equals(t)){
+                table = "\"ROLE\"";
+            }
+            if ("7".equals(t)){
+                table = "\"USER\"";
+            }
+            HistoryBeanRemoteHome historyHome = (HistoryBeanRemoteHome) EJBHelper.lookupHome("ejb/HistoryBean", HistoryBeanRemoteHome.class);
+            HistoryBeanRemote historyBean = historyHome.create();            
+            String xml = historyBean.exportToXML(table, id);
+            response.setContentType("text/xml");
+            response.setCharacterEncoding("utf-8");
+            out = response.getOutputStream();
+            out.println(xml);
+            out.flush();
+            
+        } catch (NumberFormatException ex) {
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } catch (CreateException ex) {
+            ex.printStackTrace();
+        } catch (NamingException ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (out != null) {
+                    out.close();
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
+        }
+    }
 
     protected void getProducts(HttpServletRequest request,
             HttpServletResponse response) {
@@ -360,6 +423,10 @@ public class XMLServlet extends HttpServlet {
             
             if (request.getRequestURI().equals("/ProShop-war/XML/exportUsersP")) {
                 exportUsersP(request, response);
+                return;
+            }
+            if (request.getRequestURI().equals("/ProShop-war/XML/history")) {
+                history(request, response);
                 return;
             }
             if (request.getRequestURI().equals("/ProShop-war/XML/ExportProductByName")) {

@@ -173,6 +173,10 @@
         <url-pattern>/XML/import</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>XMLServlet</servlet-name>
+        <url-pattern>/XML/history</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>ExecServlet</servlet-name>
         <url-pattern>/delProduct</url-pattern>
     </servlet-mapping>

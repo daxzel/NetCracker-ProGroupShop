@@ -15,4 +15,6 @@ import moreTools.HistoryMessage;
  */
 public interface HistoryBeanRemote extends EJBObject {
   void addRecord(HistoryMessage msgobj) throws RemoteException;
+
+  public String exportToXML(String table, long id) throws RemoteException;
 }

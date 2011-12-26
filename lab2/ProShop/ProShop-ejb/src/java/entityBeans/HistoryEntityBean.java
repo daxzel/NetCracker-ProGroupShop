@@ -15,6 +15,7 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.Vector;
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 import javax.ejb.NoSuchEntityException;
@@ -102,7 +103,7 @@ public class HistoryEntityBean implements EntityBean {
         ResultSet rs = null;
         try {
             conn = EJBHelper.getConnection();
-            pst = conn.prepareStatement("SELECT * FROM \"HISTORY\" WHERE ID_ROLE = ?");
+            pst = conn.prepareStatement("SELECT * FROM \"HISTORY\" WHERE ID_HIS = ?");
             pst.setLong(1, id_his);
             rs = pst.executeQuery();
             if (!rs.next()) {
@@ -189,6 +190,35 @@ public class HistoryEntityBean implements EntityBean {
                 throw new EJBException("Ошибка закрытии соединия с базой");
             }
         }
+    }
+    
+    public java.util.Collection ejbFindByIdObjAndNameTableP(java.lang.Long id, String nameTable) throws FinderException {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        try {
+            conn = EJBHelper.getConnection();
+            pst = conn.prepareStatement("SELECT ID_HIS FROM \"HISTORY\" WHERE ID_OBJ = ? AND NAME_TABLE = ?");
+            pst.setLong(1, id.longValue());
+            pst.setString(2, nameTable);
+            ResultSet resultSet = pst.executeQuery();
+            Vector keys = new Vector();
+            while (resultSet.next()) {
+                long id_his = resultSet.getLong(1);
+                keys.addElement(new Long(id_his));
+            }
+            return keys;
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
+        } catch (SQLException e) {
+            //e.printStackTrace();
+            throw new EJBException("Ошибка SELECT");
+        } finally {
+            try {
+                EJBHelper.closeConnection(conn, pst);
+            } catch (SQLException ex1) {
+                throw new EJBException("Ошибка закрытии соединия с базой");
+            }
+        }             
     }
 
     public java.lang.Long ejbFindByIdObjAndNameTable(java.lang.Long id, String nameTable) throws FinderException {
@@ -390,9 +420,13 @@ public class HistoryEntityBean implements EntityBean {
     public long getUserId() {
         return id_user;
     }
+    
+    public String getNameTable() {
+        return name_table;
+    }
 
     public String getTimestampSaved() {
-        java.text.SimpleDateFormat formt = new java.text.SimpleDateFormat("yyyy-MM-dd");
+        java.text.SimpleDateFormat formt = new java.text.SimpleDateFormat("dd.MM.yy");
         String date = formt.format(date_update);
         return date;
     }
