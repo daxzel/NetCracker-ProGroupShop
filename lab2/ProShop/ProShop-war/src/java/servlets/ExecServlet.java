@@ -396,9 +396,11 @@ public class ExecServlet extends HttpServlet {
                 session.setAttribute("usrOld", usr);
             }
 
-            //  usr.sendMessage(null, "\"USER\"", "Отредактирован пользователь " + usr.getNik(), null);
-
+            
             result = "профиль отредактирован";
+	    
+	    usr.sendMessage(ID, "\"USER\"", "Отредактирован пользователь " + usr.getNik(), new Long (usr.getId()),2);
+	    
         } catch (UpdateException ex) {
             result = ex.getMessage();
             if (type.equals("updateUser")) {
@@ -1046,6 +1048,7 @@ public class ExecServlet extends HttpServlet {
                     CatalogBeanRemote ctg = catalogHome.findByName(nameCatalog);
                     product.setIdCatalog(new Long(ctg.getId()));
                     result = "Продукт обновлен";
+		    usr.sendMessage(new Long (usr.getId()), "PRODUCT", "Отредактирован продукт " + product.getName(), new Long (product.getId()),2);
                     session.removeAttribute("product");
                     request.setAttribute("result", result);
                 }
