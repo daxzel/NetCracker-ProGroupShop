@@ -324,11 +324,17 @@ public class ExecServlet extends HttpServlet {
         HttpSession session = request.getSession();
         RequestDispatcher rd;
         UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
+        Long id = null;
         if (type.equals("updateUser")) {
             if (usr.getRoleId() >= 2) {
                 throw new LoginException("Вы не обладаете правами администратора");
             }
+            id = new Long(usr.getId());
             usr = (UserBeanRemote) session.getAttribute("userOld");
+        } else {
+            if (type.equals("updateProfil")) {
+                id = new Long(usr.getId());
+            }
         }
         //   UserBeanRemote usrOld = (UserBeanRemote) session.getAttribute("usrOld");
         // String nikOld = usrOld.getNik();
@@ -396,11 +402,11 @@ public class ExecServlet extends HttpServlet {
                 session.setAttribute("usrOld", usr);
             }
 
-            
+
             result = "профиль отредактирован";
-	    
-	    usr.sendMessage(ID, "\"USER\"", "Отредактирован пользователь " + usr.getNik(), new Long (usr.getId()),2);
-	    
+
+            usr.sendMessage(id, "\"USER\"", "Отредактирован пользователь " + usr.getNik(), new Long(usr.getId()), 2);
+
         } catch (UpdateException ex) {
             result = ex.getMessage();
             if (type.equals("updateUser")) {
@@ -1048,7 +1054,7 @@ public class ExecServlet extends HttpServlet {
                     CatalogBeanRemote ctg = catalogHome.findByName(nameCatalog);
                     product.setIdCatalog(new Long(ctg.getId()));
                     result = "Продукт обновлен";
-		    usr.sendMessage(new Long (usr.getId()), "PRODUCT", "Отредактирован продукт " + product.getName(), new Long (product.getId()),2);
+                    usr.sendMessage(new Long(usr.getId()), "PRODUCT", "Отредактирован продукт " + product.getName(), new Long(product.getId()), 2);
                     session.removeAttribute("product");
                     request.setAttribute("result", result);
                 }
