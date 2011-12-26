@@ -45,20 +45,22 @@
                     </tbody>
                 </table>
             </div>
-            <div id="menu">
-                <div class="catalog">
-                    <%=Menu.getMenu()%>
+            <div id="cols">
+                <div id="menu">
+                    <div class="catalog">
+                        <%=Menu.getMenu()%>
+                    </div>
+                    <div class="user_menu">
+                        <%if (usr != null) {%>
+                        <%=JSPHelper.getMenu(usr.getRoleId())%>
+                        <%} else {%>
+                        <%=JSPHelper.getMenu(3)%>
+                        <%}%>
+                    </div>
                 </div>
-                <div class="user_menu">
-                <%if(usr!=null){%>
-                <%=JSPHelper.getMenu(usr.getRoleId()) %>
-                    <%}else{%>
-                    <%=JSPHelper.getMenu(3) %>
-                    <%}%>
+                <div id="content">
+                    ТУТ БутеТ ЧТО ТО<br><br><br><br><br><br><br>sdsdsdsdsdsd<br><br><br>sdsdsdds<br><br>sdsddsdssdsd
                 </div>
-            </div>
-            <div class="content">
-                ТУТ БутеТ ЧТО ТО<br><br><br><br><br><br><br>sdsdsdsdsdsd<br><br><br>sdsdsdds<br><br>sdsddsdssdsd
             </div>
         </div>
         <%}
