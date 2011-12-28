@@ -11,6 +11,7 @@ padding: 7px 10px 20px 10px;
 position: relative;
 width: 1000px;
 background-color: white;
+min-height:850px;
 }
 #cols{
 overflow: hidden;
@@ -149,10 +150,59 @@ color: #197DBB;
 background-color:#D9D9D9;
 }
 #content{
-width: 770px;
+width: 750px;
 border: 1px solid #D9D9D9;
-float: left
+float: left;
+margin-top: 0px;
+margin-right: 0px;
+margin-bottom: 20px;
+margin-left: 0px;
+padding-top:10px;
+padding-bottom:100px; 
+padding-left:20px;
+font-size: 16px;
+
 }
 a {
 	text-decoration:none;
+}
+.Button{
+vertical-align: top;
+text-decoration: none;
+color: #FFFFFF;
+border: 1px solid #CCC;
+display: inline-block;
+
+background: #117df8;
+background: -moz-linear-gradient(-90deg, white, #117df8);
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0, white), color-stop(1, #117df8));
+font-size: 18px;
+font-weight: bold;
+cursor: pointer;
+border-color: #c4dffd;
+background:  repeat-x scroll -2px -2px #117df8;
+background: -moz-linear-gradient(-90deg, #c4dffd, #117df8);
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #c4dffd), color-stop(1, #117df8));
+
+}
+h1{
+margin: 0 0 13px 0;
+font-size: 22px;
+font-weight: normal;
+color: #386526;
+}
+#cols{
+
+}
+td{
+padding: 8px 0px 3px 3px;
+}
+#regOrLog{
+color:#86908d;
+}
+input{
+font-size: 17px;
+}
+select{
+font-size: 17px;
 }

@@ -4,6 +4,7 @@
     Author     : Yra
 --%>
 
+<%@page import="menu.Menu"%>
 <%@page import="exceptions.LoginException"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import= "entityBeans.UserBeanRemote, helpers.*"%>
@@ -15,123 +16,168 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="static/main.css">
+        <link href="static/dropdown.css" media="all" rel="stylesheet" type="text/css" />
+        <link href="static/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
+        <link href="static/default.css" media="all" rel="stylesheet" type="text/css" />
         <title>user update</title>
     </head>
     <body>
-        <h2>User update</h2>
+
         <%
 
                     SimpleDateFormat formt = new SimpleDateFormat("yyyy-MM-dd");
                     UserBeanRemote usr = JSPHelper.getUser2(session);
 
                     session.setAttribute("homepage", "updateUser.jsp");
-                    if ("upProf".equals(request.getParameter("DO")) || ("upProf".equals(request.getAttribute("DO")))) {
-                        //  session.setAttribute("usrOld", usr);
+                    //  session.setAttribute("usrOld", usr);
 %>
-        <form name="myForm" action="updateProfil">
-            <table>
-                <tr><td>Name</td><td></td></tr>
-                <tr><td><input type="text" name="NAME" value="<%=usr.getName()%>" size="20" /></td><td></td></tr>
-                <tr><td>Surname</td><td></td></tr>
-                <tr><td><input type="text" name="SURNAME" value="<%=usr.getSurname()%>" size="25" /></td><td></td></tr>
-                <tr><td>Father name</td><td></td></tr>
-                <tr><td><input type="text" name="OTCHESTVO" value="<%=usr.getOtchestvo()%>" size="20" /></td><td></td></tr>
-                <tr><td>Nik</td><td></td></tr>
-                <tr><td><input type="text" name="NIK" value="<%=usr.getNik()%>" size="20" /></td><td></td></tr>
-                <tr><td>Password</td><td> Password(repeat)</td></tr>
-                <tr><td><input type="password" name="PASSWORD" value="" size="10" /></td><td>  <input type="password" name="PASSWORD2" value="" size="10" /></td></tr>
-                <tr><td>Born</td><td></td></tr>
-                <tr><td><input type="text" name="BORN" value="<%=formt.format(usr.getBorn())%>" size="10" /></td><td></td></tr>
-                <tr><td>Phone</td><td></td></tr>
-                <%if (usr.getPhone() == null) {%>
-                <tr><td><input type="text" name="PHONE" value="" size="11" /></td><td></td></tr>
+        <div id="container">
+            <div id="header">
+                <table class="top_nav">
+                    <tbody>
+                        <tr>
+                            <td class="logo">
+                                <img src="/ProShop-war/static/logo.jpg">
+                            </td>
+                            <td class="team" align="center"><a href="aboutTeam.jsp">Команда</a></td>
+                            <td class="user_nav" align="right"><%if (usr == null) {%><a href="login.jsp">Вход</a>   <a href="registration.jsp">Регистрация</a><%} else {%><a href="logout">Выход</a><%}%></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="cols">
+                <div id="menu">
+                    <div class="catalog">
+                        <%=Menu.getMenu()%>
+                    </div>
+                    <div class="user_menu">
+                        <%if (usr != null) {%>
+                        <%=JSPHelper.getMenu(usr.getRoleId())%>
                         <%} else {%>
-                <tr><td><input type="text" name="PHONE" value="<%=usr.getPhone()%>" size="11" /></td><td></td></tr>
+                        <%=JSPHelper.getMenu(3)%>
                         <%}%>
-                <tr><td>Email</td><td></td></tr>
-                <%if (usr.getEmail() == null) {%>
-                <tr><td><input type="text" name="EMAIL" value="" size="25" /></td><td></td></tr>
-                        <%} else {%>
-                <tr><td><input type="text" name="EMAIL" value="<%=usr.getEmail()%>" size="25" /></td><td></td></tr>
-                        <%}%>
-                <tr><td><input type="submit" value="Input" /></td><td></td></tr>
-            </table>
-        </form>
-        <%if (request.getAttribute("result") instanceof String) {%>
-        <%=request.getAttribute("result").toString()%><%}%>
-        <%                                }
-                    String str = null;
-                    if (request.getAttribute("DO") != null) {
-                        str = request.getAttribute("DO").toString();
-                    }
-                    if (("upUser".equals(request.getParameter("DO")) && usr.getRoleId() == 1) || ("upUser".equals(str) && usr.getRoleId() == 1)) {
-                        if (session.getAttribute("userOld") == null) {
-                            if (usr.getRoleId() >= 2) {
-                                throw new LoginException("Вы не обладаете правами администратора");
-                            }
-        %>
-        <form action="selectByNik">
-            Input nik:
-            <input type="text" name="NIK" value="" size="20" />
-            <input type="submit" value="Input" />
-        </form>
-        <%                            } else {
-                                    if (usr.getRoleId() >= 2) {
-                                        throw new LoginException("Вы не обладаете правами администратора");
-                                    }
-                                    UserBeanRemote user;
-                                    if (session.getAttribute("userOld") instanceof UserBeanRemote) {
-                                        user = (UserBeanRemote) session.getAttribute("userOld");
-                                        //session.setAttribute("usrOld", user);
-                                       /* } else {
-                                        user = (UserBeanRemote) session.getAttribute("usrOld");
-                                        }*/
-        %>
-        <form name="myForm" action="updateUser">
-            <table>
-                <tr><td>Name</td><td></td></tr>
-                <tr><td><input type="text" name="NAME" value="<%=user.getName()%>" size="20" /></td><td></td></tr>
-                <tr><td>Surname</td><td></td></tr>
-                <tr><td><input type="text" name="SURNAME" value="<%=user.getSurname()%>" size="25" /></td><td></td></tr>
-                <tr><td>Father name</td><td></td></tr>
-                <tr><td><input type="text" name="OTCHESTVO" value="<%=user.getOtchestvo()%>" size="20" /></td><td></td></tr>
-                <tr><td>Nik</td><td></td></tr>
-                <tr><td><input type="text" name="NIK" value="<%=user.getNik()%>" size="20" /></td><td></td></tr>
-                <tr><td>Born</td><td></td></tr>
-                <tr><td><input type="text" name="BORN" value="<%=formt.format(user.getBorn())%>" size="10" /></td><td></td></tr>
-                <tr><td>Phone</td><td></td></tr>
-                <%if (user.getPhone() == null) {%>
-                <tr><td><input type="text" name="PHONE" value="" size="11" /></td><td></td></tr>
-                        <%} else {%>
-                <tr><td><input type="text" name="PHONE" value="<%=user.getPhone()%>" size="11" /></td><td></td></tr>
-                        <%}%>
-                <tr><td>Email</td><td></td></tr>
-                <%if (user.getEmail() == null) {%>
-                <tr><td><input type="text" name="EMAIL" value="" size="25" /></td><td></td></tr>
-                        <%} else {%>
-                <tr><td><input type="text" name="EMAIL" value="<%=user.getEmail()%>" size="25" /></td><td></td></tr>
-                        <%}%>
-                <tr><td>Role</td><td></td></tr>
-                <tr><td><select name="ID_ROLE" style="width : 200">
-                            <option value="1" selected>Админ</option>
-                            <option value="3">Пользователь</option>
-                            <option value="2">Менеджер</option>
-                        </select></td><td></td></tr>
+                    </div>
+                </div>
+                <div id="content">
+                    <%  if ("upProf".equals(request.getParameter("DO")) || ("upProf".equals(request.getAttribute("DO")))) {
+                    %>
+                    <h1>Редактирование профиля</h1>
+                    <form name="myForm" action="updateProfil">
+                        <table id="regOrLog">
+                            <tr><td>Name</td><td></td></tr>
+                            <tr><td><input type="text" name="NAME" value="<%=usr.getName()%>" size="20" /></td><td></td></tr>
+                            <tr><td>Surname</td><td></td></tr>
+                            <tr><td><input type="text" name="SURNAME" value="<%=usr.getSurname()%>" size="25" /></td><td></td></tr>
+                            <tr><td>Father name</td><td></td></tr>
+                            <tr><td><input type="text" name="OTCHESTVO" value="<%=usr.getOtchestvo()%>" size="20" /></td><td></td></tr>
+                            <tr><td>Nik</td><td></td></tr>
+                            <tr><td><input type="text" name="NIK" value="<%=usr.getNik()%>" size="20" /></td><td></td></tr>
+                            <tr><td>Password</td><td> Password(repeat)</td></tr>
+                            <tr><td><input type="password" name="PASSWORD" value="" size="10" /></td><td>  <input type="password" name="PASSWORD2" value="" size="10" /></td></tr>
+                            <tr><td>Born</td><td></td></tr>
+                            <tr><td><input type="text" name="BORN" value="<%=formt.format(usr.getBorn())%>" size="10" /></td><td></td></tr>
+                            <tr><td>Phone</td><td></td></tr>
+                            <%if (usr.getPhone() == null) {%>
+                            <tr><td><input type="text" name="PHONE" value="" size="11" /></td><td></td></tr>
+                                    <%} else {%>
+                            <tr><td><input type="text" name="PHONE" value="<%=usr.getPhone()%>" size="11" /></td><td></td></tr>
+                                    <%}%>
+                            <tr><td>Email</td><td></td></tr>
+                            <%if (usr.getEmail() == null) {%>
+                            <tr><td><input type="text" name="EMAIL" value="" size="25" /></td><td></td></tr>
+                                    <%} else {%>
+                            <tr><td><input type="text" name="EMAIL" value="<%=usr.getEmail()%>" size="25" /></td><td></td></tr>
+                                    <%}%>
+                            <tr><td><input type="submit" value=" Ввод " class="Button"/></td><td></td></tr>
+                        </table>
+                    </form>
+                    <%if (request.getAttribute("result") instanceof String) {%>
+                    <%=request.getAttribute("result").toString()%><%}%>
+                    <%                                }
+                                String str = null;
+                                if (request.getAttribute("DO") != null) {
+                                    str = request.getAttribute("DO").toString();
+                                }
+                                if (("upUser".equals(request.getParameter("DO")) && usr.getRoleId() == 1) || ("upUser".equals(str) && usr.getRoleId() == 1)) {
+                                    if (session.getAttribute("userOld") == null) {
+                                        if (usr.getRoleId() >= 2) {
+                                            throw new LoginException("Вы не обладаете правами администратора");
+                                        }
+                    %>
+                    <h1>Редактирование пользователя</h1>
+                    <form action="selectByNik">
+                        <table id="regOrLog">
+                            <tr><td>
+                                    Введите ник пользователя:</td></tr>
+                            <tr><td>
+                                    <input type="text" name="NIK" value="" size="20" />
+                                </td></tr>
+                            <tr><td>
+                                    <input type="submit" value=" Ввод " class="Button"/>
+                                </td></tr> 
+                        </table>
+                    </form>
+                    <%                            } else {
+                                                            if (usr.getRoleId() >= 2) {
+                                                                throw new LoginException("Вы не обладаете правами администратора");
+                                                            }
+                                                            UserBeanRemote user;
+                                                            if (session.getAttribute("userOld") instanceof UserBeanRemote) {
+                                                                user = (UserBeanRemote) session.getAttribute("userOld");
+                                                                //session.setAttribute("usrOld", user);
+                                                   /* } else {
+                                                                user = (UserBeanRemote) session.getAttribute("usrOld");
+                                                                }*/
+                    %>
+                    <h1>Редактирование пользователя</h1>
+                    <form name="myForm" action="updateUser">
+                        <table id="regOrLog">
+                            <tr><td>Name</td><td></td></tr>
+                            <tr><td><input type="text" name="NAME" value="<%=user.getName()%>" size="20" /></td><td></td></tr>
+                            <tr><td>Surname</td><td></td></tr>
+                            <tr><td><input type="text" name="SURNAME" value="<%=user.getSurname()%>" size="25" /></td><td></td></tr>
+                            <tr><td>Father name</td><td></td></tr>
+                            <tr><td><input type="text" name="OTCHESTVO" value="<%=user.getOtchestvo()%>" size="20" /></td><td></td></tr>
+                            <tr><td>Nik</td><td></td></tr>
+                            <tr><td><input type="text" name="NIK" value="<%=user.getNik()%>" size="20" /></td><td></td></tr>
+                            <tr><td>Born</td><td></td></tr>
+                            <tr><td><input type="text" name="BORN" value="<%=formt.format(user.getBorn())%>" size="10" /></td><td></td></tr>
+                            <tr><td>Phone</td><td></td></tr>
+                            <%if (user.getPhone() == null) {%>
+                            <tr><td><input type="text" name="PHONE" value="" size="11" /></td><td></td></tr>
+                                    <%} else {%>
+                            <tr><td><input type="text" name="PHONE" value="<%=user.getPhone()%>" size="11" /></td><td></td></tr>
+                                    <%}%>
+                            <tr><td>Email</td><td></td></tr>
+                            <%if (user.getEmail() == null) {%>
+                            <tr><td><input type="text" name="EMAIL" value="" size="25" /></td><td></td></tr>
+                                    <%} else {%>
+                            <tr><td><input type="text" name="EMAIL" value="<%=user.getEmail()%>" size="25" /></td><td></td></tr>
+                                    <%}%>
+                            <tr><td>Role</td><td></td></tr>
+                            <tr><td><select name="ID_ROLE" style="width : 200">
+                                        <option value="1" selected>Админ</option>
+                                        <option value="3">Пользователь</option>
+                                        <option value="2">Менеджер</option>
+                                    </select></td><td></td></tr>
 
-                <tr><td><input type="submit" value="Input" /></td><td></td></tr>
+                            <tr><td><input type="submit" value=" Ввод " class="Button"/></td><td></td></tr>
 
-            </table>
-        </form>
-        <%
-                            }
-                        }
+                        </table>
+                    </form>
+                    <%
+                                                            }
+                                                        }
 
-                    if (request.getAttribute("result") != null) {%>
-        <%=request.getAttribute("result").toString()%><%}
+                                                        if (request.getAttribute("result") != null) {%>
+                    <%=request.getAttribute("result").toString()%><%}
 
-            }
-        %><br><p align="left"><a href ="index.jsp">index</a><br></p><%
-            %>
+                                }
+                    %>
+                </div>
+            </div>
+        </div>
 
     </body>
 </html>

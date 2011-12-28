@@ -40,7 +40,7 @@
                                 <img src="/ProShop-war/static/logo.jpg">
                             </td>
                             <td class="team" align="center"><a href="aboutTeam.jsp">Команда</a></td>
-                            <td class="user_nav" align="right"><%if (usr == null) {%><a href="login.jsp">Вход</a>   <a href="login.jsp">Регистрация</a><%} else {%><a href="logout">Выход</a><%}%></td>
+                            <td class="user_nav" align="right"><%if (usr == null) {%><a href="login.jsp">Вход</a>   <a href="registration.jsp">Регистрация</a><%} else {%><a href="logout">Выход</a><%}%></td>
                         </tr>
                     </tbody>
                 </table>
@@ -59,7 +59,7 @@
                     </div>
                 </div>
                 <div id="content">
-                    ТУТ БутеТ ЧТО ТО<br><br><br><br><br><br><br>sdsdsdsdsdsd<br><br><br>sdsdsdds<br><br>sdsddsdssdsd
+                    Когда руки дойдут тут появятся новости<br><br><br><br> Когда руки дойдут тут появятся новости<br><br><br> Когда руки дойдут тут появятся новости<br><br><br><br><br>
                 </div>
             </div>
         </div>
