@@ -22,14 +22,12 @@
     <body>
         <%
                     //    PrintWriter pw = response.getWriter();
+        
                     UserBeanRemote usr = null;
                     try {
                         usr = JSPHelper.getUser2(session);
                     } catch (LoginException ex) {
-        %>
-
-
-        <%} finally {%>
+                    } finally {%>
 
         <div id="container">
             <div id="header">

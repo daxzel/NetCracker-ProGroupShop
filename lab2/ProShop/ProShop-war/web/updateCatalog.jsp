@@ -4,6 +4,7 @@
     Author     : Yra
 --%>
 
+<%@page import="menu.Menu"%>
 <%@page import="entityBeans.CatalogBeanRemote"%>
 <%@page import="helpers.JSPHelper"%>
 <%@page import="exceptions.LoginException"%>
@@ -15,6 +16,10 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="static/main.css">
+        <link href="static/dropdown.css" media="all" rel="stylesheet" type="text/css" />
+        <link href="static/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
+        <link href="static/default.css" media="all" rel="stylesheet" type="text/css" />
         <title>обновление каталога</title>
     </head>
     <body>
@@ -25,48 +30,84 @@
                     }
                     String type = request.getParameter("DO");
                     Object result = request.getAttribute("result");
-                    if ("select".equals(type) || (type == null)) {
+
 
         %>
-        <form action="selectCatalog">
-            Введите название каталога:
-            <input type="text" name="nameCatalog" value="" size="60" />
-            <input type="submit" value="Input" />
-        </form>
-        <%                      } else {
-                                CatalogBeanRemote catalog = (CatalogBeanRemote) session.getAttribute("catalog");
-                                String name = "";
-                                String parentName = "";
-                                String price = "";
-                                String nameCatalog = "";
-                                if (catalog != null) {
-                                    //   product = (ProductBeanRemote) result;
-                                    name = catalog.getName();
-                                    parentName = catalog.getParentName();
-                                    if (parentName == null) {
-                                        parentName = "";
-                                    }
+        <div id="container">
+            <div id="header">
+                <table class="top_nav">
+                    <tbody>
+                        <tr>
+                            <td class="logo">
+                                <img src="/ProShop-war/static/logo.jpg">
+                            </td>
+                            <td class="team" align="center"><a href="aboutTeam.jsp">Команда</a></td>
+                            <td class="user_nav" align="right"><%if (usr == null) {%><a href="login.jsp">Вход</a>   <a href="registration.jsp">Регистрация</a><%} else {%><a href="logout">Выход</a><%}%></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="cols">
+                <div id="menu">
+                    <div class="catalog">
+                        <%=Menu.getMenu()%>
+                    </div>
+                    <div class="user_menu">
+                        <%if (usr != null) {%>
+                        <%=JSPHelper.getMenu(usr.getRoleId())%>
+                        <%} else {%>
+                        <%=JSPHelper.getMenu(3)%>
+                        <%}%>
+                    </div>
+                </div>
+                <div id="content">
+                    <h1>Редактирование каталога</h1>
+                    <%  if ("select".equals(type) || (type == null)) {%>
 
-                                    // String g = product.getName();
-                                    //   session.setAttribute("product", product);
-                                }
+                    <form action="selectCatalog">
+                        <table id="regOrLog">
+                            <tr><td> Введите название каталога </td></tr>
+                            <tr><td>  <input type="text" name="nameCatalog" value="" size="60" /> </td></tr>
+                            <tr><td> <input type="submit" value=" Ввод "  class="Button"/></td></tr>
+                        </table>
+                    </form>
 
-        %>
-        <form name="updateCatalogForm" action="updateCatalog">
-            <table>
-                <tr><td>Имя</td><td></td></tr>
-                <tr><td><input type="text" name="NAME" value="<%= name%>" size="80" /></td><td></td></tr>
-                <tr><td>Имя родительского каталога </td><td></td></tr>
-                <tr><td><input type="text" name="PARENT" value="<%= parentName%>" size="100" /></td><td></td></tr>
-                <tr><td><input type="submit" value="Input" /></td><td></td></tr>
-            </table>
+                    <%                      } else {
+                          CatalogBeanRemote catalog = (CatalogBeanRemote) session.getAttribute("catalog");
+                          String name = "";
+                          String parentName = "";
+                          String price = "";
+                          String nameCatalog = "";
+                          if (catalog != null) {
+                              //   product = (ProductBeanRemote) result;
+                              name = catalog.getName();
+                              parentName = catalog.getParentName();
+                              if (parentName == null) {
+                                  parentName = "";
+                              }
 
-        </form>
-        <%
-                    }%>
-        <%if (result instanceof String) {%>
-        <%=result%>
-        <%}%>
-        <br><p align="left"><a href ="index.jsp">index</a><br></p>
+                              // String g = product.getName();
+                              //   session.setAttribute("product", product);
+                          }
+
+                    %>
+                    <form name="updateCatalogForm" action="updateCatalog">
+                        <table id="regOrLog">
+                            <tr><td>Имя</td><td></td></tr>
+                            <tr><td><input type="text" name="NAME" value="<%= name%>" size="80" /></td><td></td></tr>
+                            <tr><td>Имя родительского каталога </td><td></td></tr>
+                            <tr><td><input type="text" name="PARENT" value="<%= parentName%>" size="100" /></td><td></td></tr>
+                            <tr><td><input type="submit" value=" Ввод "  class="Button" /></td><td></td></tr>
+                        </table>
+
+                    </form>
+                    <%
+                                }%>
+                    <%if (result instanceof String) {%>
+                    <%=result%>
+                    <%}%>
+                </div>
+            </div>
+        </div>
     </body>
 </html>

@@ -1,4 +1,5 @@
 
+<%@page import="menu.Menu"%>
 <%@taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql"%>
 <%-- 
     Document   : product
@@ -16,7 +17,11 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Add product</title>
+        <link rel="stylesheet" type="text/css" href="static/main.css">
+        <link href="static/dropdown.css" media="all" rel="stylesheet" type="text/css" />
+        <link href="static/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
+        <link href="static/default.css" media="all" rel="stylesheet" type="text/css" />
+        <title>Добавление продукта</title>
     </head>
     <body>
         <%
@@ -29,25 +34,55 @@
                     String price = JSPHelper.getRequestOrEmpty(request, "PRICE");
                     String name_catalog = JSPHelper.getRequestOrEmpty(request, "NAME_CATALOG");
         %>
+        <div id="container">
+            <div id="header">
+                <table class="top_nav">
+                    <tbody>
+                        <tr>
+                            <td class="logo">
+                                <img src="/ProShop-war/static/logo.jpg">
+                            </td>
+                            <td class="team" align="center"><a href="aboutTeam.jsp">Команда</a></td>
+                            <td class="user_nav" align="right"><%if (usr == null) {%><a href="login.jsp">Вход</a>   <a href="registration.jsp">Регистрация</a><%} else {%><a href="logout">Выход</a><%}%></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="cols">
+                <div id="menu">
+                    <div class="catalog">
+                        <%=Menu.getMenu()%>
+                    </div>
+                    <div class="user_menu">
+                        <%if (usr != null) {%>
+                        <%=JSPHelper.getMenu(usr.getRoleId())%>
+                        <%} else {%>
+                        <%=JSPHelper.getMenu(3)%>
+                        <%}%>
+                    </div>
+                </div>
+                <div id="content">
+                    <h1>Добавление продукта</h1>
+                    <form name="addProductForm" action="addProduct">
+                        <table id="regOrLog">
+                            <tr><td>Имя</td><td></td></tr>
+                            <tr><td><input type="text" name="NAME" value="<%=name%>" size="20" /></td><td></td></tr>
+                            <tr><td>Описание</td><td></td></tr>
+                            <tr><td><input type="text" name="DESCRIPTION" value="<%=description%>" size="100" /></td><td></td></tr>
+                            <tr><td>Цена</td><td></td></tr>
+                            <tr><td><input type="text" name="PRICE" value="<%=price%>" size="20" /></td><td></td></tr>
+                            <tr><td>Название каталога</td><td></td></tr>
+                            <tr><td><input type="text" name="NAME_CATALOG" value="<%=name_catalog%>" size="10" /></td><td></td></tr>
+                            <tr><td><input type="submit" value=" Ввод " class="Button" /></td><td></td></tr>
+                        </table>
 
-        <form name="addProductForm" action="addProduct">
-            <table>
-                <tr><td>Имя</td><td></td></tr>
-                <tr><td><input type="text" name="NAME" value="<%=name%>" size="20" /></td><td></td></tr>
-                <tr><td>Описание</td><td></td></tr>
-                <tr><td><input type="text" name="DESCRIPTION" value="<%=description%>" size="100" /></td><td></td></tr>
-                <tr><td>Цена</td><td></td></tr>
-                <tr><td><input type="text" name="PRICE" value="<%=price%>" size="20" /></td><td></td></tr>
-                <tr><td>Название каталога</td><td></td></tr>
-                <tr><td><input type="text" name="NAME_CATALOG" value="<%=name_catalog%>" size="10" /></td><td></td></tr>
-                <tr><td><input type="submit" value="Input" /></td><td></td></tr>
-            </table>
-
-        </form>
-        <%if (request.getAttribute("result") != null) {
-        %><%=request.getAttribute("result")%><%
-                    }
-        %>
-        <p align="left"><a href ="index.jsp">index</a><br></p>
+                    </form>
+                    <%if (request.getAttribute("result") != null) {
+                    %><%=request.getAttribute("result")%><%
+                                }
+                    %>
+                </div>
+            </div>
+        </div>
     </body>
 </html>

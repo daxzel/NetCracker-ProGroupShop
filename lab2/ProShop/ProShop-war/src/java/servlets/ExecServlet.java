@@ -513,10 +513,11 @@ public class ExecServlet extends HttpServlet {
             String nik = request.getParameter("NIK");
             UserBeanRemoteHome userHome = (UserBeanRemoteHome) EJBHelper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
             UserBeanRemote user = userHome.findByNik(nik);
+            Long id=new Long(user.getId());
             //   Long a =
             //  user.sendMessage(new Long(usr.getId()), "\"USER\"", "Удален пользователь " + nik, null);
-            userHome.remove(new Long(user.getId()));
-            usr.sendMessage(new Long(usr.getId()), "\"USER\"", "Удален пользователь " + nik, null, 2);
+            userHome.remove(id);
+            usr.sendMessage(new Long(usr.getId()), "\"USER\"", "Удален пользователь " + nik, id, 2);
 
             result = "Удаление завершено";
         } catch (ObjectNotFoundException ex) {

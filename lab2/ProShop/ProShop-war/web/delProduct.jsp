@@ -4,18 +4,23 @@
     Author     : пк
 --%>
 
+<%@page import="menu.Menu"%>
 <%@page import="helpers.JSPHelper"%>
 <%@page import="exceptions.LoginException"%>
 <%@page import="exceptions.LoginException"%>
 <%@page import="entityBeans.UserBeanRemote"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-   "http://www.w3.org/TR/html4/loose.dtd">
+    "http://www.w3.org/TR/html4/loose.dtd">
 
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Удаление продукта</title>
+        <link rel="stylesheet" type="text/css" href="static/main.css">
+        <link href="static/dropdown.css" media="all" rel="stylesheet" type="text/css" />
+        <link href="static/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
+        <link href="static/default.css" media="all" rel="stylesheet" type="text/css" />
     </head>
     <body>
         <% UserBeanRemote usr = JSPHelper.getUser2(session);
@@ -23,15 +28,48 @@
                         throw new LoginException("Вы не обладаете правами администратора");
                     }
         %>
-        <form action="delProduct">
-            Введите название продукта или его ПК:
-            <input type="text" name="VALUE" value="" size="20" />
-            <input type="submit" value="Input" />
-        </form>
-        <%if (request.getAttribute("result") != null) {%>
-        <%=request.getAttribute("result").toString()%>
-        <%}%>
+        <div id="container">
+            <div id="header">
+                <table class="top_nav">
+                    <tbody>
+                        <tr>
+                            <td class="logo">
+                                <img src="/ProShop-war/static/logo.jpg">
+                            </td>
+                            <td class="team" align="center"><a href="aboutTeam.jsp">Команда</a></td>
+                            <td class="user_nav" align="right"><%if (usr == null) {%><a href="login.jsp">Вход</a>   <a href="registration.jsp">Регистрация</a><%} else {%><a href="logout">Выход</a><%}%></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="cols">
+                <div id="menu">
+                    <div class="catalog">
+                        <%=Menu.getMenu()%>
+                    </div>
+                    <div class="user_menu">
+                        <%if (usr != null) {%>
+                        <%=JSPHelper.getMenu(usr.getRoleId())%>
+                        <%} else {%>
+                        <%=JSPHelper.getMenu(3)%>
+                        <%}%>
+                    </div>
+                </div>
+                <div id="content">
+                    <h1>Удаение продукта</h1>
+                    <form action="delProduct">
+                        <table id="regOrLog">
+                            <tr><td>Введите название продукта или его первичный ключ</td></tr>
+                            <tr><td><input type="text" name="VALUE" value="" size="20" /></td></tr>
+                            <tr><td><input type="submit" value=" Ввод " class="Button" /></td></tr>
+                        </table>
+                    </form>
+                    <%if (request.getAttribute("result") != null) {%>
+                    <%=request.getAttribute("result").toString()%>
+                    <%}%>
 
-        <p align="left"><a href ="index.jsp">index</a><br></p>
+                </div>
+            </div>
+        </div>
     </body>
 </html>

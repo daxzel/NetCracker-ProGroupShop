@@ -4,6 +4,7 @@
     Author     : Yra
 --%>
 
+<%@page import="menu.Menu"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import= "java.util.*,java.text.SimpleDateFormat, helpers.*,entityBeans.UserBeanRemote;"%>
 <%@page errorPage="errorPage.jsp"%>
@@ -13,87 +14,119 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="static/main.css">
+        <link href="static/dropdown.css" media="all" rel="stylesheet" type="text/css" />
+        <link href="static/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
+        <link href="static/default.css" media="all" rel="stylesheet" type="text/css" />
         <title>Поиск пользователей по роле</title>
     </head>
     <body>
         <%
                     UserBeanRemote usr = JSPHelper.getUser2(session);
                     UserBeanRemote user;
-                    if (request.getAttribute("result") == null || request.getAttribute("result") instanceof String) {
-        %>
-        <form action="getUsersByRole">
-            Введите роль:
-            <tr><td><select name="ROLE" style="width : 200">
-                        <option value="admin" selected>Админ</option>
-                        <option value="manager" selected>Менеджер</option>
-                        <option value="user">Пользователь</option>
-                    </select></td><td></td></tr>
-            <input type="submit" value="Input" />
-        </form>
-        <%if (request.getAttribute("result") != null) {%>
-        <%=request.getAttribute("result").toString()%>
-        <%}%>
-        <p align="left"><a href ="index.jsp">index</a><br></p>
-            <%            } else {
-                                    if (request.getAttribute("result") instanceof Collection) {
-                                        Collection list = (Collection) request.getAttribute("result");
-                                        SimpleDateFormat formt = new SimpleDateFormat("yyyy-MM-dd");
-            %>
-        <form action="XML/exportUser">
-        <table align="center"  border="1" width="80%">
-            <tr align="center">
-                <%if (usr.getRoleId() == 1) {%>
-                <td width="5%" align="center">User id</td>
-                <%}%>
-                <td width="15%" align="center">Name</td>
-                <td width="25%" align="center">Surname</td>
-                <td width="20%" align="center">Otchestvo</td>
-                <td width="30%" align="center">Nik</td>
-                <td width="30%" align="center">Born</td>
-                <td width="30%" align="center">Phone</td>
-                <td width="30%" align="center">Email</td>
-                <%if (usr.getRoleId() == 1) {%>
-                <td width="30%" align="center">Export</td>
-                <%}%>
-            </tr>
-            <%
-                                                    Iterator iter = list.iterator();
-                                                    while (iter.hasNext()) {
-                                                        user = (UserBeanRemote) iter.next();%>
-            <tr align="center">
-                <%if (usr.getRoleId() == 1) {%>
-                <td><%= user.getId()%></td>
-                <%}%>
-                <td><%= user.getName()%></td>
-                <td><%= user.getSurname()%></td>
-                <td><%= user.getOtchestvo()%></td>
-                <td><%= user.getNik()%></td>
-                <td><%=formt.format(user.getBorn())%></td>
-                <%if (user.getPhone() != null) {%>
-                <td><%= user.getPhone()%></td>
-                <%} else {%>
-                <td></td>
-                <%}
-                                                                        if (user.getEmail() != null) {%>
-                <td><%= user.getEmail()%></td>
-                <%} else {%>
-                <td></td>
-                <%}
-                %>
-                <%if (usr.getRoleId() == 1) {%>
-                <td><input type="checkbox" name="DEL" value="<%=user.getId()%>" /></td>
-                    <%}
-                                                            }%>
-            </tr>
-            <%if (usr.getRoleId() == 1) {%>
-            <tr><td colspan="5"><input type="submit" value="Экспортировать пользователей и роли связанные с ними" name="input" /></td><td colspan="4"><input type="submit" value="Экспортировать только пользователей" name="input2" /></td></tr>
-                    <%}%>
-        </table>
-        </form>
-        <p align="center"><a href ="index.jsp">index</a><br></p>
-            <%  }
-                        }
-            %>
 
+        %>
+
+        <div id="container">
+            <div id="header">
+                <table class="top_nav">
+                    <tbody>
+                        <tr>
+                            <td class="logo">
+                                <img src="/ProShop-war/static/logo.jpg">
+                            </td>
+                            <td class="team" align="center"><a href="aboutTeam.jsp">Команда</a></td>
+                            <td class="user_nav" align="right"><%if (usr == null) {%><a href="login.jsp">Вход</a>   <a href="registration.jsp">Регистрация</a><%} else {%><a href="logout">Выход</a><%}%></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="cols">
+                <div id="menu">
+                    <div class="catalog">
+                        <%=Menu.getMenu()%>
+                    </div>
+                    <div class="user_menu">
+                        <%if (usr != null) {%>
+                        <%=JSPHelper.getMenu(usr.getRoleId())%>
+                        <%} else {%>
+                        <%=JSPHelper.getMenu(3)%>
+                        <%}%>
+                    </div>
+                </div>
+                <div id="content">
+                    <h1>Поиск пользователей</h1>
+                    <%    if (request.getAttribute("result") == null || request.getAttribute("result") instanceof String) {%>
+                    <form action="getUsersByRole">
+                        <table id="regOrLog"><tr><td>
+                                    Введите роль:</td></tr>
+                            <tr><td><select name="ROLE" style="width : 200">
+                                        <option value="admin" selected>Админ</option>
+                                        <option value="manager" selected>Менеджер</option>
+                                        <option value="user">Пользователь</option>
+                                    </select></td><td></td></tr>
+                            <tr><td><input type="submit" value=" Ввод " class="Button"/></td></tr>
+                        </table>
+                    </form>
+                    <%if (request.getAttribute("result") != null) {%>
+                    <%=request.getAttribute("result").toString()%>
+                    <%}%>
+
+                    <%            } else {
+                            if (request.getAttribute("result") instanceof Collection) {
+                                Collection list = (Collection) request.getAttribute("result");
+                                SimpleDateFormat formt = new SimpleDateFormat("yyyy-MM-dd");
+                    %>
+                    <form action="XML/exportUser">
+                        <table align="center"  border="1" width="100%">
+                            <tr align="center">
+                                <%if (usr.getRoleId() == 1) {%>
+                                <td  align="center">User id</td>
+                                <%}%>
+                                <td  align="center">Name</td>
+                                <td align="center">Surname</td>
+                                <td align="center">Otchestvo</td>
+                                <td align="center">Nik</td>
+                                <td align="center">Born</td>
+                                <td  align="center">Phone</td>
+                                <td  align="center">Email</td>
+
+                            </tr>
+                            <%
+                                                            Iterator iter = list.iterator();
+                                                            while (iter.hasNext()) {
+                                                                user = (UserBeanRemote) iter.next();%>
+                            <tr align="center">
+                                <%if (usr.getRoleId() == 1) {%>
+                                <td><%= user.getId()%></td>
+                                <%}%>
+                                <td><%= user.getName()%></td>
+                                <td><%= user.getSurname()%></td>
+                                <td><%= user.getOtchestvo()%></td>
+                                <td><%= user.getNik()%></td>
+                                <td><%=formt.format(user.getBorn())%></td>
+                                <%if (user.getPhone() != null) {%>
+                                <td><%= user.getPhone()%></td>
+                                <%} else {%>
+                                <td></td>
+                                <%}
+                                                                                                if (user.getEmail() != null) {%>
+                                <td><%= user.getEmail()%></td>
+                                <%} else {%>
+                                <td></td>
+                                <%}
+                                %>
+                            </tr>
+                            <%
+                                                            }%>
+                        </table>
+                    </form>
+
+                    <%  }
+                                }
+                    %>
+                </div>
+            </div>
+        </div>
     </body>
 </html>

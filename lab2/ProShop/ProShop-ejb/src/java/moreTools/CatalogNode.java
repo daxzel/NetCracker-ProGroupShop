@@ -39,7 +39,7 @@ public class CatalogNode {
     public String  getHtml() throws RemoteException{
         String html = "";
         if(children.isEmpty()){
-            html = "<li><a href=\""+ "getProductsByCatalog?ID="+ctg.getId() +"\">"+ctg.getName()+"</a></li>"+"\r\n";
+            html = "<li><a href=\""+ "/ProShop-war/getProductsByCatalog?ID="+ctg.getId() +"\">"+ctg.getName()+"</a></li>"+"\r\n";
         }else{
             html = "<li>"+ctg.getName()+"\r\n";
             html = html + "<ul>"+"\r\n";

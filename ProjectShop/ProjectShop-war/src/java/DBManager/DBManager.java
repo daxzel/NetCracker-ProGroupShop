@@ -174,7 +174,7 @@ public class DBManager extends AbstractManager {
     }
 
     public static List findUsersByRole(String roleName) throws SQLException, NamingException {
-        List<User> list = new ArrayList();
+        List list = new ArrayList();
         Role role = null;
         User usr = null;
         Connection conn = null;
