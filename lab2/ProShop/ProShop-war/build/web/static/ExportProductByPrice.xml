@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/ProShop-war/static/Products.xsl"?>
+<BASE>
+  <ROLE ID_ROLE="1">
+    <NAME>super_admin</NAME>
+  </ROLE>
+  <ROLE ID_ROLE="2">
+    <NAME>manager</NAME>
+  </ROLE>
+  <ROLE ID_ROLE="3">
+    <NAME>user</NAME>
+  </ROLE>
+  <USER ID_USER="3">
+    <NAME>Jura</NAME>
+    <SURNAME>Bernatskiy</SURNAME>
+    <OTCHESTVO>Igorevicha</OTCHESTVO>
+    <NIK>JuraPro</NIK>
+    <PASSWORD>123</PASSWORD>
+    <BORN>1990-09-14</BORN>
+    <PHONE />
+    <EMAIL />
+    <ID_ROLE>1</ID_ROLE>
+  </USER>
+  <USER ID_USER="5">
+    <NAME>Evgenissss</NAME>
+    <SURNAME>Poliakov</SURNAME>
+    <OTCHESTVO>Alekseevich</OTCHESTVO>
+    <NIK>Evgendos</NIK>
+    <PASSWORD>123</PASSWORD>
+    <BORN>1990-07-12</BORN>
+    <PHONE>123122</PHONE>
+    <EMAIL />
+    <ID_ROLE>2</ID_ROLE>
+  </USER>
+  <USER ID_USER="9">
+    <NAME>Andrei</NAME>
+    <SURNAME>Semenov</SURNAME>
+    <OTCHESTVO>Mihailovich</OTCHESTVO>
+    <NIK>Saimon</NIK>
+    <PASSWORD>123</PASSWORD>
+    <BORN>2011-11-11</BORN>
+    <PHONE />
+    <EMAIL />
+    <ID_ROLE>3</ID_ROLE>
+  </USER>
+  <CATALOG ID_CATALOG="3">
+    <ID_PARENT>2</ID_PARENT>
+    <NAME>Холодильники</NAME>
+  </CATALOG>
+  <CATALOG ID_CATALOG="4">
+    <ID_PARENT>2</ID_PARENT>
+    <NAME>Стиральные машины</NAME>
+  </CATALOG>
+  <CATALOG ID_CATALOG="5">
+    <ID_PARENT>2</ID_PARENT>
+    <NAME>Пылесосы</NAME>
+  </CATALOG>
+  <CATALOG ID_CATALOG="6">
+    <ID_PARENT>2</ID_PARENT>
+    <NAME>Микроволновые печи</NAME>
+  </CATALOG>
+  <CATALOG ID_CATALOG="8">
+    <ID_PARENT>7</ID_PARENT>
+    <NAME>Телевизоры</NAME>
+  </CATALOG>
+  <PRODUCT ID_PRODUCT="12">
+    <DESCRIPTION>- Цвет: белый
+    - Размеры (ВxШxГ): 85х60х65 см</DESCRIPTION>
+    <ID_CATALOG>4</ID_CATALOG>
+    <NAME>Hotpoint-Ariston AQLF 9D 69</NAME>
+    <PRICE>26700.0</PRICE>
+  </PRODUCT>
+  <PRODUCT ID_PRODUCT="13">
+    <DESCRIPTION>Уровень шума	 62 Дб
+    Гарантия	 1</DESCRIPTION>
+    <ID_CATALOG>5</ID_CATALOG>
+    <NAME>Sinbo SVC-3445</NAME>
+    <PRICE>3990.0</PRICE>
+  </PRODUCT>
+  <PRODUCT ID_PRODUCT="14">
+    <DESCRIPTION>Гарантия	 1</DESCRIPTION>
+    <ID_CATALOG>5</ID_CATALOG>
+    <NAME>Bosch BSGL-2 MOVE8</NAME>
+    <PRICE>3250.0</PRICE>
+  </PRODUCT>
+  <PRODUCT ID_PRODUCT="15">
+    <DESCRIPTION>Мощность гриля, Вт:	 900
+    Цвет корпуса:	 белый</DESCRIPTION>
+    <ID_CATALOG>6</ID_CATALOG>
+    <NAME>Wellton WMO-1700GW</NAME>
+    <PRICE>2190.0</PRICE>
+  </PRODUCT>
+  <PRODUCT ID_PRODUCT="16">
+    <DESCRIPTION>Мощность гриля, Вт:	 800
+    Цвет корпуса:</DESCRIPTION>
+    <ID_CATALOG>6</ID_CATALOG>
+    <NAME>Beko MWС 2010 MW</NAME>
+    <PRICE>2280.0</PRICE>
+  </PRODUCT>
+  <PRODUCT ID_PRODUCT="17">
+    <DESCRIPTION>Мощность гриля, Вт:	 1000
+    Цвет корпуса:	 белый</DESCRIPTION>
+    <ID_CATALOG>6</ID_CATALOG>
+    <NAME>Supra MWS 4020</NAME>
+    <PRICE>2240.0</PRICE>
+  </PRODUCT>
+  <PRODUCT ID_PRODUCT="18">
+    <DESCRIPTION>Мощность гриля, Вт:	 800
+    Цвет корпуса:	 белый</DESCRIPTION>
+    <ID_CATALOG>6</ID_CATALOG>
+    <NAME>Beko MWC 2010 EW</NAME>
+    <PRICE>2440.0</PRICE>
+  </PRODUCT>
+  <PRODUCT ID_PRODUCT="19">
+    <DESCRIPTION>Мощность гриля, Вт:	 1 200
+    Цвет корпуса:	 белый</DESCRIPTION>
+    <ID_CATALOG>6</ID_CATALOG>
+    <NAME>Gorenje MO 20 MGW</NAME>
+    <PRICE>2510.0</PRICE>
+  </PRODUCT>
+  <PRODUCT ID_PRODUCT="20">
+    <DESCRIPTION>Мощность гриля, Вт:	 1000
+    Цвет корпуса:	 серебристый</DESCRIPTION>
+    <ID_CATALOG>6</ID_CATALOG>
+    <NAME>Erisson MWG 20 DM</NAME>
+    <PRICE>2340.0</PRICE>
+  </PRODUCT>
+  <PRODUCT ID_PRODUCT="21">
+    <DESCRIPTION>Мощность гриля, Вт:	 1000
+    Цвет корпуса:	 серебристый</DESCRIPTION>
+    <ID_CATALOG>6</ID_CATALOG>
+    <NAME>Mystery MMW-2005G</NAME>
+    <PRICE>2480.0</PRICE>
+  </PRODUCT>
+  <PRODUCT ID_PRODUCT="22">
+    <DESCRIPTION>Мощность гриля, Вт:	 900
+    Цвет корпуса:	 серебристый</DESCRIPTION>
+    <ID_CATALOG>6</ID_CATALOG>
+    <NAME>Hansa HMO-2071SGM</NAME>
+    <PRICE>2630.0</PRICE>
+  </PRODUCT>
+  <PRODUCT ID_PRODUCT="23">
+    <DESCRIPTION>Стереозвук	:	есть</DESCRIPTION>
+    <ID_CATALOG>8</ID_CATALOG>
+    <NAME>Acer AT2054D</NAME>
+    <PRICE>6194.0</PRICE>
+  </PRODUCT>
+  <PRODUCT ID_PRODUCT="24">
+    <DESCRIPTION>Стереозвук	:	есть
+    Частота развертки	:	100 Гц</DESCRIPTION>
+    <ID_CATALOG>8</ID_CATALOG>
+    <NAME>Acer AT3258ML</NAME>
+    <PRICE>22005.0</PRICE>
+  </PRODUCT>
+  <PRODUCT ID_PRODUCT="25">
+    <DESCRIPTION>Стереозвук	:	есть</DESCRIPTION>
+    <ID_CATALOG>8</ID_CATALOG>
+    <NAME>LED LG 19 19LV2300</NAME>
+    <PRICE>10432.0</PRICE>
+  </PRODUCT>
+  <PRODUCT ID_PRODUCT="27">
+    <DESCRIPTION>HD-формат	:	720p
+    Стереозвук	:	есть</DESCRIPTION>
+    <ID_CATALOG>8</ID_CATALOG>
+    <NAME>LED LG 22' 22LV2300</NAME>
+    <PRICE>12355.0</PRICE>
+  </PRODUCT>
+  <PRODUCT ID_PRODUCT="28">
+    <DESCRIPTION>Стереозвук	:	есть</DESCRIPTION>
+    <ID_CATALOG>8</ID_CATALOG>
+    <NAME>LCD LG 32' 32LK455C</NAME>
+    <PRICE>17050.0</PRICE>
+  </PRODUCT>
+  <PRODUCT ID_PRODUCT="29">
+    <DESCRIPTION>Стереозвук	:	есть</DESCRIPTION>
+    <ID_CATALOG>8</ID_CATALOG>
+    <NAME>LCD 32' Rolsen RL-32A09105</NAME>
+    <PRICE>17050.0</PRICE>
+  </PRODUCT>
+  <PRODUCT ID_PRODUCT="30">
+    <DESCRIPTION>Стереозвук	:	есть
+    Светодиодная (LED) подсветка	:	есть</DESCRIPTION>
+    <ID_CATALOG>8</ID_CATALOG>
+    <NAME>LED 19' Toshiba REGZA 19EL834R</NAME>
+    <PRICE>6846.0</PRICE>
+  </PRODUCT>
+  <PRODUCT ID_PRODUCT="31">
+    <DESCRIPTION>Стереозвук	:	есть</DESCRIPTION>
+    <ID_CATALOG>8</ID_CATALOG>
+    <NAME>LED 26' Toshiba 26DL833R</NAME>
+    <PRICE>15811.0</PRICE>
+  </PRODUCT>
+  <PRODUCT ID_PRODUCT="0">
+    <DESCRIPTION>Гарантия:	 3 года</DESCRIPTION>
+    <ID_CATALOG>3</ID_CATALOG>
+    <NAME>LG GW-B207 FVQA</NAME>
+    <PRICE>33090.0</PRICE>
+  </PRODUCT>
+  <PRODUCT ID_PRODUCT="1">
+    <DESCRIPTION>Количество компрессоров:	 1
+        Класс энергопотребления:	 А+</DESCRIPTION>
+    <ID_CATALOG>3</ID_CATALOG>
+    <NAME>Siemens KA 58NA45RU</NAME>
+    <PRICE>62820.0</PRICE>
+  </PRODUCT>
+  <PRODUCT ID_PRODUCT="2">
+    <DESCRIPTION>Гарантия:	 1 год</DESCRIPTION>
+    <ID_CATALOG>3</ID_CATALOG>
+    <NAME>Zanussi ZRD 324</NAME>
+    <PRICE>8960.0</PRICE>
+  </PRODUCT>
+  <PRODUCT ID_PRODUCT="3">
+    <DESCRIPTION>Класс энергопотребления:	 А
+    Цвет:	 белый</DESCRIPTION>
+    <ID_CATALOG>3</ID_CATALOG>
+    <NAME>Vestel LWR 260</NAME>
+    <PRICE>9990.0</PRICE>
+  </PRODUCT>
+  <PRODUCT ID_PRODUCT="4">
+    <DESCRIPTION>Цвет:	 белый</DESCRIPTION>
+    <ID_CATALOG>3</ID_CATALOG>
+    <NAME>Hansa HR-138W</NAME>
+    <PRICE>9990.0</PRICE>
+  </PRODUCT>
+  <PRODUCT ID_PRODUCT="5">
+    <DESCRIPTION>Цвет:	 белый</DESCRIPTION>
+    <ID_CATALOG>3</ID_CATALOG>
+    <NAME>Beko DS 333020</NAME>
+    <PRICE>11320.0</PRICE>
+  </PRODUCT>
+  <PRODUCT ID_PRODUCT="6">
+    <DESCRIPTION>Гарантия:	 1 год</DESCRIPTION>
+    <ID_CATALOG>3</ID_CATALOG>
+    <NAME>Electrolux ERD 32190 W</NAME>
+    <PRICE>11320.0</PRICE>
+  </PRODUCT>
+  <PRODUCT ID_PRODUCT="7">
+    <DESCRIPTION>- Цвет: белый
+    - Размеры (ВxШxГ): 85x60x54 см</DESCRIPTION>
+    <ID_CATALOG>4</ID_CATALOG>
+    <NAME>Hotpoint-Ariston ARMXXD 1297</NAME>
+    <PRICE>17590.0</PRICE>
+  </PRODUCT>
+  <PRODUCT ID_PRODUCT="8">
+    <DESCRIPTION>- Цвет: белый
+    - Размеры (ВxШxГ): 84.7x60x44 см</DESCRIPTION>
+    <ID_CATALOG>4</ID_CATALOG>
+    <NAME>Bosch WLX 24463 OE</NAME>
+    <PRICE>15880.0</PRICE>
+  </PRODUCT>
+  <PRODUCT ID_PRODUCT="9">
+    <DESCRIPTION>- Цвет: белый
+    - Размеры (ВxШxГ): 85х63х60 см</DESCRIPTION>
+    <ID_CATALOG>4</ID_CATALOG>
+    <NAME>Kuppersbusch W 1809.0 W</NAME>
+    <PRICE>117180.0</PRICE>
+  </PRODUCT>
+  <PRODUCT ID_PRODUCT="10">
+    <DESCRIPTION>- Цвет: серебристо-белый
+    - Размеры (ВxШxГ): 85х59.5х62 см</DESCRIPTION>
+    <ID_CATALOG>4</ID_CATALOG>
+    <NAME>Indesit PWE 81472 S</NAME>
+    <PRICE>17900.0</PRICE>
+  </PRODUCT>
+  <PRODUCT ID_PRODUCT="11">
+    <DESCRIPTION>- Цвет: белый
+    - Размеры (ВxШxГ): 85x60x44 см</DESCRIPTION>
+    <ID_CATALOG>4</ID_CATALOG>
+    <NAME>AEG LS 84840</NAME>
+    <PRICE>39900.0</PRICE>
+  </PRODUCT>
+  <OPINION ID_OPINION="5">
+    <ID_USER>5</ID_USER>
+    <ID_PRODUCT>0</ID_PRODUCT>
+    <TEXT>fsddsfsd</TEXT>
+  </OPINION>
+  <OPINION ID_OPINION="4">
+    <ID_USER>9</ID_USER>
+    <ID_PRODUCT>0</ID_PRODUCT>
+    <TEXT>Horoshi holodilniik</TEXT>
+  </OPINION>
+  <ORDER ID_ORDER="41">
+    <ID_USER>9</ID_USER>
+    <ID_PRODUCT>23</ID_PRODUCT>
+    <STATUS>true</STATUS>
+    <KOL_VO>1</KOL_VO>
+  </ORDER>
+  <ORDER ID_ORDER="1">
+    <ID_USER>9</ID_USER>
+    <ID_PRODUCT>23</ID_PRODUCT>
+    <STATUS>true</STATUS>
+    <KOL_VO>1</KOL_VO>
+  </ORDER>
+  <ORDER ID_ORDER="21">
+    <ID_USER>3</ID_USER>
+    <ID_PRODUCT>0</ID_PRODUCT>
+    <STATUS>false</STATUS>
+    <KOL_VO>12</KOL_VO>
+  </ORDER>
+  <ORDER ID_ORDER="42">
+    <ID_USER>3</ID_USER>
+    <ID_PRODUCT>0</ID_PRODUCT>
+    <STATUS>false</STATUS>
+    <KOL_VO>12</KOL_VO>
+  </ORDER>
+  <ORDER ID_ORDER="43">
+    <ID_USER>9</ID_USER>
+    <ID_PRODUCT>2</ID_PRODUCT>
+    <STATUS>false</STATUS>
+    <KOL_VO>1</KOL_VO>
+  </ORDER>
+  <ORDER ID_ORDER="3">
+    <ID_USER>9</ID_USER>
+    <ID_PRODUCT>2</ID_PRODUCT>
+    <STATUS>false</STATUS>
+    <KOL_VO>1</KOL_VO>
+  </ORDER>
+</BASE>
+
+
