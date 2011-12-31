@@ -91,68 +91,10 @@ vertical-align: inherit;
 div {
 display: block;
 }
-#menu{
-margin-top: 0px;
-margin-right: 20px;
-margin-bottom: 20px;
-margin-left: 0px;
-width: 200px;
-float: left
-}
-#menu div.catalog{
-margin-top: 0px;
-margin-right: 0px;
-margin-bottom: 20px;
-margin-left: 0px;
-}
-#menu  div.user_menu{
-width:138;
-
-}
-#menu  div.user_menu ul{
-	list-style: none;
-	
-	
-}
-#menu  div.user_menu ul li{
-	list-style: none;
-	padding: 7px 10px;
-	border-style: solid;
-	border-width: 1px 1px 1px 1px;
-	border-color: #D9D9D9 #FFFFFF #FFFFFF;
-	background-color:#FFFFFF;
-	
-}
-#menu  div.user_menu ul li.last{
-	list-style: none;
-	padding: 7px 10px;
-	border-style: solid;
-	border-width: 1px 1px 1px 1px;
-	border-color: #D9D9D9 #FFFFFF #D9D9D9;
-	background-color:#FFFFFF;
-	
-}
-#menu  div.user_menu ul li.first{
-	list-style: none;
-	font-weight: bold;
-	padding: 7px 10px;
-	border-style: solid;
-	border-width: 1px 1px 1px 1px;
-	border-color: #D9D9D9 #FFFFFF #FFFFFF;
-	background-color:#FFFFFF;
-
-}
-#menu  div.user_menu ul li a{
-color: #197DBB;
-
-}
-#menu  div.user_menu ul li :hover{
-background-color:#D9D9D9;
-}
 #content{
-width: 750px;
+width: 75%;
 border: 1px solid #D9D9D9;
-float: left;
+float: right;
 margin-top: 0px;
 margin-right: 0px;
 margin-bottom: 20px;
@@ -173,14 +115,16 @@ text-decoration: none;
 color: #FFFFFF;
 border: 1px solid #CCC;
 display: inline-block;
-
+width:60px;
+height:25px;
 background: #117df8;
 background: -moz-linear-gradient(-90deg, white, #117df8);
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0, white), color-stop(1, #117df8));
-font-size: 18px;
+font-size: 15px;
 font-weight: bold;
 cursor: pointer;
 border-color: #c4dffd;
+border-radius: 7px;
 background:  repeat-x scroll -2px -2px #117df8;
 background: -moz-linear-gradient(-90deg, #c4dffd, #117df8);
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #c4dffd), color-stop(1, #117df8));
@@ -206,4 +150,10 @@ font-size: 17px;
 }
 select{
 font-size: 17px;
+}
+#initialCatalog{
+background-color:#200DEB;
+font-weight:bold;
+border-radius: 7px 7px 0px 0px;
+color: #FFFFFF;
 }

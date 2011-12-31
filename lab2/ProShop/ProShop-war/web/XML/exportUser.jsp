@@ -8,6 +8,7 @@
 <%@page import="exceptions.LoginException"%>
 <%@page import="helpers.JSPHelper"%>
 <%@page import="entityBeans.UserBeanRemote"%>
+<%@page errorPage="/errorPage.jsp"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -18,6 +19,8 @@
         <link href="<%=request.getContextPath()%>/static/dropdown.css" media="all" rel="stylesheet" type="text/css" />
         <link href="<%=request.getContextPath()%>/static/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
         <link href="<%=request.getContextPath()%>/static/default.css" media="all" rel="stylesheet" type="text/css" />
+        <link href="<%=request.getContextPath()%>/static/menu.css" media="all" rel="stylesheet" type="text/css" />
+
         <title>Экспорт пользователей</title>
     </head>
     <body>
@@ -32,9 +35,9 @@
                     <tbody>
                         <tr>
                             <td class="logo">
-                                <img src="/ProShop-war/static/logo.jpg">
+                                <img src="<%=request.getContextPath()%>/static/logo.jpg">
                             </td>
-                            <td class="team" align="center"><a href="aboutTeam.jsp">Команда</a></td>
+                            <td class="team" align="center"><a href="<%=request.getContextPath()%>/aboutTeam.jsp">Команда</a></td>
                             <td class="user_nav" align="right"><%if (usr == null) {%><a href="<%=request.getContextPath()%>/login.jsp">Вход</a>   <a href="<%=request.getContextPath()%>/registration.jsp">Регистрация</a><%} else {%><a href="<%=request.getContextPath()%>/logout">Выход</a><%}%></td>
                         </tr>
                     </tbody>
@@ -55,7 +58,7 @@
                 </div>
                 <div id="content">
                     <form action="exportUsersP">
-                     <table id="regOrLog">
+                        <table id="regOrLog">
                             <tr><td>Введите имя:</td><td> <input type="text" name="NAME" value="" /></td></tr>
                             <tr><td>Введите роль:
                                     <select name="ROLE" style="width : 200">

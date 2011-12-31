@@ -846,7 +846,7 @@ public class ExecServlet extends HttpServlet {
                     catalog.accept(map);
                 }
                 CatalogNode ctg = (CatalogNode) map.get(new Long(1));
-                String html = "<li>" + ctg.ctg.getName() + "</li>" + "\r\n";
+                String html = "<li id=\"initialCatalog\">" + ctg.ctg.getName() + "</li>" + "\r\n";
                 for (int j = 0; j < ctg.children.size(); j++) {
                     CatalogNode ctg1 = (CatalogNode) ctg.children.get(j);
                     //     html = html+"<li><a href=\""+ "getProductsByCatalog?ID="+ctg1.ctg.getId() +"\">"+ctg1.ctg.getName()+"</a>"+"\r\n";

@@ -14,10 +14,11 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link rel="stylesheet" type="text/css" href="static/main.css">
-        <link href="static/dropdown.css" media="all" rel="stylesheet" type="text/css" />
-        <link href="static/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
-        <link href="static/default.css" media="all" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/main.css">
+        <link href="<%=request.getContextPath()%>/static/dropdown.css" media="all" rel="stylesheet" type="text/css" />
+        <link href="<%=request.getContextPath()%>/static/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
+        <link href="<%=request.getContextPath()%>/static/default.css" media="all" rel="stylesheet" type="text/css" />
+        <link href="<%=request.getContextPath()%>/static/menu.css" media="all" rel="stylesheet" type="text/css" />
         <title>Регистрация пользователя</title>
     </head>
     <body>
@@ -51,10 +52,10 @@
                     <tbody>
                         <tr>
                             <td class="logo">
-                                <img src="/ProShop-war/static/logo.jpg">
+                                <img src="<%=request.getContextPath()%>/static/logo.jpg">
                             </td>
-                            <td class="team" align="center"><a href="aboutTeam.jsp">Команда</a></td>
-                            <td class="user_nav" align="right"><%if (usr == null) {%><a href="login.jsp">Вход</a>   <a href="registration.jsp">Регистрация</a><%} else {%><a href="logout">Выход</a><%}%></td>
+                            <td class="team" align="center"><a href="<%=request.getContextPath()%>/aboutTeam.jsp">Команда</a></td>
+                            <td class="user_nav" align="right"><%if (usr == null) {%><a href="<%=request.getContextPath()%>/login.jsp">Вход</a>   <a href="<%=request.getContextPath()%>/registration.jsp">Регистрация</a><%} else {%><a href="<%=request.getContextPath()%>/logout">Выход</a><%}%></td>
                         </tr>
                     </tbody>
                 </table>
@@ -94,14 +95,11 @@
                             <tr><td>Электронная почта</td><td></td></tr>
                             <tr><td><input type="text" name="EMAIL" value="<%=email%>" size="25" /></td><td></td></tr>
                             <tr><td><select name="ROLE" style="width : 200">
-                                        <% if (role.equals("1")) {%>
-                                        <option value="1" selected>Админ</option>
-                                        <option value="2">Пользователь</option>
-                                        <%} else {%>
+
                                         <option value="1">Админ</option>
                                         <option value="3" selected>Пользователь</option>
                                         <option value="2" selected>Менеджер</option>
-                                        <%}%>
+
                                     </select></td><td></td></tr>
                             <tr><td><input type="submit" value=" Ввод " class="Button"/></td><td></td></tr>
                         </table>
@@ -117,7 +115,5 @@
         <%}
         %>
 
-        <p align="left"><a href ="login.jsp">enter</a><br></p>
-        <p align="left"><a href ="index.jsp">index</a><br></p>
     </body>
 </html>

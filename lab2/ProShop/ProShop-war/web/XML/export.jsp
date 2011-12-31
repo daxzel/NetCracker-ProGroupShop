@@ -17,15 +17,17 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <%String str= request.getContextPath();%>
+
         <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/main.css">
         <link href="<%=request.getContextPath()%>/static/dropdown.css" media="all" rel="stylesheet" type="text/css" />
         <link href="<%=request.getContextPath()%>/static/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
         <link href="<%=request.getContextPath()%>/static/default.css" media="all" rel="stylesheet" type="text/css" />
+        <link href="<%=request.getContextPath()%>/static/menu.css" media="all" rel="stylesheet" type="text/css" />
+
         <title>Экспорт сущностей в XML</title>
     </head>
     <body>
-       <% UserBeanRemote usr = JSPHelper.getUser2(session);
+        <% UserBeanRemote usr = JSPHelper.getUser2(session);
                     if (usr.getRoleId() > 2) {
                         throw new LoginException("Вы не обладаете правами администратора");
                     }
@@ -36,9 +38,9 @@
                     <tbody>
                         <tr>
                             <td class="logo">
-                                <img src="/ProShop-war/static/logo.jpg">
+                                <img src="<%=request.getContextPath()%>/static/logo.jpg">
                             </td>
-                            <td class="team" align="center"><a href="aboutTeam.jsp">Команда</a></td>
+                            <td class="team" align="center"><a href="<%=request.getContextPath()%>/aboutTeam.jsp">Команда</a></td>
                             <td class="user_nav" align="right"><%if (usr == null) {%><a href="<%=request.getContextPath()%>/login.jsp">Вход</a>   <a href="<%=request.getContextPath()%>/registration.jsp">Регистрация</a><%} else {%><a href="<%=request.getContextPath()%>/logout">Выход</a><%}%></td>
                         </tr>
                     </tbody>

@@ -18,10 +18,11 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Обновление продукта</title>
-        <link rel="stylesheet" type="text/css" href="static/main.css">
-        <link href="static/dropdown.css" media="all" rel="stylesheet" type="text/css" />
-        <link href="static/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
-        <link href="static/default.css" media="all" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/main.css">
+        <link href="<%=request.getContextPath()%>/static/dropdown.css" media="all" rel="stylesheet" type="text/css" />
+        <link href="<%=request.getContextPath()%>/static/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
+        <link href="<%=request.getContextPath()%>/static/default.css" media="all" rel="stylesheet" type="text/css" />
+        <link href="<%=request.getContextPath()%>/static/menu.css" media="all" rel="stylesheet" type="text/css" />
     </head>
     <body>
         <%
@@ -66,7 +67,7 @@
                         <table id="regOrLog">
                             <tr><td> Введите название продукта</td></tr>
                             <tr><td>  <input type="text" name="nameProduct" value="" size="60" /></td></tr>
-                            <tr><td> <input type="submit" value="Input" /></td></tr>
+                            <tr><td> <input type="submit" value=" Ввод " class="Button"/></td></tr>
                         </table>
                     </form>
                     <%                            } else {
@@ -100,7 +101,7 @@
                             <tr><td><input type="text" name="PRICE" value="<%=price%>" size="20" /></td><td></td></tr>
                             <tr><td>Название каталога</td><td></td></tr>
                             <tr><td><input type="text" name="NAME_CATALOG" value="<%=nameCatalog%>" size="30" /></td><td></td></tr>
-                            <tr><td><input type="submit" value="Input" /></td><td></td></tr>
+                            <tr><td><input type="submit" value=" Ввод " class="Button"/></td><td></td></tr>
                         </table>
 
                     </form>

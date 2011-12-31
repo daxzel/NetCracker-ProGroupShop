@@ -8,6 +8,7 @@
 <%@page import="exceptions.LoginException"%>
 <%@page import="entityBeans.UserBeanRemote"%>
 <%@page import="helpers.JSPHelper"%>
+<%@page errorPage="/errorPage.jsp"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     "http://www.w3.org/TR/html4/loose.dtd">
@@ -19,6 +20,7 @@
         <link href="<%=request.getContextPath()%>/static/dropdown.css" media="all" rel="stylesheet" type="text/css" />
         <link href="<%=request.getContextPath()%>/static/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
         <link href="<%=request.getContextPath()%>/static/default.css" media="all" rel="stylesheet" type="text/css" />
+        <link href="<%=request.getContextPath()%>/static/menu.css" media="all" rel="stylesheet" type="text/css" />
 
         <title>Экспорт продуктов в XML</title>
     </head>
@@ -34,9 +36,9 @@
                     <tbody>
                         <tr>
                             <td class="logo">
-                                <img src="/ProShop-war/static/logo.jpg">
+                                <img src="<%=request.getContextPath()%>/static/logo.jpg">
                             </td>
-                            <td class="team" align="center"><a href="aboutTeam.jsp">Команда</a></td>
+                            <td class="team" align="center"><a href="<%=request.getContextPath()%>/aboutTeam.jsp">Команда</a></td>
                             <td class="user_nav" align="right"><%if (usr == null) {%><a href="<%=request.getContextPath()%>/login.jsp">Вход</a>   <a href="<%=request.getContextPath()%>/registration.jsp">Регистрация</a><%} else {%><a href="<%=request.getContextPath()%>/logout">Выход</a><%}%></td>
                         </tr>
                     </tbody>
@@ -71,11 +73,11 @@
                         </table>
                     </form>
                     <%Object obj = request.getAttribute("result");
-            if (obj != null) {%>
+                        if (obj != null) {%>
                     <%=obj.toString()%>
                     <%}%>
                     <%}
-                    if ("byName".equals(request.getParameter("poiskType"))) {%>
+                                if ("byName".equals(request.getParameter("poiskType"))) {%>
                     <form name="second" action="ExportProductByName">
                         <table id="regOrLog">
                             <tr><td>Введите наименование</td><td> <input type="text" name="name" value="" /></td></tr>
@@ -88,7 +90,7 @@
 
                     </form>
                     <%Object obj = request.getAttribute("result");
-                                if (obj != null) {%>
+                                                        if (obj != null) {%>
                     <%=obj.toString()%>
                     <%}%>
                     <%}%>

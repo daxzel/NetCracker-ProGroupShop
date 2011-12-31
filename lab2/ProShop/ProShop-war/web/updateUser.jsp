@@ -16,10 +16,11 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link rel="stylesheet" type="text/css" href="static/main.css">
-        <link href="static/dropdown.css" media="all" rel="stylesheet" type="text/css" />
-        <link href="static/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
-        <link href="static/default.css" media="all" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/main.css">
+        <link href="<%=request.getContextPath()%>/static/dropdown.css" media="all" rel="stylesheet" type="text/css" />
+        <link href="<%=request.getContextPath()%>/static/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
+        <link href="<%=request.getContextPath()%>/static/default.css" media="all" rel="stylesheet" type="text/css" />
+        <link href="<%=request.getContextPath()%>/static/menu.css" media="all" rel="stylesheet" type="text/css" />
         <title>user update</title>
     </head>
     <body>
@@ -31,7 +32,7 @@
 
                     session.setAttribute("homepage", "updateUser.jsp");
                     //  session.setAttribute("usrOld", usr);
-%>
+        %>
         <div id="container">
             <div id="header">
                 <table class="top_nav">

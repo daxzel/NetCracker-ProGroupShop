@@ -7,6 +7,7 @@
 <%@page import="exceptions.LoginException"%>
 <%@page import="entityBeans.UserBeanRemote"%>
 <%@page import="menu.Menu"%>
+<%@page errorPage="/errorPage.jsp"%>
 <%@page import="helpers.JSPHelper"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -19,6 +20,7 @@
         <link href="<%=request.getContextPath()%>/static/dropdown.css" media="all" rel="stylesheet" type="text/css" />
         <link href="<%=request.getContextPath()%>/static/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
         <link href="<%=request.getContextPath()%>/static/default.css" media="all" rel="stylesheet" type="text/css" />
+        <link href="<%=request.getContextPath()%>/static/menu.css" media="all" rel="stylesheet" type="text/css" />
 
         <title>Импорт из XML</title>
     </head>
@@ -34,9 +36,9 @@
                     <tbody>
                         <tr>
                             <td class="logo">
-                                <img src="/ProShop-war/static/logo.jpg">
+                                <img src="<%=request.getContextPath()%>/static/logo.jpg">
                             </td>
-                            <td class="team" align="center"><a href="aboutTeam.jsp">Команда</a></td>
+                            <td class="team" align="center"><a href="<%=request.getContextPath()%>/aboutTeam.jsp">Команда</a></td>
                             <td class="user_nav" align="right"><%if (usr == null) {%><a href="<%=request.getContextPath()%>/login.jsp">Вход</a>   <a href="<%=request.getContextPath()%>/registration.jsp">Регистрация</a><%} else {%><a href="<%=request.getContextPath()%>/logout">Выход</a><%}%></td>
                         </tr>
                     </tbody>
