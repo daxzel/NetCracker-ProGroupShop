@@ -513,7 +513,7 @@ public class ExecServlet extends HttpServlet {
             String nik = request.getParameter("NIK");
             UserBeanRemoteHome userHome = (UserBeanRemoteHome) EJBHelper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
             UserBeanRemote user = userHome.findByNik(nik);
-            Long id=new Long(user.getId());
+            Long id = new Long(user.getId());
             //   Long a =
             //  user.sendMessage(new Long(usr.getId()), "\"USER\"", "Удален пользователь " + nik, null);
             userHome.remove(id);
@@ -1019,6 +1019,7 @@ public class ExecServlet extends HttpServlet {
             throw new LoginException("Вы не обладаете правами администратора");
         }
         String result = "Продукт не обновлен";
+        String message = "";
         try {
             ProductBeanRemote product = (ProductBeanRemote) request.getSession().getAttribute("product");
             //   String g1 = product.getName();
@@ -1041,21 +1042,37 @@ public class ExecServlet extends HttpServlet {
                             request.setAttribute("result", result);
                             throw new Exception();
                         } catch (FinderException ex) {
+                            String str = " Изменено название продукта с " + product.getName() + " на " + name;
                             product.setName(name);
+                            message = message + str;
                         }
                     }
                     String description = request.getParameter("DESCRIPTION");
-                    product.setDescription(description);
+                    if (!product.getDescription().equals(description)) {
+                        String str = ". Изменено описание продукта";
+                        product.setDescription(description);
+                        message = message + str;
+                    }
                     String price = request.getParameter("PRICE");
                     double priceDouble = Double.parseDouble(price);
-                    product.setPrice(new Double(priceDouble));
+                    if (product.getPrice() != priceDouble) {
+                        String str = ". Изменена цена продукта с " + product.getPrice() + " на " + priceDouble;
+                        product.setPrice(new Double(priceDouble));
+                        message = message + str;
+                    }
                     String nameCatalog = request.getParameter("NAME_CATALOG");
 
                     CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
                     CatalogBeanRemote ctg = catalogHome.findByName(nameCatalog);
-                    product.setIdCatalog(new Long(ctg.getId()));
+                    //   CatalogBeanRemote ctg1 = catalogHome.findByPrimaryKey(new Long(product.getIdCatalog()));
+                    if (ctg.getId() != product.getIdCatalog()) {
+                        CatalogBeanRemote ctg1 = catalogHome.findByPrimaryKey(new Long(product.getIdCatalog()));
+                        String str = ". Продукт перемещени из каталога " + ctg1.getName() + " в каталог " + ctg.getName();
+                        product.setIdCatalog(new Long(ctg.getId()));
+                        message = message + str;
+                    }
                     result = "Продукт обновлен";
-                    usr.sendMessage(new Long(usr.getId()), "\"PRODUCT\"", "Отредактирован продукт " + product.getName(), new Long(product.getId()), 2);
+                    usr.sendMessage(new Long(usr.getId()), "\"PRODUCT\"", "Отредактирован продукт " + product.getName() + ". " + message, new Long(product.getId()), 2);
                     session.removeAttribute("product");
                     request.setAttribute("result", result);
                 }
