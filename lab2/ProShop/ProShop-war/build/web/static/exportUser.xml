@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BASE>
+  <USER ID_USER="5">
+    <NAME>Evgeni</NAME>
+    <SURNAME>Poliakov</SURNAME>
+    <OTCHESTVO>Alekseevich</OTCHESTVO>
+    <NIK>Evgendos</NIK>
+    <PASSWORD>123</PASSWORD>
+    <BORN>1990-07-12</BORN>
+    <PHONE>123122</PHONE>
+    <EMAIL />
+    <ID_ROLE>2</ID_ROLE>
+  </USER>
+  <USER ID_USER="6">
+    <NAME>Andrey</NAME>
+    <SURNAME>Carevskiy</SURNAME>
+    <OTCHESTVO>qwe</OTCHESTVO>
+    <NIK>Car</NIK>
+    <PASSWORD>11</PASSWORD>
+    <BORN>2011-11-09</BORN>
+    <PHONE />
+    <EMAIL />
+    <ID_ROLE>2</ID_ROLE>
+  </USER>
+
+ <ROLE ID_ROLE="2">
+    <NAME>manager</NAME>
+  </ROLE>
+</BASE>
+
+
