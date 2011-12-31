@@ -1055,7 +1055,7 @@ public class ExecServlet extends HttpServlet {
                     CatalogBeanRemote ctg = catalogHome.findByName(nameCatalog);
                     product.setIdCatalog(new Long(ctg.getId()));
                     result = "Продукт обновлен";
-                    usr.sendMessage(new Long(usr.getId()), "\"CATALOG\"", "Отредактирован продукт " + product.getName(), new Long(product.getId()), 2);
+                    usr.sendMessage(new Long(usr.getId()), "\"PRODUCT\"", "Отредактирован продукт " + product.getName(), new Long(product.getId()), 2);
                     session.removeAttribute("product");
                     request.setAttribute("result", result);
                 }
@@ -1174,8 +1174,8 @@ public class ExecServlet extends HttpServlet {
                     catalog.setParentId(parent.getId());
                     result = "Каталог обновлен";
 
-                    usr.sendMessage(new Long(usr.getId()), "PRODUCT", "Каталог обновлен " + catalog.getName(), new Long(catalog.getId()), 2);
-                    usr.sendMessage(new Long(usr.getId()), "PRODUCT", "Дочерний каталог обновлен " + catalog.getName(), new Long(catalog.getParentId()), 2);
+                    usr.sendMessage(new Long(usr.getId()), "CATALOG", "Каталог обновлен " + catalog.getName(), new Long(catalog.getId()), 2);
+                    usr.sendMessage(new Long(usr.getId()), "CATALOG", "Дочерний каталог обновлен " + catalog.getName(), new Long(catalog.getParentId()), 2);
 
                     session.removeAttribute("catalog");
                     request.setAttribute("result", result);
