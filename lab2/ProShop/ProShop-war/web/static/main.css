@@ -9,7 +9,7 @@ body {
 margin: 0 auto 40px auto;
 padding: 7px 10px 20px 10px;
 position: relative;
-width: 1000px;
+width: 1200px;
 background-color: white;
 min-height:850px;
 }
@@ -37,7 +37,7 @@ min-height: 400px;
 }
 #header table.top_nav {
 margin: 0 10px 5px 10px;
-width: 980px;
+width: 1180px;
 border-collapse: collapse;
 color: #000;
 }
@@ -92,7 +92,7 @@ div {
 display: block;
 }
 #content{
-width: 75%;
+width: 79%;
 border: 1px solid #D9D9D9;
 float: right;
 margin-top: 0px;

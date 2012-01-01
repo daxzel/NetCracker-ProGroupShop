@@ -32,7 +32,7 @@
 
                     session.setAttribute("homepage", "updateUser.jsp");
                     //  session.setAttribute("usrOld", usr);
-        %>
+%>
         <div id="container">
             <div id="header">
                 <table class="top_nav">
@@ -158,9 +158,30 @@
                                     <%}%>
                             <tr><td>Role</td><td></td></tr>
                             <tr><td><select name="ID_ROLE" style="width : 200">
+                                        <%if (user.getRoleId() == 1) {%>
                                         <option value="1" selected>Админ</option>
                                         <option value="3">Пользователь</option>
                                         <option value="2">Менеджер</option>
+                                        <option value="4">Заблокированные</option>
+                                        <%}%>
+                                        <%if (user.getRoleId() == 3) {%>
+                                        <option value="1">Админ</option>
+                                        <option value="3" selected>Пользователь</option>
+                                        <option value="2">Менеджер</option>
+                                        <option value="4">Заблокированные</option>
+                                        <%}%>
+                                        <%if (user.getRoleId() == 2) {%>
+                                        <option value="1">Админ</option>
+                                        <option value="3">Пользователь</option>
+                                        <option value="2" selected>Менеджер</option>
+                                        <option value="4">Заблокированные</option>
+                                        <%}%>
+                                        <%if (user.getRoleId() == 4) {%>
+                                        <option value="1">Админ</option>
+                                        <option value="3">Пользователь</option>
+                                        <option value="2">Менеджер</option>
+                                        <option value="4" selected>Заблокированные</option>
+                                        <%}%>
                                     </select></td><td></td></tr>
 
                             <tr><td><input type="submit" value=" Ввод " class="Button"/></td><td></td></tr>

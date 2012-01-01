@@ -483,6 +483,9 @@ public class ExecServlet extends HttpServlet {
                     if ("manager".equals(rolename)) {
                         role_id = 2;
                     }
+                    if("block".equals(rolename)){
+                        role_id=4;
+                    }
                 }
             }
             UserBeanRemoteHome userHome = (UserBeanRemoteHome) EJBHelper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
@@ -591,7 +594,10 @@ public class ExecServlet extends HttpServlet {
             }
             UserBeanRemoteHome userHome = (UserBeanRemoteHome) EJBHelper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
             UserBeanRemote usr = userHome.findByNikAndPassword(nik, password);
-
+            if(usr.getRoleId()==4){
+                request.setAttribute("result", "Ваш профиль заблокирован");
+                throw new LoginException("Ваш профиль заблокирован");
+            }
             session.setAttribute("user", usr);
 
             if (session.getAttribute("homepage") != null) {
@@ -1249,6 +1255,50 @@ public class ExecServlet extends HttpServlet {
 
     }
 
+    protected void blockUsers(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException, LoginException {
+        HttpSession session = request.getSession();
+        RequestDispatcher rd;
+        UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
+        if (usr.getRoleId() > 2) {
+            throw new LoginException("Вы не обладаете правами администратора");
+        }
+        String result2 = "Пользователи не заблокированны";
+        try {
+            String id_users[] = request.getParameterValues("id_user");
+            UserBeanRemoteHome userHome = (UserBeanRemoteHome) EJBHelper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
+            UserBeanRemote user = null;
+            List list = new ArrayList();
+            for (int i = 0; i < id_users.length; i++) {
+                user = userHome.findByPrimaryKey(new Long(id_users[i]));
+                user.setRoleId(new Long(4));
+                list.add(user);
+                //    user.sendMessage(new Long(usr.getId()), "\"\"", "Удален заказ", null, 2);
+            }
+
+            //   List list = (List) userHome.findByRole(new Long(4));
+            //  String id_order = request.getParameter("id_order");
+            //     OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
+            //   orderHome.remove(new Long(order.getId()));
+            //  usr.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Удален заказ", null, 2);
+            result2 = "Пользователи заблокированны";
+            request.setAttribute("result", list);
+            //   request.setAttribute("result2", result2);
+            //   result2 = "Заказ удален из корзины";
+        } catch (FinderException ex) {
+            result2 = "Произошла ошибка";
+        } catch (RemoteException ex) {
+            result2 = "Произошла ошибка";
+        } catch (NamingException ex) {
+            result2 = "Произошла ошибка";
+        } finally {
+            request.setAttribute("result2", result2);
+            rd = request.getRequestDispatcher("getUsersByRole.jsp");
+            rd.forward(request, response);
+        }
+
+    }
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         RequestDispatcher rd;
@@ -1337,6 +1387,10 @@ public class ExecServlet extends HttpServlet {
             }
             if (request.getRequestURI().equals("/ProShop-war/del_catalog")) {
                 delCatalog(request, response);
+                return;
+            }
+            if (request.getRequestURI().equals("/ProShop-war/blockUsers")) {
+                blockUsers(request, response);
                 return;
             }
             if (request.getRequestURI().equals("/ProShop-war/getProductsByCatalog")) {

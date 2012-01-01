@@ -125,7 +125,7 @@
                         </tr>
                     </table>
                     <br>
-                    <%if (usr != null) {%>
+                    <%if (usr != null||usr.getRoleId()<4) {%>
                     <form action="addComment">
                         <table align="center"  border="0" width="100%">
                             <tr align="center">

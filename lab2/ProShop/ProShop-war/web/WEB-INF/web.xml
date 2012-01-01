@@ -108,6 +108,11 @@
         <servlet-name>ExecServlet</servlet-name>
         <url-pattern>/order</url-pattern>
     </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ExecServlet</servlet-name>
+        <url-pattern>/blockUsers</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ExecServlet</servlet-name>
         <url-pattern>/basket</url-pattern>

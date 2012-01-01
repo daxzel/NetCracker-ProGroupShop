@@ -65,6 +65,7 @@
                                         <option value="admin" selected>Админ</option>
                                         <option value="manager" selected>Менеджер</option>
                                         <option value="user">Пользователь</option>
+                                        <option value="block">Заблокированные</option>
                                     </select></td><td></td></tr>
                             <tr><td><input type="submit" value=" Ввод " class="Button"/></td></tr>
                         </table>
@@ -78,20 +79,24 @@
                                 Collection list = (Collection) request.getAttribute("result");
                                 SimpleDateFormat formt = new SimpleDateFormat("yyyy-MM-dd");
                     %>
-                    <form action="XML/exportUser">
+
+                    <form action="blockUsers">
                         <table align="center"  border="1" width="100%">
                             <tr align="center">
                                 <%if (usr.getRoleId() == 1) {%>
-                                <td  align="center">User id</td>
+                                <td  align="center" width="5%">User id</td>
                                 <%}%>
-                                <td  align="center">Name</td>
-                                <td align="center">Surname</td>
-                                <td align="center">Otchestvo</td>
-                                <td align="center">Nik</td>
-                                <td align="center">Born</td>
-                                <td  align="center">Phone</td>
-                                <td  align="center">Email</td>
+                                <td  align="center" width="10%">Name</td>
+                                <td align="center" width="10%">Surname</td>
+                                <td align="center" width="20%">Otchestvo</td>
+                                <td align="center" width="10%">Nik</td>
+                                <td align="center" width="15%">Born</td>
+                                <td  align="center" width="10%">Phone</td>
+                                <td  align="center" width="15%">Email</td>
+                                <%if ((usr.getRoleId() == 1)) {%>
 
+                                <td  align="center" width="5%">Заблокировать пользователя</td>
+                                <%}%>
                             </tr>
                             <%
                                                             Iterator iter = list.iterator();
@@ -116,16 +121,28 @@
                                 <%} else {%>
                                 <td></td>
                                 <%}
-                                %>
+                                                                                                if ((usr.getRoleId() == 1) && (user.getRoleId() != 4)) {%>
+                                <td  align="center"><input type="checkbox" name="id_user" value=<%=user.getId()%> /></td>
+                                    <%} else {%>
+                                <td></td>
+                                <%}%>
                             </tr>
-                            <%
-                                                            }%>
+                            <%      }%>
                         </table>
+                        <br>
+                        <input type="submit" value=" Заблокировать выбранных пользователей " class="Button"/>
                     </form>
 
                     <%  }
-                                }
-                    %>
+
+
+
+                            if (request.getAttribute("result2") instanceof String) {%>
+                    <p>
+                        <%=request.getAttribute("result2")%>
+                    </p>
+                    <%}
+                                }%>
                 </div>
             </div>
         </div>

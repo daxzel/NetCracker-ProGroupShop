@@ -50,6 +50,9 @@ public class JSPHelper {
         } else {
             try {
                 UserBeanRemote usr = (UserBeanRemote) sess.getAttribute("user");
+                if(usr.getRoleId()==4){
+                    throw new LoginException("Вы не обладаете правами");
+                }
                 if (usr.getRoleId() == 1) {
                     return usr;
                 } else {
