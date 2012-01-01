@@ -46,9 +46,8 @@ public class OrderBean implements EntityBean {
     private String name_product;
     private String name_user;
     private double price_product;
-
-        private long userId;
-     private long objId;
+    private long userId;
+    private long objId;
 
     // <editor-fold defaultstate="collapsed" desc="EJB infrastructure methods. Click the + sign on the left to edit the code.">
     // TODO Add code to acquire and use other enterprise resources (DataSource, JMS, enterprise beans, Web services)
@@ -95,7 +94,7 @@ public class OrderBean implements EntityBean {
      */
     public void ejbRemove() throws RemoveException, EJBException {
         Connection conn = null;
-        PreparedStatement  pst = null;
+        PreparedStatement pst = null;
         try {
             conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("DELETE FROM \"ORDER\" WHERE ID_ORDER = ?");
@@ -104,11 +103,11 @@ public class OrderBean implements EntityBean {
                 throw new RemoveException("Ошибка удаления");
             }
 
-        //    EJBHelper.sendMessage(new HistoryMessage(userId,"ORDER","Удален заказ",objId));
+            //    EJBHelper.sendMessage(new HistoryMessage(userId,"ORDER","Удален заказ",objId));
 
 
-       //  } catch (JMSException ex){
-       //     throw new EJBException("Ошибка jms");
+            //  } catch (JMSException ex){
+            //     throw new EJBException("Ошибка jms");
         } catch (NamingException ex) {
             throw new EJBException("Ошибка при удалении");
         } catch (SQLException ex) {
@@ -181,10 +180,10 @@ public class OrderBean implements EntityBean {
                 throw new NoSuchEntityException("Не найдена запись");
             }
 
-        //    EJBHelper.sendMessage(new HistoryMessage(userId,"ORDER","Изменен заказ",objId));
+            //    EJBHelper.sendMessage(new HistoryMessage(userId,"ORDER","Изменен заказ",objId));
 
-         //        } catch (JMSException ex){
-        //    throw new EJBException("Ошибка jms");
+            //        } catch (JMSException ex){
+            //    throw new EJBException("Ошибка jms");
         } catch (NamingException ex) {
             throw new EJBException("Ошибка UPDATE");
         } catch (SQLException e) {
@@ -254,7 +253,7 @@ public class OrderBean implements EntityBean {
             }
         }
     }
-    
+
     public Collection ejbFindByUserAndStatus(java.lang.Long id_user, boolean status) {
         Connection conn = null;
         PreparedStatement pst = null;
@@ -338,12 +337,12 @@ public class OrderBean implements EntityBean {
             }
             this.id_order = pst.getLong(5);
 
-           /// EJBHelper.sendMessage(new HistoryMessage(userId,"ORDER","Добавлен заказ",pst.getLong(5)));
+            /// EJBHelper.sendMessage(new HistoryMessage(userId,"ORDER","Добавлен заказ",pst.getLong(5)));
 
             return new Long(this.id_order);
 
-           // //             } catch (JMSException ex){
-           // throw new EJBException("Ошибка jms");
+            // //             } catch (JMSException ex){
+            // throw new EJBException("Ошибка jms");
         } catch (NamingException ex) {
             throw new EJBException("Произошла ошибка добавления");
         } catch (SQLException ex) {
@@ -359,7 +358,7 @@ public class OrderBean implements EntityBean {
         }
     }
 
-      public java.lang.Long ejbCreate(java.lang.Long id, java.lang.Long id_user, java.lang.Long id_product, java.lang.Boolean status, java.lang.Integer amount) throws CreateException {
+    public java.lang.Long ejbCreate(java.lang.Long id, java.lang.Long id_user, java.lang.Long id_product, java.lang.Boolean status, java.lang.Integer amount) throws CreateException {
 
         this.id_order = id.longValue();
         this.id_user = id_user.longValue();
@@ -400,7 +399,7 @@ public class OrderBean implements EntityBean {
     public void ejbPostCreate(java.lang.Long id_user, java.lang.Long id_product, java.lang.Boolean status, java.lang.Integer amount) throws CreateException {
     }
 
-     public void ejbPostCreate(java.lang.Long id,java.lang.Long id_user, java.lang.Long id_product, java.lang.Boolean status, java.lang.Integer amount) throws CreateException {
+    public void ejbPostCreate(java.lang.Long id, java.lang.Long id_user, java.lang.Long id_product, java.lang.Boolean status, java.lang.Integer amount) throws CreateException {
     }
 
     public void setId(java.lang.Long id_order) {
@@ -467,24 +466,23 @@ public class OrderBean implements EntityBean {
         return price_product * amount;
     }
 
-    public void setAll(long id_user, long id_product,boolean status, int amount)
-    {
-        this.id_user =id_user;
+    public void setAll(long id_user, long id_product, boolean status, int amount) {
+        this.id_user = id_user;
         this.id_product = id_product;
         this.status = status;
         this.amount = amount;
     }
 
-     public void setParamMessage(long userId, long objId ){
-      this.userId = userId;
-      this.objId = objId;
+    public void setParamMessage(long userId, long objId) {
+        this.userId = userId;
+        this.objId = objId;
     }
 
-        public void setParamMessage(long userId ){
-      this.userId = userId;
+    public void setParamMessage(long userId) {
+        this.userId = userId;
     }
 
- public void sendMessage(Long id_user,  String nameTables, String message, Long id_obj, int prior) {
+    public void sendMessage(Long id_user, String nameTables, String message, Long id_obj, int prior) {
         try {
             EJBHelper.sendMessage(new HistoryMessage(id_user, nameTables, message, id_obj), prior);
         } catch (EJBException ex) {

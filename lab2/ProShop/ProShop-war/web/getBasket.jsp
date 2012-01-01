@@ -20,15 +20,18 @@
         <link href="<%=request.getContextPath()%>/static/default.css" media="all" rel="stylesheet" type="text/css" />
         <link href="<%=request.getContextPath()%>/static/menu.css" media="all" rel="stylesheet" type="text/css" />
 
-        <title>Корзина/заказы</title>
+        <title><%String status = request.getParameter("status");
+                          if("false".equals(status)){
+                        %>Моя корзина
+                        <%}if("true".equals(status)){%>
+                        Моя история заказов
+                        <%}%></title>
     </head>
     <body>
         <%UserBeanRemote usr = JSPHelper.getUser2(session);
-                    if (request.getAttribute("result") instanceof List) {
-                        List list = (List) request.getAttribute("result");
 
 
-                     %>
+        %>
         <div id="container">
             <div id="header">
                 <table class="top_nav">
@@ -57,12 +60,30 @@
                     </div>
                 </div>
                 <div id="content">
-                    <h1></h1>
-                    <%   if (list.isEmpty()) {%>
-                    <p align="center">У вас нет заказов<br>
-                    <p align="center"><a href="getFull_catalog">Каталог</a></p>
+                    <h1><%
+                          if("false".equals(status)){
+                        %>Моя корзина
+                        <%}if("true".equals(status)){%>
+                        Моя история заказов
+                        <%}%>
+                    </h1>
+
+                    <%String result2 = (String) request.getAttribute("result2");
+                                if (request.getAttribute("result") instanceof List) {
+                                    List list = (List) request.getAttribute("result");
+                                    if (list.isEmpty()) {%>
+                    <p>
+                        <%if (result2 != null) {%>
+                        <%=result2%>
+                        <%}  if("false".equals(status)){
+                        %>У вас нет продуктов в корзине
+                        <%}if("true".equals(status)){%>
+                        Ваша история заказов пуста
+                        <%}%>
+                        
+                    </p>
                     <%} else {
-                                                OrderBeanRemote ord = (OrderBeanRemote) list.get(0);
+                                                            OrderBeanRemote ord = (OrderBeanRemote) list.get(0);
                     %>
                     <table align="center"  border="1" width="100%">
                         <tr align="center">
@@ -72,17 +93,17 @@
                             <td width="25%" align="center">Количество</td>
                             <td width="20%" align="center">Цена заказа</td>
                             <%if (!ord.getStatus()) {%>
-                            <td width="20%" align="center">Оформить заказ</td>
+                          
                             <td width="20%" align="center">Удалить заказ</td>
                             <%}%>
                         </tr>
                         <%
-                                                    double priceProduct;
-                                                    int amount;
-                                                    for (int i = 0; i <= (list.size() - 1); i++) {
-                                                        ord = (OrderBeanRemote) list.get(i);
-                                                        priceProduct = ord.getPriceProduct();
-                                                        amount = ord.getAmount();
+                                                                double priceProduct;
+                                                                int amount;
+                                                                for (int i = 0; i <= (list.size() - 1); i++) {
+                                                                    ord = (OrderBeanRemote) list.get(i);
+                                                                    priceProduct = ord.getPriceProduct();
+                                                                    amount = ord.getAmount();
                         %>
                         <tr align="center">
                             <td><a href ="product?ID=<%=ord.getIdProduct().longValue()%>"><%= ord.getNameProduct()%></a></td>
@@ -90,14 +111,19 @@
                             <td><%=  amount%></td>
                             <td><%= (priceProduct) * (amount)%></td>
                             <%if (!ord.getStatus()) {%>
-                            <td><a href ="updateStatusOrder?id_order=<%=ord.getId()%>">оформить заказ</a></td>
-                            <td><a href ="deleteOrder?id_order=<%=ord.getId()%>">удалить заказ</a></td>
+
+                            <td><a href ="deleteOrder?id_order=<%=ord.getId()%>">удалить продукт</a></td>
                             <%}%>
                         </tr>
 
-                        <%}%> </table><%
+                        <%}%> </table>
+                        <%if (!ord.getStatus()) {%><br><br>
+                    <form action="updateOrderStatus">
+                        <input type="submit" value=" Оформить заказ " class="Button" />
+                    </form>
+                    <%}
 
-                                                    if (request.getAttribute("result2") instanceof String) {%>
+                                                            if (request.getAttribute("result2") instanceof String) {%>
                     <p align="center">
                         <%=request.getAttribute("result2")%>
                     </p>

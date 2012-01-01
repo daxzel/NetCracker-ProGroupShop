@@ -72,10 +72,7 @@
                             <tr><td>Цена:</td>
                             <td><%=prd.getPrice()%></td></tr>
                             <tr><td>Количество:</td><td><input type="text" name="KOL" value="<%=kol_vo%>" size="25" /></td></tr>
-                            <tr><td><select name="STATUS" style="width : 200">
-                                        <option value="false" selected>Добавить в корзину</option>
-                                        <option value="true">Оформить заказ</option>
-                                    </select></td></tr>
+                           
                             <tr><td><input type="submit" value=" Ввод " class="Button"/></td><td></td></tr>
                         </table>
                     </form>

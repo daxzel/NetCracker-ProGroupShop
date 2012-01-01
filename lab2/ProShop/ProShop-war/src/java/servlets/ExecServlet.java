@@ -891,16 +891,14 @@ public class ExecServlet extends HttpServlet {
         try {
             HttpSession session = request.getSession();
             kol_vo = request.getParameter("KOL");
-            String status = request.getParameter("STATUS");
+
             String id_product = session.getAttribute("ID_PRODUCT").toString();
             OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
-            OrderBeanRemote order = orderHome.create(new Long(usr.getId()), new Long(Long.parseLong(id_product)), new Boolean(Boolean.parseBoolean(status)), new Integer(Integer.parseInt(kol_vo)));
+            OrderBeanRemote order = orderHome.create(new Long(usr.getId()), new Long(Long.parseLong(id_product)), new Boolean(false), new Integer(Integer.parseInt(kol_vo)));
             order.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Добавлен заказ", new Long(order.getId()), 1);
-            if ("false".equals(status)) {
-                result = "Заказ добавлен в корзину";
-            } else {
-                result = "Заказ оформлен";
-            }
+
+            result = "Продукт добавлен в корзину";
+
         } catch (NumberFormatException ex) {
             result = "не правильный формат данных";
         } catch (CreateException ex) {
@@ -927,7 +925,7 @@ public class ExecServlet extends HttpServlet {
             OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
             List list = orderHome.findByUserAndStatus(new Long(usr.getId()), status);
             request.setAttribute("result", list);
-            rd = request.getRequestDispatcher("getBasket.jsp");
+            rd = request.getRequestDispatcher("getBasket.jsp?status=" + status);
             rd.forward(request, response);
         } catch (FinderException ex) {
         } catch (RemoteException ex) {
@@ -945,16 +943,18 @@ public class ExecServlet extends HttpServlet {
         UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
         String result2 = "Заказ не оформлен";
         try {
-            String id_order = request.getParameter("id_order");
+            //   String id_order = request.getParameter("id_order");
             OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
-            OrderBeanRemote order = orderHome.findByPrimaryKey(new Long(Long.parseLong(id_order)));
-            order.setStatus(true);
+            // OrderBeanRemote order = orderHome.findByPrimaryKey(new Long(Long.parseLong(id_order)));
+            List list = orderHome.findByUserAndStatus(new Long(usr.getId()), false);
+            //  order.setStatus(true);
+            for (int i = 0; i < list.size(); i++) {
+                OrderBeanRemote ord = (OrderBeanRemote) list.get(i);
+                ord.setStatus(true);
+                ord.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Заказ " + ord.getId() + " пользователя : " + ord.getNameUser() + " на товар: " + ord.getNameProduct() + " оформлен", new Long(ord.getId()), 3);
+            }
             result2 = "Заказ оформлен";
-            order.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Заказ пользователя : " + order.getNameUser() + " на товар: " + order.getNameProduct() + " оформлен", new Long(Long.parseLong(id_order)), 3);
-
-
             request.setAttribute("result", orderHome.findByUserAndStatus(new Long(usr.getId()), false));
-
         } catch (FinderException ex) {
             result2 = "Произошла ошибка";
         } catch (RemoteException ex) {
@@ -963,7 +963,7 @@ public class ExecServlet extends HttpServlet {
             result2 = "Произошла ошибка";
         } finally {
             request.setAttribute("result2", result2);
-            rd = request.getRequestDispatcher("getBasket.jsp");
+            rd = request.getRequestDispatcher("getBasket.jsp?status=false");
             rd.forward(request, response);
         }
 
@@ -1356,6 +1356,12 @@ public class ExecServlet extends HttpServlet {
                 return;
             }
             if (request.getRequestURI().equals("/ProShop-war/updateStatusOrder")) {
+                updateStatusOrders(request, response);
+                return;
+            }
+
+
+            if (request.getRequestURI().equals("/ProShop-war/updateOrderStatus")) {
                 updateStatusOrders(request, response);
                 return;
             }

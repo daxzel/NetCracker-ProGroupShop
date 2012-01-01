@@ -180,6 +180,10 @@
         <servlet-name>ExecServlet</servlet-name>
         <url-pattern>/delProduct</url-pattern>
     </servlet-mapping>
+     <servlet-mapping>
+        <servlet-name>ExecServlet</servlet-name>
+        <url-pattern>/updateOrderStatus</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
