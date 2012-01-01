@@ -116,7 +116,7 @@ color: #FFFFFF;
 border: 1px solid #CCC;
 display: inline-block;
 
-height:25px;
+height:26px;
 background: #117df8;
 background: -moz-linear-gradient(-90deg, white, #117df8);
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0, white), color-stop(1, #117df8));
