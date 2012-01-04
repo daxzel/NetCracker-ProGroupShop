@@ -58,10 +58,10 @@
                     </div>
                 </div>
                 <div id="content">
-                    <h1>Удаение продукта</h1>
+                    <h1>Удаление продукта</h1>
                     <form action="delProduct">
                         <table id="regOrLog">
-                            <tr><td>Введите название продукта или его первичный ключ</td></tr>
+                            <tr><td>Введите название продукта</td></tr>
                             <tr><td><input type="text" name="VALUE" value="" size="20" /></td></tr>
                             <tr><td><input type="submit" value=" Ввод " class="Button" /></td></tr>
                         </table>

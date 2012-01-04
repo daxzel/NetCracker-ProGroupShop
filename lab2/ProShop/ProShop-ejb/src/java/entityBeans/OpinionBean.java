@@ -419,4 +419,5 @@ public class OpinionBean implements EntityBean {
             ex.printStackTrace();
         }
     }
+
 }

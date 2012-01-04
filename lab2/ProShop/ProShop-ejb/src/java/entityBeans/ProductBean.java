@@ -575,5 +575,7 @@ public class ProductBean implements EntityBean {
             ex.printStackTrace();
         }
     }
+
+
     
 }
