@@ -124,7 +124,7 @@
                     <%}
 
                                                             if (request.getAttribute("result2") instanceof String) {%>
-                    <p align="center">
+                    <p>
                         <%=request.getAttribute("result2")%>
                     </p>
                     <%}
