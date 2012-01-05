@@ -327,7 +327,7 @@ public class ExecServlet extends HttpServlet {
         RequestDispatcher rd;
         UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
         Long id = null;
-        String msg = ". ";
+        String msg = "";
 
         if (type.equals("updateUser")) {
             if (usr.getRoleId() >= 2) {
@@ -425,14 +425,14 @@ public class ExecServlet extends HttpServlet {
                 usr.setBorn(new java.sql.Date(born.getTime()));
             }
 
-            if (usr.getPhone().equals(phone)){
+            if ((usr.getPhone()!=null)&&(usr.getPhone().equals(phone))){
             usr.setPhone(phone);
             } else {
                 msg = msg + "Номер телефона был изменен с " + usr.getPhone() + " на " + phone + ". ";
                 usr.setPhone(phone);
             }
 
-            if (usr.getEmail().equals(email)){
+            if ((usr.getEmail()!=null)&&(usr.getEmail().equals(email))){
             usr.setEmail(email);
             } else {
                 msg = msg + "Электронная почта была изменена с " + usr.getEmail() + " на " + email + ". ";
