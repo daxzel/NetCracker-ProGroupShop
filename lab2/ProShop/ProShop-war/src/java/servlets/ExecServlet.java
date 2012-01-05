@@ -713,10 +713,12 @@ public class ExecServlet extends HttpServlet {
             ProductBeanRemote product = (ProductBeanRemote) session.getAttribute("product");
             String id_op = request.getParameter("ID");
             OpinionBeanRemoteHome opinionHome = (OpinionBeanRemoteHome) EJBHelper.lookupHome("ejb/OpinionBean", OpinionBeanRemoteHome.class);
+            
             OpinionBeanRemote obr = opinionHome.findByPrimaryKey(new Long (Long.parseLong(id_op)));
+            String usrName = obr.getUserName();
             opinionHome.remove(new Long(Long.parseLong(id_op)));
 
-            usr.sendMessage(new Long(usr.getId()), "\"OPINION\"", "Удален комментарий о продукте: "+ product.getName()+ " от пользователя: " + obr.getUserName() + ". " , null, 2);
+            usr.sendMessage(new Long(usr.getId()), "\"OPINION\"", "Удален комментарий о продукте: "+ product.getName()+ " от пользователя: " + usrName + ". " , null, 2);
 
             rd = request.getRequestDispatcher("getOpinion.jsp");
             request.setAttribute("result", product);
@@ -1303,10 +1305,11 @@ public class ExecServlet extends HttpServlet {
             OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
             OrderBeanRemote order = orderHome.findByPrimaryKey(new Long(Long.parseLong(id_order)));
             
-            order.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Удален заказ на товар: " + order.getNameProduct() + " пользователем: " + order.getNameUser(), null, 2);
+            order.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Удален заказ на товар: " + order.getNameProduct() + " пользователем: " + order.getNameUser(), new Long(order.getId()) , 2);
 
-            request.setAttribute("result", orderHome.findByUserAndStatus(new Long(usr.getId()), false));
+           
             order.remove();
+             request.setAttribute("result", orderHome.findByUserAndStatus(new Long(usr.getId()), false));
             result2 = "Заказ удален из корзины";
 
         } catch (RemoveException ex) {

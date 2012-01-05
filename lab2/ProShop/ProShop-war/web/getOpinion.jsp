@@ -32,7 +32,7 @@
                     try {
                         usr = JSPHelper.getUser2(session);
                     } catch (LoginException ex) {
-                    }
+                    } finally {
 
         %>
         <div id="container">
@@ -125,7 +125,7 @@
                         </tr>
                     </table>
                     <br>
-                    <%if (usr != null||usr.getRoleId()<4) {%>
+                    <%if (usr != null) {%>
                     <form action="addComment">
                         <table align="center"  border="0" width="100%">
                             <tr align="center">
@@ -141,9 +141,9 @@
                         </table>
                     </form>
                     <%}
+                                        }
                                     }
                                 }
-
                                 /*}else{
                                 RequestDispatcher rd;
                                 rd = request.getRequestDispatcher("login.jsp");
