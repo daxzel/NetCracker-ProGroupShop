@@ -26,7 +26,7 @@
     </head>
     <body>
         <% UserBeanRemote usr = JSPHelper.getUser2(session);
-                    if (usr.getRoleId() >= 2) {
+                    if (usr.getRoleId() > 2) {
                         throw new LoginException("Вы не обладаете правами администратора");
                     }
         %>

@@ -212,7 +212,9 @@ public class ExecServlet extends HttpServlet {
             }
 
             price = Double.parseDouble(priceS);
-
+            if (price <= 0) {
+                throw new NegativeNumberException("Введите положительную цену продукта");
+            }
             ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
              // productHome.setParamMessage(usr.getId());
             // productHome.setParamMessage(usr.getId());
@@ -231,6 +233,13 @@ public class ExecServlet extends HttpServlet {
             request.setAttribute("NAME_CATALOG", name_catalog);
             page = "addProduct.jsp";
 
+            } catch (NegativeNumberException ex) {
+            result = "Введите положительную цену продукта";
+            request.setAttribute("NAME", name);
+            request.setAttribute("DESCRIPTION", description);
+            request.setAttribute("PRICE", priceS);
+            request.setAttribute("NAME_CATALOG", name_catalog);
+            page = "addProduct.jsp";
         } catch (FinderException ex) {
             result = "Имя каталога указанно не верно";
             request.setAttribute("NAME", name);
@@ -277,8 +286,10 @@ public class ExecServlet extends HttpServlet {
         RequestDispatcher rd;
         UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
         String result = "Продукт не удален";
-        if (usr.getRoleId() >= 2) {
+        if (usr.getRoleId() > 2) {
             throw new LoginException("Вы не обладаете правами администратора");
+            
+            
         }
         try {
 
@@ -292,7 +303,7 @@ public class ExecServlet extends HttpServlet {
      
 
 
-
+        
         } catch (ObjectNotFoundException ex) {
             result = "Продукта не существует";
         } catch (RemoveException ex) {
@@ -661,12 +672,12 @@ public class ExecServlet extends HttpServlet {
             rd = request.getRequestDispatcher("login.jsp");
             rd.forward(request, response);
         } catch (FinderException ex) {
-            result = "Не правильно указанно имя полльзователя";
+            result = "Не правильно указанно имя пользователя или пароль";
             request.setAttribute("result", result);
             rd = request.getRequestDispatcher("login.jsp");
             rd.forward(request, response);
         } catch (NamingException ex) {
-            request.setAttribute("result", "произошла ошибка");
+            request.setAttribute("result", "Произошла ошибка");
             rd = request.getRequestDispatcher("login.jsp");
             rd.forward(request, response);
         }
@@ -951,8 +962,12 @@ public class ExecServlet extends HttpServlet {
         String kol_vo = "";
         try {
             HttpSession session = request.getSession();
-            kol_vo = request.getParameter("KOL");
 
+            kol_vo = request.getParameter("KOL");
+             if (Integer.parseInt(kol_vo) <= 0) {
+                 throw new NegativeNumberException("Введите положительное кол-во товара");
+             }
+        
             String id_product = session.getAttribute("ID_PRODUCT").toString();
 
 
@@ -961,8 +976,10 @@ public class ExecServlet extends HttpServlet {
             order.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Добавлен заказ на товар: " + order.getNameProduct()+ " пользователем: " + order.getNameUser(), new Long(order.getId()), 1);
 
             result = "Продукт добавлен в корзину";
-        } catch (FinderException ex) {
+         } catch (FinderException ex) {
             result = "Произошла ошибка";
+        } catch (NegativeNumberException ex) {
+            result = "Введите положительное кол-во товара";
         } catch (NumberFormatException ex) {
             result = "не правильный формат данных";
         } catch (CreateException ex) {
@@ -1120,6 +1137,9 @@ public class ExecServlet extends HttpServlet {
                     }
                     String price = request.getParameter("PRICE");
                     double priceDouble = Double.parseDouble(price);
+                     if (priceDouble <= 0) {
+                throw new NegativeNumberException("Введите положительную цену продукта");
+            }
                     if (product.getPrice() != priceDouble) {
                         String str = ". Изменена цена продукта с " + product.getPrice() + " на " + priceDouble;
                         product.setPrice(new Double(priceDouble));
@@ -1144,8 +1164,12 @@ public class ExecServlet extends HttpServlet {
 
 
             }
+            
         } catch (NumberFormatException ex) {
             result = "Не верно введена цена";
+            request.setAttribute("result", result);
+        } catch (NegativeNumberException ex) {
+            result = "Введите положительную цену продукта";
             request.setAttribute("result", result);
         } catch (FinderException ex) {
             result = "Не найден каталог";

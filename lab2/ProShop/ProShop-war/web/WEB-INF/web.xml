@@ -108,7 +108,6 @@
         <servlet-name>ExecServlet</servlet-name>
         <url-pattern>/order</url-pattern>
     </servlet-mapping>
-
     <servlet-mapping>
         <servlet-name>ExecServlet</servlet-name>
         <url-pattern>/blockUsers</url-pattern>
@@ -129,7 +128,7 @@
         <servlet-name>ExecServlet</servlet-name>
         <url-pattern>/selectProduct</url-pattern>
     </servlet-mapping>
-     <servlet-mapping>
+    <servlet-mapping>
         <servlet-name>ExecServlet</servlet-name>
         <url-pattern>/updateCatalog</url-pattern>
     </servlet-mapping>
@@ -185,9 +184,13 @@
         <servlet-name>ExecServlet</servlet-name>
         <url-pattern>/delProduct</url-pattern>
     </servlet-mapping>
-     <servlet-mapping>
+    <servlet-mapping>
         <servlet-name>ExecServlet</servlet-name>
         <url-pattern>/updateOrderStatus</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ImageServlet</servlet-name>
+        <url-pattern>/ImageServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
