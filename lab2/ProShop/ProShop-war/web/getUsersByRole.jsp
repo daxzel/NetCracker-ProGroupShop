@@ -121,16 +121,18 @@
                                 <%} else {%>
                                 <td></td>
                                 <%}
-                                                                                                if ((usr.getRoleId() == 1) && (user.getRoleId() != 4)) {%>
+                                                                                                if ((usr.getRoleId() == 1)) {
+                                %>
                                 <td  align="center"><input type="checkbox" name="id_user" value=<%=user.getId()%> /></td>
-                                    <%} else {%>
-                                <td></td>
-                                <%}%>
+                                    <%}%>
+
                             </tr>
                             <%      }%>
                         </table>
                         <br>
+                        <%if ((usr.getRoleId() == 1)) {%>
                         <input type="submit" value=" Заблокировать выбранных пользователей " class="Button"/>
+                        <%}%>
                     </form>
 
                     <%  }

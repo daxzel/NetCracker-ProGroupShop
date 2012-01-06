@@ -106,7 +106,7 @@ public class ExecServlet extends HttpServlet {
 
             //DBManager.addUser(name, surname, otchestvo, nik, password, bornDate, phone, email, Integer.parseInt(role));
             UserBeanRemoteHome userHome = (UserBeanRemoteHome) EJBHelper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
-             RoleBeanRemoteHome roleHome = (RoleBeanRemoteHome) EJBHelper.lookupHome("ejb/RoleBean", RoleBeanRemoteHome.class);
+            RoleBeanRemoteHome roleHome = (RoleBeanRemoteHome) EJBHelper.lookupHome("ejb/RoleBean", RoleBeanRemoteHome.class);
             java.sql.Date sqlDate = new java.sql.Date(bornDate.getTime());
             java.lang.Long idRole = new Long(Long.parseLong(role));
 
@@ -164,8 +164,8 @@ public class ExecServlet extends HttpServlet {
             result = "произошла ошибка";
             request.setAttribute("result", result);
         } finally {
-            request.setAttribute("DO", "upUser");
-            rd = request.getRequestDispatcher(homepage);
+            rd = request.getRequestDispatcher("updateUser.jsp?DO=" + "updateUser");
+           // rd = request.getRequestDispatcher(homepage);
             rd.forward(request, response);
         }
     }
@@ -216,14 +216,14 @@ public class ExecServlet extends HttpServlet {
                 throw new NegativeNumberException("Введите положительную цену продукта");
             }
             ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
-             // productHome.setParamMessage(usr.getId());
+            // productHome.setParamMessage(usr.getId());
             // productHome.setParamMessage(usr.getId());
             ProductBeanRemote pbr = productHome.create(description, name_catalog, name, price);
 
             Long idu = new Long(usr.getId());
             // Long idu = new Long(usr.getId());
             Long ido = new Long(pbr.getId());
-            pbr.sendMessage(idu, "PRODUCT", "Добавлен продукт: " + name+ ", в каталог: " + pbr.getNameCatalog(), ido, 1);
+            pbr.sendMessage(idu, "PRODUCT", "Добавлен продукт: " + name + ", в каталог: " + pbr.getNameCatalog(), ido, 1);
 
 
             result = "Продукт добавлен";
@@ -233,7 +233,7 @@ public class ExecServlet extends HttpServlet {
             request.setAttribute("NAME_CATALOG", name_catalog);
             page = "addProduct.jsp";
 
-            } catch (NegativeNumberException ex) {
+        } catch (NegativeNumberException ex) {
             result = "Введите положительную цену продукта";
             request.setAttribute("NAME", name);
             request.setAttribute("DESCRIPTION", description);
@@ -288,22 +288,22 @@ public class ExecServlet extends HttpServlet {
         String result = "Продукт не удален";
         if (usr.getRoleId() > 2) {
             throw new LoginException("Вы не обладаете правами администратора");
-            
-            
+
+
         }
         try {
 
-                String value = request.getParameter("VALUE");
-                ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
-                ProductBeanRemote pr = productHome.findByName(value);
-                
-                result = "Удаление завершено";
-                pr.sendMessage(new Long(pr.getId()), "PRODUCT", "Удален продукт: " + pr.getName()+ " из каталога: " + pr.getNameCatalog(), null, 2);
-                productHome.remove(new Long(pr.getId()));
-     
+            String value = request.getParameter("VALUE");
+            ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
+            ProductBeanRemote pr = productHome.findByName(value);
+
+            result = "Удаление завершено";
+            pr.sendMessage(new Long(pr.getId()), "PRODUCT", "Удален продукт: " + pr.getName() + " из каталога: " + pr.getNameCatalog(), null, 2);
+            productHome.remove(new Long(pr.getId()));
 
 
-        
+
+
         } catch (ObjectNotFoundException ex) {
             result = "Продукта не существует";
         } catch (RemoveException ex) {
@@ -380,7 +380,7 @@ public class ExecServlet extends HttpServlet {
                     throw new PasswordException();
                 }
                 if (usr.getPassword().equals(password)) {
-                usr.setPassword(password);
+                    usr.setPassword(password);
                 } else {
                     msg = msg + "Пароль был изменен с " + usr.getPassword() + " на " + password + ". ";
                     usr.setPassword(password);
@@ -388,140 +388,135 @@ public class ExecServlet extends HttpServlet {
 
                 }
             }
-            if ((usr.getName().equals(name))){
-            usr.setName(name);
+            if ((usr.getName().equals(name))) {
+                usr.setName(name);
             } else {
                 msg = msg + "Имя пользователя было изменено с " + usr.getName() + " на " + name + ". ";
                 usr.setName(name);
 
             }
 
-            if (usr.getSurname().equals(surname)){
-                    usr.setSurname(surname);
+            if (usr.getSurname().equals(surname)) {
+                usr.setSurname(surname);
             } else {
                 msg = msg + "Фамилия пользователя была изменена с " + usr.getSurname() + " на " + surname + ". ";
                 usr.setSurname(surname);
 
             }
 
-            if (usr.getOtchestvo().equals(otchestvo)){
-            usr.setOtchestvo(otchestvo);
+            if (usr.getOtchestvo().equals(otchestvo)) {
+                usr.setOtchestvo(otchestvo);
             } else {
                 msg = msg + "Отчество пользователя было изменено с " + usr.getOtchestvo() + " на " + otchestvo + ". ";
                 usr.setOtchestvo(otchestvo);
             }
 
-            if (usr.getNik().equals(nik)){
-            usr.setNik(nik);
+            if (usr.getNik().equals(nik)) {
+                usr.setNik(nik);
             } else {
                 msg = msg + "Ник пользователя был изменен с " + usr.getNik() + " на " + nik + ". ";
                 usr.setNik(nik);
             }
 
-            if (usr.getBorn().equals(born)){
-            usr.setBorn(new java.sql.Date(born.getTime()));
+            if (usr.getBorn().equals(born)) {
+                usr.setBorn(new java.sql.Date(born.getTime()));
             } else {
                 msg = msg + "Дата рождения изменена с " + usr.getBorn() + " на " + brn + ". ";
                 usr.setBorn(new java.sql.Date(born.getTime()));
             }
 
-            if ((usr.getPhone()!=null)&&(usr.getPhone().equals(phone))){
-            usr.setPhone(phone);
+            if ((usr.getPhone() != null) && (usr.getPhone().equals(phone))) {
+                usr.setPhone(phone);
             } else {
                 msg = msg + "Номер телефона был изменен с " + usr.getPhone() + " на " + phone + ". ";
                 usr.setPhone(phone);
             }
 
-            if ((usr.getEmail()!=null)&&(usr.getEmail().equals(email))){
-            usr.setEmail(email);
+            if ((usr.getEmail() != null) && (usr.getEmail().equals(email))) {
+                usr.setEmail(email);
             } else {
                 msg = msg + "Электронная почта была изменена с " + usr.getEmail() + " на " + email + ". ";
                 usr.setEmail(email);
             }
 
             RoleBeanRemoteHome roleHome = (RoleBeanRemoteHome) EJBHelper.lookupHome("ejb/RoleBean", RoleBeanRemoteHome.class);
-            RoleBeanRemote rbr = roleHome.findByPrimaryKey(new Long (usr.getRoleId()));
+            RoleBeanRemote rbr = roleHome.findByPrimaryKey(new Long(usr.getRoleId()));
 
             if (type.equals("updateUser")) {
                 long id_role = Long.parseLong(request.getParameter("ID_ROLE"));
-                if (usr.getRoleId()==id_role){
-                usr.setRoleId(new Long(id_role));
-                } else {
-                   String oldRole = rbr.getName();
+                if (usr.getRoleId() == id_role) {
                     usr.setRoleId(new Long(id_role));
-                   msg = msg + "Права доступа были изменены с " + oldRole + " на " + rbr.getName();
+                } else {
+                    String oldRole = rbr.getName();
+                    usr.setRoleId(new Long(id_role));
+                    msg = msg + "Права доступа были изменены с " + oldRole + " на " + rbr.getName();
                 }
             }
 
-            if (type.equals("updateProfil")) {
-                request.setAttribute("DO", "upProf");
-                session.setAttribute("user", usr);
-            }
+
+
             if (type.equals("updateUser")) {
-                request.setAttribute("DO", "upUser");
-                session.setAttribute("usrOld", usr);
+                result = "пользователь отредактирован";
+
+                session.removeAttribute("userOld");
             }
+            if (type.equals("updateProfil")) {
+                result = "профиль отредактирован";
 
-
-            result = "профиль отредактирован";
-
+            }
+            //  rd = request.getRequestDispatcher("updateUser.jsp?DO=" + type);
             usr.sendMessage(id, "\"USER\"", "Отредактирован пользователь :" + usr.getNik() + msg, new Long(usr.getId()), 2);
 
         } catch (UpdateException ex) {
             result = ex.getMessage();
             if (type.equals("updateUser")) {
-                request.setAttribute("DO", "upUser");
+
                 session.setAttribute("usrOld", usr);
             }
             if (type.equals("updateProfil")) {
-                request.setAttribute("DO", "upProf");
                 //  session.setAttribute("user",usr);
             }
         } catch (NamingException ex) {
             result = "неизвестная ошибка";
             if (type.equals("updateUser")) {
-                request.setAttribute("DO", "upUser");
+
                 session.setAttribute("usrOld", usr);
             }
             if (type.equals("updateProfil")) {
-                request.setAttribute("DO", "upProf");
                 //  session.setAttribute("user",usr);
             }
         } catch (PasswordException ex) {
             result = ex.getMessage();
             if (type.equals("updateUser")) {
-                request.setAttribute("DO", "upUser");
+
                 session.setAttribute("usrOld", usr);
             }
             if (type.equals("updateProfil")) {
-                request.setAttribute("DO", "upProf");
                 //  session.setAttribute("user",usr);
             }
         } catch (ParseException ex) {
             result = "ошибка ввода даты рождения";
             if (type.equals("updateUser")) {
-                request.setAttribute("DO", "upUser");
+
                 session.setAttribute("usrOld", usr);
             }
             if (type.equals("updateProfil")) {
-                request.setAttribute("DO", "upProf");
                 //  session.setAttribute("user",usr);
             }
         } catch (Exception ex) {
             result = "ошибка";
             if (type.equals("updateUser")) {
-                request.setAttribute("DO", "upUser");
+
                 session.setAttribute("usrOld", usr);
             }
             if (type.equals("updateProfil")) {
-                request.setAttribute("DO", "upProf");
                 //  session.setAttribute("user",usr);
             }
+        } finally {
+            request.setAttribute("result", result);
+            rd = request.getRequestDispatcher("updateUser.jsp?DO=" + type);
+            rd.forward(request, response);
         }
-        request.setAttribute("result", result);
-        rd = request.getRequestDispatcher("updateUser.jsp");
-        rd.forward(request, response);
-
     }
 
     protected void getUserByRole(HttpServletRequest request,
@@ -543,8 +538,8 @@ public class ExecServlet extends HttpServlet {
                     if ("manager".equals(rolename)) {
                         role_id = 2;
                     }
-                    if("block".equals(rolename)){
-                        role_id=4;
+                    if ("block".equals(rolename)) {
+                        role_id = 4;
                     }
                 }
             }
@@ -652,7 +647,7 @@ public class ExecServlet extends HttpServlet {
             }
             UserBeanRemoteHome userHome = (UserBeanRemoteHome) EJBHelper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
             UserBeanRemote usr = userHome.findByNikAndPassword(nik, password);
-            if(usr.getRoleId()==4){
+            if (usr.getRoleId() == 4) {
                 request.setAttribute("result", "Ваш профиль заблокирован");
                 throw new LoginException("Ваш профиль заблокирован");
             }
@@ -715,7 +710,7 @@ public class ExecServlet extends HttpServlet {
     }
 
     protected void delComment(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, IOException, LoginException{
+            HttpServletResponse response) throws ServletException, IOException, LoginException {
 
         RequestDispatcher rd;
         HttpSession session = request.getSession();
@@ -724,12 +719,12 @@ public class ExecServlet extends HttpServlet {
             ProductBeanRemote product = (ProductBeanRemote) session.getAttribute("product");
             String id_op = request.getParameter("ID");
             OpinionBeanRemoteHome opinionHome = (OpinionBeanRemoteHome) EJBHelper.lookupHome("ejb/OpinionBean", OpinionBeanRemoteHome.class);
-            
-            OpinionBeanRemote obr = opinionHome.findByPrimaryKey(new Long (Long.parseLong(id_op)));
+
+            OpinionBeanRemote obr = opinionHome.findByPrimaryKey(new Long(Long.parseLong(id_op)));
             String usrName = obr.getUserName();
             opinionHome.remove(new Long(Long.parseLong(id_op)));
 
-            usr.sendMessage(new Long(usr.getId()), "\"OPINION\"", "Удален комментарий о продукте: "+ product.getName()+ " от пользователя: " + usrName + ". " , null, 2);
+            usr.sendMessage(new Long(usr.getId()), "\"OPINION\"", "Удален комментарий о продукте: " + product.getName() + " от пользователя: " + usrName + ". ", null, 2);
 
             rd = request.getRequestDispatcher("getOpinion.jsp");
             request.setAttribute("result", product);
@@ -809,7 +804,7 @@ public class ExecServlet extends HttpServlet {
             Long ido = new Long(ctg.getId());
             ctg.sendMessage(idu, "\"CATALOG\"", "Добавлен каталог: " + name, ido, 1);
 
-            ctg.sendMessage(idu, "\"CATALOG\"", "В каталог: "+ctg.getParentName() +" добавлен дочерний каталог: " + name, new Long(ctg.getParentId()), 1);
+            ctg.sendMessage(idu, "\"CATALOG\"", "В каталог: " + ctg.getParentName() + " добавлен дочерний каталог: " + name, new Long(ctg.getParentId()), 1);
 
 
             result = "Добавление каталога завершено";
@@ -853,14 +848,14 @@ public class ExecServlet extends HttpServlet {
             Long idp = new Long(ctg.getParentId());
             Long idu = new Long(usr.getId());
             CatalogBeanRemote parentCtg = catalogHome.findByPrimaryKey(idp);
-            
-            parentCtg.sendMessage(idu, "\"CATALOG\"","Из каталога: "+parentCtg.getName()+ " удален дочерний каталог: " + name, idp, 2);
+
+            parentCtg.sendMessage(idu, "\"CATALOG\"", "Из каталога: " + parentCtg.getName() + " удален дочерний каталог: " + name, idp, 2);
             ctg.sendMessage(idu, "\"CATALOG\"", "Удален каталог: " + ctg.getName(), null, 2);
             ctg.remove();
 
 
 
-            
+
 
             result = "Удаление завершено";
         } catch (FinderException ex) {
@@ -966,19 +961,19 @@ public class ExecServlet extends HttpServlet {
             HttpSession session = request.getSession();
 
             kol_vo = request.getParameter("KOL");
-             if (Integer.parseInt(kol_vo) <= 0) {
-                 throw new NegativeNumberException("Введите положительное кол-во товара");
-             }
-        
+            if (Integer.parseInt(kol_vo) <= 0) {
+                throw new NegativeNumberException("Введите положительное кол-во товара");
+            }
+
             String id_product = session.getAttribute("ID_PRODUCT").toString();
 
 
             OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
             OrderBeanRemote order = orderHome.create(new Long(usr.getId()), new Long(Long.parseLong(id_product)), new Boolean(false), new Integer(Integer.parseInt(kol_vo)));
-            order.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Добавлен заказ на товар: " + order.getNameProduct()+ " пользователем: " + order.getNameUser(), new Long(order.getId()), 1);
+            order.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Добавлен заказ на товар: " + order.getNameProduct() + " пользователем: " + order.getNameUser(), new Long(order.getId()), 1);
 
             result = "Продукт добавлен в корзину";
-         } catch (FinderException ex) {
+        } catch (FinderException ex) {
             result = "Произошла ошибка";
         } catch (NegativeNumberException ex) {
             result = "Введите положительное кол-во товара";
@@ -1139,9 +1134,9 @@ public class ExecServlet extends HttpServlet {
                     }
                     String price = request.getParameter("PRICE");
                     double priceDouble = Double.parseDouble(price);
-                     if (priceDouble <= 0) {
-                throw new NegativeNumberException("Введите положительную цену продукта");
-            }
+                    if (priceDouble <= 0) {
+                        throw new NegativeNumberException("Введите положительную цену продукта");
+                    }
                     if (product.getPrice() != priceDouble) {
                         String str = ". Изменена цена продукта с " + product.getPrice() + " на " + priceDouble;
                         product.setPrice(new Double(priceDouble));
@@ -1159,14 +1154,14 @@ public class ExecServlet extends HttpServlet {
                         message = message + str;
                     }
                     result = "Продукт обновлен";
-                     product.sendMessage(new Long(usr.getId()), "\"PRODUCT\"", "Отредактирован продукт " + product.getName() + ". " + message, new Long(product.getId()), 2);
+                    product.sendMessage(new Long(usr.getId()), "\"PRODUCT\"", "Отредактирован продукт " + product.getName() + ". " + message, new Long(product.getId()), 2);
                     session.removeAttribute("product");
                     request.setAttribute("result", result);
                 }
 
 
             }
-            
+
         } catch (NumberFormatException ex) {
             result = "Не верно введена цена";
             request.setAttribute("result", result);
@@ -1255,7 +1250,7 @@ public class ExecServlet extends HttpServlet {
                 String name = request.getParameter("NAME");
 
                 if (name == null || "".equals(name)) {
-                    result = "Название продукта введено не верно";
+                    result = "Название каталога введено не верно";
                     request.setAttribute("result", result);
                 } else {
                     CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
@@ -1267,33 +1262,37 @@ public class ExecServlet extends HttpServlet {
                             request.setAttribute("result", result);
                             throw new Exception();
                         } catch (FinderException ex) {
-                            msg = msg + "Имя каталога было сменено с " + catalog.getName()+ " на " + name + ". ";
+                            msg = msg + "Имя каталога было сменено с " + catalog.getName() + " на " + name + ". ";
                             catalog.setName(name);
                         }
                     }
                     String nameParent = request.getParameter("PARENT");
                     CatalogBeanRemote parent = null;
-                    try {
-                        parent = catalogHome.findByName(nameParent);
-                    } catch (FinderException ex) {
-                        result = "Родительский каталог не найден";
-                        request.setAttribute("result", result);
-                    }
+                    if (!("".equals(nameParent))) {
 
-                    // String nameCatalog = request.getParameter("NAME_CATALOG");
-                    if (catalog.getParentName().equals(nameParent)){
-                    catalog.setParentId(parent.getId());
+
+                        // String nameCatalog = request.getParameter("NAME_CATALOG");
+
+                        if (!catalog.getParentName().equals(nameParent)) {
+                            try {
+                                parent = catalogHome.findByName(nameParent);
+                            } catch (FinderException ex) {
+                                result = "Родительский каталог не найден";
+                                request.setAttribute("result", result);
+                            }
+                            msg = msg + "Родительский каталог был сменен с " + parent.getName() + " на " + nameParent + ". ";
+                            catalog.setParentId(parent.getId());
+                        }
+
                     } else {
-                        msg = msg + "Родительский каталог был сменен с " + parent.getName() + " на " + nameParent + ". "; 
-                        catalog.setParentId(parent.getId()); 
+                        catalog.setParentId(0);
                     }
-                            
                     result = "Каталог обновлен";
 
-                    
-                    parent.sendMessage(new Long(usr.getId()), "CATALOG", "Дочерний каталог: " + catalog.getName()+ " каталога: " + parent.getName()+ " обновлен" + msg, new Long(catalog.getParentId()), 2);
-                    catalog.sendMessage(new Long(usr.getId()), "CATALOG", "Каталог: "+ catalog.getName() + "обновлен" + msg, new Long(catalog.getId()), 2);
-                   
+
+                    parent.sendMessage(new Long(usr.getId()), "CATALOG", "Дочерний каталог: " + catalog.getName() + " каталога: " + parent.getName() + " обновлен" + msg, new Long(catalog.getParentId()), 2);
+                    catalog.sendMessage(new Long(usr.getId()), "CATALOG", "Каталог: " + catalog.getName() + "обновлен" + msg, new Long(catalog.getId()), 2);
+
                     session.removeAttribute("catalog");
                     request.setAttribute("result", result);
                 }
@@ -1328,12 +1327,12 @@ public class ExecServlet extends HttpServlet {
             String id_order = request.getParameter("id_order");
             OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
             OrderBeanRemote order = orderHome.findByPrimaryKey(new Long(Long.parseLong(id_order)));
-            
-            order.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Удален заказ на товар: " + order.getNameProduct() + " пользователем: " + order.getNameUser(), new Long(order.getId()) , 2);
 
-           
+            order.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Удален заказ на товар: " + order.getNameProduct() + " пользователем: " + order.getNameUser(), new Long(order.getId()), 2);
+
+
             order.remove();
-             request.setAttribute("result", orderHome.findByUserAndStatus(new Long(usr.getId()), false));
+            request.setAttribute("result", orderHome.findByUserAndStatus(new Long(usr.getId()), false));
             result2 = "Заказ удален из корзины";
 
         } catch (RemoveException ex) {
