@@ -25,7 +25,7 @@
         <link href="<%=request.getContextPath()%>/static/menu.css" media="all" rel="stylesheet" type="text/css" />
     </head>
     <body>
-        <%
+        <%          String type = request.getParameter("DO");
                     UserBeanRemote usr = JSPHelper.getUser2(session);
                     if (usr.getRoleId() > 2) {
                         throw new LoginException("Вы не обладаете правами администратора");
@@ -62,7 +62,7 @@
                 </div>
                 <div id="content">
                     <h1>Редактирование продукта</h1>
-                    <% if (result == null) {%>
+                    <% if ("select".equals(type)) {%>
                     <form action="selectProduct">
                         <table id="regOrLog">
                             <tr><td> Введите название продукта</td></tr>
@@ -70,7 +70,7 @@
                             <tr><td> <input type="submit" value=" Ввод " class="Button"/></td></tr>
                         </table>
                     </form>
-                    <%                            } else {
+                    <%                            } if("update".equals(type)){
 
                          ProductBeanRemote product = (ProductBeanRemote) session.getAttribute("product");
                          String name = "";
@@ -105,10 +105,10 @@
                         </table>
 
                     </form>
-                    <%if (result instanceof String) {%>
+                    <%}if (result instanceof String) {%>
                     <%=result%>
                     <%}
-                                }%>
+                                %>
                 </div>
             </div>
         </div>

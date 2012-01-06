@@ -26,10 +26,8 @@
     <body>
 
         <%
-
                     SimpleDateFormat formt = new SimpleDateFormat("yyyy-MM-dd");
                     UserBeanRemote usr = JSPHelper.getUser2(session);
-
                     session.setAttribute("homepage", "updateUser.jsp");
                     //  session.setAttribute("usrOld", usr);
 %>
