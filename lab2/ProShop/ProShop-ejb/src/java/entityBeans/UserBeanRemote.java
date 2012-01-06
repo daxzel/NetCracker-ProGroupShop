@@ -46,7 +46,7 @@ public interface UserBeanRemote extends EJBObject {
 
     void setEmail(String nemail) throws RemoteException;
 
-    //public String getRoleName();
+    
     void setRoleId(java.lang.Long nid_role) throws RemoteException;
 
     long getRoleId() throws RemoteException;
@@ -59,5 +59,7 @@ public interface UserBeanRemote extends EJBObject {
             java.sql.Date born, String phone, String email, long id_role) throws RemoteException;
 
     void sendMessage(Long id_user,  String nameTables, String message, Long id_obj, int prior) throws RemoteException;
+
+    String getRoleName () throws RemoteException;
 
 }

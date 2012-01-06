@@ -37,6 +37,7 @@ import moreTools.HistoryMessage;
  */
 public class UserBean implements EntityBean {
 
+    private RoleBeanRemoteHome roleHome ;
     private EntityContext entityContext;
     private Connection conn;
     private long id_user;
@@ -669,4 +670,10 @@ public class UserBean implements EntityBean {
             ex.printStackTrace();
         }
     }
+
+ public String getRoleName () throws FinderException, RemoteException, NamingException {
+     roleHome = (RoleBeanRemoteHome) EJBHelper.lookupHome("ejb/RoleBean", RoleBeanRemoteHome.class);
+         RoleBeanRemote rbr = roleHome.findByPrimaryKey(new Long(id_role));
+         return rbr.getName();
+}
 }
