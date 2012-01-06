@@ -29,6 +29,8 @@
 
                     try {
                         usr = JSPHelper.getUser2(session);
+                        long r = usr.getRoleId();
+
                     } catch (LoginException ex) {
                     } finally {%>
 
@@ -42,7 +44,7 @@
                             <td class="logo" align="left">
                                 <img src="<%=request.getContextPath()%>/static/logo.jpg">
                             </td>
-                             <td  class="current_user" align="right"><%if (usr == null) {%><a </a><%} else {%><a>Текущий пользователь: <%=usr.getNik()%><a> Статус: <%=usr.getRoleName()%> </a><%}%></td>
+                             <td  class="current_user" align="right"><%if (usr == null) {%><a> </a><%} else {%>Текущий пользователь:<a href="<%=request.getContextPath()%>/updateUser.jsp?DO=updateProfil"> <%=usr.getNik()%></a><a> Статус: <%=usr.getRoleName()%> </a><%}%></td>
                             <td class="user_nav" align="right"><%if (usr == null) {%><a href="<%=request.getContextPath()%>/login.jsp">Вход</a>   <a href="<%=request.getContextPath()%>/registration.jsp">Регистрация</a><%} else {%><a href="<%=request.getContextPath()%>/logout">Выход</a><%}%></td>
                             
         </tr>

@@ -58,7 +58,7 @@ public class ExecServlet extends HttpServlet {
         String born = request.getParameter("BORN");
         String phone = request.getParameter("PHONE");
         String email = request.getParameter("EMAIL");
-        
+
 
         request.setAttribute("NAME", name);
         request.setAttribute("SURNAME", surname);
@@ -69,7 +69,7 @@ public class ExecServlet extends HttpServlet {
         request.setAttribute("BORN", born);
         request.setAttribute("EMAIL", email);
         request.setAttribute("PHONE", phone);
-       
+
 
 
         try {
@@ -1056,7 +1056,7 @@ public class ExecServlet extends HttpServlet {
         }
         String result = "Продукт не найден вернитесь назад и введите верное название";
         String homepage;
-        RequestDispatcher rd;
+        RequestDispatcher  rd = request.getRequestDispatcher("updateProduct.jsp?DO=select");;
         String nameProduct = request.getParameter("nameProduct");
         try {
             if (nameProduct == null) {
@@ -1069,9 +1069,10 @@ public class ExecServlet extends HttpServlet {
                 //  order.setStatus(true);
                 request.getSession().setAttribute("product", product);
                 request.setAttribute("result", "поиск завершен успешно");
+                rd = request.getRequestDispatcher("updateProduct.jsp?DO=update");
             }
         } catch (FinderException ex) {
-            result = "Продукт не найден вернитесь назад и введите верное название";
+            result = "Продукт не найден";
             request.setAttribute("result", result);
         } catch (RemoteException ex) {
             result = "Произошла ошибка";
@@ -1080,7 +1081,7 @@ public class ExecServlet extends HttpServlet {
             result = "Произошла ошибка";
             request.setAttribute("result", result);
         } finally {
-            rd = request.getRequestDispatcher("updateProduct.jsp?DO=update");
+           
             rd.forward(request, response);
         }
 
@@ -1153,9 +1154,10 @@ public class ExecServlet extends HttpServlet {
                     }
                     result = "Продукт обновлен";
                     product.sendMessage(new Long(usr.getId()), "\"PRODUCT\"", "Отредактирован продукт " + product.getName() + ". " + message, new Long(product.getId()), 2);
-                    session.removeAttribute("product");
+
                     request.setAttribute("result", result);
                     rd = request.getRequestDispatcher("updateProduct.jsp?DO=select");
+                    session.removeAttribute("product");
                 }
 
 
@@ -1165,7 +1167,7 @@ public class ExecServlet extends HttpServlet {
             result = "Не верно введена цена";
             request.setAttribute("result", result);
 
-          
+
         } catch (NegativeNumberException ex) {
             result = "Введите положительную цену продукта";
             request.setAttribute("result", result);
@@ -1200,14 +1202,14 @@ public class ExecServlet extends HttpServlet {
         }
         String result = "Каталог не найден вернитесь назад и введите верное название";
         String homepage;
-        RequestDispatcher rd;
+        RequestDispatcher rd = request.getRequestDispatcher("updateCatalog.jsp?DO=select");
         rd = request.getRequestDispatcher("updateCatalog.jsp?DO=select");
         String nameCatalog = request.getParameter("nameCatalog");
         try {
             if (nameCatalog == null) {
                 result = "введите название каталога";
                 request.setAttribute("result", result);
-                rd = request.getRequestDispatcher("updateCatalog.jsp?DO=select");
+                
             } else {
 
                 // String nameProduct = request.getParameter("nameProduct");
@@ -1238,7 +1240,8 @@ public class ExecServlet extends HttpServlet {
 
     protected void updateCatalog(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, ParseException, IOException, LoginException {
-        RequestDispatcher rd;
+        RequestDispatcher rd = request.getRequestDispatcher("updateCatalog.jsp?DO=update");
+        ;
         String msg = ". ";
         HttpSession session = request.getSession();
         UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
@@ -1293,6 +1296,7 @@ public class ExecServlet extends HttpServlet {
                     catalog.sendMessage(new Long(usr.getId()), "CATALOG", "Каталог: " + catalog.getName() + "обновлен" + msg, new Long(catalog.getId()), 2);
                     session.removeAttribute("catalog");
                     request.setAttribute("result", result);
+                    rd = request.getRequestDispatcher("updateCatalog.jsp?DO=select");
                 }
             }
         } catch (FinderException ex) {
@@ -1307,7 +1311,7 @@ public class ExecServlet extends HttpServlet {
         } catch (Exception ex) {
         } finally {
 
-            rd = request.getRequestDispatcher("updateCatalog.jsp?DO=select");
+
             rd.forward(request, response);
         }
 

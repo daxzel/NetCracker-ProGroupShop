@@ -674,6 +674,19 @@ public class UserBean implements EntityBean {
  public String getRoleName () throws FinderException, RemoteException, NamingException {
      roleHome = (RoleBeanRemoteHome) EJBHelper.lookupHome("ejb/RoleBean", RoleBeanRemoteHome.class);
          RoleBeanRemote rbr = roleHome.findByPrimaryKey(new Long(id_role));
-         return rbr.getName();
+         String role_name="";
+         if(id_role==1){
+             role_name="админ";
+         }
+           if(id_role==2){
+             role_name="менеджер";
+         }
+           if(id_role==3){
+             role_name="пользователь";
+         }
+           if(id_role==4){
+             role_name="заблокированный профиль";
+         }
+         return role_name;
 }
 }

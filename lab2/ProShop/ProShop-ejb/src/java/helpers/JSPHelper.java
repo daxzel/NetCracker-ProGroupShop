@@ -38,19 +38,7 @@ public class JSPHelper {
     }
         return menu;
     }
-    public static String getMenu(long role) {
-        String menu = "";
-        if (role == 1) {
-            menu = adminMenu;
-        } else {
-            if (role == 2) {
-                menu = managerMenu;
-            } else {
-                menu = userMenu;
-            }
-        }
-        return menu;
-    }
+ 
     public static String getRequestOrEmpty(HttpServletRequest request, String name) {
         if (request.getAttribute(name) != null) {
             return request.getAttribute(name).toString();

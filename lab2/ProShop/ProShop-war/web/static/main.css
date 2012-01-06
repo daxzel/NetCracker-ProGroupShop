@@ -35,7 +35,7 @@ min-height: 400px;
 #header div.team{
         min-height: 115px;
         height: auto;
-	width: 60px;
+		width: 60px;
         font-size: 11px;
 		
 }
@@ -73,6 +73,7 @@ list-style: none;
 #header table.top_nav td.current_user {
 vertical-align: top;
 width: 401px;
+
 font-size: 13px;
 }
 #header table.top_nav td.current_user ul  {
@@ -80,15 +81,10 @@ list-style: none;
  padding: 0;
  margin: 0;
 }
-#header table.top_nav td.current_user ul li.first {
-	padding: 3px 3px;
-	 display: block;
-	  float: left;
-	border-style: solid;
-	border-width: 1px 1px 1px 1px;
-	border-color: #FFFFFF #D9D9D9 #FFFFFF #FFFFFF;
-	background-color:#FFFFFF;
+#header table.top_nav td.current_user ul  a {
+text-decoration:none;
 }
+
 
 #header  {
 }

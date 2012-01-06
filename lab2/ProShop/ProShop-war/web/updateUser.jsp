@@ -188,9 +188,7 @@
                                                         }
 
                                                         if (request.getAttribute("result") != null) {
-                                                            if ("профиль отредактирован".equals(request.getAttribute("result").toString())) {
-                                                                session.removeAttribute("userOld");
-                                                            }%>
+                                                           %>
                     <%=request.getAttribute("result").toString()%><%}
 
                                 }
