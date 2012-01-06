@@ -5,6 +5,7 @@
 package entityBeans;
 
 import helpers.EJBHelper;
+import java.sql.Date;
 import java.rmi.RemoteException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -46,6 +47,7 @@ public class OrderBean implements EntityBean {
     private String name_product;
     private String name_user;
     private double price_product;
+    private Date orderByDate;
     private long userId;
     private long objId;
 
@@ -150,6 +152,7 @@ public class OrderBean implements EntityBean {
             //
             status = rs.getBoolean(4);
             amount = rs.getInt(5);
+           // orderByDate = rs.getDate(6);
 
 
         } catch (NamingException ex) {
@@ -176,6 +179,7 @@ public class OrderBean implements EntityBean {
             pst = conn.prepareStatement("UPDATE \"ORDER\"" + "SET STATUS = ? WHERE ID_ORDER=?");
             pst.setBoolean(1, status);
             pst.setLong(2, id_order);
+           // pst.setDate(3, orderByDate);
             if (pst.executeUpdate() < 1) {
                 throw new NoSuchEntityException("Не найдена запись");
             }
@@ -320,6 +324,7 @@ public class OrderBean implements EntityBean {
         this.id_product = id_product.longValue();
         this.status = status.booleanValue();
         this.amount = amount.intValue();
+
         Connection conn = null;
         CallableStatement pst = null;
         ResultSet rs = null;
@@ -330,6 +335,7 @@ public class OrderBean implements EntityBean {
             pst.setLong(2, this.id_product);
             pst.setBoolean(3, this.status);
             pst.setInt(4, this.amount);
+
             pst.registerOutParameter(5, Types.INTEGER);
             rs = pst.executeQuery();
             if (!rs.next()) {
@@ -365,6 +371,7 @@ public class OrderBean implements EntityBean {
         this.id_product = id_product.longValue();
         this.status = status.booleanValue();
         this.amount = amount.intValue();
+
         Connection conn = null;
         CallableStatement pst = null;
         ResultSet rs = null;
@@ -464,6 +471,14 @@ public class OrderBean implements EntityBean {
 
     public double getPrice() {
         return price_product * amount;
+    }
+
+    public Date getOrderByDate(){
+        return orderByDate;
+    }
+
+     public void setOrderByDate(Date date) {
+        this.orderByDate = date;
     }
 
     public void setAll(long id_user, long id_product, boolean status, int amount) {

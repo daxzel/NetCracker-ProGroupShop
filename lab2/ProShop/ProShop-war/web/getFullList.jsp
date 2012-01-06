@@ -90,17 +90,18 @@
 
                         <table align="center"  border="1" width="100%">
                             <tr align="center">
-                                <td width="5%" align="center">User id</td>
-                                <td width="15%" align="center">Name</td>
-                                <td width="25%" align="center">Surname</td>
-                                <td width="20%" align="center">Otchestvo</td>
-                                <td width="30%" align="center">Nik</td>
-                                <td width="30%" align="center">Born</td>
-                                <td width="30%" align="center">Phone</td>
+                                <td width="2%" align="center">ПК</td>
+                                <td width="7%" align="center">Имя</td>
+                                <td width="15%" align="center">Фамилия</td>
+                                <td width="15%" align="center">Отчество</td>
+                                <td width="15%" align="center">Никнейм</td>
+                                <td width="20%" align="center">Дата рождения</td>
+                                <td width="30%" align="center">Телефон</td>
                                 <td width="30%" align="center">Email</td>
-                                <td width="30%" align="center">Role</td>
+                                <td width="20%" align="center">Дата регистрации</td>
+                                <td width="7%" align="center">Статус</td>
                                 <%if (usr.getRoleId() == 1) {%>
-                                <td width="30%" align="center">Export</td>
+                                <td width="30%" align="center">Экспорт</td>
                                 <%}%>
                             </tr>
                             <% for (int i = 0; i <= (list1.size() - 1); i++) {
@@ -127,6 +128,7 @@
                                 <%} else {%>
                                 <td></td>
                                 <%}%>
+                                  <td><%= user.getRegistrationDate()%></td>
                                 <td><%if (user.getRoleId() == 1) {%>
                                     admin
                                     <%} else {%>
@@ -169,8 +171,8 @@
                         %>
                     <table align="center"  border="1" width="100%">
                         <tr align="center">
-                            <td width="5%" align="center">Role id</td>
-                            <td width="15%" align="center">Name</td>
+                            <td width="5%" align="center">ПК Прав доступа</td>
+                            <td width="15%" align="center">Название</td>
 
                         </tr>
                         <% for (int i = 0; i <= (list1.size() - 1); i++) {

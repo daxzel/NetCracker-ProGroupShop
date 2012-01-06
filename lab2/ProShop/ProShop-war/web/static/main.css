@@ -9,7 +9,7 @@ body {
 margin: 0 auto 40px auto;
 padding: 7px 10px 20px 10px;
 position: relative;
-width: 1200px;
+width: 1400px;
 background-color: white;
 min-height:550px;
 }
@@ -41,7 +41,7 @@ min-height: 400px;
 }
 #header table.top_nav {
 margin: 0 10px 5px 10px;
-width: 1180px;
+width: 1380px;
 border-collapse: collapse;
 color: #000;
 }
@@ -53,7 +53,7 @@ width: 387px;
 }
 #header table.top_nav td.user_nav {
 vertical-align: top;
-width: 101px;
+width: 201px;
 font-size: 13px;
 }
 #header table.top_nav td.user_nav ul  {

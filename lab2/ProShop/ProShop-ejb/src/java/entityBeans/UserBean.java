@@ -50,6 +50,7 @@ public class UserBean implements EntityBean {
     private String phone;
     private String email;
     private long id_role;
+    private Date registrationDate;
     private RoleBeanRemote role;
 
         private long userId;
@@ -155,8 +156,9 @@ public class UserBean implements EntityBean {
             born = rs.getDate(7);
             phone = rs.getString(8);
             email = rs.getString(9);
+            registrationDate = rs.getDate(10);
 
-            id_role = rs.getLong(10);
+            id_role = rs.getLong(11);
         } catch (NamingException ex) {
             throw new EJBException("Ошибка SELECT");
         } catch (SQLException e) {
@@ -453,13 +455,16 @@ public class UserBean implements EntityBean {
         this.born = born;
         this.phone = phone;
         this.email = email;
+        java.sql.Date date = new java.sql.Date((new java.util.Date()).getTime());
+            this.registrationDate = date;
         this.id_role = id_role.longValue();
+
         Connection conn = null;
         CallableStatement pst = null;
         ResultSet rs = null;
         try {
             conn = EJBHelper.getConnection();
-            pst = conn.prepareCall("BEGIN INSERT INTO \"USER\" " + "(NAME,SURNAME,OTCHESTVO,NIK,PASSWORD,BORN,PHONE,EMAIL,ID_ROLE)" + "VALUES(?,?,?,?,?,?,?,?,?) RETURNING ID_USER INTO ?;END;");
+            pst = conn.prepareCall("BEGIN INSERT INTO \"USER\" " + "(NAME,SURNAME,OTCHESTVO,NIK,PASSWORD,BORN,PHONE,EMAIL,REGISTRATION_DATE,ID_ROLE)" + "VALUES(?,?,?,?,?,?,?,?,?,?) RETURNING ID_USER INTO ?;END;");
             pst.setString(1, name);
             pst.setString(2, surname);
             pst.setString(3, otchestvo);
@@ -468,21 +473,20 @@ public class UserBean implements EntityBean {
             pst.setDate(6, born);
             pst.setString(7, phone);
             pst.setString(8, email);
-            pst.setLong(9, id_role.longValue());
-            pst.registerOutParameter(10, Types.INTEGER);
+            pst.setDate(9, date);
+            pst.setLong(10, id_role.longValue());
+            pst.registerOutParameter(11, Types.INTEGER);
             rs = pst.executeQuery();
             if (!rs.next()) {
                 throw new CreateException("Ошибка вставки");
             }
 
-            id_user = pst.getLong(10);
+            id_user = pst.getLong(11);
 
 
-           // EJBHelper.sendMessage(new HistoryMessage("USER","Добавлен пользователь",pst.getLong(10)));
 
             return new Long(id_user);
-      //   } catch (JMSException ex){
-         //   throw new EJBException("Ошибка jms");
+      
         } catch (NamingException ex) {
             throw new EJBException("Произошла ошибка добавления");
         } catch (SQLException ex) {
@@ -516,13 +520,15 @@ public class UserBean implements EntityBean {
         this.born = born;
         this.phone = phone;
         this.email = email;
+         java.sql.Date date = new java.sql.Date((new java.util.Date()).getTime());
+            this.registrationDate = date;
         this.id_role = id_role.longValue();
         Connection conn = null;
         CallableStatement pst = null;
         ResultSet rs = null;
         try {
             conn = EJBHelper.getConnection();
-            pst = conn.prepareCall("INSERT INTO \"USER\" " + "(ID_USER,NAME,SURNAME,OTCHESTVO,NIK,PASSWORD,BORN,PHONE,EMAIL,ID_ROLE)" + "VALUES(?,?,?,?,?,?,?,?,?,?)");
+            pst = conn.prepareCall("INSERT INTO \"USER\" " + "(ID_USER,NAME,SURNAME,OTCHESTVO,NIK,PASSWORD,BORN,PHONE,EMAIL,REGISTRATION_DATE,ID_ROLE)" + "VALUES(?,?,?,?,?,?,?,?,?,?,?)");
             pst.setLong(1, id.longValue());
             pst.setString(2, name);
             pst.setString(3, surname);
@@ -532,7 +538,8 @@ public class UserBean implements EntityBean {
             pst.setDate(7, born);
             pst.setString(8, phone);
             pst.setString(9, email);
-            pst.setLong(10, id_role.longValue());
+           pst.setDate(10, date);
+            pst.setLong(11, id_role.longValue());
             rs = pst.executeQuery();
             if (!rs.next()) {
                 throw new CreateException("Ошибка вставки");
@@ -623,6 +630,9 @@ public class UserBean implements EntityBean {
         phone = nphone;
     }
 
+     public Date getRegistrationDate() {
+        return registrationDate;
+    }
     public String getEmail() {
         return email;
     }
@@ -676,16 +686,16 @@ public class UserBean implements EntityBean {
          RoleBeanRemote rbr = roleHome.findByPrimaryKey(new Long(id_role));
          String role_name="";
          if(id_role==1){
-             role_name="админ";
+             role_name="Админ";
          }
            if(id_role==2){
-             role_name="менеджер";
+             role_name="Менеджер";
          }
            if(id_role==3){
-             role_name="пользователь";
+             role_name="Пользователь";
          }
            if(id_role==4){
-             role_name="заблокированный профиль";
+             role_name="Заблокированный профиль";
          }
          return role_name;
 }

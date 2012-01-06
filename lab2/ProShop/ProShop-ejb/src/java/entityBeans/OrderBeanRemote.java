@@ -8,6 +8,7 @@ import java.rmi.RemoteException;
 import javax.ejb.EJBObject;
 import javax.ejb.FinderException;
 import javax.naming.NamingException;
+import java.sql.Date;
 
 /**
  *
@@ -39,6 +40,10 @@ public interface OrderBeanRemote extends EJBObject {
     double getPriceProduct() throws RemoteException;
 
     double getPrice() throws RemoteException;
+
+    Date getOrderByDate() throws RemoteException;
+
+    void setOrderByDate(Date date) throws RemoteException;
 
     String getNameUser() throws FinderException, RemoteException;
 

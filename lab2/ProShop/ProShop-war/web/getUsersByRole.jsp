@@ -85,15 +85,16 @@
                         <table align="center"  border="1" width="100%">
                             <tr align="center">
                                 <%if (usr.getRoleId() == 1) {%>
-                                <td  align="center" width="5%">User id</td>
+                                <td  align="center" width="5%">ПК</td>
                                 <%}%>
-                                <td  align="center" width="10%">Name</td>
-                                <td align="center" width="10%">Surname</td>
-                                <td align="center" width="20%">Otchestvo</td>
-                                <td align="center" width="10%">Nik</td>
-                                <td align="center" width="15%">Born</td>
-                                <td  align="center" width="10%">Phone</td>
+                                <td  align="center" width="10%">Имя</td>
+                                <td align="center" width="10%">Фамилия</td>
+                                <td align="center" width="20%">Отчество</td>
+                                <td align="center" width="10%">Никнейм</td>
+                                <td align="center" width="15%">Дата рождения</td>
+                                <td  align="center" width="10%">Телефон</td>
                                 <td  align="center" width="15%">Email</td>
+                                <td  align="center" width="15%">Дата регистрации</td>
                                 <%if ((usr.getRoleId() == 1)) {%>
 
                                 <td  align="center" width="5%">Заблокировать пользователя</td>
@@ -120,8 +121,12 @@
                                                                                                 if (user.getEmail() != null) {%>
                                 <td><%= user.getEmail()%></td>
                                 <%} else {%>
-                                <td></td>
-                                <%}
+                                <td></td> 
+                                
+                                <%} %>
+                                <td><%= user.getRegistrationDate()%></td>
+                                <%
+
                                                                                                 if ((usr.getRoleId() == 1)) {
                                 %>
                                 <td  align="center"><input type="checkbox" name="id_user" value=<%=user.getId()%> /></td>

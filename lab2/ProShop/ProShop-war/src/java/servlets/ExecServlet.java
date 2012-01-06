@@ -114,7 +114,7 @@ public class ExecServlet extends HttpServlet {
             RoleBeanRemote rbr = roleHome.findByPrimaryKey(new Long(3));
 
             Long ido = new Long(usr.getId());
-            usr.sendMessage(new Long(usr.getId()), "\"USER\"", "Зарегестрирован пользователь: " + nik + ". Статус: " + rbr.getName(), ido, 1);
+            usr.sendMessage(new Long(usr.getId()), "\"USER\"", "Зарегестрирован пользователь: " + nik + ". Статус: " + rbr.getName() + ". Дата регистрации: " + usr.getRegistrationDate(), ido, 1);
 
 
             result = "Пользователь зарегестрирован";
@@ -1029,8 +1029,9 @@ public class ExecServlet extends HttpServlet {
             for (int i = 0; i < list.size(); i++) {
                 OrderBeanRemote ord = (OrderBeanRemote) list.get(i);
                 ord.setStatus(true);
-
-                ord.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Заказ " + ord.getId() + " пользователя : " + ord.getNameUser() + " на товар: " + ord.getNameProduct() + " оформлен", new Long(ord.getId()), 3);
+                java.sql.Date f = new java.sql.Date((new java.util.Date()).getTime());
+                ord.setOrderByDate(f);
+                ord.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Заказ " + ord.getId() + " пользователя : " + ord.getNameUser() + " на товар: " + ord.getNameProduct() + " оформлен. Дата оформления заказа: " + ord.getOrderByDate(), new Long(ord.getId()), 3);
             }
             result2 = "Заказ оформлен";
             request.setAttribute("result", orderHome.findByUserAndStatus(new Long(usr.getId()), false));
