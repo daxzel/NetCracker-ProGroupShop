@@ -298,7 +298,7 @@ public class ExecServlet extends HttpServlet {
             ProductBeanRemote pr = productHome.findByName(value);
 
             result = "Удаление завершено";
-            pr.sendMessage(new Long(pr.getId()), "PRODUCT", "Удален продукт: " + pr.getName() + " из каталога: " + pr.getNameCatalog(), null, 2);
+            pr.sendMessage(new Long(usr.getId()), "PRODUCT", "Удален продукт: " + pr.getName() + " из каталога: " + pr.getNameCatalog(), null, 2);
             productHome.remove(new Long(pr.getId()));
 
 
@@ -327,7 +327,7 @@ public class ExecServlet extends HttpServlet {
         RequestDispatcher rd;
         UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
         Long id = null;
-        String msg = "";
+        String msg = ". ";
 
         if (type.equals("updateUser")) {
             if (usr.getRoleId() >= 2) {
@@ -852,11 +852,6 @@ public class ExecServlet extends HttpServlet {
             parentCtg.sendMessage(idu, "\"CATALOG\"", "Из каталога: " + parentCtg.getName() + " удален дочерний каталог: " + name, idp, 2);
             ctg.sendMessage(idu, "\"CATALOG\"", "Удален каталог: " + ctg.getName(), null, 2);
             ctg.remove();
-
-
-
-
-
             result = "Удаление завершено";
         } catch (FinderException ex) {
             result = ex.getMessage();
@@ -1057,7 +1052,8 @@ public class ExecServlet extends HttpServlet {
         }
         String result = "Продукт не найден вернитесь назад и введите верное название";
         String homepage;
-        RequestDispatcher  rd = request.getRequestDispatcher("updateProduct.jsp?DO=select");;
+        RequestDispatcher rd = request.getRequestDispatcher("updateProduct.jsp?DO=select");
+        ;
         String nameProduct = request.getParameter("nameProduct");
         try {
             if (nameProduct == null) {
@@ -1082,7 +1078,7 @@ public class ExecServlet extends HttpServlet {
             result = "Произошла ошибка";
             request.setAttribute("result", result);
         } finally {
-           
+
             rd.forward(request, response);
         }
 
@@ -1210,7 +1206,7 @@ public class ExecServlet extends HttpServlet {
             if (nameCatalog == null) {
                 result = "введите название каталога";
                 request.setAttribute("result", result);
-                
+
             } else {
 
                 // String nameProduct = request.getParameter("nameProduct");
@@ -1283,23 +1279,24 @@ public class ExecServlet extends HttpServlet {
                             try {
                                 parent = catalogHome.findByName(nameParent);
                             } catch (FinderException ex) {
-                                result = "Родительский каталог не найден";
-                                request.setAttribute("result", result);
+                                throw new UpdateException("Родительский каталог не найден");
                             }
                             msg = msg + "Родительский каталог был сменен с " + parent.getName() + " на " + nameParent + ". ";
                             catalog.setParentId(parent.getId());
                         }
                     } else {
-                        catalog.setParentId(0);
+                        throw new UpdateException("Введите имя родительского каталога");
                     }
                     result = "Каталог обновлен";
                     parent.sendMessage(new Long(usr.getId()), "CATALOG", "Дочерний каталог: " + catalog.getName() + " каталога: " + parent.getName() + " обновлен" + msg, new Long(catalog.getParentId()), 2);
-                    catalog.sendMessage(new Long(usr.getId()), "CATALOG", "Каталог: " + catalog.getName() + "обновлен" + msg, new Long(catalog.getId()), 2);
+                    catalog.sendMessage(new Long(usr.getId()), "CATALOG", "Каталог: " + catalog.getName() + " обновлен" + msg, new Long(catalog.getId()), 2);
                     session.removeAttribute("catalog");
                     request.setAttribute("result", result);
                     rd = request.getRequestDispatcher("updateCatalog.jsp?DO=select");
                 }
             }
+        } catch (UpdateException ex) {
+            request.setAttribute("result", ex.getMessage());
         } catch (FinderException ex) {
             result = "Не найден каталог";
             request.setAttribute("result", result);

@@ -1,4 +1,5 @@
 ﻿
+
 INSERT INTO "CATALOG" (ID_CATALOG,"NAME")   VALUES(1,'Техника');
 
        INSERT INTO "CATALOG" (ID_CATALOG,ID_PARENT,"NAME")   VALUES(2,1,'Бытовая техника');
