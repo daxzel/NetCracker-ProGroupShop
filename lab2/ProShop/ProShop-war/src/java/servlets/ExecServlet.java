@@ -58,7 +58,7 @@ public class ExecServlet extends HttpServlet {
         String born = request.getParameter("BORN");
         String phone = request.getParameter("PHONE");
         String email = request.getParameter("EMAIL");
-        String role = request.getParameter("ROLE");
+        
 
         request.setAttribute("NAME", name);
         request.setAttribute("SURNAME", surname);
@@ -69,7 +69,7 @@ public class ExecServlet extends HttpServlet {
         request.setAttribute("BORN", born);
         request.setAttribute("EMAIL", email);
         request.setAttribute("PHONE", phone);
-        request.setAttribute("ROLE", role);
+       
 
 
         try {
@@ -108,10 +108,10 @@ public class ExecServlet extends HttpServlet {
             UserBeanRemoteHome userHome = (UserBeanRemoteHome) EJBHelper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
             RoleBeanRemoteHome roleHome = (RoleBeanRemoteHome) EJBHelper.lookupHome("ejb/RoleBean", RoleBeanRemoteHome.class);
             java.sql.Date sqlDate = new java.sql.Date(bornDate.getTime());
-            java.lang.Long idRole = new Long(Long.parseLong(role));
+            //java.lang.Long idRole = new Long(Long.parseLong(role));
 
-            UserBeanRemote usr = userHome.create(name, surname, otchestvo, nik, password, sqlDate, phone, email, idRole);
-            RoleBeanRemote rbr = roleHome.findByPrimaryKey(idRole);
+            UserBeanRemote usr = userHome.create(name, surname, otchestvo, nik, password, sqlDate, phone, email, new Long(3));
+            RoleBeanRemote rbr = roleHome.findByPrimaryKey(new Long(3));
 
             Long ido = new Long(usr.getId());
             usr.sendMessage(new Long(usr.getId()), "\"USER\"", "Зарегестрирован пользователь: " + nik + ". Статус: " + rbr.getName(), ido, 1);

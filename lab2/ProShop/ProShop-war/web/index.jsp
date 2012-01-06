@@ -4,6 +4,7 @@
     Author     : daxzel
 --%>
 
+<%@page import="entityBeans.RoleBeanRemote"%>
 <%@page import="java.io.PrintWriter"%>
 <%@page import="menu.Menu"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -25,6 +26,7 @@
                     //    PrintWriter pw = response.getWriter();
         
                     UserBeanRemote usr = null;
+
                     try {
                         usr = JSPHelper.getUser2(session);
                     } catch (LoginException ex) {
@@ -34,13 +36,17 @@
             <div id="header">
                 <table class="top_nav">
                     <tbody>
+                              
+ 
                         <tr>
-                            <td class="logo">
+                            <td class="logo" align="left">
                                 <img src="<%=request.getContextPath()%>/static/logo.jpg">
                             </td>
-                            <td class="team" align="center"><a href="<%=request.getContextPath()%>/aboutTeam.jsp">Команда</a></td>
+                             <td  class="current_user" align="right"><%if (usr == null) {%><a </a><%} else {%><a>Текущий пользователь: <%=usr.getNik()%><a> Статус: <%=usr.getRoleName()%> </a><%}%></td>
                             <td class="user_nav" align="right"><%if (usr == null) {%><a href="<%=request.getContextPath()%>/login.jsp">Вход</a>   <a href="<%=request.getContextPath()%>/registration.jsp">Регистрация</a><%} else {%><a href="<%=request.getContextPath()%>/logout">Выход</a><%}%></td>
-                        </tr>
+                            
+        </tr>
+                   
                     </tbody>
                 </table>
             </div>
@@ -53,7 +59,7 @@
                         <%if (usr != null) {%>
                         <%=JSPHelper.getMenu(usr.getRoleId())%>
                         <%} else {%>
-                        <%=JSPHelper.getMenu(3)%>
+                        <%=JSPHelper.getMenu(4)%>
                         <%}%>
                     </div>
                 </div>
@@ -61,8 +67,14 @@
                     Когда руки дойдут тут появятся новости<br><br><br><br> Когда руки дойдут тут появятся новости<br><br><br> Когда руки дойдут тут появятся новости<br><br><br><br><br>
                 </div>
             </div>
+                    
+            <div class="team" align="center">
+               <a href="<%=request.getContextPath()%>/aboutTeam.jsp"><font size="2">Команда </font></a>
         </div>
+        </div>
+                     
         <%}
         %>
+ 
     </body>
 </html>

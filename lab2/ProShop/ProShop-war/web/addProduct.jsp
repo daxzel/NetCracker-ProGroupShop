@@ -59,7 +59,7 @@
                         <%if (usr != null) {%>
                         <%=JSPHelper.getMenu(usr.getRoleId())%>
                         <%} else {%>
-                        <%=JSPHelper.getMenu(3)%>
+                        <%=JSPHelper.getMenu(4)%>
                         <%}%>
                     </div>
                 </div>

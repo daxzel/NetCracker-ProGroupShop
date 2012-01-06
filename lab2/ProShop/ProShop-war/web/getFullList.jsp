@@ -4,15 +4,27 @@
     Author     : Yra
 --%>
 
+
+<%@page import="menu.Menu"%>
+<%@page import="exceptions.LoginException"%>
+<%@page import="helpers.JSPHelper"%>
+<%@page import="entityBeans.UserBeanRemote"%>
+<%@page import="entityBeans.CatalogBeanRemote,entityBeans.ProductBeanRemote"%>
+<%@page import="java.util.List"%>
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import= "entityBeans.*,java.util.List,java.util.Iterator,java.text.SimpleDateFormat, helpers.*,exceptions.LoginException;"%>
 <%@page errorPage="errorPage.jsp"%>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-    "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/main.css">
+        <link href="<%=request.getContextPath()%>/static/dropdown.css" media="all" rel="stylesheet" type="text/css" />
+        <link href="<%=request.getContextPath()%>/static/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
+        <link href="<%=request.getContextPath()%>/static/default.css" media="all" rel="stylesheet" type="text/css" />
+        <link href="<%=request.getContextPath()%>/static/menu.css" media="all" rel="stylesheet" type="text/css" />
         <title>Полный список</title>
 
     </head>
@@ -24,14 +36,41 @@
                     }
                     if (request.getAttribute("result") == null) {
         %>
-
-        <p align="center"><a href ="getFullProductList">Get full list of product</a><br></p>
+        <div id="container">
+            <div id="header">
+                <table class="top_nav">
+                    <tbody>
+                        <tr>
+                            <td class="logo">
+                                <img src="<%=request.getContextPath()%>/static/logo.jpg">
+                            </td>
+                            <td class="team" align="center"><a href="<%=request.getContextPath()%>/aboutTeam.jsp">Команда</a></td>
+                            <td class="user_nav" align="right"><%if (usr == null) {%><a href="<%=request.getContextPath()%>/login.jsp">Вход</a>   <a href="<%=request.getContextPath()%>/registration.jsp">Регистрация</a><%} else {%><a href="<%=request.getContextPath()%>/logout">Выход</a><%}%></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="cols">
+                <div id="menu">
+                    <div class="catalog">
+                        <%=Menu.getMenu()%>
+                    </div>
+                    <div class="user_menu">
+                        <%if (usr != null) {%>
+                        <%=JSPHelper.getMenu(usr.getRoleId())%>
+                        <%} else {%>
+                        <%=JSPHelper.getMenu(4)%>
+                        <%}%>
+                    </div>
+                </div>
+                <div id="content">
+        <p align="center"><a href ="getFullProductList">Вся продукция</a><br></p>
             <% if (usr != null) {
                                         if (usr.getRoleId() <= 3) {%>
-        <p align="center"><a href ="getFullUserList">Get full list of user</a><br></p>
+        <p align="center"><a href ="getFullUserList">Зарегистрированные  пользователи</a><br></p>
             <%}%>
             <%if (usr.getRoleId() == 1) {%>
-        <p align="center"><a href ="getFullRoleList">Get full list of role</a><br></p>
+        <p align="center"><a href ="getFullRoleList">Роли</a><br></p>
             <%}
                                     }%>
         <p align="center"><a href ="index.jsp">index</a><br></p>
@@ -140,12 +179,16 @@
             <%}%>
 
         </table>
-        <p align="center"><a href ="index.jsp">index</a><br></p>
+        
             <%  }
 
                                 }
                             }
                         }
             %>
-    </body>
+   
+                        </div>
+            </div>
+        </div>
+                </body>
 </html>

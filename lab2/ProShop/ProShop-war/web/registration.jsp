@@ -33,7 +33,7 @@
                     String born = JSPHelper.getRequestOrEmpty(request, "BORN");
                     String phone = JSPHelper.getRequestOrEmpty(request, "PHONE");
                     String email = JSPHelper.getRequestOrEmpty(request, "EMAIL");
-                    String role = JSPHelper.getRequestOrEmpty(request, "ROLE");
+                    
 
         %>
         <%
@@ -69,7 +69,7 @@
                         <%if (usr != null) {%>
                         <%=JSPHelper.getMenu(usr.getRoleId())%>
                         <%} else {%>
-                        <%=JSPHelper.getMenu(3)%>
+                        <%=JSPHelper.getMenu(4)%>
                         <%}%>
                     </div>
                 </div>
@@ -94,13 +94,7 @@
                             <tr><td><input type="text" name="PHONE" value="<%=phone%>" size="25" /></td><td></td></tr>
                             <tr><td>Электронная почта</td><td></td></tr>
                             <tr><td><input type="text" name="EMAIL" value="<%=email%>" size="25" /></td><td></td></tr>
-                            <tr><td><select name="ROLE" style="width : 200">
-
-                                        <option value="1">Админ</option>
-                                        <option value="3" selected>Пользователь</option>
-                                        <option value="2" selected>Менеджер</option>
-
-                                    </select></td><td></td></tr>
+                            
                             <tr><td><input type="submit" value=" Ввод " class="Button"/></td><td></td></tr>
                         </table>
                     </form>
