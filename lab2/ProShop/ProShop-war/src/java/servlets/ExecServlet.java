@@ -1248,7 +1248,6 @@ public class ExecServlet extends HttpServlet {
                 request.setAttribute("result", result);
             } else {
                 String name = request.getParameter("NAME");
-
                 if (name == null || "".equals(name)) {
                     result = "Название каталога введено не верно";
                     request.setAttribute("result", result);
@@ -1269,10 +1268,7 @@ public class ExecServlet extends HttpServlet {
                     String nameParent = request.getParameter("PARENT");
                     CatalogBeanRemote parent = null;
                     if (!("".equals(nameParent))) {
-
-
                         // String nameCatalog = request.getParameter("NAME_CATALOG");
-
                         if (!catalog.getParentName().equals(nameParent)) {
                             try {
                                 parent = catalogHome.findByName(nameParent);
@@ -1283,21 +1279,15 @@ public class ExecServlet extends HttpServlet {
                             msg = msg + "Родительский каталог был сменен с " + parent.getName() + " на " + nameParent + ". ";
                             catalog.setParentId(parent.getId());
                         }
-
                     } else {
                         catalog.setParentId(0);
                     }
                     result = "Каталог обновлен";
-
-
                     parent.sendMessage(new Long(usr.getId()), "CATALOG", "Дочерний каталог: " + catalog.getName() + " каталога: " + parent.getName() + " обновлен" + msg, new Long(catalog.getParentId()), 2);
                     catalog.sendMessage(new Long(usr.getId()), "CATALOG", "Каталог: " + catalog.getName() + "обновлен" + msg, new Long(catalog.getId()), 2);
-
                     session.removeAttribute("catalog");
                     request.setAttribute("result", result);
                 }
-
-
             }
         } catch (FinderException ex) {
             result = "Не найден каталог";
@@ -1311,7 +1301,7 @@ public class ExecServlet extends HttpServlet {
         } catch (Exception ex) {
         } finally {
 
-            rd = request.getRequestDispatcher("updateCatalog.jsp?DO=update");
+            rd = request.getRequestDispatcher("updateCatalog.jsp?DO=select");
             rd.forward(request, response);
         }
 
