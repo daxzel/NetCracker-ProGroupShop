@@ -82,10 +82,11 @@
                           if (catalog != null) {
                               //   product = (ProductBeanRemote) result;
                               name = catalog.getName();
+                           
+                              if(catalog.getParentId()!=0){
                               parentName = catalog.getParentName();
-                              if (parentName == null) {
-                                  parentName = "";
                               }
+                             
 
                               // String g = product.getName();
                               //   session.setAttribute("product", product);

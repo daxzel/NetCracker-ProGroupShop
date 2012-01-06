@@ -61,7 +61,7 @@
                     </div>
                 </div>
                 <div id="content">
-                    <%  if ("upProf".equals(request.getParameter("DO")) || ("upProf".equals(request.getAttribute("DO")))) {
+                    <%  if ("updateProfil".equals(request.getParameter("DO"))) {
                     %>
                     <h1>Редактирование профиля</h1>
                     <form name="myForm" action="updateProfil">
@@ -94,13 +94,10 @@
                         </table>
                     </form>
                     <%if (request.getAttribute("result") instanceof String) {%>
-                    <%=request.getAttribute("result").toString()%><%}%>
-                    <%                                }
-                                String str = null;
-                                if (request.getAttribute("DO") != null) {
-                                    str = request.getAttribute("DO").toString();
+                    <%=request.getAttribute("result").toString()%><%}
                                 }
-                                if (("upUser".equals(request.getParameter("DO")) && usr.getRoleId() == 1) || ("upUser".equals(str) && usr.getRoleId() == 1)) {
+
+                                if (("updateUser".equals(request.getParameter("DO")) && usr.getRoleId() == 1)) {
                                     if (session.getAttribute("userOld") == null) {
                                         if (usr.getRoleId() >= 2) {
                                             throw new LoginException("Вы не обладаете правами администратора");
@@ -192,7 +189,10 @@
                                                             }
                                                         }
 
-                                                        if (request.getAttribute("result") != null) {%>
+                                                        if (request.getAttribute("result") != null) {
+                                                            if ("профиль отредактирован".equals(request.getAttribute("result").toString())) {
+                                                                session.removeAttribute("userOld");
+                                                            }%>
                     <%=request.getAttribute("result").toString()%><%}
 
                                 }
