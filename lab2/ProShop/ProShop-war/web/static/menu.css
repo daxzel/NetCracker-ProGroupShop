@@ -1,16 +1,17 @@
 #menu{
 margin-top: 0px;
-margin-right: 10px;
+margin-right: 5px;
 margin-bottom: 20px;
 margin-left: 0px;
-width: 17%;
-float: left
+width:197px;
+float: left;
 }
 #menu div.catalog{
 margin-top: 0px;
 margin-right: 0px;
 margin-bottom: 20px;
 margin-left: 0px;
+width:197px;
 }
 #menu  div.user_menu{
 width:197px;
@@ -21,7 +22,7 @@ vertical-align: middle;
 	list-style: none;
 	margin: 0;
 	padding: 0;
-    width:200px;
+    width:197px;
 }
 #menu  div.user_menu ul li{
 	color: #777;
