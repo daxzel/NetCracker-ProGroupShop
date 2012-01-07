@@ -20,7 +20,7 @@
         <link href="<%=request.getContextPath()%>/static/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
         <link href="<%=request.getContextPath()%>/static/default.css" media="all" rel="stylesheet" type="text/css" />
         <link href="<%=request.getContextPath()%>/static/menu.css" media="all" rel="stylesheet" type="text/css" />
-        <title>Удаление пользователя</title>
+        <title>Блокировка пользователя</title>
     </head>
     <body>
         <% UserBeanRemote usr = JSPHelper.getUser2(session);
@@ -57,7 +57,7 @@
                     </div>
                 </div>
                 <div id="content">
-                    <h1>Удаление пользователя</h1>
+                    <h1>Блокировка пользователя</h1>
                     <form action="deleteUser">
                         <table id="regOrLog">
                             <tr><td>Введите ник:</td></tr>

@@ -573,7 +573,7 @@ public class ExecServlet extends HttpServlet {
         HttpSession session = request.getSession();
         RequestDispatcher rd;
         UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
-        String result = "Удаление не выполнено";
+        String result = "Блокировка не выполнена";
         if (usr.getRoleId() >= 2) {
             throw new LoginException("Вы не обладаете правами администратора");
         }
@@ -582,16 +582,17 @@ public class ExecServlet extends HttpServlet {
             UserBeanRemoteHome userHome = (UserBeanRemoteHome) EJBHelper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
             UserBeanRemote user = userHome.findByNik(nik);
             Long id = new Long(user.getId());
-            userHome.remove(id);
-            usr.sendMessage(new Long(usr.getId()), "\"USER\"", "Удален пользователь: " + nik, id, 2);
+            //userHome.remove(id);
+            user.setRoleId(new Long(4));
+            usr.sendMessage(new Long(usr.getId()), "\"USER\"", "Пользователь заблокирован: " + nik, id, 2);
 
-            result = "Удаление завершено";
+            result = "Блокировка завершена";
         } catch (ObjectNotFoundException ex) {
             result = "Пользователя с таким ником не существует";
         } catch (RemoteException ex) {
-            result = "Ошибка при удалении";
-        } catch (RemoveException ex) {
-            result = "Ошибка при удалении";
+            result = "Ошибка при блокировке";
+       // } catch (RemoveException ex) {
+        //    result = "Ошибка при удалении";
         } catch (FinderException ex) {
             result = "Ошибка при поиске";
         } catch (NamingException ex) {
@@ -653,7 +654,7 @@ public class ExecServlet extends HttpServlet {
             String nik = request.getParameter("NIK");
             String password = request.getParameter("PASSWORD");
             if ("".equals(nik) || "".equals(password)) {
-                throw new LoginException("Не указанны поля пользователя или пароля");
+                throw new LoginException("Не указано имя пользователя или пароль");
             }
             UserBeanRemoteHome userHome = (UserBeanRemoteHome) EJBHelper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
             UserBeanRemote usr = userHome.findByNikAndPassword(nik, password);
