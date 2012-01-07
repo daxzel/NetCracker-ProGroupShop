@@ -1281,6 +1281,8 @@ public class ExecServlet extends HttpServlet {
                         } catch (FinderException ex) {
                             msg = msg + "Имя каталога было сменено с " + catalog.getName() + " на " + name + ". ";
                             catalog.setName(name);
+                            catalog.sendMessage(new Long(usr.getId()), "\"CATALOG\"", "Дочерний каталог: " + catalog.getName() + " каталога: " + catalog.getParentName() + " обновлен" + msg, new Long(catalog.getParentId()), 2);
+
                         }
                     }
                     String nameParent = request.getParameter("PARENT");
@@ -1293,10 +1295,12 @@ public class ExecServlet extends HttpServlet {
                             } catch (FinderException ex) {
                                 throw new UpdateException("Родительский каталог не найден");
                             }
-
-                            msg = msg + "Родительский каталог был сменен с " + parent.getName() + " на " + nameParent + ". ";
+                            String oldParent = catalog.getParentName();
+                            long oldPid = catalog.getParentId();
+                            msg = msg + "Родительский каталог был сменен с " +  oldParent  + " на " + nameParent + ". ";
                             catalog.setParentId(parent.getId());
-                            parent.sendMessage(new Long(usr.getId()), "CATALOG", "Дочерний каталог: " + catalog.getName() + " каталога: " + parent.getName() + " обновлен" + msg, new Long(catalog.getParentId()), 2);
+                            catalog.sendMessage(new Long(usr.getId()), "\"CATALOG\"", "Дочерний каталог: " + catalog.getName() + " каталога: " + oldParent + " перенесен в каталог " + catalog.getParentName(), new Long(oldPid), 2);
+                            catalog.sendMessage(new Long(usr.getId()), "\"CATALOG\"", "Добавлен дочерний каталог: " + catalog.getName(), new Long(catalog.getParentId()), 2);
 
                         }
                     } else {
@@ -1304,7 +1308,8 @@ public class ExecServlet extends HttpServlet {
                     }
                     result = "Каталог обновлен";
                     //  parent.sendMessage(new Long(usr.getId()), "CATALOG", "Дочерний каталог: " + catalog.getName() + " каталога: " + parent.getName() + " обновлен" + msg, new Long(catalog.getParentId()), 2);
-                    catalog.sendMessage(new Long(usr.getId()), "CATALOG", "Каталог: " + catalog.getName() + " обновлен" + msg, new Long(catalog.getId()), 2);
+                    catalog.sendMessage(new Long(usr.getId()), "\"CATALOG\"", "Каталог: " + catalog.getName() + " обновлен" + msg, new Long(catalog.getId()), 2);
+
                     session.removeAttribute("catalog");
                     request.setAttribute("result", result);
                     rd = request.getRequestDispatcher("updateCatalog.jsp?DO=select");
