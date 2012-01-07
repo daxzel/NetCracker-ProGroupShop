@@ -63,7 +63,7 @@
                     <%  if ("updateProfil".equals(request.getParameter("DO"))) {
                     %>
                     <h1>Редактирование профиля</h1>
-                    <form name="myForm" action="updateProfil">
+                    <form name="myForm" action="updateProfil" method ="post">
                         <table id="regOrLog">
                             <tr><td>Name</td><td></td></tr>
                             <tr><td><input type="text" name="NAME" value="<%=usr.getName()%>" size="20" /></td><td></td></tr>

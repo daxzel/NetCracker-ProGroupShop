@@ -109,7 +109,7 @@ public class ExecServlet extends HttpServlet {
             RoleBeanRemoteHome roleHome = (RoleBeanRemoteHome) EJBHelper.lookupHome("ejb/RoleBean", RoleBeanRemoteHome.class);
             java.sql.Date sqlDate = new java.sql.Date(bornDate.getTime());
             //java.lang.Long idRole = new Long(Long.parseLong(role));
-
+            password=JSPHelper.MD5(password);
             UserBeanRemote usr = userHome.create(name, surname, otchestvo, nik, password, sqlDate, phone, email, new Long(3));
             RoleBeanRemote rbr = roleHome.findByPrimaryKey(new Long(3));
 
@@ -657,6 +657,7 @@ public class ExecServlet extends HttpServlet {
                 throw new LoginException("Не указано имя пользователя или пароль");
             }
             UserBeanRemoteHome userHome = (UserBeanRemoteHome) EJBHelper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
+            password=JSPHelper.MD5(password);
             UserBeanRemote usr = userHome.findByNikAndPassword(nik, password);
             if (usr.getRoleId() == 4) {
                 request.setAttribute("result", "Ваш профиль заблокирован");

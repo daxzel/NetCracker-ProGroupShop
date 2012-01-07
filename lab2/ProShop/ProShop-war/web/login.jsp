@@ -65,7 +65,7 @@
                 </div>
                 <div id="content">
                     <h1>Вход</h1><br>
-                    <form action="<%=request.getContextPath()%>/login">
+                    <form action="<%=request.getContextPath()%>/login" method ="post">
                         <table id="regOrLog">
                             <tr><td>
                                     Ник</td></tr>
