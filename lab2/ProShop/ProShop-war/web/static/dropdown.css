@@ -22,6 +22,7 @@ ul.dropdown ul {
 	list-style: none;
 	margin: 0;
 	padding: 0;
+
 }
 
 ul.dropdown {
@@ -33,6 +34,7 @@ ul.dropdown li {
 	float: left;
 	line-height: 1.3em;
 	vertical-align: middle;
+
 	zoom: 1;
 }
 
@@ -40,6 +42,7 @@ ul.dropdown li.hover,
 ul.dropdown li:hover {
 	position: relative;
 	cursor: default;
+
 }
 
 ul.dropdown ul {
@@ -52,6 +55,7 @@ ul.dropdown ul {
 
 ul.dropdown ul li {
 	float: none;
+
 }
 
 

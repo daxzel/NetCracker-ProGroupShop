@@ -69,13 +69,13 @@
                     <form name="addProductForm" action="addProduct">
                         <table id="regOrLog">
                             <tr><td>Имя</td><td></td></tr>
-                            <tr><td><input type="text" name="NAME" value="<%=name%>" size="20" /></td><td></td></tr>
+                            <tr><td><input type="text" name="NAME" value="<%=name%>" size="60" /></td><td></td></tr>
                             <tr><td>Описание</td><td></td></tr>
                             <tr><td><input type="text" name="DESCRIPTION" value="<%=description%>" size="100" /></td><td></td></tr>
                             <tr><td>Цена</td><td></td></tr>
                             <tr><td><input type="text" name="PRICE" value="<%=price%>" size="20" /></td><td></td></tr>
                             <tr><td>Название каталога</td><td></td></tr>
-                            <tr><td><input type="text" name="NAME_CATALOG" value="<%=name_catalog%>" size="10" /></td><td></td></tr>
+                            <tr><td><input type="text" name="NAME_CATALOG" value="<%=name_catalog%>" size="60" /></td><td></td></tr>
                             <tr><td><input type="submit" value=" Ввод " class="Button" /></td><td></td></tr>
                         </table>
 

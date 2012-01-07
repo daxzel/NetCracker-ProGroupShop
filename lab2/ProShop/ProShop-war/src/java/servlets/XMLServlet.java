@@ -15,7 +15,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import exceptions.*;
 import entityBeans.*;
 import helpers.*;
 import SessionBeans.*;
@@ -294,7 +294,7 @@ public class XMLServlet extends HttpServlet {
         }
     }
 
-    protected void exportProductByPrice(HttpServletRequest request, HttpServletResponse response) throws ExportException, IOException, ServletException {
+    protected void exportProductByPrice(HttpServletRequest request, HttpServletResponse response) throws  IOException, ServletException {
         RequestDispatcher rd;
         ServletOutputStream out = null;
         boolean flag, catalogFlag, orderFlag, commentFlag, allFlag;
@@ -310,6 +310,11 @@ public class XMLServlet extends HttpServlet {
             if (price == null) {
 
                 name = request.getParameter("name");
+                  if (name == null || "".equals(name)) {
+                    
+                    throw new ExportException("Введите название продукта");
+
+                }
             } else {
 
                 priceDouble = Double.parseDouble(price);
@@ -353,8 +358,13 @@ public class XMLServlet extends HttpServlet {
             out = response.getOutputStream();
             out.println(xml);
             out.flush();
-        } catch (FinderException ex) {
+            } catch (FinderException ex) {
             result = "Не найдены записи";
+            rd = request.getRequestDispatcher("exportProduct.jsp");
+            request.setAttribute("result", result);
+            rd.forward(request, response);
+        } catch (ExportException ex) {
+            result = "Введите название продукта";
             rd = request.getRequestDispatcher("exportProduct.jsp");
             request.setAttribute("result", result);
             rd.forward(request, response);

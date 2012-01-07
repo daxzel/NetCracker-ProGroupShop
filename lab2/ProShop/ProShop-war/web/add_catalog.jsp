@@ -60,9 +60,9 @@
                     <form name="addCatalog" action="add_catalog">
                         <table id="regOrLog">
                             <tr><td>Название родительского каталога</td><td></td></tr>
-                            <tr><td><input type="text" name="PARENTNAME" value="" size="10" /></td><td></td></tr>
+                            <tr><td><input type="text" name="PARENTNAME" value="" size="60" /></td><td></td></tr>
                             <tr><td>Название каталога</td><td></td></tr>
-                            <tr><td><input type="text" name="NAME" value="" size="200" /></td><td></td></tr>
+                            <tr><td><input type="text" name="NAME" value="" size="60" /></td><td></td></tr>
                             <tr><td><input type="submit" value=" Ввод " class="Button" /></td><td></td></tr>
                         </table>
                     </form>

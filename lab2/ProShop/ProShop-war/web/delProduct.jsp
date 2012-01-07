@@ -64,7 +64,7 @@
                     <form action="delProduct">
                         <table id="regOrLog">
                             <tr><td>Введите название продукта</td></tr>
-                            <tr><td><input type="text" name="VALUE" value="" size="20" /></td></tr>
+                            <tr><td><input type="text" name="VALUE" value="" size="60" /></td></tr>
                             <tr><td><input type="submit" value=" Ввод " class="Button" /></td></tr>
                         </table>
                     </form>

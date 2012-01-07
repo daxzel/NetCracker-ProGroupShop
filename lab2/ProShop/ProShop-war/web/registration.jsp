@@ -90,7 +90,7 @@
                             <tr><td>Пароль</td><td> Пароль(Подтверждение)</td></tr>
                             <tr><td><input type="password" name="PASSWORD" value="<%=password%>" size="25" /></td><td>  <input type="password" name="PASSWORD2" value="<%=password2%>" size="25" /></td></tr>
                             <tr><td>Дата рождения</td><td></td></tr>
-                            <tr><td><input type="date" name="BORN" value="<%=born%>" size="25" /></td><td></td></tr>
+                            <tr><td><input type="date" name="BORN" value="<%=born%>" size="25" title="гггг-мм-дд" /></td><td></td></tr>
                             <tr><td>Телефон</td><td></td></tr>
                             <tr><td><input type="text" name="PHONE" value="<%=phone%>" size="25" /></td><td></td></tr>
                             <tr><td>Электронная почта</td><td></td></tr>

@@ -80,7 +80,7 @@
                                 if ("byName".equals(request.getParameter("poiskType"))) {%>
                     <form name="second" action="ExportProductByName">
                         <table id="regOrLog">
-                            <tr><td>Введите наименование</td><td> <input type="text" name="name" value="" /></td></tr>
+                            <tr><td>Введите наименование</td><td> <input type="text" name="name" value="" size="60" /></td></tr>
                             <tr><td>Экспортировать продукт с каталогом</td><td><input type="checkbox" name="exportCatalog" value="ON" /> </td></tr>
                             <tr><td>Экспортировать продукт, заказы этого продукта и пользователей которые эти заказы сделали</td><td><input type="checkbox" name="exportOrder" value="ON" /> </td></tr>
                             <tr><td>Экспортировать продукт, комментарии и пользователей</td><td><input type="checkbox" name="exportComment" value="ON" /> </td></tr>

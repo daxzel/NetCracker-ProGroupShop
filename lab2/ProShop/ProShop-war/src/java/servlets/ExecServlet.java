@@ -216,14 +216,19 @@ public class ExecServlet extends HttpServlet {
                 throw new NegativeNumberException("Введите положительную цену продукта");
             }
             ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
+
             // productHome.setParamMessage(usr.getId());
             // productHome.setParamMessage(usr.getId());
             ProductBeanRemote pbr = productHome.create(description, name_catalog, name, price);
+            CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
+            CatalogBeanRemote ctg = catalogHome.findByPrimaryKey(new Long(pbr.getIdCatalog()));
 
             Long idu = new Long(usr.getId());
             // Long idu = new Long(usr.getId());
             Long ido = new Long(pbr.getId());
             pbr.sendMessage(idu, "PRODUCT", "Добавлен продукт: " + name + ", в каталог: " + pbr.getNameCatalog(), ido, 1);
+            ctg.sendMessage(new Long(usr.getId()), "\"CATALOG\"", " Каталог: " + pbr.getNameCatalog() + " изменен. Добавлен продукт: " + pbr.getName(), new Long(pbr.getIdCatalog()), 2);
+            ctg.sendMessage(new Long(usr.getId()), "\"CATALOG\"", " Каталог: " + ctg.getParentName() + " изменен. Изменен дочерний каталог: " +pbr.getNameCatalog()+ ". Добавлен продукт: " + pbr.getName(), new Long(ctg.getParentId()), 2);
 
 
             result = "Продукт добавлен";
@@ -296,9 +301,14 @@ public class ExecServlet extends HttpServlet {
             String value = request.getParameter("VALUE");
             ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
             ProductBeanRemote pr = productHome.findByName(value);
+            CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
+            CatalogBeanRemote ctg = catalogHome.findByPrimaryKey(new Long(pr.getIdCatalog()));
 
             result = "Удаление завершено";
             pr.sendMessage(new Long(usr.getId()), "PRODUCT", "Удален продукт: " + pr.getName() + " из каталога: " + pr.getNameCatalog(), null, 2);
+            ctg.sendMessage(new Long(usr.getId()), "\"CATALOG\"", " Каталог: " + pr.getNameCatalog() + " изменен. Удален продукт: " + pr.getName(), new Long(pr.getIdCatalog()), 2);
+            ctg.sendMessage(new Long(usr.getId()), "\"CATALOG\"", " Каталог: " + ctg.getParentName() + " изменен. Изменен дочерний каталог: " +pr.getNameCatalog()+ ". Удален продукт: " + pr.getName(), new Long(ctg.getParentId()), 2);
+
             productHome.remove(new Long(pr.getId()));
 
 
