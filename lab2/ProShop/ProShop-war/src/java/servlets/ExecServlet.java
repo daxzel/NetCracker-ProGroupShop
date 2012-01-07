@@ -228,7 +228,7 @@ public class ExecServlet extends HttpServlet {
             Long ido = new Long(pbr.getId());
             pbr.sendMessage(idu, "PRODUCT", "Добавлен продукт: " + name + ", в каталог: " + pbr.getNameCatalog(), ido, 1);
             ctg.sendMessage(new Long(usr.getId()), "\"CATALOG\"", " Каталог: " + pbr.getNameCatalog() + " изменен. Добавлен продукт: " + pbr.getName(), new Long(pbr.getIdCatalog()), 2);
-            ctg.sendMessage(new Long(usr.getId()), "\"CATALOG\"", " Каталог: " + ctg.getParentName() + " изменен. Изменен дочерний каталог: " +pbr.getNameCatalog()+ ". Добавлен продукт: " + pbr.getName(), new Long(ctg.getParentId()), 2);
+            ctg.sendMessage(new Long(usr.getId()), "\"CATALOG\"", " Каталог: " + ctg.getParentName() + " изменен. Изменен дочерний каталог: " + pbr.getNameCatalog() + ". Добавлен продукт: " + pbr.getName(), new Long(ctg.getParentId()), 2);
 
 
             result = "Продукт добавлен";
@@ -307,7 +307,7 @@ public class ExecServlet extends HttpServlet {
             result = "Удаление завершено";
             pr.sendMessage(new Long(usr.getId()), "PRODUCT", "Удален продукт: " + pr.getName() + " из каталога: " + pr.getNameCatalog(), null, 2);
             ctg.sendMessage(new Long(usr.getId()), "\"CATALOG\"", " Каталог: " + pr.getNameCatalog() + " изменен. Удален продукт: " + pr.getName(), new Long(pr.getIdCatalog()), 2);
-            ctg.sendMessage(new Long(usr.getId()), "\"CATALOG\"", " Каталог: " + ctg.getParentName() + " изменен. Изменен дочерний каталог: " +pr.getNameCatalog()+ ". Удален продукт: " + pr.getName(), new Long(ctg.getParentId()), 2);
+            ctg.sendMessage(new Long(usr.getId()), "\"CATALOG\"", " Каталог: " + ctg.getParentName() + " изменен. Изменен дочерний каталог: " + pr.getNameCatalog() + ". Удален продукт: " + pr.getName(), new Long(ctg.getParentId()), 2);
 
             productHome.remove(new Long(pr.getId()));
 
@@ -591,8 +591,8 @@ public class ExecServlet extends HttpServlet {
             result = "Пользователя с таким ником не существует";
         } catch (RemoteException ex) {
             result = "Ошибка при блокировке";
-       // } catch (RemoveException ex) {
-        //    result = "Ошибка при удалении";
+            // } catch (RemoveException ex) {
+            //    result = "Ошибка при удалении";
         } catch (FinderException ex) {
             result = "Ошибка при поиске";
         } catch (NamingException ex) {
@@ -1251,6 +1251,7 @@ public class ExecServlet extends HttpServlet {
         RequestDispatcher rd = request.getRequestDispatcher("updateCatalog.jsp?DO=update");
         ;
         String msg = ". ";
+        String msg2 = "";
         HttpSession session = request.getSession();
         UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
         if (usr.getRoleId() > 2) {
@@ -1292,14 +1293,17 @@ public class ExecServlet extends HttpServlet {
                             } catch (FinderException ex) {
                                 throw new UpdateException("Родительский каталог не найден");
                             }
+
                             msg = msg + "Родительский каталог был сменен с " + parent.getName() + " на " + nameParent + ". ";
                             catalog.setParentId(parent.getId());
+                            parent.sendMessage(new Long(usr.getId()), "CATALOG", "Дочерний каталог: " + catalog.getName() + " каталога: " + parent.getName() + " обновлен" + msg, new Long(catalog.getParentId()), 2);
+
                         }
                     } else {
                         throw new UpdateException("Введите имя родительского каталога");
                     }
                     result = "Каталог обновлен";
-                    parent.sendMessage(new Long(usr.getId()), "CATALOG", "Дочерний каталог: " + catalog.getName() + " каталога: " + parent.getName() + " обновлен" + msg, new Long(catalog.getParentId()), 2);
+                    //  parent.sendMessage(new Long(usr.getId()), "CATALOG", "Дочерний каталог: " + catalog.getName() + " каталога: " + parent.getName() + " обновлен" + msg, new Long(catalog.getParentId()), 2);
                     catalog.sendMessage(new Long(usr.getId()), "CATALOG", "Каталог: " + catalog.getName() + " обновлен" + msg, new Long(catalog.getId()), 2);
                     session.removeAttribute("catalog");
                     request.setAttribute("result", result);
@@ -1318,6 +1322,7 @@ public class ExecServlet extends HttpServlet {
             result = "Произошла ошибка";
             request.setAttribute("result", result);
         } catch (Exception ex) {
+            ex.printStackTrace();
         } finally {
 
 
