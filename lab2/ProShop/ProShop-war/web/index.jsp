@@ -67,9 +67,7 @@
                 </div>
                 <div id="content">
                     Когда руки дойдут тут появятся новости<br><br><br>
-                    <br> <img alt="ололо"  src="<%=request.getContextPath()%>/image?ID=1"
-
-                              <br><br><br> Когда руки дойдут тут появятся новости<br><br><br><br><br>
+                    <br><br><br> Когда руки дойдут тут появятся новости<br><br><br><br><br>
                 </div>
             </div>
                     

@@ -353,7 +353,7 @@ public class XmlBean implements SessionBean {
         return result;
     }
 
-    public Document exportToXMLProduct(List products,  boolean allFlag, boolean catalogFlag, boolean orderFlag, boolean commentFlag) throws EJBException {
+    public String exportToXMLProduct(List products,  boolean allFlag, boolean catalogFlag, boolean orderFlag, boolean commentFlag) throws EJBException {
         String result = "<error message = \"Sorry\" />";
 
         Document doc = new Document();
@@ -475,7 +475,7 @@ public class XmlBean implements SessionBean {
         XMLOutputter outputter = new XMLOutputter();
         outputter.setFormat(Format.getPrettyFormat());
         result = outputter.outputString(doc).toString();
-        return doc;
+        return result;
     }
 
     protected Element createUserNode(UserBeanRemote user) throws RemoteException {

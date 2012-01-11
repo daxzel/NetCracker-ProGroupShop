@@ -60,6 +60,7 @@
                 <div id="content">
                     <h1>Экспорт продуктов в XML</h1>
                     <%String type = request.getParameter("poiskType");
+
                                 if ("byPrice".equals(type)) {%>
                     <form action="ExportProductByPrice">
                         <table id="regOrLog">
@@ -77,8 +78,8 @@
                                                         if (obj != null) {%>
                     <%=obj.toString()%>
                     <%}%>
-                    <%}
-                                if ("byName".equals(type)) {%>
+                    <%} else {
+                                                        if ("byName".equals(type)) {%>
                     <form name="second" action="ExportProductByName">
                         <table id="regOrLog">
                             <tr><td>Введите наименование</td><td> <input type="text" name="name" value="" size="60" /></td></tr>
@@ -91,17 +92,16 @@
 
                     </form>
                     <%Object obj = request.getAttribute("result");
-                                                        if (obj != null) {%>
+                                                                                if (obj != null) {%>
                     <%=obj.toString()%>
                     <%}%>
-                    <%}
-                                if ("showXml".equals(type)) {
-                                    String str = request.getAttribute("result").toString();
-                                    if (str != null) {%>
-                                    <%=str%>
-                                      <a href="<%=request.getContextPath()%>/XML/getFile">Скачать файл</a>
-                    <%              }
-                                }%>
+                    <%} else {
+                    %><table id="regOrLog">
+                        <tr><td><a href="/ProShop-war/XML/exportProduct.jsp?poiskType=byPrice" class="first">Экспортировать продукты используя поиск по цене </a> </td></tr>
+                        <tr><td><a href="/ProShop-war/XML/exportProduct.jsp?poiskType=byName">Экспортировать продукты используя поиск по имени</a></td></tr> 
+                    </table>
+                    <%   }
+                    %>
                 </div>
             </div>
             <div class="team" align="center">

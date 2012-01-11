@@ -188,6 +188,10 @@
         <servlet-name>ExecServlet</servlet-name>
         <url-pattern>/updateOrderStatus</url-pattern>
     </servlet-mapping>
+     <servlet-mapping>
+        <servlet-name>XMLServlet</servlet-name>
+        <url-pattern>/XML/getFile</url-pattern>
+    </servlet-mapping>
     
     <servlet-mapping>
         <servlet-name>ImageServlet</servlet-name>

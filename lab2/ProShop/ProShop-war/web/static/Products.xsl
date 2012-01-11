@@ -6,6 +6,7 @@
         <html xmlns="http://www.w3.org/1999/xhtml">
         <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<link rel="stylesheet" type="text/css" href="/ProShop-war/static/new.css"/>
         <title>Просмотр XML документа</title>
         </head>
         
@@ -16,9 +17,11 @@
     </xsl:template>
     
 	<xsl:template match="BASE">
-    	<div style=" padding-left:100px; width:1000px; border-color:#666">
-			<a href="getFile">Скачать файл</a>
-            
+    	<div style=" padding-top:20px; padding-left:100px; width:1000px; border-color:#666">
+		
+            <form action="getFile">
+			 <input type="submit" value=" Скачать файл " class="Button"/>
+			</form>
 			<xsl:apply-templates select="ROLE"/>
 			
 			<xsl:apply-templates select="USER"/>

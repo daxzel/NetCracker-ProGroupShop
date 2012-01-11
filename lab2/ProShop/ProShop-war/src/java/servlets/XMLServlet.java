@@ -275,6 +275,7 @@ public class XMLServlet extends HttpServlet {
             response.setContentType("text/xml");
             response.setCharacterEncoding("utf-8");
             out = response.getOutputStream();
+            request.getSession().setAttribute("XMLDoc", xml);
             out.println(xml);
             out.flush();
         } catch (NumberFormatException ex) {
@@ -302,7 +303,7 @@ public class XMLServlet extends HttpServlet {
         ServletOutputStream out = null;
         response.setContentType("text/xml");
         response.setCharacterEncoding("utf-8");
-       // response.addHeader("Content-Disposition", "attachment; filename=" + "test.xml");
+        // response.addHeader("Content-Disposition", "attachment; filename=" + "test.xml");
         boolean flag, catalogFlag, orderFlag, commentFlag, allFlag;
         flag = catalogFlag = orderFlag = commentFlag = allFlag = false;
         String result, price, name, more, less, exportCatalog, exportOrder, exportComment, exportAll;
@@ -359,13 +360,10 @@ public class XMLServlet extends HttpServlet {
             XmlBeanRemoteHome xmlHome = (XmlBeanRemoteHome) EJBHelper.lookupHome("ejb/XmlBean", XmlBeanRemoteHome.class);
             XmlBeanRemote xmlBean = xmlHome.create();
             //   String xml = xmlBean.exportToXMLProduct(products, allFlag, catalogFlag, orderFlag, commentFlag);
-            Document doc = xmlBean.exportToXMLProduct(products, allFlag, catalogFlag, orderFlag, commentFlag);
-            XMLOutputter outputter = new XMLOutputter();
-            outputter.setFormat(Format.getPrettyFormat());
-          //  outputter.output(doc, response.getOutputStream());
-            result = outputter.outputString(doc).toString();
-            response.setContentType("text/xml");
-            response.setCharacterEncoding("utf-8");
+            result = xmlBean.exportToXMLProduct(products, allFlag, catalogFlag, orderFlag, commentFlag);
+
+            request.getSession().setAttribute("XMLDoc", result);
+
             out = response.getOutputStream();
             out.println(result);
             out.flush();
@@ -408,6 +406,38 @@ public class XMLServlet extends HttpServlet {
         }
     }
 
+    protected void getFile(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, ExportException {
+        RequestDispatcher rd;
+        ServletOutputStream out = null;
+
+        Object obj = request.getSession().getAttribute("XMLDoc");
+        try {
+            if (obj instanceof String) {
+                String XMLDoc = obj.toString();
+                response.addHeader("Content-Disposition", "attachment; filename=" + "export.xml");
+                out = response.getOutputStream();
+                request.getSession().removeAttribute("XMLDoc");
+                out.println(XMLDoc);
+
+                if (XMLDoc == null) {
+
+                    throw new ExportException("Произошла ошибка, файл не был записан");
+                }
+            } else {
+                throw new ExportException("Произошла ошибка, файл не был записан");
+            }
+        } finally {
+            try {
+                if (out != null) {
+                    out.close();
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
+        }
+    }
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -421,57 +451,50 @@ public class XMLServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
 
         RequestDispatcher rd;
+
+
         try {
-            if (request.getRequestURI().equals("/ProShop-war/XML/Products.xml")) {
+            if (request.getRequestURI().equals(request.getContextPath() + "/XML/Products.xml")) {
                 getProducts(request, response);
                 return;
             }
 
-            if (request.getRequestURI().equals("/ProShop-war/XML/exportUser")) {
-
+            if (request.getRequestURI().equals(request.getContextPath() + "/XML/exportUser")) {
                 exportUsers(request, response);
                 return;
-
             }
 
-            if (request.getRequestURI().equals("/ProShop-war/XML/ExportProductByPrice")) {
-
+            if (request.getRequestURI().equals(request.getContextPath() + "/XML/ExportProductByPrice")) {
                 exportProductByPrice(request, response);
                 return;
-
+            }
+            if (request.getRequestURI().equals(request.getContextPath() + "/XML/getFile")) {
+                getFile(request, response);
+                return;
             }
 
 
-            if (request.getRequestURI().equals("/ProShop-war/XML/exportUsersP")) {
+            if (request.getRequestURI().equals(request.getContextPath() + "/XML/exportUsersP")) {
                 exportUsersP(request, response);
                 return;
             }
-            if (request.getRequestURI().equals("/ProShop-war/XML/history")) {
+            if (request.getRequestURI().equals(request.getContextPath() + "/XML/history")) {
                 history(request, response);
                 return;
             }
-            if (request.getRequestURI().equals("/ProShop-war/XML/ExportProductByName")) {
-
-
-
-
-
+            if (request.getRequestURI().equals(request.getContextPath() + "/XML/ExportProductByName")) {
                 exportProductByPrice(request, response);
                 return;
-
             }
-
-            if (request.getRequestURI().equals("/ProShop-war/XML/import")) {
+            if (request.getRequestURI().equals(request.getContextPath() + "/XML/import")) {
                 importXML(request, response);
                 return;
             }
         } catch (ExportException ex) {
-
-            rd = request.getRequestDispatcher("/errorPage.jsp");
+            rd = request.getRequestDispatcher(request.getContextPath() + "/errorPage.jsp");
             request.setAttribute("exception", ex);
             rd.forward(request, response);
         }
-
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -485,9 +508,11 @@ public class XMLServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
+
+
     }
 
-    /** 
+    /**
      * Handles the HTTP <code>POST</code> method.
      * @param request servlet request
      * @param response servlet response
@@ -497,6 +522,8 @@ public class XMLServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
+
+
     }
 
     /** 
@@ -505,5 +532,6 @@ public class XMLServlet extends HttpServlet {
      */
     public String getServletInfo() {
         return "Short description";
+
     }// </editor-fold>
 }
