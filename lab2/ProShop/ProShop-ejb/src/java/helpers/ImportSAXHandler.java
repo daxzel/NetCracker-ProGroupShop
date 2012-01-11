@@ -487,8 +487,7 @@ public class ImportSAXHandler extends DefaultHandler
             {
                     try
                     {
-                        moreTools.SerializbleImage sImage = new  moreTools.SerializbleImage(imageImage);
-                        EJBHelper.AddOrUpdate.Image(id.longValue(),imageIdProduct.longValue(), imageName, sImage, imageWidth, imageHeight);
+                        EJBHelper.AddOrUpdate.Image(id.longValue(),imageIdProduct.longValue(), imageName, imageWidth, imageHeight);
                     }
                     catch(Exception ex)
                     {

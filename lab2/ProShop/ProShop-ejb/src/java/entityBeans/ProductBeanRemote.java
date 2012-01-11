@@ -38,6 +38,8 @@ public interface ProductBeanRemote extends EJBObject {
 
     java.util.List getOpinionList()  throws RemoteException;
 
+    java.util.List getImageList()  throws RemoteException;
+
     void setAll(java.lang.String description, long id_catalog,
             java.lang.String name, double price) throws RemoteException;
 

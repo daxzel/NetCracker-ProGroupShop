@@ -5,6 +5,7 @@
 --%>
 
 
+<%@page import="entityBeans.ImageBeanRemote"%>
 <%@page import="menu.Menu"%>
 <%@page import="exceptions.LoginException"%>
 <%@page import="helpers.*"%>
@@ -76,17 +77,19 @@
                           if (request.getAttribute("result") instanceof ProductBeanRemote) {
                               ProductBeanRemote prd = (ProductBeanRemote) request.getAttribute("result");
                               List list = prd.getOpinionList();
+                              List list1 = prd.getImageList();
                               OpinionBeanRemote opn;
+                              ImageBeanRemote img;
                               session.setAttribute("product", prd);
 
                     %>
                     <table align="center" border="1" width="100%">
                         <tr align="center">
-                            <td>NAME</td>
-                            <td>DESCRIPTION</td>
-                            <td>NAME_CATALOG</td>
-                            <td>PRICE</td>
-                            <td rowspan="2"><a href ="addOrder.jsp" >order</a></td>
+                            <td>Наименование</td>
+                            <td>Описание</td>
+                            <td>Каталог</td>
+                            <td>Цена, р</td>
+                            <td rowspan="2"><a href ="addOrder.jsp" >Купить</a></td>
                         </tr>
                         <tr align="center">
                             <td><%= prd.getName()%></td>
@@ -99,27 +102,35 @@
                             <td><%= prd.getPrice()%></td>
 
                         </tr>
-                    </table><br><br>
+                    </table><br>
+                    <table align="center" border="0">
+                                                <% for (int n = 0; n <= (list1.size() - 1); n++) {
+                                                          img = (ImageBeanRemote) list1.get(n);%>
+                                                          <td><img width="50%" height="50%" src="<%=request.getContextPath()%>/image?ID=<%= img.getId_img()%>"</td>
+                        <%} %>
+                         </table><br>
+                    <br>
                     <table align="center"  border="1" width="100%">
                         <tr align="center">
-                            <td colspan="3">Comments to <%=prd.getName()%></td>
+                            <td colspan="3">Комментарий к <%=prd.getName()%></td>
 
                         </tr>
                         <tr align="center">
-                            <td width ="10%" align="center">User nik</td>
-                            <td align="center">Text</td>
+                            <td width ="10%" align="center">Никнейм</td>
+                            <td align="center">Комментарий</td>
                             <%if (usr != null) {%>
-                            <td width="20%" align="center">Delete</td>
+                            <td width="20%" align="center"></td>
                             <%}%>
                         </tr>
-                        <% for (int i = 0; i <= (list.size() - 1); i++) {
+                        <%
+                        for (int i = 0; i <= (list.size() - 1); i++) {
                                                           opn = (OpinionBeanRemote) list.get(i);%>
                         <tr align="center">
                             <td width ="10%" ><%= opn.getUserName()%></td>
                             <td><%= opn.getText()%></td>
                             <td><%if (usr != null) {
                                      if (opn.getIdUser() == usr.getId() || usr.getRoleId() <= 2) {%>
-                                <a href ="delComment?ID=<%=opn.getIdOpinion()%>">del this comment</a>
+                                <a href ="delComment?ID=<%=opn.getIdOpinion()%>">Удалить комментарий</a>
                                 <%}
                                      }%></td>
                                 <%}%>
@@ -130,7 +141,7 @@
                     <form action="addComment">
                         <table align="center"  border="0" width="100%">
                             <tr align="center">
-                                <td colspan="2">Add you comment to <%=prd.getName()%></td>
+                                <td colspan="2">Добавить комментарий к <%=prd.getName()%></td>
 
                             </tr>
                             <tr>

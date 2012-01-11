@@ -37,6 +37,7 @@ public class ProductBean implements EntityBean {
 
     private OpinionBeanRemoteHome opinionHome;
     private CatalogBeanRemoteHome catalogHome;
+    private ImageBeanRemoteHome imageHome;
     private EntityContext entityContext;
     private Connection conn;
     private long id_product;
@@ -547,6 +548,13 @@ public class ProductBean implements EntityBean {
     public List getOpinionList() throws NamingException, FinderException, RemoteException {
 
         List list = opinionHome.findOpinionByProduct(new Long(this.id_product));
+        return list;
+    }
+
+    public List getImageList() throws NamingException, FinderException, RemoteException {
+
+        imageHome = (ImageBeanRemoteHome) helpers.EJBHelper.lookupHome("ejb/ImageBean", ImageBeanRemoteHome.class);
+        List list = imageHome.findImageByProduct(new Long(this.id_product));
         return list;
     }
 

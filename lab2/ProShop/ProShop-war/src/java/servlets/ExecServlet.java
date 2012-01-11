@@ -769,6 +769,7 @@ public class ExecServlet extends HttpServlet {
             Long id_product = new Long(Long.parseLong(id_pr));
             ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
             ProductBeanRemote prd = productHome.findByPrimaryKey(id_product);
+
             request.setAttribute("result", prd);
             rd = request.getRequestDispatcher("getOpinion.jsp");
             rd.forward(request, response);
@@ -1412,6 +1413,27 @@ public class ExecServlet extends HttpServlet {
             rd.forward(request, response);
         }
 
+
+    }
+        protected void image(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, ParseException, IOException, LoginException {
+        RequestDispatcher rd;
+        HttpSession session = request.getSession();
+       // UserBeanRemote usr = JSPHelper.getUser2(session);
+        try {
+                       long id = Long.parseLong(request.getParameter("ID"));
+            ImageBeanRemoteHome imageHome = (ImageBeanRemoteHome) EJBHelper.lookupHome("ejb/ImageBean", ImageBeanRemoteHome.class);
+            ImageBeanRemote ibr=imageHome.findByPrimaryKey(new Long(id));
+            //request.setAttribute("result", list);
+            rd = request.getRequestDispatcher("Image/"+ibr.getName());
+            rd.forward(request, response);
+        } catch (FinderException ex) {
+        } catch (RemoteException ex) {
+            ex.printStackTrace();
+        } catch (NamingException ex) {
+            Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -1424,6 +1446,10 @@ public class ExecServlet extends HttpServlet {
         try {
 
 
+             if (request.getRequestURI().equals("/ProShop-war/image")) {
+                image(request, response);
+                return;
+            }
             if (request.getRequestURI().equals("/ProShop-war/login")) {
                 login(request, response);
                 return;

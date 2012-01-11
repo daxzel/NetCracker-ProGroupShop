@@ -181,8 +181,8 @@ public static void sendMessage(Object msgContent, int prior) throws EJBException
             }
         }
 
-         public static void Image(long id, long idProduct, String name, SerializbleImage imageS,
-                int width, int heaight) throws NamingException,CreateException,RemoteException
+         public static void Image(long id, long idProduct, String name,
+                int width, int height) throws NamingException,CreateException,RemoteException
          {
             ImageBeanRemote image = null;
             try
@@ -195,11 +195,11 @@ public static void sendMessage(Object msgContent, int prior) throws EJBException
 
             if (image!=null)
             {
-                image.setAll(idProduct, name, imageS, width, heaight);
+                image.setAll(idProduct, name, width, height);
             }
             else
             {
-                EJBHelper.getImageRemoteHome().create(id, idProduct, name, imageS, width, heaight);
+                EJBHelper.getImageRemoteHome().create(id, idProduct, name, width, height);
             }
          }
 

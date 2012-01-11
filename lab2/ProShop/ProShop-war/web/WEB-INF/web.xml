@@ -192,6 +192,10 @@
         <servlet-name>ImageServlet</servlet-name>
         <url-pattern>/ImageServlet</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ExecServlet</servlet-name>
+        <url-pattern>/image</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30

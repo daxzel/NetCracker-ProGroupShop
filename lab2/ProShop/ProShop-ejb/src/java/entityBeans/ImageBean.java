@@ -24,12 +24,12 @@ import moreTools.HistoryMessage;
 public class ImageBean implements EntityBean {
 
     private EntityContext entityContext;
-    private Connection conn;
+  
     private long id_img;
     private long id_product;
     private String name;
     private int width;
-    private int heaight;
+    private int height;
         private long userId;
      private long objId;
     
@@ -41,8 +41,17 @@ public class ImageBean implements EntityBean {
     /**
      * @see javax.ejb.EntityBean#setEntityContext(javax.ejb.EntityContext)
      */
-    public void setEntityContext(EntityContext aContext) {
-        entityContext = aContext;
+    public void setEntityContext(EntityContext ctx) {
+          this.entityContext = ctx;
+        try {
+            // javax.naming.Context context = new javax.naming.InitialContext();
+            try {
+            } catch (Exception e) {
+                throw new EJBException("Проблема с подключением к базе");
+            }
+        } catch (Exception e) {
+            throw new EJBException("Проблема с подключением к базе");
+        }
     }
     
     /**
@@ -58,7 +67,10 @@ public class ImageBean implements EntityBean {
     public void ejbPassivate() {
         
     }
-    
+
+    public void unsetEntityContext() {
+        entityContext = null;
+    }
     /**
      * @see javax.ejb.EntityBean#ejbRemove()
      */
@@ -68,7 +80,7 @@ public class ImageBean implements EntityBean {
         PreparedStatement pst = null;
         try {
             conn = EJBHelper.getConnection();
-            pst = conn.prepareStatement("SELECT * FROM IMAGE WHERE ID_IMG = ?");
+            pst = conn.prepareStatement("SELECT ID_IMG FROM IMAGE WHERE ID_IMG = ?");
             //id_catalog.longValue();
             pst.setLong(1, i_id_image.longValue());
             ResultSet resultSet = pst.executeQuery();
@@ -84,7 +96,7 @@ public class ImageBean implements EntityBean {
             try {
                 EJBHelper.closeConnection(conn, pst);
             } catch (SQLException ex1) {
-                throw new EJBException("Ошибка закрытии соединия с базой");
+                ex1.printStackTrace();
             }
         }
     }
@@ -123,9 +135,7 @@ public class ImageBean implements EntityBean {
     /**
      * @see javax.ejb.EntityBean#unsetEntityContext()
      */
-    public void unsetEntityContext() {
-        entityContext = null;
-    }
+
 
     public Collection ejbFindAll() {
         Connection conn = null;
@@ -157,8 +167,8 @@ public class ImageBean implements EntityBean {
      * @see javax.ejb.EntityBean#ejbLoad()
      */
     public void ejbLoad() {
-        java.lang.Long lg = (java.lang.Long) entityContext.getPrimaryKey();
-        id_img = lg.longValue();
+        //java.lang.Long lg = (java.lang.Long) entityContext.getPrimaryKey();
+        id_img  = Long.parseLong(entityContext.getPrimaryKey().toString());
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
@@ -170,11 +180,11 @@ public class ImageBean implements EntityBean {
             if (!rs.next()) {
                 throw new NoSuchEntityException("Не найдена указанная запись");
             }
-            id_img = rs.getLong(1);
+            //id_img = rs.getLong(1);
             id_product = rs.getLong(2);
             name = rs.getString(3);
-            width=rs.getInt(5);
-            heaight=rs.getInt(6);
+            width=rs.getInt(4);
+            height=rs.getInt(5);
         } catch (NamingException ex) {
             throw new EJBException("Ошибка SELECT");
         } catch (SQLException e) {
@@ -197,10 +207,12 @@ public class ImageBean implements EntityBean {
         try {
             conn = EJBHelper.getConnection();
             pst = conn.prepareStatement("UPDATE IMAGE SET ID_PRODUCT =?, NAME =?, WIDTH=?, HEIGHT =? WHERE ID_IMG=?");
+            //pst = conn.prepareStatement("UPDATE IMAGE SET ID_PRODUCT =?, NAME =?, WIDTH=?, HEIGHT =? WHERE ID_IMG=?");
+//            pst = conn.prepareStatement("UPDATE IMAGE" + "SET NAME =? WHERE ID_IMG=?");
             pst.setLong(1, id_product);
             pst.setString(2, name);
             pst.setInt(3, width);
-            pst.setInt(4, heaight);
+            pst.setInt(4, height);
             pst.setLong(5, id_img);
             
            // EJBHelper.sendMessage(new HistoryMessage(userId,"IMAGE","Изменено изображение",objId));
@@ -213,6 +225,8 @@ public class ImageBean implements EntityBean {
         } catch (NamingException ex) {
             throw new EJBException("Ошибка UPDATE");
         } catch (SQLException e) {
+            e.printStackTrace();
+
             throw new EJBException("Ошибка UPDATE");
         } finally {
             try {
@@ -234,7 +248,7 @@ public class ImageBean implements EntityBean {
     {
         setId_img(key.longValue());
     }
-    
+    /*
     private InputStream imageToStream(moreTools.SerializbleImage image) throws IOException, SQLException
     {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -283,12 +297,13 @@ public class ImageBean implements EntityBean {
 
         return (moreTools.SerializbleImage)ois.readObject();
     }
-
+*/
+    /*
     public java.lang.Long ejbCreate(long i_id_product,String i_name, moreTools.SerializbleImage image,  int i_width, int i_heaight)  throws CreateException {
         this.id_product=i_id_product;
         this.name = i_name;
         this.width = i_width;
-        this.heaight= i_heaight;
+        this.height= i_heaight;
         Connection conn = null;
         CallableStatement pst = null;
         ResultSet rs = null;
@@ -298,7 +313,7 @@ public class ImageBean implements EntityBean {
             pst.setLong(1, id_product);
             pst.setString(2, name);
             pst.setInt(3, width);
-            pst.setInt(4, heaight);
+            pst.setInt(4, height);
 
 
             pst.registerOutParameter(5, Types.INTEGER);
@@ -399,7 +414,98 @@ public class ImageBean implements EntityBean {
 
     public void ejbPostCreate(long id, long i_id_product,String i_name,  moreTools.SerializbleImage image, int i_width, int i_heaight)  throws CreateException {
     }
+*/
+     public java.lang.Long ejbCreate(long i_id_product,String i_name,  int i_width, int i_height)  throws CreateException {
+        this.id_product=i_id_product;
+        this.name = i_name;
+        this.width = i_width;
+        this.height= i_height;
+        Connection conn = null;
+        CallableStatement pst = null;
+        ResultSet rs = null;
+        try {
+            conn = EJBHelper.getConnection();
+            pst = conn.prepareCall("BEGIN INSERT INTO IMAGE (ID_PRODUCT, NAME, WIDTH, HEIGHT)" + "VALUES(?,?,?,?) RETURNING ID_IMG INTO ?;END;");
+            pst.setLong(1, id_product);
+            pst.setString(2, name);
+            pst.setInt(3, width);
+            pst.setInt(4, height);
 
+
+            pst.registerOutParameter(5, Types.INTEGER);
+            rs = pst.executeQuery();
+            if (!rs.next()) {
+                throw new CreateException("Ошибка вставки");
+            }
+            id_img = pst.getLong(5);
+
+            return new Long(id_img);
+
+       // } catch (JMSException ex){
+        //    throw new EJBException("Ошибка jms");
+        } catch (NamingException ex) {
+            throw new EJBException("Произошла ошибка добавления");
+        } catch (Exception ex) {
+            throw new EJBException("Произошла ошибка добавления");
+        } finally {
+
+            try {
+                EJBHelper.closeConnection(conn, pst, rs);
+            } catch (SQLException ex1) {
+              //  throw new EJBException("Ошибка закрытии соединия с базой");
+            }
+
+        }
+
+    }
+
+    public java.lang.Long ejbCreate(long id,long i_id_product,String i_name, int i_width, int i_height)  throws CreateException {
+        this.id_img = id;
+        this.id_product=i_id_product;
+        this.name = i_name;
+        this.width = i_width;
+        this.height= i_height;
+        Connection conn = null;
+        CallableStatement pst = null;
+        ResultSet rs = null;
+        try {
+            conn = EJBHelper.getConnection();
+            pst = conn.prepareCall("INSERT INTO IMAGE (ID_IMG ,ID_PRODUCT, NAME,  WIDTH, HEIGHT)" + "VALUES(?,?,?,?,?)");
+            pst.setLong(1, id);
+            pst.setLong(2, id_product);
+            pst.setString(3, name);
+            pst.setInt(4, width);
+            pst.setInt(5, height);
+
+            rs = pst.executeQuery();
+            if (!rs.next()) {
+                throw new CreateException("Ошибка вставки");
+            }
+
+
+            return new Long(id_img);
+        } catch (NamingException ex) {
+            throw new EJBException("Произошла ошибка добавления");
+        } catch (Exception ex) {
+            throw new EJBException("Произошла ошибка добавления");
+        } finally {
+
+            try {
+                EJBHelper.closeConnection(conn, pst, rs);
+            } catch (SQLException ex1) {
+              //  throw new EJBException("Ошибка закрытии соединия с базой");
+            }
+
+        }
+
+    }
+
+
+    public void ejbPostCreate(long i_id_product,String i_name,   int i_width, int i_height)  throws CreateException {
+    }
+
+    public void ejbPostCreate(long id, long i_id_product,String i_name,  int i_width, int i_height)  throws CreateException {
+    }
     public long getId_product()
     {
         return id_product;
@@ -409,7 +515,7 @@ public class ImageBean implements EntityBean {
     {
         id_product=id.longValue();
     }
-
+/*
     public byte[] getImage()
     {
         try
@@ -477,8 +583,16 @@ public class ImageBean implements EntityBean {
         {
         }
     }
-    
+   */
+  public String getName()
+    {
+        return name;
+    }
 
+    public void setName(String i_name)
+    {
+        name=i_name;
+    }
     public long getWidth()
     {
         return id_img;
@@ -489,14 +603,14 @@ public class ImageBean implements EntityBean {
         width=i_width;
     }
 
-    public long getHeaight()
+    public long getHeight()
     {
-        return heaight;
+        return height;
     }
 
-    public void setHeaight(int i_heaight)
+    public void setHeight(int i_height)
     {
-        heaight=i_heaight;
+        height=i_height;
     }
 
     public void ejbHomeHomeMethod() {
@@ -512,13 +626,12 @@ public class ImageBean implements EntityBean {
         id_img=id;
     }
 
-    public void setAll(long i_id_product,String i_name, moreTools.SerializbleImage image,  int i_width, int i_heaight)
+    public void setAll(long i_id_product,String i_name, moreTools.SerializbleImage image,  int i_width, int i_height)
     {
         this.id_product=i_id_product;
         this.name = i_name;
-        this.setImageI(image);
         this.width = i_width;
-        this.heaight = i_heaight;
+        this.height = i_height;
     }
 
      public void setParamMessage(long userId, long objId ){
@@ -537,6 +650,34 @@ public class ImageBean implements EntityBean {
             ex.printStackTrace();
         } catch (JMSException ex) {
             ex.printStackTrace();
+        }
+    }
+
+     public Collection ejbFindImageByProduct(java.lang.Long id_pr) {
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        Connection conn = null;
+        try {
+            conn = EJBHelper.getConnection();
+            pst = conn.prepareStatement("SELECT ID_IMG FROM IMAGE WHERE ID_PRODUCT = ?");
+            pst.setLong(1, id_pr.longValue());
+            rs = pst.executeQuery();
+            Vector keys = new Vector();
+            while (rs.next()) {
+                long id_img = rs.getLong(1);
+                keys.addElement(new Long(id_img));
+            }
+            return keys;
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
+        } catch (SQLException e) {
+            throw new EJBException("Ошибка SELECT");
+        } finally {
+            try {
+                EJBHelper.closeConnection(conn, pst);
+            } catch (SQLException ex1) {
+                throw new EJBException("Ошибка закрытии соединия с базой");
+            }
         }
     }
 }

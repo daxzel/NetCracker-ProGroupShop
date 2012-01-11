@@ -510,16 +510,13 @@ public static void ImageToXml(java.util.Collection images, PrintWriter result) t
                 idProductE.appendChild(doc.createTextNode(Long.toString(image.getId_product())));
                 imageE.appendChild(idProductE);
 
-                Element imageByteE = doc.createElement("IMAGE");
-                imageByteE.appendChild(doc.createTextNode(image.getImage().toString()));
-                imageE.appendChild(imageByteE);
 
                 Element widthE = doc.createElement("WIDTH");
                 widthE.appendChild(doc.createTextNode(Long.toString(image.getWidth())));
                 imageE.appendChild(widthE);
 
                 Element heightE = doc.createElement("HEIGHT");
-                heightE.appendChild(doc.createTextNode(java.lang.Long.toString(image.getHeaight())));
+                heightE.appendChild(doc.createTextNode(java.lang.Long.toString(image.getHeight())));
                 imageE.appendChild(heightE);
 
             }

@@ -141,7 +141,7 @@ public class ImageServlet extends HttpServlet {
 
             ImageBeanRemoteHome imageHome = (ImageBeanRemoteHome) EJBHelper.lookupHome("ejb/ImageBean", ImageBeanRemoteHome.class);
 
-            ImageBeanRemote imageBean=imageHome.create(id_product, name, im , width, height);
+           // ImageBeanRemote imageBean=imageHome.create(id_product, name, im , width, height);
 
             result = "Продукт добавлен";
             page = "index.jsp";
@@ -182,11 +182,12 @@ public class ImageServlet extends HttpServlet {
             long id = Long.parseLong(request.getParameter("ID"));
             ImageBeanRemoteHome imageHome = (ImageBeanRemoteHome) EJBHelper.lookupHome("ejb/ImageBean", ImageBeanRemoteHome.class);
             ImageBeanRemote imageBean=imageHome.findByPrimaryKey(new Long(id));
-            moreTools.SerializbleImage image = imageBean.getImageI();
-            //response.setContentType("text/html;charset=UTF-8");
-            response.setContentType("image/jpeg");
+         //   moreTools.SerializbleImage image = imageBean.getImageI();
+            response.setContentType("text/html;charset=UTF-8");
+            //response.setContentType("image/jpeg");
             com.sun.image.codec.jpeg.JPEGImageEncoder jie = com.sun.image.codec.jpeg.JPEGCodec.createJPEGEncoder(out);
-            jie.encode(image.getImage());
+        //    jie.encode(image.getImage());
+
         }
         catch(Exception ex)
         {

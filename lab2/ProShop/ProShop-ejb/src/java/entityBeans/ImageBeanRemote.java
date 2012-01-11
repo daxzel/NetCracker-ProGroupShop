@@ -27,23 +27,27 @@ public interface ImageBeanRemote extends EJBObject {
 
     void setId_product(java.lang.Long id) throws RemoteException;
 
-    byte[] getImage() throws RemoteException;
+   // byte[] getImage() throws RemoteException;
 
-    void setImage(byte[] image) throws RemoteException;
+   // void setImage(byte[] image) throws RemoteException;
+    String getName() throws RemoteException;
+
+    void setName(int i_name) throws RemoteException;
+
 
     long getWidth() throws RemoteException;
 
     void setWidth(int i_width) throws RemoteException;
 
-    long getHeaight() throws RemoteException;
+    long getHeight() throws RemoteException;
 
-    void setHeaight(int i_heaight) throws RemoteException;
+    void setHeight(int i_height) throws RemoteException;
 
-    moreTools.SerializbleImage getImageI() throws RemoteException;
+    //moreTools.SerializbleImage getImageI() throws RemoteException;
 
-    void setImageI(moreTools.SerializbleImage image) throws RemoteException;
+    //void setImageI(moreTools.SerializbleImage image) throws RemoteException;
 
-    void setAll(long i_id_product,String i_name, moreTools.SerializbleImage image,  int i_width, int i_heaight) throws RemoteException;
+    void setAll(long i_id_product,String i_name, int i_width, int i_heaight) throws RemoteException;
 
     void sendMessage(Long id_user,  String nameTables, String message, Long id_obj, int prior) throws RemoteException;
 
