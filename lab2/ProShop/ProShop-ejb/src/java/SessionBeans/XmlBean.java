@@ -281,7 +281,8 @@ public class XmlBean implements SessionBean {
             ex.printStackTrace();
         } catch (RemoteException ex) {
             ex.printStackTrace();
-        }   
+        }
+
         XMLOutputter outputter = new XMLOutputter();
         outputter.setFormat(Format.getPrettyFormat());
         result = outputter.outputString(doc).toString();
@@ -352,7 +353,7 @@ public class XmlBean implements SessionBean {
         return result;
     }
 
-    public String exportToXMLProduct(List products,  boolean allFlag, boolean catalogFlag, boolean orderFlag, boolean commentFlag) throws EJBException {
+    public Document exportToXMLProduct(List products,  boolean allFlag, boolean catalogFlag, boolean orderFlag, boolean commentFlag) throws EJBException {
         String result = "<error message = \"Sorry\" />";
 
         Document doc = new Document();
@@ -474,7 +475,7 @@ public class XmlBean implements SessionBean {
         XMLOutputter outputter = new XMLOutputter();
         outputter.setFormat(Format.getPrettyFormat());
         result = outputter.outputString(doc).toString();
-        return result;
+        return doc;
     }
 
     protected Element createUserNode(UserBeanRemote user) throws RemoteException {

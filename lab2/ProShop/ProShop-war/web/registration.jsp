@@ -77,7 +77,7 @@
                 <div id="content">
                     <H1>Регистрация</H1>
 
-                    <form name="myForm" action="registration">
+                    <form name="myForm" action="registration" method="post">
                         <table id="regOrLog">
                             <tr><td>Имя</td><td></td></tr>
                             <tr><td><input type="text" name="NAME" value="<%=name%>" size="25" /></td><td></td></tr>

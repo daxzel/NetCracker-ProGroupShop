@@ -188,6 +188,7 @@
         <servlet-name>ExecServlet</servlet-name>
         <url-pattern>/updateOrderStatus</url-pattern>
     </servlet-mapping>
+    
     <servlet-mapping>
         <servlet-name>ImageServlet</servlet-name>
         <url-pattern>/ImageServlet</url-pattern>

@@ -59,7 +59,8 @@
                 </div>
                 <div id="content">
                     <h1>Экспорт продуктов в XML</h1>
-                    <%if ("byPrice".equals(request.getParameter("poiskType"))) {%>
+                    <%String type = request.getParameter("poiskType");
+                                if ("byPrice".equals(type)) {%>
                     <form action="ExportProductByPrice">
                         <table id="regOrLog">
                             <tr><td>Введите цену</td><td> <input type="text" name="price" value="" /></td></tr>
@@ -73,11 +74,11 @@
                         </table>
                     </form>
                     <%Object obj = request.getAttribute("result");
-                        if (obj != null) {%>
+                                                        if (obj != null) {%>
                     <%=obj.toString()%>
                     <%}%>
                     <%}
-                                if ("byName".equals(request.getParameter("poiskType"))) {%>
+                                if ("byName".equals(type)) {%>
                     <form name="second" action="ExportProductByName">
                         <table id="regOrLog">
                             <tr><td>Введите наименование</td><td> <input type="text" name="name" value="" size="60" /></td></tr>
@@ -93,12 +94,19 @@
                                                         if (obj != null) {%>
                     <%=obj.toString()%>
                     <%}%>
-                    <%}%>
+                    <%}
+                                if ("showXml".equals(type)) {
+                                    String str = request.getAttribute("result").toString();
+                                    if (str != null) {%>
+                                    <%=str%>
+                                      <a href="<%=request.getContextPath()%>/XML/getFile">Скачать файл</a>
+                    <%              }
+                                }%>
                 </div>
             </div>
-                <div class="team" align="center">
-               <a href="<%=request.getContextPath()%>/aboutTeam.jsp"><font size="2">Команда </font></a>
-        </div>
+            <div class="team" align="center">
+                <a href="<%=request.getContextPath()%>/aboutTeam.jsp"><font size="2">Команда </font></a>
+            </div>
         </div>
     </body>
 </html>
