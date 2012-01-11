@@ -4,8 +4,11 @@
  */
 package servlets;
 
+import SessionBeans.XmlBeanRemote;
+import SessionBeans.XmlBeanRemoteHome;
 import java.rmi.RemoteException;
-
+import javax.xml.stream.XMLStreamReader;
+import org.jdom.Document;
 import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -109,7 +112,7 @@ public class ExecServlet extends HttpServlet {
             RoleBeanRemoteHome roleHome = (RoleBeanRemoteHome) EJBHelper.lookupHome("ejb/RoleBean", RoleBeanRemoteHome.class);
             java.sql.Date sqlDate = new java.sql.Date(bornDate.getTime());
             //java.lang.Long idRole = new Long(Long.parseLong(role));
-            password=JSPHelper.MD5(password);
+            password = JSPHelper.MD5(password);
             UserBeanRemote usr = userHome.create(name, surname, otchestvo, nik, password, sqlDate, phone, email, new Long(3));
             RoleBeanRemote rbr = roleHome.findByPrimaryKey(new Long(3));
 
@@ -390,12 +393,12 @@ public class ExecServlet extends HttpServlet {
                     throw new PasswordException();
                 }
                 if (usr.getPassword().equals(password)) {
+                    password = JSPHelper.MD5(password);
                     usr.setPassword(password);
                 } else {
                     msg = msg + "Пароль был изменен с " + usr.getPassword() + " на " + password + ". ";
+                    password = JSPHelper.MD5(password);
                     usr.setPassword(password);
-
-
                 }
             }
             if ((usr.getName().equals(name))) {
@@ -657,7 +660,7 @@ public class ExecServlet extends HttpServlet {
                 throw new LoginException("Не указано имя пользователя или пароль");
             }
             UserBeanRemoteHome userHome = (UserBeanRemoteHome) EJBHelper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
-            password=JSPHelper.MD5(password);
+            password = JSPHelper.MD5(password);
             UserBeanRemote usr = userHome.findByNikAndPassword(nik, password);
             if (usr.getRoleId() == 4) {
                 request.setAttribute("result", "Ваш профиль заблокирован");
@@ -1298,7 +1301,7 @@ public class ExecServlet extends HttpServlet {
                             }
                             String oldParent = catalog.getParentName();
                             long oldPid = catalog.getParentId();
-                            msg = msg + "Родительский каталог был сменен с " +  oldParent  + " на " + nameParent + ". ";
+                            msg = msg + "Родительский каталог был сменен с " + oldParent + " на " + nameParent + ". ";
                             catalog.setParentId(parent.getId());
                             catalog.sendMessage(new Long(usr.getId()), "\"CATALOG\"", "Дочерний каталог: " + catalog.getName() + " каталога: " + oldParent + " перенесен в каталог " + catalog.getParentName(), new Long(oldPid), 2);
                             catalog.sendMessage(new Long(usr.getId()), "\"CATALOG\"", "Добавлен дочерний каталог: " + catalog.getName(), new Long(catalog.getParentId()), 2);
@@ -1414,6 +1417,8 @@ public class ExecServlet extends HttpServlet {
         }
 
     }
+
+    
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -1568,7 +1573,7 @@ public class ExecServlet extends HttpServlet {
                 return;
             }
 
-
+           
         } catch (ParseException ex) {
             Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
         } catch (LoginException ex) {

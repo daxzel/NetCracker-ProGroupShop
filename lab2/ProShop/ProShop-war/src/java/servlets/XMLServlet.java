@@ -26,6 +26,9 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletOutputStream;
 import helpers.*;
 import javax.ejb.FinderException;
+import org.jdom.Document;
+import org.jdom.output.Format;
+import org.jdom.output.XMLOutputter;
 
 /**
  *
@@ -35,7 +38,7 @@ public class XMLServlet extends HttpServlet {
 
     protected void importXML(HttpServletRequest request,
             HttpServletResponse response) {
-        PrintWriter out =null;
+        PrintWriter out = null;
         try {
             out = response.getWriter();
 
@@ -79,7 +82,7 @@ public class XMLServlet extends HttpServlet {
         }
 
     }
-    
+
     protected void history(HttpServletRequest request, HttpServletResponse response) throws ExportException, IOException, ServletException {
         RequestDispatcher rd;
         ServletOutputStream out = null;
@@ -88,41 +91,41 @@ public class XMLServlet extends HttpServlet {
         String t;
         result = "Произошла ошибка";
         try {
-            
+
             ArrayList list = new ArrayList();
             t = request.getParameter("TABLE").toString();
             id_s = request.getParameter("ID").toString();
             id = Long.parseLong(id_s);
-            if ("1".equals(t)){
+            if ("1".equals(t)) {
                 table = "\"CATALOG\"";
             }
-            if ("2".equals(t)){
+            if ("2".equals(t)) {
                 table = "\"IMAGE\"";
             }
-            if ("3".equals(t)){
+            if ("3".equals(t)) {
                 table = "\"OPINION\"";
             }
-            if ("4".equals(t)){
+            if ("4".equals(t)) {
                 table = "\"ORDER\"";
             }
-            if ("5".equals(t)){
+            if ("5".equals(t)) {
                 table = "PRODUCT";
             }
-            if ("6".equals(t)){
+            if ("6".equals(t)) {
                 table = "\"ROLE\"";
             }
-            if ("7".equals(t)){
+            if ("7".equals(t)) {
                 table = "\"USER\"";
             }
             HistoryBeanRemoteHome historyHome = (HistoryBeanRemoteHome) EJBHelper.lookupHome("ejb/HistoryBean", HistoryBeanRemoteHome.class);
-            HistoryBeanRemote historyBean = historyHome.create();            
+            HistoryBeanRemote historyBean = historyHome.create();
             String xml = historyBean.exportToXML(table, id);
             response.setContentType("text/xml");
             response.setCharacterEncoding("utf-8");
             out = response.getOutputStream();
             out.println(xml);
             out.flush();
-            
+
         } catch (NumberFormatException ex) {
             ex.printStackTrace();
         } catch (IOException ex) {
@@ -213,8 +216,8 @@ public class XMLServlet extends HttpServlet {
             }
         }
     }
-    
-     protected void exportUsersP(HttpServletRequest request, HttpServletResponse response) throws ExportException, IOException, ServletException {
+
+    protected void exportUsersP(HttpServletRequest request, HttpServletResponse response) throws ExportException, IOException, ServletException {
         RequestDispatcher rd;
         ServletOutputStream out = null;
         boolean flag1, flag2, usersFlag, rolesFlag, opinionsFlag, productsFlag, ordersFlag, catalogsFlag;
@@ -226,16 +229,16 @@ public class XMLServlet extends HttpServlet {
             ArrayList list = new ArrayList();
             name = request.getParameter("NAME").toString();
             role = request.getParameter("ROLE").toString();
-            if ("admin".equals(role)){
+            if ("admin".equals(role)) {
                 id_role = 1;
             } else {
                 if ("manager".equals(role)) {
-                    id_role = 2;                    
+                    id_role = 2;
                 } else {
                     if ("user".equals(role)) {
                         id_role = 3;
-                    }                    
-                }                    
+                    }
+                }
             }
             searchByName = request.getParameter("USERSBYNAME");
             searchByRole = request.getParameter("USERSBYROLE");
@@ -244,24 +247,24 @@ public class XMLServlet extends HttpServlet {
             }
             if (request.getParameter("USERSBYROLE") != null) {
                 flag2 = true;
-            }            
-            exportRoles = request.getParameter("ROLES");            
+            }
+            exportRoles = request.getParameter("ROLES");
             if ("ON".equals(exportRoles)) {
                 rolesFlag = true;
             }
-            exportOpinions = request.getParameter("OPINIONS");            
+            exportOpinions = request.getParameter("OPINIONS");
             if ("ON".equals(exportOpinions)) {
                 opinionsFlag = true;
             }
-            exportProducts = request.getParameter("PRODUCTS");            
+            exportProducts = request.getParameter("PRODUCTS");
             if ("ON".equals(exportProducts)) {
                 productsFlag = true;
             }
-            exportCatalogs = request.getParameter("CATALOGS");            
+            exportCatalogs = request.getParameter("CATALOGS");
             if ("ON".equals(exportCatalogs)) {
                 catalogsFlag = true;
             }
-            exportOrders = request.getParameter("ORDERS");            
+            exportOrders = request.getParameter("ORDERS");
             if ("ON".equals(exportOrders)) {
                 ordersFlag = true;
             }
@@ -294,15 +297,18 @@ public class XMLServlet extends HttpServlet {
         }
     }
 
-    protected void exportProductByPrice(HttpServletRequest request, HttpServletResponse response) throws  IOException, ServletException {
+    protected void exportProductByPrice(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         RequestDispatcher rd;
         ServletOutputStream out = null;
+        response.setContentType("text/xml");
+        response.setCharacterEncoding("utf-8");
+       // response.addHeader("Content-Disposition", "attachment; filename=" + "test.xml");
         boolean flag, catalogFlag, orderFlag, commentFlag, allFlag;
         flag = catalogFlag = orderFlag = commentFlag = allFlag = false;
         String result, price, name, more, less, exportCatalog, exportOrder, exportComment, exportAll;
         double priceDouble = 0;
         result = "Произошла ошибка";
-        name=null;
+        name = null;
         try {
 
             ArrayList list = new ArrayList();
@@ -310,8 +316,8 @@ public class XMLServlet extends HttpServlet {
             if (price == null) {
 
                 name = request.getParameter("name");
-                  if (name == null || "".equals(name)) {
-                    
+                if (name == null || "".equals(name)) {
+
                     throw new ExportException("Введите название продукта");
 
                 }
@@ -345,20 +351,25 @@ public class XMLServlet extends HttpServlet {
             if (price != null) {
                 products = productHome.findByPrice(priceDouble, flag);
             }
-            if(name!=null){
+            if (name != null) {
                 ProductBeanRemote product = productHome.findByName(name);
                 products = new ArrayList();
                 products.add(product);
             }
             XmlBeanRemoteHome xmlHome = (XmlBeanRemoteHome) EJBHelper.lookupHome("ejb/XmlBean", XmlBeanRemoteHome.class);
             XmlBeanRemote xmlBean = xmlHome.create();
-            String xml = xmlBean.exportToXMLProduct(products, allFlag, catalogFlag, orderFlag, commentFlag);
+            //   String xml = xmlBean.exportToXMLProduct(products, allFlag, catalogFlag, orderFlag, commentFlag);
+            Document doc = xmlBean.exportToXMLProduct(products, allFlag, catalogFlag, orderFlag, commentFlag);
+            XMLOutputter outputter = new XMLOutputter();
+            outputter.setFormat(Format.getPrettyFormat());
+          //  outputter.output(doc, response.getOutputStream());
+            result = outputter.outputString(doc).toString();
             response.setContentType("text/xml");
             response.setCharacterEncoding("utf-8");
             out = response.getOutputStream();
-            out.println(xml);
+            out.println(result);
             out.flush();
-            } catch (FinderException ex) {
+        } catch (FinderException ex) {
             result = "Не найдены записи";
             rd = request.getRequestDispatcher("exportProduct.jsp");
             request.setAttribute("result", result);
@@ -408,7 +419,7 @@ public class XMLServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
-        
+
         RequestDispatcher rd;
         try {
             if (request.getRequestURI().equals("/ProShop-war/XML/Products.xml")) {
@@ -430,7 +441,7 @@ public class XMLServlet extends HttpServlet {
 
             }
 
-            
+
             if (request.getRequestURI().equals("/ProShop-war/XML/exportUsersP")) {
                 exportUsersP(request, response);
                 return;

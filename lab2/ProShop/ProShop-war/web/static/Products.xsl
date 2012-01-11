@@ -17,7 +17,8 @@
     
 	<xsl:template match="BASE">
     	<div style=" padding-left:100px; width:1000px; border-color:#666">
-			
+			<a href="getFile">Скачать файл</a>
+            
 			<xsl:apply-templates select="ROLE"/>
 			
 			<xsl:apply-templates select="USER"/>
@@ -28,7 +29,8 @@
 			
 			<xsl:apply-templates select="OPINION"/>  			
 			
-			<xsl:apply-templates select="ORDER"/>  
+			<xsl:apply-templates select="ORDER"/> 
+			
         </div>     
  	</xsl:template>
 
