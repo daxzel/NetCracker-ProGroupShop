@@ -24,7 +24,7 @@
                     if ("false".equals(status)) {
             %>Моя корзина
             <%}
-                                    if ("true".equals(status)) {%>
+                        if ("true".equals(status)) {%>
             Моя история заказов
             <%}%></title>
     </head>
@@ -75,19 +75,26 @@
                                 if (request.getAttribute("result") instanceof List) {
                                     List list = (List) request.getAttribute("result");
                                     if (list.isEmpty()) {%>
-                    <p>
-                        <%if (result2 != null) {%>
-                        <%=result2%>
-                        <%}
-                                                                if ("false".equals(status)) {
-                        %>У вас нет продуктов в корзине
-                        <%}
-                                                                if ("true".equals(status)) {%>
-                        Ваша история заказов пуста
-                        <%}%>
 
-                    </p>
-                    <%} else {
+                    <%
+                                                            if ("false".equals(status)) {
+
+                    %>
+                    <div class="emptyBasket">
+                        У вас нет продуктов в корзине
+                    </div>
+                    <%}
+                                                                if ("true".equals(status)) {%>
+                    <div class="emptyBasket">
+                        Ваша история заказов пуста
+                    </div>
+                    <%}%>
+                    <%if (result2 != null) {%>
+                    <%=result2%>
+                    <%}
+
+
+                                                        } else {
                                                             OrderBeanRemote ord = (OrderBeanRemote) list.get(0);
                     %>
                     <table align="center"  border="1" width="100%">

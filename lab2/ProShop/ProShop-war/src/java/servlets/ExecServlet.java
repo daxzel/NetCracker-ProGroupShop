@@ -120,19 +120,19 @@ public class ExecServlet extends HttpServlet {
             usr.sendMessage(new Long(usr.getId()), "\"USER\"", "Зарегестрирован пользователь: " + nik + ". Статус: " + rbr.getName() + ". Дата регистрации: " + usr.getRegistrationDate(), ido, 1);
 
 
-            result = "Пользователь зарегестрирован";
+            result = "<div class=\"success\"><p align=\"center\">Пользователь зарегестрирован</p></div>";
         } catch (DuplicateKeyException ex) {
-            result = ex.getMessage();
+            result = "<div class=\"warning\"><p align=\"center\">" + ex.getMessage() + "</p></div>";
         } catch (CreateException ex) {
-            result = "Ошибка при создании пользователя";
+            result = "<div class=\"warning\"><p align=\"center\">Ошибка при создании пользователя</p></div>";
         } catch (RegistrationException ex) {
-            result = ex.getMessage();
+            result = "<div class=\"warning\"><p align=\"center\">" + ex.getMessage() + "</p></div>";
         }/* catch (NikNameException ex) {
         result = ex.getMessage();
         } */ catch (PasswordException ex) {
-            result = ex.getMessage();
+            result = "<div class=\"warning\"><p align=\"center\">" + ex.getMessage() + "</p></div>";
         } catch (Exception ex) {
-            result = "Неизвестная ошибка";
+            result = "Неизвестная ошибка</p></div>";
         }
 
         request.setAttribute("result", result);
@@ -146,7 +146,7 @@ public class ExecServlet extends HttpServlet {
         if (usr.getRoleId() > 2) {
             throw new LoginException("Вы не обладаете правами администратора");
         }
-        String result = "Пользователь не найден";
+        String result = "<div class=\"warning\"><p align=\"center\">Пользователь не найден</p></div>";
         String homepage;
         RequestDispatcher rd;
         HttpSession session = request.getSession();
@@ -158,13 +158,13 @@ public class ExecServlet extends HttpServlet {
             //request.setAttribute("DO", "upUser");
             session.setAttribute("userOld", user);
         } catch (ObjectNotFoundException ex) {
-            result = "не существует пользователя с таким ником";
+            result = "<div class=\"warning\"><p align=\"center\">не существует пользователя с таким ником</p></div>";
             request.setAttribute("result", result);
         } catch (FinderException ex) {
-            result = "ник введен не верно";
+            result = "<div class=\"warning\"><p align=\"center\">ник введен не верно</p></div>";
             request.setAttribute("result", result);
         } catch (NamingException ex) {
-            result = "произошла ошибка";
+            result = "<div class=\"warning\"><p align=\"center\">произошла ошибка</p></div>";
             request.setAttribute("result", result);
         } finally {
             rd = request.getRequestDispatcher("updateUser.jsp?DO=" + "updateUser");
@@ -198,7 +198,7 @@ public class ExecServlet extends HttpServlet {
         String description = request.getParameter("DESCRIPTION");
         String priceS = request.getParameter("PRICE");
         String name_catalog = request.getParameter("NAME_CATALOG");
-        String result = "Произошла ошибка при добавлении продукта";
+        String result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка при добавлении продукта</p></div>";
         String page = "addProduct.jsp";
 
         double price = 0;
@@ -234,7 +234,7 @@ public class ExecServlet extends HttpServlet {
             ctg.sendMessage(new Long(usr.getId()), "\"CATALOG\"", " Каталог: " + ctg.getParentName() + " изменен. Изменен дочерний каталог: " + pbr.getNameCatalog() + ". Добавлен продукт: " + pbr.getName(), new Long(ctg.getParentId()), 2);
 
 
-            result = "Продукт добавлен";
+            result = "<div class=\"success\"><p align=\"center\">Продукт добавлен</p></div>";
             request.setAttribute("NAME", name);
             request.setAttribute("DESCRIPTION", description);
             request.setAttribute("PRICE", priceS);
@@ -242,41 +242,41 @@ public class ExecServlet extends HttpServlet {
             page = "addProduct.jsp";
 
         } catch (NegativeNumberException ex) {
-            result = "Введите положительную цену продукта";
+            result = "<div class=\"warning\"><p align=\"center\">Введите положительную цену продукта</p></div>";
             request.setAttribute("NAME", name);
             request.setAttribute("DESCRIPTION", description);
             request.setAttribute("PRICE", priceS);
             request.setAttribute("NAME_CATALOG", name_catalog);
             page = "addProduct.jsp";
         } catch (FinderException ex) {
-            result = "Имя каталога указанно не верно";
+            result = "<div class=\"warning\"><p align=\"center\">Имя каталога указанно не верно</p></div>";
             request.setAttribute("NAME", name);
             request.setAttribute("DESCRIPTION", description);
             request.setAttribute("PRICE", priceS);
             request.setAttribute("NAME_CATALOG", name_catalog);
             page = "addProduct.jsp";
         } catch (NamingException ex) {
-            result = "Ошибка";
+            result = "<div class=\"warning\"><p align=\"center\">Ошибка</p></div>";
         } catch (CreateException ex) {
             request.setAttribute("NAME", name);
             request.setAttribute("DESCRIPTION", description);
             request.setAttribute("PRICE", priceS);
             request.setAttribute("NAME_CATALOG", name_catalog);
-            result = ex.getMessage();
+            result = "<div class=\"warning\"><p align=\"center\">" + ex.getMessage() + "</p></div>";
             page = "addProduct.jsp";
         } catch (NumberFormatException ex) {
             request.setAttribute("NAME", name);
             request.setAttribute("DESCRIPTION", description);
             request.setAttribute("PRICE", priceS);
             request.setAttribute("NAME_CATALOG", name_catalog);
-            result = "Ошибка в указании цены";
+            result = "<div class=\"warning\"><p align=\"center\">Ошибка в указании цены</p></div>";
             page = "addProduct.jsp";
         } catch (ProductException ex) {
             request.setAttribute("NAME", name);
             request.setAttribute("DESCRIPTION", description);
             request.setAttribute("PRICE", priceS);
             request.setAttribute("NAME_CATALOG", name_catalog);
-            result = ex.getMessage();
+            result = "<div class=\"warning\"><p align=\"center\">" + ex.getMessage() + "</p></div>";
             page = "addProduct.jsp";
         } finally {
             request.setAttribute("result", result);
@@ -293,7 +293,7 @@ public class ExecServlet extends HttpServlet {
         HttpSession session = request.getSession();
         RequestDispatcher rd;
         UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
-        String result = "Продукт не удален";
+        String result = "<div class=\"warning\"><p align=\"center\">Продукт не удален</p></div>";
         if (usr.getRoleId() > 2) {
             throw new LoginException("Вы не обладаете правами администратора");
 
@@ -307,7 +307,7 @@ public class ExecServlet extends HttpServlet {
             CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
             CatalogBeanRemote ctg = catalogHome.findByPrimaryKey(new Long(pr.getIdCatalog()));
 
-            result = "Удаление завершено";
+            result = "<div class=\"success\"><p align=\"center\">Удаление завершено</p></div>";
             pr.sendMessage(new Long(usr.getId()), "PRODUCT", "Удален продукт: " + pr.getName() + " из каталога: " + pr.getNameCatalog(), null, 2);
             ctg.sendMessage(new Long(usr.getId()), "\"CATALOG\"", " Каталог: " + pr.getNameCatalog() + " изменен. Удален продукт: " + pr.getName(), new Long(pr.getIdCatalog()), 2);
             ctg.sendMessage(new Long(usr.getId()), "\"CATALOG\"", " Каталог: " + ctg.getParentName() + " изменен. Изменен дочерний каталог: " + pr.getNameCatalog() + ". Удален продукт: " + pr.getName(), new Long(ctg.getParentId()), 2);
@@ -318,13 +318,13 @@ public class ExecServlet extends HttpServlet {
 
 
         } catch (ObjectNotFoundException ex) {
-            result = "Продукта не существует";
+            result = "<div class=\"warning\"><p align=\"center\">Продукта не существует</p></div>";
         } catch (RemoveException ex) {
-            result = "Ошибка при удалении";
+            result = "<div class=\"warning\"><p align=\"center\">Ошибка при удалении</p></div>";
         } catch (FinderException ex) {
-            result = "Ошибка при поиске";
+            result = "<div class=\"warning\"><p align=\"center\">Ошибка при поиске</p></div>";
         } catch (NamingException ex) {
-            result = "Произошла ошибка";
+            result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
         } finally {
             request.setAttribute("result", result);
             rd = request.getRequestDispatcher("delProduct.jsp");
@@ -335,7 +335,7 @@ public class ExecServlet extends HttpServlet {
 
     protected void updateUser(HttpServletRequest request,
             HttpServletResponse response, String type) throws ServletException, ParseException, IOException, LoginException {
-        String result = "порофиль не отредактирован";
+        String result = "<div class=\"warning\"><p align=\"center\">порофиль не отредактирован</p></div>";
         HttpSession session = request.getSession();
         RequestDispatcher rd;
         UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
@@ -469,19 +469,19 @@ public class ExecServlet extends HttpServlet {
 
 
             if (type.equals("updateUser")) {
-                result = "пользователь отредактирован";
+                result = "<div class=\"success\"><p align=\"center\">пользователь отредактирован</p></div>";
 
                 session.removeAttribute("userOld");
             }
             if (type.equals("updateProfil")) {
-                result = "профиль отредактирован";
-
+                result = "<div class=\"success\"><p align=\"center\">профиль отредактирован</p></div>";
+                session.setAttribute("user",usr);
             }
             //  rd = request.getRequestDispatcher("updateUser.jsp?DO=" + type);
             usr.sendMessage(id, "\"USER\"", "Отредактирован пользователь :" + usr.getNik() + msg, new Long(usr.getId()), 2);
 
         } catch (UpdateException ex) {
-            result = ex.getMessage();
+            result = "<div class=\"warning\"><p align=\"center\">" + ex.getMessage() + "</p></div>";
             if (type.equals("updateUser")) {
 
                 session.setAttribute("usrOld", usr);
@@ -490,7 +490,7 @@ public class ExecServlet extends HttpServlet {
                 //  session.setAttribute("user",usr);
             }
         } catch (NamingException ex) {
-            result = "неизвестная ошибка";
+            result = "<div class=\"warning\"><p align=\"center\">неизвестная ошибка</p></div>";
             if (type.equals("updateUser")) {
 
                 session.setAttribute("usrOld", usr);
@@ -499,7 +499,7 @@ public class ExecServlet extends HttpServlet {
                 //  session.setAttribute("user",usr);
             }
         } catch (PasswordException ex) {
-            result = ex.getMessage();
+            result = "<div class=\"warning\"><p align=\"center\">" + ex.getMessage() + "</p></div>";
             if (type.equals("updateUser")) {
 
                 session.setAttribute("usrOld", usr);
@@ -508,7 +508,7 @@ public class ExecServlet extends HttpServlet {
                 //  session.setAttribute("user",usr);
             }
         } catch (ParseException ex) {
-            result = "ошибка ввода даты рождения";
+            result = "<div class=\"warning\"><p align=\"center\">ошибка ввода даты рождения</p></div>";
             if (type.equals("updateUser")) {
 
                 session.setAttribute("usrOld", usr);
@@ -517,7 +517,7 @@ public class ExecServlet extends HttpServlet {
                 //  session.setAttribute("user",usr);
             }
         } catch (Exception ex) {
-            result = "ошибка";
+            result = "<div class=\"warning\"><p align=\"center\">ошибка</p></div>";
             if (type.equals("updateUser")) {
 
                 session.setAttribute("usrOld", usr);
@@ -539,7 +539,7 @@ public class ExecServlet extends HttpServlet {
         HttpSession session = request.getSession();
         UserBeanRemote usr = JSPHelper.getUser2(session);
         String rolename = request.getParameter("ROLE");
-        String result = "Пользователи не найденны";
+        String result = "<div class=\"warning\"><p align=\"center\">Пользователи не найденны</p></div>";
         try {
             long role_id = 0;
             if ("admin".equals(rolename)) {
@@ -561,9 +561,9 @@ public class ExecServlet extends HttpServlet {
 
             request.setAttribute("result", list);
         } catch (FinderException ex) {
-            request.setAttribute("result", "Ошибка поиска");
+            request.setAttribute("result", "<div class=\"warning\"><p align=\"center\">Ошибка поиска</p></div>");
         } catch (NamingException ex) {
-            request.setAttribute("result", "Ошибка поиска");
+            request.setAttribute("result", "<div class=\"warning\"><p align=\"center\">Ошибка поиска</p></div>");
         } finally {
             rd = request.getRequestDispatcher("getUsersByRole.jsp");
             rd.forward(request, response);
@@ -576,7 +576,7 @@ public class ExecServlet extends HttpServlet {
         HttpSession session = request.getSession();
         RequestDispatcher rd;
         UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
-        String result = "Блокировка не выполнена";
+        String result = "<div class=\"warning\"><p align=\"center\">Блокировка не выполнена</p></div>";
         if (usr.getRoleId() >= 2) {
             throw new LoginException("Вы не обладаете правами администратора");
         }
@@ -589,17 +589,17 @@ public class ExecServlet extends HttpServlet {
             user.setRoleId(new Long(4));
             usr.sendMessage(new Long(usr.getId()), "\"USER\"", "Пользователь заблокирован: " + nik, id, 2);
 
-            result = "Блокировка завершена";
+            result = "<div class=\"success\"><p align=\"center\">Блокировка завершена</p></div>";
         } catch (ObjectNotFoundException ex) {
-            result = "Пользователя с таким ником не существует";
+            result = "<div class=\"warning\"><p align=\"center\">Пользователя с таким ником не существует</p></div>";
         } catch (RemoteException ex) {
-            result = "Ошибка при блокировке";
+            result = "<div class=\"warning\"><p align=\"center\">Ошибка при блокировке</p></div>";
             // } catch (RemoveException ex) {
             //    result = "Ошибка при удалении";
         } catch (FinderException ex) {
-            result = "Ошибка при поиске";
+            result = "<div class=\"warning\"><p align=\"center\">Ошибка при поиске</p></div>";
         } catch (NamingException ex) {
-            result = "Произошла ошибка попробуйте еще раз)";
+            result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка попробуйте еще раз)</p></div>";
         } finally {
             request.setAttribute("result", result);
             rd = request.getRequestDispatcher("deleteUser.jsp");
@@ -612,7 +612,7 @@ public class ExecServlet extends HttpServlet {
             HttpServletResponse response, String table) throws ServletException, LoginException, IOException {
         RequestDispatcher rd;
         HttpSession session = request.getSession();
-        String result = "Ошибка поиска";
+        String result = "<div class=\"warning\"><p align=\"center\">Ошибка поиска</p></div>";
         try {
             List list = null;
             if ("PRODUCT".equals(table)) {
@@ -633,13 +633,13 @@ public class ExecServlet extends HttpServlet {
             }
             request.setAttribute("result", list);
         } catch (FinderException ex) {
-            result = "Произошла ошибка поиска";
+            result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка поиска</p></div>";
             request.setAttribute("result", result);
         } catch (RemoteException ex) {
-            result = "Произошла ошибка поиска";
+            result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка поиска</p></div>";
             request.setAttribute("result", result);
         } catch (NamingException ex) {
-            result = "Произошла ошибка поиска";
+            result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка поиска</p></div>";
             request.setAttribute("result", result);
         } finally {
             rd = request.getRequestDispatcher("getFullList.jsp");
@@ -677,17 +677,17 @@ public class ExecServlet extends HttpServlet {
                 rd.forward(request, response);
             }
         } catch (LoginException ex) {
-            result = ex.getMessage();
+            result = "<div class=\"warning\"><p align=\"center\">" + ex.getMessage() + "</p></div>";
             request.setAttribute("result", result);
             rd = request.getRequestDispatcher("login.jsp");
             rd.forward(request, response);
         } catch (FinderException ex) {
-            result = "Не правильно указанно имя пользователя или пароль";
+            result = "<div class=\"warning\"><p align=\"center\">Не правильно указанно имя пользователя или пароль</p></div>";
             request.setAttribute("result", result);
             rd = request.getRequestDispatcher("login.jsp");
             rd.forward(request, response);
         } catch (NamingException ex) {
-            request.setAttribute("result", "Произошла ошибка");
+            request.setAttribute("result", "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>");
             rd = request.getRequestDispatcher("login.jsp");
             rd.forward(request, response);
         }
@@ -767,7 +767,7 @@ public class ExecServlet extends HttpServlet {
 
         RequestDispatcher rd;
         HttpSession session = request.getSession();
-        String result = "Произошла ошибка перейдите на стартовую страницу";
+        String result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка перейдите на стартовую страницу</p></div>";
         try {
             String id_pr = request.getParameter("ID");
             Long id_product = new Long(Long.parseLong(id_pr));
@@ -778,7 +778,7 @@ public class ExecServlet extends HttpServlet {
             rd = request.getRequestDispatcher("getOpinion.jsp");
             rd.forward(request, response);
         } catch (FinderException ex) {
-            result = "Продукт не найден";
+            result = "<div class=\"warning\"><p align=\"center\">Продукт не найден</p></div>";
         } catch (RemoteException ex) {
             ex.printStackTrace();
         } catch (NumberFormatException ex) {
@@ -805,7 +805,7 @@ public class ExecServlet extends HttpServlet {
         if (usr.getRoleId() > 2) {
             throw new LoginException("Вы не обладаете правами администратора");
         }
-        String result = "Добавление каталога прошло не успешно";
+        String result = "<div class=\"warning\"><p align=\"center\">Добавление каталога прошло не успешно</p></div>";
         try {
             String nameParent = request.getParameter("PARENTNAME");
             String name = request.getParameter("NAME");
@@ -823,19 +823,19 @@ public class ExecServlet extends HttpServlet {
             ctg.sendMessage(idu, "\"CATALOG\"", "В каталог: " + ctg.getParentName() + " добавлен дочерний каталог: " + name, new Long(ctg.getParentId()), 1);
 
 
-            result = "Добавление каталога завершено";
+            result = "<div class=\"success\"><p align=\"center\">Добавление каталога завершено</p></div>";
 
 
 
 
         } catch (CreateException ex) {
-            result = ex.getMessage();
+            result = "<div class=\"warning\"><p align=\"center\">" + ex.getMessage() + "</p></div>";
         } catch (RemoteException ex) {
-            result = "Ошибка при удалении";
+            result = "<div class=\"warning\"><p align=\"center\">Ошибка при удалении</p></div>";
         } catch (NamingException ex) {
-            result = "Произошла ошибка при добавлении каталога";
+            result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка при добавлении каталога</p></div>";
         } catch (CatalogException ex) {
-            result = ex.getMessage();
+             result = "<div class=\"warning\"><p align=\"center\">" + ex.getMessage() + "</p></div>";
             //Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             request.setAttribute("result", result);
@@ -853,7 +853,7 @@ public class ExecServlet extends HttpServlet {
             throw new LoginException("Вы не обладаете правами администратора");
         }
         RequestDispatcher rd;
-        String result = "Произошла ошибка";
+        String result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
         try {
             if ("".equals(name)) {
                 throw new CatalogException("Имя каталога не может быть пустым");
@@ -868,18 +868,18 @@ public class ExecServlet extends HttpServlet {
             parentCtg.sendMessage(idu, "\"CATALOG\"", "Из каталога: " + parentCtg.getName() + " удален дочерний каталог: " + name, idp, 2);
             ctg.sendMessage(idu, "\"CATALOG\"", "Удален каталог: " + ctg.getName(), null, 2);
             ctg.remove();
-            result = "Удаление завершено";
+            result = "<div class=\"success\"><p align=\"center\">Удаление завершено</p></div>";
         } catch (FinderException ex) {
-            result = ex.getMessage();
+            result = "<div class=\"warning\"><p align=\"center\">" + ex.getMessage() + "</p></div>";
         } catch (RemoteException ex) {
             ex.printStackTrace();
-            result = "Ошибка при удалении";
+            result = "<div class=\"warning\"><p align=\"center\">Ошибка при удалении</p></div>";
         } catch (RemoveException ex) {
-            result = "Ошибка при удалении";
+            result = "<div class=\"warning\"><p align=\"center\">Ошибка при удалении</p></div>";
         } catch (CatalogException ex) {
-            result = ex.getMessage();
+            result = "<div class=\"warning\"><p align=\"center\">" + ex.getMessage() + "</p></div>";
         } catch (NamingException ex) {
-            result = "Ошибка при удалении попробуйте еще раз";
+            result = "<div class=\"warning\"><p align=\"center\">Ошибка при удалении попробуйте еще раз</p></div>";
         } finally {
             request.setAttribute("result", result);
             rd = request.getRequestDispatcher("del_catalog.jsp");
@@ -983,7 +983,7 @@ public class ExecServlet extends HttpServlet {
             } else {
                 id_product = request.getParameter("ID_PRODUCT");
                 ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
-                session.setAttribute("product",productHome.findByPrimaryKey(new Long(Long.parseLong(id_product))));
+                session.setAttribute("product", productHome.findByPrimaryKey(new Long(Long.parseLong(id_product))));
                 if (id_product == null) {
                     throw new FinderException();
                 }
@@ -992,26 +992,26 @@ public class ExecServlet extends HttpServlet {
             OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
             OrderBeanRemote order = orderHome.create(new Long(usr.getId()), new Long(Long.parseLong(id_product)), new Boolean(false), new Integer(Integer.parseInt(kol_vo)));
             order.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Добавлен заказ на товар: " + order.getNameProduct() + " пользователем: " + order.getNameUser(), new Long(order.getId()), 1);
-            if(session.getAttribute("list")!=null){
-                rd=request.getRequestDispatcher("getCatalog.jsp");
+            if (session.getAttribute("list") != null) {
+                rd = request.getRequestDispatcher("getCatalog.jsp");
             }
-            result = "Продукт добавлен в корзину";
+            result = "<div class=\"success\"><p align=\"center\">Продукт добавлен в корзину</p></div>";
         } catch (FinderException ex) {
-            result = "Произошла ошибка";
+            result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
         } catch (NegativeNumberException ex) {
-            result = "Введите положительное кол-во товара";
+            result = "<div class=\"warning\"><p align=\"center\">Введите положительное кол-во товара</p></div>";
         } catch (NumberFormatException ex) {
-            result = "не правильный формат данных";
+            result = "<div class=\"warning\"><p align=\"center\">не правильный формат данных</p></div>";
         } catch (CreateException ex) {
-            result = "произошла ошибка при добавлении заказа";
+            result = "<div class=\"warning\"><p align=\"center\">произошла ошибка при добавлении заказа</p></div>";
         } catch (RemoteException ex) {
-            result = "произошла ошибка при добавлении заказа";
+            result = "<div class=\"warning\"><p align=\"center\">произошла ошибка при добавлении заказа</p></div>";
         } catch (NamingException ex) {
-            result = "произошла ошибка при добавлении заказа";
+            result = "<div class=\"warning\"><p align=\"center\">произошла ошибка при добавлении заказа</p></div>";
         } finally {
             request.setAttribute("kol_vo", kol_vo);
             request.setAttribute("result", result);
-            
+
             rd.forward(request, response);
         }
 
@@ -1042,7 +1042,7 @@ public class ExecServlet extends HttpServlet {
         RequestDispatcher rd;
         HttpSession session = request.getSession();
         UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
-        String result2 = "Заказ не оформлен";
+        String result2 = "<div class=\"warning\"><p align=\"center\">Заказ не оформлен</p></div>";
         try {
             //   String id_order = request.getParameter("id_order");
             OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
@@ -1056,14 +1056,14 @@ public class ExecServlet extends HttpServlet {
                 ord.setOrderByDate(f);
                 ord.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Заказ " + ord.getId() + " пользователя : " + ord.getNameUser() + " на товар: " + ord.getNameProduct() + " оформлен. Дата оформления заказа: " + ord.getOrderByDate(), new Long(ord.getId()), 3);
             }
-            result2 = "Заказ оформлен";
+            result2 = "<div class=\"success\"><p align=\"center\">Заказ оформлен</p></div>";
             request.setAttribute("result", orderHome.findByUserAndStatus(new Long(usr.getId()), false));
         } catch (FinderException ex) {
-            result2 = "Произошла ошибка";
+            result2 = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
         } catch (RemoteException ex) {
-            result2 = "Произошла ошибка";
+            result2 = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
         } catch (NamingException ex) {
-            result2 = "Произошла ошибка";
+            result2 = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
         } finally {
             request.setAttribute("result2", result2);
             rd = request.getRequestDispatcher("getBasket.jsp?status=false");
@@ -1078,14 +1078,14 @@ public class ExecServlet extends HttpServlet {
         if (usr.getRoleId() > 2) {
             throw new LoginException("Вы не обладаете правами администратора");
         }
-        String result = "Продукт не найден вернитесь назад и введите верное название";
+        String result = "<div class=\"warning\"><p align=\"center\">Продукт не найден</p></div>";
         String homepage;
         RequestDispatcher rd = request.getRequestDispatcher("updateProduct.jsp?DO=select");
         ;
         String nameProduct = request.getParameter("nameProduct");
         try {
             if (nameProduct == null) {
-                result = "введите название продукта";
+                result = "<div class=\"warning\"><p align=\"center\">введите название продукта</p></div>";
                 request.setAttribute("result", result);
             } else {
                 // String nameProduct = request.getParameter("nameProduct");
@@ -1093,17 +1093,17 @@ public class ExecServlet extends HttpServlet {
                 ProductBeanRemote product = productHome.findByName(nameProduct);
                 //  order.setStatus(true);
                 request.getSession().setAttribute("product", product);
-                request.setAttribute("result", "поиск завершен успешно");
+                request.setAttribute("result", "<div class=\"success\"><p align=\"center\">поиск завершен успешно</p></div>");
                 rd = request.getRequestDispatcher("updateProduct.jsp?DO=update");
             }
         } catch (FinderException ex) {
-            result = "Продукт не найден";
+            result = "<div class=\"warning\"><p align=\"center\">Продукт не найден</p></div>";
             request.setAttribute("result", result);
         } catch (RemoteException ex) {
-            result = "Произошла ошибка";
+            result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
             request.setAttribute("result", result);
         } catch (NamingException ex) {
-            result = "Произошла ошибка";
+            result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
             request.setAttribute("result", result);
         } finally {
 
@@ -1121,19 +1121,19 @@ public class ExecServlet extends HttpServlet {
         if (usr.getRoleId() > 2) {
             throw new LoginException("Вы не обладаете правами администратора");
         }
-        String result = "Продукт не обновлен";
+        String result = "<div class=\"warning\"><p align=\"center\">Продукт не обновлен</p></div>";
         String message = "";
         try {
             ProductBeanRemote product = (ProductBeanRemote) request.getSession().getAttribute("product");
             //   String g1 = product.getName();
             if (product == null) {
-                result = "Продукт не обновлен";
+
                 request.setAttribute("result", result);
             } else {
                 String name = request.getParameter("NAME");
 
                 if (name == null || "".equals(name)) {
-                    result = "Название продукта введено не верно";
+                    result = "<div class=\"warning\"><p align=\"center\">Название продукта введено не верно</p></div>";
                     request.setAttribute("result", result);
                 } else {
                     ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
@@ -1141,7 +1141,7 @@ public class ExecServlet extends HttpServlet {
                     if (!product.getName().equals(name)) {
                         try {
                             productHome.findByName(name);
-                            result = "Такое имя уже используется";
+                            result = "<div class=\"warning\"><p align=\"center\">Такое имя уже используется</p></div>";
                             request.setAttribute("result", result);
                             throw new Exception();
                         } catch (FinderException ex) {
@@ -1151,7 +1151,10 @@ public class ExecServlet extends HttpServlet {
                         }
                     }
                     String description = request.getParameter("DESCRIPTION");
-                    if (!product.getDescription().equals(description)) {
+                    if(description==null){
+                        description="";
+                    }
+                    if (!description.equals(product.getDescription())) {
                         String str = ". Изменено описание продукта";
                         product.setDescription(description);
                         message = message + str;
@@ -1177,7 +1180,7 @@ public class ExecServlet extends HttpServlet {
                         product.setIdCatalog(new Long(ctg.getId()));
                         message = message + str;
                     }
-                    result = "Продукт обновлен";
+                    result = "<div class=\"success\"><p align=\"center\">Продукт обновлен</p></div>";
                     product.sendMessage(new Long(usr.getId()), "\"PRODUCT\"", "Отредактирован продукт " + product.getName() + ". " + message, new Long(product.getId()), 2);
 
                     request.setAttribute("result", result);
@@ -1189,27 +1192,27 @@ public class ExecServlet extends HttpServlet {
             }
 
         } catch (NumberFormatException ex) {
-            result = "Не верно введена цена";
+            result = "<div class=\"warning\"><p align=\"center\">Не верно введена цена</p></div>";
             request.setAttribute("result", result);
 
 
         } catch (NegativeNumberException ex) {
-            result = "Введите положительную цену продукта";
+            result = "<div class=\"warning\"><p align=\"center\">Введите положительную цену продукта</p></div>";
             request.setAttribute("result", result);
 
         } catch (FinderException ex) {
-            result = "Не найден каталог";
+            result = "<div class=\"warning\"><p align=\"center\">Не найден каталог</p></div>";
             request.setAttribute("result", result);
         } catch (RemoteException ex) {
-            result = "Произошла ошибка";
+            result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
             request.setAttribute("result", result);
 
         } catch (NamingException ex) {
-            result = "Произошла ошибка";
+            result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
             request.setAttribute("result", result);
 
         } catch (Exception ex) {
-            result = "Произошла ошибка";
+            result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
             request.setAttribute("result", result);
 
         } finally {
@@ -1225,14 +1228,14 @@ public class ExecServlet extends HttpServlet {
         if (usr.getRoleId() > 2) {
             throw new LoginException("Вы не обладаете правами администратора");
         }
-        String result = "Каталог не найден вернитесь назад и введите верное название";
+        String result = "<div class=\"warning\"><p align=\"center\">Каталог не найден</p></div>";
         String homepage;
         RequestDispatcher rd = request.getRequestDispatcher("updateCatalog.jsp?DO=select");
         rd = request.getRequestDispatcher("updateCatalog.jsp?DO=select");
         String nameCatalog = request.getParameter("nameCatalog");
         try {
             if (nameCatalog == null) {
-                result = "введите название каталога";
+                result = "<div class=\"warning\"><p align=\"center\">введите название каталога</p></div>";
                 request.setAttribute("result", result);
 
             } else {
@@ -1242,19 +1245,19 @@ public class ExecServlet extends HttpServlet {
                 CatalogBeanRemote catalog = catalogHome.findByName(nameCatalog);
                 //  order.setStatus(true);
                 request.getSession().setAttribute("catalog", catalog);
-                request.setAttribute("result", "поиск завершен успешно");
+                request.setAttribute("result", "<div class=\"success\"><p align=\"center\">поиск завершен успешно</p></div>");
                 rd = request.getRequestDispatcher("updateCatalog.jsp?DO=update");
             }
         } catch (FinderException ex) {
-            result = "Каталог не найден, введите верное название";
+
             request.setAttribute("result", result);
             //rd = request.getRequestDispatcher("updateCatalog.jsp?DO=select");
         } catch (RemoteException ex) {
-            result = "Произошла ошибка";
+            result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
             request.setAttribute("result", result);
             ///rd = request.getRequestDispatcher("updateCatalog.jsp?DO=select");
         } catch (NamingException ex) {
-            result = "Произошла ошибка";
+            result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
             request.setAttribute("result", result);
             //rd = request.getRequestDispatcher("updateCatalog.jsp?DO=select");
         } finally {
@@ -1274,17 +1277,17 @@ public class ExecServlet extends HttpServlet {
         if (usr.getRoleId() > 2) {
             throw new LoginException("Вы не обладаете правами администратора");
         }
-        String result = "Каталог не обновлен";
+        String result = "<div class=\"warning\"><p align=\"center\">Каталог не обновлен</p></div>";
         try {
             CatalogBeanRemote catalog = (CatalogBeanRemote) request.getSession().getAttribute("catalog");
             //   String g1 = product.getName();
             if (catalog == null) {
-                result = "Каталог не обновлен";
+
                 request.setAttribute("result", result);
             } else {
                 String name = request.getParameter("NAME");
                 if (name == null || "".equals(name)) {
-                    result = "Название каталога введено не верно";
+                    result = "<div class=\"warning\"><p align=\"center\">Название каталога введено не верно</p></div>";
                     request.setAttribute("result", result);
                 } else {
                     CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
@@ -1292,7 +1295,7 @@ public class ExecServlet extends HttpServlet {
                     if (!catalog.getName().equals(name)) {
                         try {
                             catalogHome.findByName(name);
-                            result = "Такое имя уже используется";
+                            result = "<div class=\"warning\"><p align=\"center\">Такое имя уже используется</p></div>";
                             request.setAttribute("result", result);
                             throw new Exception();
                         } catch (FinderException ex) {
@@ -1323,7 +1326,7 @@ public class ExecServlet extends HttpServlet {
                     } else {
                         throw new UpdateException("Введите имя родительского каталога");
                     }
-                    result = "Каталог обновлен";
+                    result = "<div class=\"success\"><p align=\"center\">Каталог обновлен</p></div>";
                     //  parent.sendMessage(new Long(usr.getId()), "CATALOG", "Дочерний каталог: " + catalog.getName() + " каталога: " + parent.getName() + " обновлен" + msg, new Long(catalog.getParentId()), 2);
                     catalog.sendMessage(new Long(usr.getId()), "\"CATALOG\"", "Каталог: " + catalog.getName() + " обновлен" + msg, new Long(catalog.getId()), 2);
 
@@ -1333,17 +1336,19 @@ public class ExecServlet extends HttpServlet {
                 }
             }
         } catch (UpdateException ex) {
-            request.setAttribute("result", ex.getMessage());
+            request.setAttribute("result", "<div class=\"warning\"><p align=\"center\">" + ex.getMessage() + "</p></div>");
         } catch (FinderException ex) {
-            result = "Не найден каталог";
+            result = "<div class=\"warning\"><p align=\"center\">Не найден каталог</p></div>";
             request.setAttribute("result", result);
         } catch (RemoteException ex) {
-            result = "Произошла ошибка";
+            result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
             request.setAttribute("result", result);
         } catch (NamingException ex) {
-            result = "Произошла ошибка";
+            result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
             request.setAttribute("result", result);
         } catch (Exception ex) {
+            result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
+            request.setAttribute("result", result);
             ex.printStackTrace();
         } finally {
 
@@ -1358,7 +1363,7 @@ public class ExecServlet extends HttpServlet {
         HttpSession session = request.getSession();
         RequestDispatcher rd;
         UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
-        String result2 = "Заказ не удален";
+        String result2 = "<div class=\"warning\"><p align=\"center\">Продукт не удален</p></div>";
         try {
             String id_order = request.getParameter("id_order");
             OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
@@ -1369,16 +1374,16 @@ public class ExecServlet extends HttpServlet {
 
             order.remove();
             request.setAttribute("result", orderHome.findByUserAndStatus(new Long(usr.getId()), false));
-            result2 = "Продукт удален из корзины";
+            result2 = "<div class=\"success\"><p align=\"center\">Продукт удален из корзины</p></div>";
 
         } catch (RemoveException ex) {
-            result2 = "Произошла ошибка";
+            result2 = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
         } catch (FinderException ex) {
-            result2 = "Произошла ошибка";
+            result2 = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
         } catch (RemoteException ex) {
-            result2 = "Произошла ошибка";
+            result2 = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
         } catch (NamingException ex) {
-            result2 = "Произошла ошибка";
+            result2 = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
         } finally {
             request.setAttribute("result2", result2);
             rd = request.getRequestDispatcher("getBasket.jsp");
@@ -1395,7 +1400,7 @@ public class ExecServlet extends HttpServlet {
         if (usr.getRoleId() > 2) {
             throw new LoginException("Вы не обладаете правами администратора");
         }
-        String result2 = "Пользователи не заблокированны";
+        String result2 = "<div class=\"warning\"><p align=\"center\">Пользователи не заблокированны</p></div>";
         try {
             String id_users[] = request.getParameterValues("id_user");
             UserBeanRemoteHome userHome = (UserBeanRemoteHome) EJBHelper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
@@ -1413,16 +1418,16 @@ public class ExecServlet extends HttpServlet {
             //     OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
             //   orderHome.remove(new Long(order.getId()));
             //  usr.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Удален заказ", null, 2);
-            result2 = "Пользователи заблокированны";
+            result2 = "<div class=\"success\"><p align=\"center\">Пользователи заблокированны</p></div>";
             request.setAttribute("result", list);
             //   request.setAttribute("result2", result2);
             //   result2 = "Заказ удален из корзины";
         } catch (FinderException ex) {
-            result2 = "Произошла ошибка";
+            result2 = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
         } catch (RemoteException ex) {
-            result2 = "Произошла ошибка";
+            result2 = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
         } catch (NamingException ex) {
-            result2 = "Произошла ошибка";
+            result2 = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
         } finally {
             request.setAttribute("result2", result2);
             rd = request.getRequestDispatcher("getUsersByRole.jsp");

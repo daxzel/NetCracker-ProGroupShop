@@ -74,10 +74,7 @@
                             <tr><td>Показать записи</td><td><input type="submit" value=" Ввод " class="Button"/></td></tr>
                         </table>
                     </form>
-                    <%Object obj = request.getAttribute("result");
-                                                        if (obj != null) {%>
-                    <%=obj.toString()%>
-                    <%}%>
+                   
                     <%} else {
                                                         if ("byName".equals(type)) {%>
                     <form name="second" action="ExportProductByName">
@@ -91,10 +88,7 @@
                         </table>
 
                     </form>
-                    <%Object obj = request.getAttribute("result");
-                                                                                if (obj != null) {%>
-                    <%=obj.toString()%>
-                    <%}%>
+                   
                     <%} else {
                     %><table id="regOrLog">
                         <tr><td><a href="/ProShop-war/XML/exportProduct.jsp?poiskType=byPrice" class="first">Экспортировать продукты используя поиск по цене </a> </td></tr>
@@ -102,6 +96,10 @@
                     </table>
                     <%   }}
                     %>
+                     <%Object obj = request.getAttribute("result");
+                                                        if (obj != null) {%>
+                    <%=obj.toString()%>
+                    <%}%>
                 </div>
             </div>
             <div class="team" align="center">

@@ -71,11 +71,11 @@
                     <%
                                                         if (exception != null) {
                     %>
-                    <%=exception.getMessage()%>
+                    <div class="warning"><p align="center"> <%=exception.getMessage()%></p></div>
                     <%}
                                                         if (request.getAttribute("exception") != null) {
                                                             Exception ex = (Exception) request.getAttribute("exception");%>
-                    <%=ex.getMessage()%>
+                    <div class="warning"><p align="center">  <%=ex.getMessage()%></p></div>
                     <%}
                                     }
                                 }

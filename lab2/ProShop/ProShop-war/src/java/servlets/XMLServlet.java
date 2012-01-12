@@ -75,7 +75,7 @@ public class XMLServlet extends HttpServlet {
 
             XMLHelper.importOfXML(xml2);
 
-            out.write("Импорт успешно завершён");
+            out.write("<div class=\"success\"><p align=\"center\">Импорт успешно завершён</p></div>");
 
         } catch (Exception ex) {
             out.write(ex.getMessage());
@@ -89,7 +89,7 @@ public class XMLServlet extends HttpServlet {
         String result, id_s, table = null;
         long id;
         String t;
-        result = "Произошла ошибка";
+        result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
         try {
 
             ArrayList list = new ArrayList();
@@ -308,7 +308,7 @@ public class XMLServlet extends HttpServlet {
         flag = catalogFlag = orderFlag = commentFlag = allFlag = false;
         String result, price, name, more, less, exportCatalog, exportOrder, exportComment, exportAll;
         double priceDouble = 0;
-        result = "Произошла ошибка";
+        result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
         name = null;
         try {
 
@@ -368,17 +368,17 @@ public class XMLServlet extends HttpServlet {
             out.println(result);
             out.flush();
         } catch (FinderException ex) {
-            result = "Не найдены записи";
+            result = "<div class=\"warning\"><p align=\"center\">Не найдены записи</p></div>";
             rd = request.getRequestDispatcher("exportProduct.jsp");
             request.setAttribute("result", result);
             rd.forward(request, response);
         } catch (ExportException ex) {
-            result = "Введите название продукта";
+            result = "<div class=\"warning\"><p align=\"center\">Введите название продукта</p></div>";
             rd = request.getRequestDispatcher("exportProduct.jsp");
             request.setAttribute("result", result);
             rd.forward(request, response);
         } catch (NumberFormatException ex) {
-            result = "Не правильно ввдена цена продукта";
+            result = "<div class=\"warning\"><p align=\"center\">Не правильно ввдена цена продукта</p></div>";
             rd = request.getRequestDispatcher("exportProduct.jsp");
             request.setAttribute("result", result);
             rd.forward(request, response);
@@ -409,14 +409,14 @@ public class XMLServlet extends HttpServlet {
     protected void getFile(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, ExportException {
         RequestDispatcher rd;
         ServletOutputStream out = null;
-
+        String result= "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
         Object obj = request.getSession().getAttribute("XMLDoc");
         try {
             if (obj instanceof String) {
                 String XMLDoc = obj.toString();
                 response.addHeader("Content-Disposition", "attachment; filename=" + "export.xml");
                 out = response.getOutputStream();
-      //          request.getSession().removeAttribute("XMLDoc");
+                //          request.getSession().removeAttribute("XMLDoc");
                 out.println(XMLDoc);
 
                 if (XMLDoc == null) {
@@ -426,6 +426,12 @@ public class XMLServlet extends HttpServlet {
             } else {
                 throw new ExportException("Произошла ошибка, файл не был записан");
             }
+
+        } catch (ExportException ex) {
+              result = "<div class=\"warning\"><p align=\"center\">"+ex.getMessage()+"</p></div>";
+              request.setAttribute("result", result);
+              rd=request.getRequestDispatcher("exportProduct.jsp");
+              rd.forward(request, response);
         } finally {
             try {
                 if (out != null) {
