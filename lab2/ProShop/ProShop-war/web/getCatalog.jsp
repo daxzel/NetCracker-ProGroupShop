@@ -10,6 +10,7 @@
 <%@page import="entityBeans.UserBeanRemote"%>
 <%@page import="entityBeans.CatalogBeanRemote,entityBeans.ProductBeanRemote"%>
 <%@page import="java.util.List"%>
+<%@page errorPage="/errorPage.jsp"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -28,6 +29,7 @@
 
                     //    PrintWriter pw = response.getWriter();
                     UserBeanRemote usr = null;
+
                     try {
                         usr = JSPHelper.getUser2(session);
                     } catch (LoginException ex) {
@@ -40,8 +42,8 @@
                             <td class="logo">
                                 <img src="<%=request.getContextPath()%>/static/logo.jpg">
                             </td>
-                            
-                             <td  class="current_user" align="right"><%if (usr == null) {%><a> </a><%} else {%>Текущий пользователь:<a href="<%=request.getContextPath()%>/updateUser.jsp?DO=updateProfil"> <%=usr.getNik()%></a><a> Статус: <%=usr.getRoleName()%> </a><%}%></td>
+
+                            <td  class="current_user" align="right"><%if (usr == null) {%><a> </a><%} else {%>Текущий пользователь:<a href="<%=request.getContextPath()%>/updateUser.jsp?DO=updateProfil"> <%=usr.getNik()%></a><a> Статус: <%=usr.getRoleName()%> </a><%}%></td>
                             <td class="user_nav" align="right"><%if (usr == null) {%><a href="<%=request.getContextPath()%>/login.jsp">Вход</a>   <a href="<%=request.getContextPath()%>/registration.jsp">Регистрация</a><%} else {%><a href="<%=request.getContextPath()%>/logout">Выход</a><%}%></td>
                         </tr>
                     </tbody>
@@ -61,16 +63,32 @@
                     </div>
                 </div>
                 <div id="content">
-                    <% if (request.getAttribute("result") != null && request.getAttribute("result") instanceof List) {
+                    <h1>Просмотр каталога</h1>
+                    <%
+                                            Object obj1 = request.getAttribute("result");
+                                            Object obj2 = session.getAttribute("list");
+                                            if (((obj1 != null)) || (obj2 != null)) {
+                                                List list1 = null;
+                                                String result = "";
 
-                                                List list1 = (List) request.getAttribute("result");
+                                                if (obj1 instanceof List) {
+                                                    list1 = (List) obj1;
+                                                    session.setAttribute("list", list1);
+                                                } else {
+                                                    if (obj2 instanceof List) {
+                                                        list1 = (List) obj2;
+                                                    } else {
+                                                        throw new Exception("Произошла ошибка при загрузке каталога, пожалуйста сообщите администрации сайта.");
+                                                    }
+                                                }
+
                                                 if (!list1.isEmpty()) {
                                                     if (list1.get(0) instanceof CatalogBeanRemote) {
                                                         CatalogBeanRemote ctg = (CatalogBeanRemote) list1.get(0);
                     %>
                     <table align="center" width="100%">
                         <% for (int i = 0; i <= (list1.size() - 1); i++) {
-                                                                                        ctg = (CatalogBeanRemote) list1.get(i);%>
+                                                                                    ctg = (CatalogBeanRemote) list1.get(i);%>
                         <tr align="center">
                             <td><p align="center"><a href ="catalog?pid=<%= ctg.getId()%>"><%=  ctg.getName()%></a></p></td>
                         </tr>
@@ -79,32 +97,35 @@
                     </table>
 
                     <%}
-                                                                            if (list1.get(0) instanceof ProductBeanRemote) {
-                                                                                ProductBeanRemote prd = (ProductBeanRemote) list1.get(0);
+                                                                        if (list1.get(0) instanceof ProductBeanRemote) {
+                                                                            ProductBeanRemote prd = (ProductBeanRemote) list1.get(0);
+                                                                            session.setAttribute("catalog", String.valueOf(prd.getIdCatalog()));
                     %>
-                    <table align="center"  width="100%">
-                        <tr align="center">
-                            <td width="70%" align="center">Название</td><td width="15%" align="center">Цена</td><td width="15%" align="center">В корзину</td>
+                    <table align="center"  width="70%">
+                        <tr>
+                            <td width="40%" align="center">Название</td><td width="15%">Цена</td><td width="15%"></td>
                         </tr>
                         <% for (int i = 0; i <= (list1.size() - 1); i++) {
-                                                                                            prd = (ProductBeanRemote) list1.get(i);%>
-                        <tr align="center">
-                            <td><a href ="product?ID=<%=prd.getId()%>"><%= prd.getName()%></a></td><td><%= prd.getPrice()%></td><td><a href ="order?VOL=1&ID_PRODUCT=<%=prd.getId()%>"><%= prd.getName()%></a></td>
+                                                                                                        prd = (ProductBeanRemote) list1.get(i);%>
+                        <tr>
+                            <td><a href ="product?ID=<%=prd.getId()%>"><%= prd.getName()%></a></td><td><%= prd.getPrice()%></td><td><a href ="order?VOL=1&ID_PRODUCT=<%=prd.getId()%>" class="Button">В корзину</a></td>
                         </tr>
                         <%}%>
 
                     </table>
 
                     <br><%
-                                                                                }%>
-                        <%
-                                                                            } else {%><br><p align="center">Каталог не содержит никакой информации<br></p><%}
-                                                                             } else {%><br><p align="center">произошла ошибка<br></p><%                                                 }%>
+                                                                        }
+                                                                        if (obj1 instanceof String) {%>
+                                                                        <%=obj1.toString() %>
+                    <%}
+                                                                        } else {%><br><p align="center">Каталог не содержит никакой информации<br></p><%}
+                                                                                                                    } else {%><br><p align="center">произошла ошибка<br></p><%                                                 }%>
                 </div>
             </div>
-                <div class="team" align="center">
-               <a href="<%=request.getContextPath()%>/aboutTeam.jsp"><font size="2">Команда </font></a>
-        </div>
+            <div class="team" align="center">
+                <a href="<%=request.getContextPath()%>/aboutTeam.jsp"><font size="2">Команда </font></a>
+            </div>
         </div>
         <%}%>
     </body>

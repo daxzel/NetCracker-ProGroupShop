@@ -89,7 +89,7 @@
                             <td>Описание</td>
                             <td>Каталог</td>
                             <td>Цена, р</td>
-                            <td rowspan="2"><a href ="addOrder.jsp" >Купить</a></td>
+                            <td rowspan="2"><a href ="addOrder.jsp" class="Button">В корзину</a></td>
                         </tr>
                         <tr align="center">
                             <td><%= prd.getName()%></td>

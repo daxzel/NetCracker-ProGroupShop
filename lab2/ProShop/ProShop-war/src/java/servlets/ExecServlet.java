@@ -968,6 +968,7 @@ public class ExecServlet extends HttpServlet {
         UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
         RequestDispatcher rd;
         String kol_vo = "";
+        rd = request.getRequestDispatcher("addOrder.jsp");
         try {
             HttpSession session = request.getSession();
 
@@ -991,7 +992,9 @@ public class ExecServlet extends HttpServlet {
             OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
             OrderBeanRemote order = orderHome.create(new Long(usr.getId()), new Long(Long.parseLong(id_product)), new Boolean(false), new Integer(Integer.parseInt(kol_vo)));
             order.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Добавлен заказ на товар: " + order.getNameProduct() + " пользователем: " + order.getNameUser(), new Long(order.getId()), 1);
-
+            if(session.getAttribute("list")!=null){
+                rd=request.getRequestDispatcher("getCatalog.jsp");
+            }
             result = "Продукт добавлен в корзину";
         } catch (FinderException ex) {
             result = "Произошла ошибка";
@@ -1008,7 +1011,7 @@ public class ExecServlet extends HttpServlet {
         } finally {
             request.setAttribute("kol_vo", kol_vo);
             request.setAttribute("result", result);
-            rd = request.getRequestDispatcher("addOrder.jsp");
+            
             rd.forward(request, response);
         }
 
@@ -1366,7 +1369,7 @@ public class ExecServlet extends HttpServlet {
 
             order.remove();
             request.setAttribute("result", orderHome.findByUserAndStatus(new Long(usr.getId()), false));
-            result2 = "Заказ удален из корзины";
+            result2 = "Продукт удален из корзины";
 
         } catch (RemoveException ex) {
             result2 = "Произошла ошибка";
