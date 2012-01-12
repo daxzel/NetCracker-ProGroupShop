@@ -21,11 +21,12 @@
         <link href="<%=request.getContextPath()%>/static/menu.css" media="all" rel="stylesheet" type="text/css" />
 
         <title><%String status = request.getParameter("status");
-                          if("false".equals(status)){
-                        %>Моя корзина
-                        <%}if("true".equals(status)){%>
-                        Моя история заказов
-                        <%}%></title>
+                    if ("false".equals(status)) {
+            %>Моя корзина
+            <%}
+                                    if ("true".equals(status)) {%>
+            Моя история заказов
+            <%}%></title>
     </head>
     <body>
         <%UserBeanRemote usr = JSPHelper.getUser2(session);
@@ -40,8 +41,8 @@
                             <td class="logo">
                                 <img src="/ProShop-war/static/logo.jpg">
                             </td>
-                            
-                             <td  class="current_user" align="right"><%if (usr == null) {%><a> </a><%} else {%>Текущий пользователь:<a href="<%=request.getContextPath()%>/updateUser.jsp?DO=updateProfil"> <%=usr.getNik()%></a><a> Статус: <%=usr.getRoleName()%> </a><%}%></td>
+
+                            <td  class="current_user" align="right"><%if (usr == null) {%><a> </a><%} else {%>Текущий пользователь:<a href="<%=request.getContextPath()%>/updateUser.jsp?DO=updateProfil"> <%=usr.getNik()%></a>   Статус: <%=usr.getRoleName()%> <%}%></td>
                             <td class="user_nav" align="right"><%if (usr == null) {%><a href="login.jsp">Вход</a>   <a href="registration.jsp">Регистрация</a><%} else {%><a href="logout">Выход</a><%}%></td>
                         </tr>
                     </tbody>
@@ -62,9 +63,10 @@
                 </div>
                 <div id="content">
                     <h1><%
-                          if("false".equals(status)){
+                                if ("false".equals(status)) {
                         %>Моя корзина
-                        <%}if("true".equals(status)){%>
+                        <%}
+                                    if ("true".equals(status)) {%>
                         Моя история заказов
                         <%}%>
                     </h1>
@@ -76,12 +78,14 @@
                     <p>
                         <%if (result2 != null) {%>
                         <%=result2%>
-                        <%}  if("false".equals(status)){
+                        <%}
+                                                                if ("false".equals(status)) {
                         %>У вас нет продуктов в корзине
-                        <%}if("true".equals(status)){%>
+                        <%}
+                                                                if ("true".equals(status)) {%>
                         Ваша история заказов пуста
                         <%}%>
-                        
+
                     </p>
                     <%} else {
                                                             OrderBeanRemote ord = (OrderBeanRemote) list.get(0);
@@ -94,7 +98,7 @@
                             <td width="25%" align="center">Количество</td>
                             <td width="20%" align="center">Цена заказа</td>
                             <%if (!ord.getStatus()) {%>
-                          
+
                             <td width="20%" align="center">Удалить заказ</td>
                             <%}%>
                         </tr>
@@ -118,7 +122,7 @@
                         </tr>
 
                         <%}%> </table>
-                        <%if (!ord.getStatus()) {%><br><br>
+                    <%if (!ord.getStatus()) {%><br><br>
                     <form action="updateOrderStatus">
                         <input type="submit" value=" Оформить заказ " class="Button" />
                     </form>
@@ -133,9 +137,9 @@
                                 }%>
                 </div>
             </div>
-                <div class="team" align="center">
-               <a href="<%=request.getContextPath()%>/aboutTeam.jsp"><font size="2">Команда </font></a>
-        </div>
+            <div class="team" align="center">
+                <a href="<%=request.getContextPath()%>/aboutTeam.jsp"><font size="2">Команда </font></a>
+            </div>
         </div>
     </body>
 </html>

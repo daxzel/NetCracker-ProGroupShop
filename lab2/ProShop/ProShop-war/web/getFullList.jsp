@@ -44,8 +44,8 @@
                             <td class="logo">
                                 <img src="<%=request.getContextPath()%>/static/logo.jpg">
                             </td>
-                            
-                             <td  class="current_user" align="right"><%if (usr == null) {%><a> </a><%} else {%>Текущий пользователь:<a href="<%=request.getContextPath()%>/updateUser.jsp?DO=updateProfil"> <%=usr.getNik()%></a><a> Статус: <%=usr.getRoleName()%> </a><%}%></td>
+
+                            <td  class="current_user" align="right"><%if (usr == null) {%><a> </a><%} else {%>Текущий пользователь:<a href="<%=request.getContextPath()%>/updateUser.jsp?DO=updateProfil"> <%=usr.getNik()%></a>   Статус: <%=usr.getRoleName()%> <%}%></td>
                             <td class="user_nav" align="right"><%if (usr == null) {%><a href="<%=request.getContextPath()%>/login.jsp">Вход</a>   <a href="<%=request.getContextPath()%>/registration.jsp">Регистрация</a><%} else {%><a href="<%=request.getContextPath()%>/logout">Выход</a><%}%></td>
                         </tr>
                     </tbody>
@@ -68,23 +68,23 @@
                     <%   if (request.getAttribute("result") == null) {%>
                     <p align="center"><a href ="getFullProductList">Вся продукция</a><br></p>
                         <% if (usr != null) {
-                       if (usr.getRoleId() <= 3) {%>
+                                   if (usr.getRoleId() <= 3) {%>
                     <p align="center"><a href ="getFullUserList">Зарегистрированные  пользователи</a><br></p>
                         <%}%>
                         <%if (usr.getRoleId() == 1) {%>
                     <p align="center"><a href ="getFullRoleList">Роли</a><br></p>
                         <%}
-                   }%>
-                  
-                        <%} else {
-                               if (request.getAttribute("result") instanceof List) {
-                                   List list1 = (List) request.getAttribute("result");
-                       if (list1.isEmpty()) {%>
+                               }%>
+
+                    <%} else {
+                           if (request.getAttribute("result") instanceof List) {
+                               List list1 = (List) request.getAttribute("result");
+                                   if (list1.isEmpty()) {%>
                     <p align="center">Таблица не содержит данных</p>
                     <%} else {
-                                                                if (list1.get(0) instanceof UserBeanRemote) {
-                                                                    UserBeanRemote user;
-                                                                    SimpleDateFormat formt = new SimpleDateFormat("yyyy-MM-dd");
+                                               if (list1.get(0) instanceof UserBeanRemote) {
+                                                   UserBeanRemote user;
+                                                   SimpleDateFormat formt = new SimpleDateFormat("yyyy-MM-dd");
                     %>
                     <form action="XML/exportUser">
 
@@ -105,7 +105,7 @@
                                 <%}%>
                             </tr>
                             <% for (int i = 0; i <= (list1.size() - 1); i++) {
-                                                                                        user = (UserBeanRemote) list1.get(i);
+                                                                                                    user = (UserBeanRemote) list1.get(i);
                             %>
                             <tr align="center">
                                 <td><%= user.getId()%></td>
@@ -118,17 +118,17 @@
                                 <%} else {%>
                                 <td></td>
                                 <%}
-                         if (user.getPhone() != null) {%>
+                                     if (user.getPhone() != null) {%>
                                 <td><%= user.getPhone()%></td>
                                 <%} else {%>
                                 <td></td>
                                 <%}
-                         if (user.getEmail() != null) {%>
+                                     if (user.getEmail() != null) {%>
                                 <td><%= user.getEmail()%></td>
                                 <%} else {%>
                                 <td></td>
                                 <%}%>
-                                  <td><%= user.getRegistrationDate()%></td>
+                                <td><%= user.getRegistrationDate()%></td>
                                 <td><%if (user.getRoleId() == 1) {%>
                                     admin
                                     <%} else {%>
@@ -144,31 +144,31 @@
                                     <%}%>
                         </table>
                     </form>
-                    
-                        <%  }
-                                                                    if (list1.get(0) instanceof ProductBeanRemote) {
-                                                                        ProductBeanRemote prd;
-                                                                        //  SimpleDateFormat formt = new SimpleDateFormat("dd MM yyyy");
-%>
+
+                    <%  }
+                                               if (list1.get(0) instanceof ProductBeanRemote) {
+                                                   ProductBeanRemote prd;
+                                                   //  SimpleDateFormat formt = new SimpleDateFormat("dd MM yyyy");
+                    %>
                     <table align="center"  border="1" width="100%">
                         <tr align="center">
                             <td width="15%" align="center">Name</td>
                         </tr>
                         <% for (int i = 0; i <= (list1.size() - 1); i++) {
-                                                                            prd = (ProductBeanRemote) list1.get(i);%>
+                                                                                                    prd = (ProductBeanRemote) list1.get(i);%>
                         <tr align="center">
                             <td><p align="center"><a href ="product?ID=<%=prd.getId()%>"><%= prd.getName()%></a></p></td>
                         </tr>
                         <%}%>
 
                     </table>
-                   
-                        <%  }
 
-                                                                    if (list1.get(0) instanceof RoleBeanRemote && usr.getRoleId() == 1) {
-                                                                        RoleBeanRemote role;
+                    <%  }
 
-                        %>
+                                               if (list1.get(0) instanceof RoleBeanRemote && usr.getRoleId() == 1) {
+                                                   RoleBeanRemote role;
+
+                    %>
                     <table align="center"  border="1" width="100%">
                         <tr align="center">
                             <td width="5%" align="center">ПК Прав доступа</td>
@@ -176,7 +176,7 @@
 
                         </tr>
                         <% for (int i = 0; i <= (list1.size() - 1); i++) {
-                                                                            role = (RoleBeanRemote) list1.get(i);%>
+                                                                                                    role = (RoleBeanRemote) list1.get(i);%>
                         <tr align="center">
                             <td><%= role.getId()%></td>
                             <td><%= role.getName()%></td>
@@ -194,9 +194,9 @@
 
                 </div>
             </div>
-                    <div class="team" align="center">
-               <a href="<%=request.getContextPath()%>/aboutTeam.jsp"><font size="2">Команда </font></a>
-        </div>
+            <div class="team" align="center">
+                <a href="<%=request.getContextPath()%>/aboutTeam.jsp"><font size="2">Команда </font></a>
+            </div>
         </div>
     </body>
 </html>

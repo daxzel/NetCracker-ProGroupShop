@@ -9,7 +9,7 @@ body {
 margin: 0 auto 40px auto;
 padding: 7px 10px 20px 10px;
 position: relative;
-width: 1350px;
+width: 1250px;
 background-color: white;
 min-height:550px;
 }
@@ -41,7 +41,7 @@ min-height: 400px;
 }
 #header table.top_nav {
 margin: 0 10px 5px 10px;
-width: 1330px;
+width: 1230px;
 border-collapse: collapse;
 color: #000;
 }
@@ -49,7 +49,7 @@ color: #000;
 padding-right: 5px;
 }
 #header table.top_nav td.logo {
-width: 387px;
+width: 287px;
 }
 #header table.top_nav td.user_nav {
 vertical-align: top;
@@ -111,7 +111,7 @@ div {
 display: block;
 }
 #content{
-width: 1110px;
+width: 1010px;
 border: 1px solid #D9D9D9;
 float: right;
 margin-top: 0px;
@@ -131,10 +131,10 @@ a {
 }
 .Button{
 	background-color:#3bb3e0;
-	padding:7px;
+	padding:4px;
 
 	font-family: 'Open Sans', sans-serif;
-	font-size:12px;
+	font-size:14px;
 	text-decoration:none;
 	color:#fff;
 	border: solid 1px #186f8f;

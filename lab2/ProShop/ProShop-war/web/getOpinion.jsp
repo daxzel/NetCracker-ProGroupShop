@@ -44,8 +44,8 @@
                             <td class="logo">
                                 <img src="<%=request.getContextPath()%>/static/logo.jpg">
                             </td>
-                            
-                             <td  class="current_user" align="right"><%if (usr == null) {%><a> </a><%} else {%>Текущий пользователь:<a href="<%=request.getContextPath()%>/updateUser.jsp?DO=updateProfil"> <%=usr.getNik()%></a><a> Статус: <%=usr.getRoleName()%> </a><%}%></td>
+
+                            <td  class="current_user" align="right"><%if (usr == null) {%><a> </a><%} else {%>Текущий пользователь:<a href="<%=request.getContextPath()%>/updateUser.jsp?DO=updateProfil"> <%=usr.getNik()%></a>   Статус: <%=usr.getRoleName()%> <%}%></td>
                             <td class="user_nav" align="right"><%if (usr == null) {%><a href="<%=request.getContextPath()%>/login.jsp">Вход</a>   <a href="<%=request.getContextPath()%>/registration.jsp">Регистрация</a><%} else {%><a href="<%=request.getContextPath()%>/logout">Выход</a><%}%></td>
                         </tr>
                     </tbody>
@@ -104,11 +104,11 @@
                         </tr>
                     </table><br>
                     <table align="center" border="0">
-                                                <% for (int n = 0; n <= (list1.size() - 1); n++) {
-                                                          img = (ImageBeanRemote) list1.get(n);%>
-                                                          <td><img width="50%" height="50%" src="<%=request.getContextPath()%>/image?ID=<%= img.getId_img()%>"</td>
-                        <%} %>
-                         </table><br>
+                        <% for (int n = 0; n <= (list1.size() - 1); n++) {
+                                                                                  img = (ImageBeanRemote) list1.get(n);%>
+                        <td><img width="50%" height="50%" src="<%=request.getContextPath()%>/image?ID=<%= img.getId_img()%>"</td>
+                            <%}%>
+                    </table><br>
                     <br>
                     <table align="center"  border="1" width="100%">
                         <tr align="center">
@@ -123,16 +123,16 @@
                             <%}%>
                         </tr>
                         <%
-                        for (int i = 0; i <= (list.size() - 1); i++) {
+                                                      for (int i = 0; i <= (list.size() - 1); i++) {
                                                           opn = (OpinionBeanRemote) list.get(i);%>
                         <tr align="center">
                             <td width ="10%" ><%= opn.getUserName()%></td>
                             <td><%= opn.getText()%></td>
                             <td><%if (usr != null) {
-                                     if (opn.getIdUser() == usr.getId() || usr.getRoleId() <= 2) {%>
+                                                            if (opn.getIdUser() == usr.getId() || usr.getRoleId() <= 2) {%>
                                 <a href ="delComment?ID=<%=opn.getIdOpinion()%>">Удалить комментарий</a>
                                 <%}
-                                     }%></td>
+                                                            }%></td>
                                 <%}%>
                         </tr>
                     </table>
@@ -152,7 +152,7 @@
                                 </td></tr>
                         </table>
                     </form>
-                                                  
+
                     <%}
                                         }
                                     }
@@ -164,9 +164,9 @@
                                 }*/%>
                 </div>
             </div>
-                <div class="team" align="center">
-               <a href="<%=request.getContextPath()%>/aboutTeam.jsp"><font size="2">Команда </font></a>
-        </div>
+            <div class="team" align="center">
+                <a href="<%=request.getContextPath()%>/aboutTeam.jsp"><font size="2">Команда </font></a>
+            </div>
         </div>
     </body>
 </html>

@@ -30,7 +30,7 @@
                     UserBeanRemote usr = JSPHelper.getUser2(session);
                     session.setAttribute("homepage", "updateUser.jsp");
                     //  session.setAttribute("usrOld", usr);
-%>
+        %>
         <div id="container">
             <div id="header">
                 <table class="top_nav">
@@ -39,8 +39,8 @@
                             <td class="logo">
                                 <img src="/ProShop-war/static/logo.jpg">
                             </td>
-                            
-                             <td  class="current_user" align="right"><%if (usr == null) {%><a> </a><%} else {%>Текущий пользователь:<a href="<%=request.getContextPath()%>/updateUser.jsp?DO=updateProfil"> <%=usr.getNik()%></a><a> Статус: <%=usr.getRoleName()%> </a><%}%></td>
+
+                            <td  class="current_user" align="right"><%if (usr == null) {%><a> </a><%} else {%>Текущий пользователь:<a href="<%=request.getContextPath()%>/updateUser.jsp?DO=updateProfil"> <%=usr.getNik()%></a>   Статус: <%=usr.getRoleName()%> <%}%></td>
                             <td class="user_nav" align="right"><%if (usr == null) {%><a href="login.jsp">Вход</a>   <a href="registration.jsp">Регистрация</a><%} else {%><a href="logout">Выход</a><%}%></td>
                         </tr>
                     </tbody>
@@ -94,7 +94,7 @@
                     </form>
                     <%if (request.getAttribute("result") instanceof String) {%>
                     <%=request.getAttribute("result").toString()%><%}
-                                }
+                                                                    }
 
                                 if (("updateUser".equals(request.getParameter("DO")) && usr.getRoleId() == 1)) {
                                     if (session.getAttribute("userOld") == null) {
@@ -189,16 +189,16 @@
                                                         }
 
                                                         if (request.getAttribute("result") != null) {
-                                                           %>
+                    %>
                     <%=request.getAttribute("result").toString()%><%}
 
-                                }
+                                                                    }
                     %>
                 </div>
             </div>
-                <div class="team" align="center">
-               <a href="<%=request.getContextPath()%>/aboutTeam.jsp"><font size="2">Команда </font></a>
-        </div>
+            <div class="team" align="center">
+                <a href="<%=request.getContextPath()%>/aboutTeam.jsp"><font size="2">Команда </font></a>
+            </div>
         </div>
 
     </body>
