@@ -971,13 +971,22 @@ public class ExecServlet extends HttpServlet {
         try {
             HttpSession session = request.getSession();
 
-            kol_vo = request.getParameter("KOL");
+            kol_vo = request.getParameter("VOL");
             if (Integer.parseInt(kol_vo) <= 0) {
                 throw new NegativeNumberException("Введите положительное кол-во товара");
             }
-
-            String id_product = session.getAttribute("ID_PRODUCT").toString();
-
+            Object obj = session.getAttribute("ID_PRODUCT");
+            String id_product = null;
+            if (obj != null) {
+                id_product = obj.toString();
+            } else {
+                id_product = request.getParameter("ID_PRODUCT");
+                ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
+                session.setAttribute("product",productHome.findByPrimaryKey(new Long(Long.parseLong(id_product))));
+                if (id_product == null) {
+                    throw new FinderException();
+                }
+            }
 
             OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
             OrderBeanRemote order = orderHome.create(new Long(usr.getId()), new Long(Long.parseLong(id_product)), new Boolean(false), new Integer(Integer.parseInt(kol_vo)));
@@ -1419,17 +1428,18 @@ public class ExecServlet extends HttpServlet {
 
 
     }
-        protected void image(HttpServletRequest request,
+
+    protected void image(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, ParseException, IOException, LoginException {
         RequestDispatcher rd;
         HttpSession session = request.getSession();
-       // UserBeanRemote usr = JSPHelper.getUser2(session);
+        // UserBeanRemote usr = JSPHelper.getUser2(session);
         try {
-                       long id = Long.parseLong(request.getParameter("ID"));
+            long id = Long.parseLong(request.getParameter("ID"));
             ImageBeanRemoteHome imageHome = (ImageBeanRemoteHome) EJBHelper.lookupHome("ejb/ImageBean", ImageBeanRemoteHome.class);
-            ImageBeanRemote ibr=imageHome.findByPrimaryKey(new Long(id));
+            ImageBeanRemote ibr = imageHome.findByPrimaryKey(new Long(id));
             //request.setAttribute("result", list);
-            rd = request.getRequestDispatcher("Image/"+ibr.getName());
+            rd = request.getRequestDispatcher("Image/" + ibr.getName());
             rd.forward(request, response);
         } catch (FinderException ex) {
         } catch (RemoteException ex) {
@@ -1439,8 +1449,6 @@ public class ExecServlet extends HttpServlet {
         }
 
     }
-
-    
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -1452,7 +1460,7 @@ public class ExecServlet extends HttpServlet {
         try {
 
 
-             if (request.getRequestURI().equals("/ProShop-war/image")) {
+            if (request.getRequestURI().equals("/ProShop-war/image")) {
                 image(request, response);
                 return;
             }
@@ -1599,7 +1607,7 @@ public class ExecServlet extends HttpServlet {
                 return;
             }
 
-           
+
         } catch (ParseException ex) {
             Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
         } catch (LoginException ex) {

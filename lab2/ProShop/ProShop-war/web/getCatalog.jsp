@@ -68,7 +68,7 @@
                                                     if (list1.get(0) instanceof CatalogBeanRemote) {
                                                         CatalogBeanRemote ctg = (CatalogBeanRemote) list1.get(0);
                     %>
-                    <table align="center"  border="1" width="80%">
+                    <table align="center" width="100%">
                         <% for (int i = 0; i <= (list1.size() - 1); i++) {
                                                                                         ctg = (CatalogBeanRemote) list1.get(i);%>
                         <tr align="center">
@@ -82,14 +82,14 @@
                                                                             if (list1.get(0) instanceof ProductBeanRemote) {
                                                                                 ProductBeanRemote prd = (ProductBeanRemote) list1.get(0);
                     %>
-                    <table align="center"  border="1" width="100%">
+                    <table align="center"  width="100%">
                         <tr align="center">
                             <td width="70%" align="center">Название</td><td width="15%" align="center">Цена</td><td width="15%" align="center">В корзину</td>
                         </tr>
                         <% for (int i = 0; i <= (list1.size() - 1); i++) {
                                                                                             prd = (ProductBeanRemote) list1.get(i);%>
                         <tr align="center">
-                            <td><a href ="product?ID=<%=prd.getId()%>"><%= prd.getName()%></a></td><td><%= prd.getPrice()%></td><td>Пока не работает</td>
+                            <td><a href ="product?ID=<%=prd.getId()%>"><%= prd.getName()%></a></td><td><%= prd.getPrice()%></td><td><a href ="order?VOL=1&ID_PRODUCT=<%=prd.getId()%>"><%= prd.getName()%></a></td>
                         </tr>
                         <%}%>
 

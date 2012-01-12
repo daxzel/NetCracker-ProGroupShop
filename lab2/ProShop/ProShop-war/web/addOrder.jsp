@@ -66,18 +66,22 @@
                     </div>
                 </div>
                 <div id="content">
+                    <h1>Добавление продукта в корзину</h1>
+                    <%if(prd!=null){%>
                     <form name="myForm" action="order">
                         <table>
                             <tr><td>Название продукта:</td>
                             <td><a href ="product?NAME=<%=prd.getName()%>"><%= prd.getName()%></a></td>
                             <tr><td>Цена:</td>
                             <td><%=prd.getPrice()%></td></tr>
-                            <tr><td>Количество:</td><td><input type="text" name="KOL" value="<%=kol_vo%>" size="25" /></td></tr>
+                            <tr><td>Количество:</td><td><input type="text" name="VOL" value="<%=kol_vo%>" size="25" /></td></tr>
                            
                             <tr><td><input type="submit" value=" Ввод " class="Button"/></td><td></td></tr>
                         </table>
                     </form>
-                    <% if (request.getAttribute("result") != null) {%>
+                    <%}else{%>
+                    Продукт не выбран.
+                    <%}if (request.getAttribute("result") != null) {%>
                     <%=request.getAttribute("result")%>
                     <%}%>
                 </div>

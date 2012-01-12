@@ -416,7 +416,7 @@ public class XMLServlet extends HttpServlet {
                 String XMLDoc = obj.toString();
                 response.addHeader("Content-Disposition", "attachment; filename=" + "export.xml");
                 out = response.getOutputStream();
-                request.getSession().removeAttribute("XMLDoc");
+      //          request.getSession().removeAttribute("XMLDoc");
                 out.println(XMLDoc);
 
                 if (XMLDoc == null) {

@@ -100,7 +100,7 @@
                         <tr><td><a href="/ProShop-war/XML/exportProduct.jsp?poiskType=byPrice" class="first">Экспортировать продукты используя поиск по цене </a> </td></tr>
                         <tr><td><a href="/ProShop-war/XML/exportProduct.jsp?poiskType=byName">Экспортировать продукты используя поиск по имени</a></td></tr> 
                     </table>
-                    <%   }
+                    <%   }}
                     %>
                 </div>
             </div>

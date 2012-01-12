@@ -72,4 +72,4 @@ vertical-align: middle;
 
 
 }
-#menu  div.user_menu	li:hover ul { display: block; }
+#menu  div.user_menu	li:hover ul { display: block; z-index:1000;}
