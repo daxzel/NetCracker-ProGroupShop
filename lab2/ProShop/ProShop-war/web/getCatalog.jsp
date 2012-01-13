@@ -29,7 +29,7 @@
 
                     //    PrintWriter pw = response.getWriter();
                     UserBeanRemote usr = null;
-
+                    session.setAttribute("homepage", "getCatalog.jsp");
                     try {
                         usr = JSPHelper.getUser2(session);
                     } catch (LoginException ex) {
@@ -119,8 +119,8 @@
                                                                         if (obj1 instanceof String) {%>
                     <%=obj1.toString()%>
                         <%}
-                                                                    } else {%><br><p align="center">Каталог не содержит никакой информации<br></p><%}
-                                                                                                                } else {%><br><p align="center">произошла ошибка<br></p><%                                                 }%>
+                                                                                                                           } else {%><div class="warning"><p align="center">Каталог не содержит никакой информации</p></div><%}
+                                                                                                                    } else {%><div class="warning"><p align="center">Произошла ошибка</p></div><%                                                 }%>
                 </div>
             </div>
             <div class="team" align="center">

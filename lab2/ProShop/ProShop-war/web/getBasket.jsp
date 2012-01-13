@@ -103,7 +103,7 @@
                             <td width="15%" align="center">Название продукта</td>
                             <td width="25%" align="center">Цена, руб</td>
                             <td width="25%" align="center">Колличество</td>
-                            <td width="20%" align="center">Цена заказа, руб</td>
+                            <td width="20%" align="center">Цена продуктов, руб</td>
                             <%if (!ord.getStatus()) {%>
 
                             <td width="20%" align="center">Удалить заказ</td>
