@@ -152,7 +152,7 @@ public class OrderBean implements EntityBean {
             //
             status = rs.getBoolean(4);
             amount = rs.getInt(5);
-           // orderByDate = rs.getDate(6);
+            orderByDate = rs.getDate(6);
 
 
         } catch (NamingException ex) {
@@ -176,10 +176,11 @@ public class OrderBean implements EntityBean {
         PreparedStatement pst = null;
         try {
             conn = EJBHelper.getConnection();
-            pst = conn.prepareStatement("UPDATE \"ORDER\"" + "SET STATUS = ? WHERE ID_ORDER=?");
+            pst = conn.prepareStatement("UPDATE \"ORDER\" SET STATUS = ?, ORDER_BY_DATE = ? WHERE ID_ORDER=?");
             pst.setBoolean(1, status);
-            pst.setLong(2, id_order);
-           // pst.setDate(3, orderByDate);
+           
+            pst.setDate(2, orderByDate);
+             pst.setLong(3, id_order);
             if (pst.executeUpdate() < 1) {
                 throw new NoSuchEntityException("Не найдена запись");
             }
@@ -330,7 +331,7 @@ public class OrderBean implements EntityBean {
         ResultSet rs = null;
         try {
             conn = EJBHelper.getConnection();
-            pst = conn.prepareCall("BEGIN INSERT INTO \"ORDER\" " + "(ID_USER,ID_PRODUCT,STATUS,KOL_VO)" + "VALUES(?,?,?,?) RETURNING ID_ORDER INTO ?;END;");
+            pst = conn.prepareCall("BEGIN INSERT INTO \"ORDER\" (ID_USER,ID_PRODUCT,STATUS,KOL_VO)" + "VALUES(?,?,?,?) RETURNING ID_ORDER INTO ?;END;");
             pst.setLong(1, this.id_user);
             pst.setLong(2, this.id_product);
             pst.setBoolean(3, this.status);

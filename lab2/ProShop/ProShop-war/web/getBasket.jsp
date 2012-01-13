@@ -101,9 +101,9 @@
                         <tr align="center">
 
                             <td width="15%" align="center">Название продукта</td>
-                            <td width="25%" align="center">Цена</td>
-                            <td width="25%" align="center">Количество</td>
-                            <td width="20%" align="center">Цена заказа</td>
+                            <td width="25%" align="center">Цена, руб</td>
+                            <td width="25%" align="center">Колличество</td>
+                            <td width="20%" align="center">Цена заказа, руб</td>
                             <%if (!ord.getStatus()) {%>
 
                             <td width="20%" align="center">Удалить заказ</td>
@@ -112,10 +112,12 @@
                         <%
                                                                 double priceProduct;
                                                                 int amount;
+                                                                double sum = 0;
                                                                 for (int i = 0; i <= (list.size() - 1); i++) {
                                                                     ord = (OrderBeanRemote) list.get(i);
                                                                     priceProduct = ord.getPriceProduct();
                                                                     amount = ord.getAmount();
+                                                                    sum = sum + (priceProduct) * (amount);
                         %>
                         <tr align="center">
                             <td><a href ="product?ID=<%=ord.getIdProduct().longValue()%>"><%= ord.getNameProduct()%></a></td>
@@ -129,6 +131,9 @@
                         </tr>
 
                         <%}%> </table>
+                        <br>
+                        <br>
+                        <p align="right"><font size="4"> Итого:</font> <%= sum %> руб.</p>
                     <%if (!ord.getStatus()) {%><br><br>
                     <form action="updateOrderStatus">
                         <input type="submit" value=" Оформить заказ " class="Button" />
