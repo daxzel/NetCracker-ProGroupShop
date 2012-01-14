@@ -72,13 +72,18 @@
                                                         if (exception != null) {
                     %>
                     <div class="warning"><p align="center"> <%=exception.getMessage()%></p></div>
-                    <%}
-                                                        if (request.getAttribute("exception") != null) {
-                                                            Exception ex = (Exception) request.getAttribute("exception");%>
+                    <%} else {
+                                                                                if (request.getAttribute("exception") != null) {
+                                                                                    Exception ex = (Exception) request.getAttribute("exception");%>
                     <div class="warning"><p align="center">  <%=ex.getMessage()%></p></div>
-                    <%}
-                                    }
-                                }
+                    <%} else {%>
+                   <div class="warning"><p align="center"> произошла ошибка, пожалуйста обратитесь к администратору.</p></div>
+                    <%                    }
+                                                }
+                                            }
+
+
+
 
                     %>
                 </div>
@@ -88,4 +93,5 @@
             </div>
         </div>
     </body>
+    <%}%>
 </html>

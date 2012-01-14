@@ -1468,19 +1468,22 @@ public class ExecServlet extends HttpServlet {
             HttpServletResponse response) throws ServletException, IOException {
         RequestDispatcher rd;
         HttpSession session = request.getSession();
+        rd= request.getRequestDispatcher("/errorPage.jsp");
         try {
             String subtr= request.getParameter("sabstrName");
             ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
             List products= productHome.findBySubstrOfName(subtr);
             request.setAttribute("products", products);
-            rd= request.getRequestDispatcher("index.jsp");
-            rd.forward(request, response);
+            rd= request.getRequestDispatcher("/index.jsp");
+          //  rd.forward(request, response);
         } catch (FinderException ex) {
             ex.printStackTrace();
         } catch (RemoteException ex) {
             ex.printStackTrace();
         } catch (NamingException ex) {
             ex.printStackTrace();
+        }finally{
+             rd.forward(request, response);
         }
 
 

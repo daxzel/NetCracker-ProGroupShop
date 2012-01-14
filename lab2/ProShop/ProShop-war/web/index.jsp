@@ -69,32 +69,35 @@
                 </div>
                 <div id="find">
                     <form action="<%=request.getContextPath()%>/find">
-                    <input type="text" name="sabstrName" value="" size="30" class="in"/>
-                    <input type="submit" value=" Ввод " class="Button" />
+                        <input type="text" name="sabstrName" value="" size="100" class="in"/>
+                        <input type="submit" value=" Ввод " class="Button" />
                     </form>
                 </div>
                 <div id="content">
-                    <%List products = (List)request.getAttribute("products");
-                    if(products==null){%>
+                    <%List products = (List) request.getAttribute("products");
+                                            if (products == null) {%>
                     Когда руки дойдут тут появятся новости<br><br><br>
                     <br><br><br> Когда руки дойдут тут появятся новости<br><br><br><br><br>
-                    <%}else{
-                             ProductBeanRemote prd ;//= (ProductBeanRemote) products.get(0);
-                                                                            //session.setAttribute("catalog", String.valueOf(prd.getIdCatalog()));
-                    %>
+                    <%} else {
+                                                                    ProductBeanRemote prd;//= (ProductBeanRemote) products.get(0);
+                                                                    if (products.isEmpty()) {                                              //session.setAttribute("catalog", String.valueOf(prd.getIdCatalog()));
+%>
+                    По вашему запросу не найдено продуктов.
+                    <%} else {%>
                     <table align="center"  width="70%">
                         <tr>
                             <td width="40%" align="center">Название</td><td width="15%">Цена</td><td width="15%"></td>
                         </tr>
                         <% for (int i = 0; i <= (products.size() - 1); i++) {
-                                                                                                        prd = (ProductBeanRemote) products.get(i);%>
+                                                                                                    prd = (ProductBeanRemote) products.get(i);%>
                         <tr>
                             <td><a href ="product?ID=<%=prd.getId()%>"><%= prd.getName()%></a></td><td><%= prd.getPrice()%></td><td><a href ="order?VOL=1&ID_PRODUCT=<%=prd.getId()%>" class="Button">В корзину</a></td>
                         </tr>
                         <%}%>
 
                     </table>
-                        <%}%>
+                    <%}
+                                            }%>
                 </div>
             </div>
 
