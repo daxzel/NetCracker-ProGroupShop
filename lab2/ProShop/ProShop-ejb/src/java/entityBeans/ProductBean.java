@@ -500,6 +500,39 @@ public class ProductBean implements EntityBean {
         }
     }
 
+     public Collection ejbFindBySubstrOfName(java.lang.String substrName) throws ObjectNotFoundException {
+         Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            String str="*"+substrName+"*";
+            conn = EJBHelper.getConnection();
+            pst = conn.prepareStatement("SELECT ID_PRODUCT FROM PRODUCT WHERE REGEXP_LIKE(NAME,'"+str+"')");
+           // pst.setString(1, str);
+            //   pst.setLong(1, id_catalog.longValue());
+            // rs = pst.executeQuery();
+            rs = pst.executeQuery();
+            Vector keys = new Vector();
+            while (rs.next()) {
+                long id_product = rs.getLong(1);
+                keys.addElement(new Long(id_product));
+            }
+            return keys;
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new EJBException("Ошибка SELECT");
+            // e.printStackTrace();
+        } finally {
+            try {
+                EJBHelper.closeConnection(conn, pst, rs);
+            } catch (SQLException ex1) {
+                throw new EJBException("Ошибка закрытии соединия с базой");
+            }
+        }
+    }
+
     public void setParamMessage(long userId, long objId ){
       this.userId = userId;
       this.objId = objId;

@@ -114,11 +114,11 @@ div {
 display: block;
 }
 #content{
-width: 1010px;
+width: 1015px;
 border: 1px solid #D9D9D9;
 float: right;
 margin-top: 0px;
-margin-right: 0px;
+
 margin-bottom: 20px;
 margin-left: 0px;
 padding-top:10px;
@@ -168,6 +168,20 @@ a {
 }
 .Button:active{
 
+	background-image: linear-gradient(bottom, rgb(44,160,202) 0%, rgb(62,184,229) 100%);
+	background-image: -o-linear-gradient(bottom, rgb(44,160,202) 0%, rgb(62,184,229) 100%);
+	background-image: -moz-linear-gradient(bottom, rgb(44,160,202) 0%, rgb(62,184,229) 100%);
+	background-image: -webkit-linear-gradient(bottom, rgb(44,160,202) 0%, rgb(62,184,229) 100%);
+	background-image: -ms-linear-gradient(bottom, rgb(44,160,202) 0%, rgb(62,184,229) 100%);
+	background-image: -webkit-gradient(
+	linear,
+	left bottom,
+	left top,
+	color-stop(0, rgb(44,160,202)),
+	color-stop(1, rgb(62,184,229))
+	);
+}
+#find{
 	background-image: linear-gradient(bottom, rgb(62,184,229) 0%, rgb(44,160,202) 100%);
 	background-image: -o-linear-gradient(bottom, rgb(62,184,229) 0%, rgb(44,160,202) 100%);
 	background-image: -moz-linear-gradient(bottom, rgb(62,184,229) 0%, rgb(44,160,202) 100%);
@@ -177,9 +191,25 @@ a {
 	linear,
 	left bottom,
 	left top,
-	color-stop(0, rgb(62,184,229)),
-	color-stop(1, rgb(44,160,202))
+	color-stop(0, #336633),
+	color-stop(1,#33FF33)
 	);
+	width:1046px;
+	
+	padding-bottom:5px;
+	margin-bottom:6px;
+	float:right;
+}
+#find input.in{
+margin-left: 40px;
+margin-top:5px;
+
+}
+#find input{
+margin-left: 5px;
+margin-top:5px;
+padding-top:2px;
+padding-bottom:2px;
 }
 .Button .updateOrder{
 width:100px;
@@ -222,8 +252,10 @@ font-size: 17px;
 	);
 	border: solid 1px #186f8f;
 	font-weight:bold;
+	padding:8px 0px 3px 10px;
 	border-radius: 7px 7px 0px 0px;
 	color: #FFFFFF;
+	height:25px;
 }
 
 .warning{

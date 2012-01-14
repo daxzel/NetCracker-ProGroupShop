@@ -968,11 +968,11 @@ public class ExecServlet extends HttpServlet {
         UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
         RequestDispatcher rd;
         String kol_vo = "";
-     //   rd = request.getRequestDispatcher("addOrder.jsp");
+        //   rd = request.getRequestDispatcher("addOrder.jsp");
         HttpSession session = request.getSession();
         String homepage = (String) session.getAttribute("homepage");
-        if(homepage==null){
-            homepage="index.jsp";
+        if (homepage == null) {
+            homepage = "index.jsp";
         }
         rd = request.getRequestDispatcher(homepage);
         try {
@@ -1087,7 +1087,7 @@ public class ExecServlet extends HttpServlet {
         String result = "<div class=\"warning\"><p align=\"center\">Продукт не найден</p></div>";
         String homepage;
         RequestDispatcher rd = request.getRequestDispatcher("updateProduct.jsp?DO=select");
-        ;
+
         String nameProduct = request.getParameter("nameProduct");
         try {
             if (nameProduct == null) {
@@ -1464,6 +1464,28 @@ public class ExecServlet extends HttpServlet {
 
     }
 
+    protected void findProductsBySubstName(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException {
+        RequestDispatcher rd;
+        HttpSession session = request.getSession();
+        try {
+            String subtr= request.getParameter("sabstrName");
+            ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
+            List products= productHome.findBySubstrOfName(subtr);
+            request.setAttribute("products", products);
+            rd= request.getRequestDispatcher("index.jsp");
+            rd.forward(request, response);
+        } catch (FinderException ex) {
+            ex.printStackTrace();
+        } catch (RemoteException ex) {
+            ex.printStackTrace();
+        } catch (NamingException ex) {
+            ex.printStackTrace();
+        }
+
+
+    }
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         RequestDispatcher rd;
@@ -1618,6 +1640,10 @@ public class ExecServlet extends HttpServlet {
             }
             if (request.getRequestURI().equals("/ProShop-war/updateCatalog")) {
                 updateCatalog(request, response);
+                return;
+            }
+            if (request.getRequestURI().equals("/ProShop-war/find")) {
+                findProductsBySubstName(request, response);
                 return;
             }
 
