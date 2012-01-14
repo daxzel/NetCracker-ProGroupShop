@@ -70,7 +70,7 @@
                 <div id="find">
                     <form action="<%=request.getContextPath()%>/find">
                         <input type="text" name="sabstrName" value="" size="100" class="in"/>
-                        <input type="submit" value=" Ввод " class="Button" />
+                        <input type="submit" value=" Найти " class="Button1" />
                     </form>
                 </div>
                 <div id="content">
