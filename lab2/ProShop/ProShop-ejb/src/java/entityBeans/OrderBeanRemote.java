@@ -37,6 +37,8 @@ public interface OrderBeanRemote extends EJBObject {
 
     void setStatus(boolean status) throws RemoteException;
 
+    void setAmount(int amount) throws RemoteException;
+
     double getPriceProduct() throws RemoteException;
 
     double getPrice() throws RemoteException;
@@ -47,7 +49,7 @@ public interface OrderBeanRemote extends EJBObject {
 
     String getNameUser() throws FinderException, RemoteException;
 
-    void setAll(long id_user, long id_product,boolean status, int amount) throws RemoteException;
+    void setAll(long id_user, long id_product, boolean status, int amount) throws RemoteException;
 
-    void sendMessage(Long id_user,  String nameTables, String message, Long id_obj, int prior) throws RemoteException;
+    void sendMessage(Long id_user, String nameTables, String message, Long id_obj, int prior) throws RemoteException;
 }

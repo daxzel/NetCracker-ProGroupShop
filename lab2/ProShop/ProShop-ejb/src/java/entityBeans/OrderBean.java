@@ -176,11 +176,12 @@ public class OrderBean implements EntityBean {
         PreparedStatement pst = null;
         try {
             conn = EJBHelper.getConnection();
-            pst = conn.prepareStatement("UPDATE \"ORDER\" SET STATUS = ?, ORDER_BY_DATE = ? WHERE ID_ORDER=?");
+            pst = conn.prepareStatement("UPDATE \"ORDER\" SET STATUS = ?, ORDER_BY_DATE = ?, KOL_VO=? WHERE ID_ORDER=?");
             pst.setBoolean(1, status);
            
             pst.setDate(2, orderByDate);
-             pst.setLong(3, id_order);
+            pst.setInt(3, amount);
+            pst.setLong(4, id_order);
             if (pst.executeUpdate() < 1) {
                 throw new NoSuchEntityException("Не найдена запись");
             }
@@ -468,6 +469,10 @@ public class OrderBean implements EntityBean {
 
     public void setStatus(boolean status) {
         this.status = status;
+    }
+
+      public void setAmount(int amount) {
+        this.amount = amount;
     }
 
     public double getPrice() {

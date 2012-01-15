@@ -22,6 +22,10 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ExecServlet</servlet-name>
+        <url-pattern>/changeAmount</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ExecServlet</servlet-name>
         <url-pattern>/find</url-pattern>
     </servlet-mapping>
     <servlet-mapping>

@@ -135,7 +135,7 @@ a {
 .Button{
 	background-color:#3bb3e0;
 	padding:4px;
-
+	
 	font-family: 'Open Sans', sans-serif;
 	font-size:14px;
 	text-decoration:none;
@@ -182,6 +182,7 @@ a {
 	);
 }
 #find{
+border: solid 1px #186f8f;
 background-image: linear-gradient(bottom, rgb(44,160,202) 0%, rgb(62,184,229) 100%);
 	background-image: -o-linear-gradient(bottom, rgb(44,160,202) 0%, rgb(62,184,229) 100%);
 	background-image: -moz-linear-gradient(bottom, rgb(44,160,202) 0%, rgb(62,184,229) 100%);
@@ -196,8 +197,8 @@ background-image: linear-gradient(bottom, rgb(44,160,202) 0%, rgb(62,184,229) 10
 	);
 	width:1046px;
 	
-	padding-bottom:5px;
-	margin-bottom:6px;
+	padding-bottom:4px;
+	margin-bottom:5px;
 	float:right;
 }
 #find input.in{

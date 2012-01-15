@@ -1488,6 +1488,51 @@ public class ExecServlet extends HttpServlet {
 
 
     }
+    protected void changeAmount(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, ParseException, IOException, LoginException {
+        String result = "произошла ошибка";
+        UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
+        RequestDispatcher rd;
+        String amount = "";
+        //   rd = request.getRequestDispatcher("addOrder.jsp");
+        HttpSession session = request.getSession();
+        rd = request.getRequestDispatcher("getBasket.jsp");
+        String strId_product;
+        try {
+            amount = request.getParameter("amount");
+            strId_product=request.getParameter("ID_ORDER");
+            int int_amount = Integer.parseInt(amount);
+            if (Integer.parseInt(amount) <= 0) {
+                throw new NegativeNumberException("Введите положительное кол-во товара");
+            }
+           // Object obj = session.getAttribute("ID_PRODUCT");
+            long id_order =Long.parseLong(strId_product);
+            OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
+            OrderBeanRemote ord = orderHome.findByPrimaryKey(new Long(id_order));
+            ord.setAmount(int_amount);
+             //  if (session.getAttribute("homepage") = null) {
+            //     rd = request.getRequestDispatcher("getCatalog.jsp");
+            //  }
+            getOrders(request,response,false);
+            result = "<div class=\"success\"><p align=\"center\">Продукт добавлен в корзину</p></div>";
+        } catch (FinderException ex) {
+            result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
+        } catch (NegativeNumberException ex) {
+            result = "<div class=\"warning\"><p align=\"center\">Введите положительное кол-во товара</p></div>";
+        } catch (NumberFormatException ex) {
+            result = "<div class=\"warning\"><p align=\"center\">не правильный формат данных</p></div>";
+        }  catch (RemoteException ex) {
+            result = "<div class=\"warning\"><p align=\"center\">произошла ошибка при добавлении заказа</p></div>";
+        } catch (NamingException ex) {
+            result = "<div class=\"warning\"><p align=\"center\">произошла ошибка при добавлении заказа</p></div>";
+        } finally {
+          //  request.setAttribute("kol_vo", kol_vo);
+          //  request.setAttribute("result", result);
+
+          //  rd.forward(request, response);
+        }
+
+    }
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -1528,6 +1573,10 @@ public class ExecServlet extends HttpServlet {
             }
             if (request.getRequestURI().equals("/ProShop-war/updateUser")) {
                 updateUser(request, response, "updateUser");
+                return;
+            }
+            if (request.getRequestURI().equals("/ProShop-war/changeAmount")) {
+                changeAmount(request, response);
                 return;
             }
             if (request.getRequestURI().equals("/ProShop-war/updateProfil")) {
