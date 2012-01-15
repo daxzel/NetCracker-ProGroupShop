@@ -132,7 +132,7 @@ public class ExecServlet extends HttpServlet {
         } */ catch (PasswordException ex) {
             result = "<div class=\"warning\"><p align=\"center\">" + ex.getMessage() + "</p></div>";
         } catch (Exception ex) {
-            result = "Неизвестная ошибка</p></div>";
+            result = "<div class=\"warning\"><p align=\"center\">Неизвестная ошибка</p></div>";
         }
 
         request.setAttribute("result", result);
@@ -996,12 +996,19 @@ public class ExecServlet extends HttpServlet {
             }
 
             OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
-            OrderBeanRemote order = orderHome.create(new Long(usr.getId()), new Long(Long.parseLong(id_product)), new Boolean(false), new Integer(Integer.parseInt(kol_vo)));
-            order.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Добавлен заказ на товар: " + order.getNameProduct() + " пользователем: " + order.getNameUser(), new Long(order.getId()), 1);
-            //  if (session.getAttribute("homepage") = null) {
-            //     rd = request.getRequestDispatcher("getCatalog.jsp");
-            //  }
+            try {
+                orderHome.findByUserProductAndSatatus(new Long(usr.getId()), new Long(Long.parseLong(id_product)), false);
+                throw new MyException("ы уже добавили этот продукт в свою корзину.");
+            } catch (FinderException ex) {
+                OrderBeanRemote order = orderHome.create(new Long(usr.getId()), new Long(Long.parseLong(id_product)), new Boolean(false), new Integer(Integer.parseInt(kol_vo)));
+                order.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Добавлен заказ на товар: " + order.getNameProduct() + " пользователем: " + order.getNameUser(), new Long(order.getId()), 1);
+                //  if (session.getAttribute("homepage") = null) {
+                //     rd = request.getRequestDispatcher("getCatalog.jsp");
+                //  }
+            }
             result = "<div class=\"success\"><p align=\"center\">Продукт добавлен в корзину</p></div>";
+        } catch (MyException ex) {
+            result = "<div class=\"warning\"><p align=\"center\">" + ex.getMessage() + "</p></div>";
         } catch (FinderException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
         } catch (NegativeNumberException ex) {
@@ -1468,26 +1475,38 @@ public class ExecServlet extends HttpServlet {
             HttpServletResponse response) throws ServletException, IOException {
         RequestDispatcher rd;
         HttpSession session = request.getSession();
-        rd= request.getRequestDispatcher("/errorPage.jsp");
+        String result = "";
+        rd = request.getRequestDispatcher("/errorPage.jsp");
         try {
-            String subtr= request.getParameter("sabstrName");
+            String subtr = request.getParameter("sabstrName");
+            if ("".equals(subtr) || subtr == null) {
+                result = "<div class=\"warning\"><p align=\"center\">Введите название продукта</p></div>";
+                throw new ProductException(result);
+            }
             ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
-            List products= productHome.findBySubstrOfName(subtr);
+            List products = productHome.findBySubstrOfName(subtr);
             request.setAttribute("products", products);
-            rd= request.getRequestDispatcher("/index.jsp");
-          //  rd.forward(request, response);
+            rd = request.getRequestDispatcher("/index.jsp");
+            //  rd.forward(request, response);
+        } catch (ProductException ex) {
+            request.setAttribute("result", ex.getMessage());
+            rd = request.getRequestDispatcher("/index.jsp");
         } catch (FinderException ex) {
-            ex.printStackTrace();
+            result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
+            request.setAttribute("result", result);
         } catch (RemoteException ex) {
-            ex.printStackTrace();
+            result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
+            request.setAttribute("result", result);
         } catch (NamingException ex) {
-            ex.printStackTrace();
-        }finally{
-             rd.forward(request, response);
+            result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
+            request.setAttribute("result", result);
+        } finally {
+            rd.forward(request, response);
         }
 
 
     }
+
     protected void changeAmount(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, ParseException, IOException, LoginException {
         String result = "произошла ошибка";
@@ -1500,20 +1519,20 @@ public class ExecServlet extends HttpServlet {
         String strId_product;
         try {
             amount = request.getParameter("amount");
-            strId_product=request.getParameter("ID_ORDER");
+            strId_product = request.getParameter("ID_ORDER");
             int int_amount = Integer.parseInt(amount);
             if (Integer.parseInt(amount) <= 0) {
                 throw new NegativeNumberException("Введите положительное кол-во товара");
             }
-           // Object obj = session.getAttribute("ID_PRODUCT");
-            long id_order =Long.parseLong(strId_product);
+            // Object obj = session.getAttribute("ID_PRODUCT");
+            long id_order = Long.parseLong(strId_product);
             OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
             OrderBeanRemote ord = orderHome.findByPrimaryKey(new Long(id_order));
             ord.setAmount(int_amount);
-             //  if (session.getAttribute("homepage") = null) {
+            //  if (session.getAttribute("homepage") = null) {
             //     rd = request.getRequestDispatcher("getCatalog.jsp");
             //  }
-            getOrders(request,response,false);
+            getOrders(request, response, false);
             result = "<div class=\"success\"><p align=\"center\">Продукт добавлен в корзину</p></div>";
         } catch (FinderException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
@@ -1521,15 +1540,14 @@ public class ExecServlet extends HttpServlet {
             result = "<div class=\"warning\"><p align=\"center\">Введите положительное кол-во товара</p></div>";
         } catch (NumberFormatException ex) {
             result = "<div class=\"warning\"><p align=\"center\">не правильный формат данных</p></div>";
-        }  catch (RemoteException ex) {
+        } catch (RemoteException ex) {
             result = "<div class=\"warning\"><p align=\"center\">произошла ошибка при добавлении заказа</p></div>";
         } catch (NamingException ex) {
             result = "<div class=\"warning\"><p align=\"center\">произошла ошибка при добавлении заказа</p></div>";
         } finally {
-          //  request.setAttribute("kol_vo", kol_vo);
-          //  request.setAttribute("result", result);
-
-          //  rd.forward(request, response);
+            //  request.setAttribute("kol_vo", kol_vo);
+            //  request.setAttribute("result", result);
+            //  rd.forward(request, response);
         }
 
     }

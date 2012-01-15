@@ -74,14 +74,20 @@
                     </form>
                 </div>
                 <div id="content">
-                    <%List products = (List) request.getAttribute("products");
-                                            if (products == null) {%>
+                    <%
+                                            List products = (List) request.getAttribute("products");
+                                            String result = (String) request.getAttribute("result");
+                                            if (products == null) {
+                                                if (result != null) {%>
+                    <%=result%>
+                    <%} else {%>
                     Когда руки дойдут тут появятся новости<br><br><br>
                     <br><br><br> Когда руки дойдут тут появятся новости<br><br><br><br><br>
-                    <%} else {
+                    <%}
+                                                                } else {
                                                                     ProductBeanRemote prd;//= (ProductBeanRemote) products.get(0);
                                                                     if (products.isEmpty()) {                                              //session.setAttribute("catalog", String.valueOf(prd.getIdCatalog()));
-%>
+                    %>
                     По вашему запросу не найдено продуктов.
                     <%} else {%>
                     <table align="center"  width="70%">

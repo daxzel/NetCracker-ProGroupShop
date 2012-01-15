@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 import javax.ejb.CreateException;
+import javax.ejb.DuplicateKeyException;
 import javax.ejb.EJBException;
 import javax.ejb.EntityBean;
 import javax.ejb.EntityContext;
@@ -46,7 +47,7 @@ public class ProductBean implements EntityBean {
     private String name;
     private double price;
     private long userId;
-     private long objId;
+    private long objId;
 
     // <editor-fold defaultstate="collapsed" desc="EJB infrastructure methods. Click the + sign on the left to edit the code.">
     // TODO Add code to acquire and use other enterprise resources (DataSource, JMS, enterprise beans, Web services)
@@ -101,15 +102,15 @@ public class ProductBean implements EntityBean {
             pst = conn.prepareStatement("DELETE FROM \"PRODUCT\" WHERE ID_PRODUCT = ?");
             pst.setLong(1, id_product);
 
-           //  EJBHelper.sendMessage(new HistoryMessage(userId,"PRODUCT","Удален продукт",objId));
+            //  EJBHelper.sendMessage(new HistoryMessage(userId,"PRODUCT","Удален продукт",objId));
 
             if (pst.executeUpdate() < 1) {
                 throw new RemoveException("Ошибка удаления");
             }
             // conn.commit();
 
-        //  } catch (JMSException ex){
-       //     throw new EJBException("Ошибка jms");
+            //  } catch (JMSException ex){
+            //     throw new EJBException("Ошибка jms");
         } catch (NamingException ex) {
             throw new EJBException("Ошибка при удалении");
         } catch (SQLException ex) {
@@ -175,15 +176,15 @@ public class ProductBean implements EntityBean {
             pst.setDouble(4, price);
             pst.setLong(5, id_product);
 
-          //  EJBHelper.sendMessage(new HistoryMessage(userId,"PRODUCT","Изменен продукт",objId));
+            //  EJBHelper.sendMessage(new HistoryMessage(userId,"PRODUCT","Изменен продукт",objId));
 
 
 
             if (pst.executeUpdate() < 1) {
                 throw new NoSuchEntityException("Не найдена запись");
             }
-       // } catch (JMSException ex){
-        //    throw new EJBException("Ошибка jms");
+            // } catch (JMSException ex){
+            //    throw new EJBException("Ошибка jms");
         } catch (NamingException ex) {
             throw new EJBException("Ошибка UPDATE");
         } catch (SQLException e) {
@@ -221,7 +222,7 @@ public class ProductBean implements EntityBean {
             }
             this.id_product = pst.getLong(5);
 
-           //  EJBHelper.sendMessage(new HistoryMessage(userId,"PRODUCT","Добавлен продукт",pst.getLong(5)));
+            //  EJBHelper.sendMessage(new HistoryMessage(userId,"PRODUCT","Добавлен продукт",pst.getLong(5)));
 
             return new Long(this.id_product);
         } catch (RemoteException ex) {
@@ -229,7 +230,13 @@ public class ProductBean implements EntityBean {
         } catch (NamingException ex) {
             throw new EJBException("Произошла ошибка добавления");
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            String str = ex.getMessage();
+
+            str = str.substring(0, 55);
+            if ("ORA-00001: unique constraint (JURA.UNIQUE_NAME_PRODUCT)".equals(str)) {
+                throw new DuplicateKeyException("Продукт с таким названием уже существует");
+            }
+            //ex.printStackTrace();
             throw new EJBException("Произошла ошибка добавления");
         } finally {
 
@@ -242,8 +249,8 @@ public class ProductBean implements EntityBean {
         }
     }
 
-     public java.lang.Long ejbCreate(java.lang.Long id, java.lang.String description,
-             java.lang.String name_catalog, java.lang.String name, double price) throws CreateException, FinderException {
+    public java.lang.Long ejbCreate(java.lang.Long id, java.lang.String description,
+            java.lang.String name_catalog, java.lang.String name, double price) throws CreateException, FinderException {
         //try {
         //  ejbFindByName(name);
         //throw new DuplicateKeyException("Продукт с таким именем уже существует");
@@ -277,6 +284,12 @@ public class ProductBean implements EntityBean {
         } catch (NamingException ex) {
             throw new EJBException("Произошла ошибка добавления");
         } catch (SQLException ex) {
+            String str = ex.getMessage();
+
+            str = str.substring(0, 55);
+            if ("ORA-00001: unique constraint (JURA.UNIQUE_NAME_PRODUCT)".equals(str)) {
+                throw new DuplicateKeyException("Продукт с таким названием уже существует");
+            }
             throw new EJBException("Произошла ошибка добавления");
         } finally {
 
@@ -289,8 +302,8 @@ public class ProductBean implements EntityBean {
         }
     }
 
-     public java.lang.Long ejbCreate(java.lang.Long id, java.lang.String description,
-             long catalog_id, java.lang.String name, double price) throws CreateException, FinderException {
+    public java.lang.Long ejbCreate(java.lang.Long id, java.lang.String description,
+            long catalog_id, java.lang.String name, double price) throws CreateException, FinderException {
         //try {
         //  ejbFindByName(name);
         //throw new DuplicateKeyException("Продукт с таким именем уже существует");
@@ -298,18 +311,18 @@ public class ProductBean implements EntityBean {
         //}
         this.id_product = id.longValue();
         this.description = description;
-        
-         Connection conn = null;
-         CallableStatement pst = null;
-         ResultSet rs = null;
-        
-         try {
+
+        Connection conn = null;
+        CallableStatement pst = null;
+        ResultSet rs = null;
+
+        try {
             conn = EJBHelper.getConnection();
             this.id_catalog = catalog_id;
             this.name = name;
             this.price = price;
 
-       
+
 
             conn = EJBHelper.getConnection();
             pst = conn.prepareCall("INSERT INTO \"PRODUCT\" " + "(ID_PRODUCT,DESCRIPTION,ID_CATALOG,NAME,PRICE)" + "VALUES(?,?,?,?,?)");
@@ -323,9 +336,15 @@ public class ProductBean implements EntityBean {
                 throw new CreateException("Ошибка вставки");
             }
             return new Long(this.id_product);
-        }  catch (NamingException ex) {
+        } catch (NamingException ex) {
             throw new EJBException("Произошла ошибка добавления");
         } catch (SQLException ex) {
+            String str = ex.getMessage();
+
+            str = str.substring(0, 55);
+            if ("ORA-00001: unique constraint (JURA.UNIQUE_NAME_PRODUCT)".equals(str)) {
+                throw new DuplicateKeyException("Продукт с таким названием уже существует");
+            }
             throw new EJBException("Произошла ошибка добавления");
         } finally {
 
@@ -337,7 +356,6 @@ public class ProductBean implements EntityBean {
 
         }
     }
-
 
     public void ejbPostCreate(java.lang.String description, java.lang.String name_catalog, java.lang.String name, double price) throws CreateException {
     }
@@ -417,7 +435,7 @@ public class ProductBean implements EntityBean {
             if (flag) {
                 pst = conn.prepareStatement("SELECT ID_PRODUCT FROM \"PRODUCT\" WHERE PRICE >= ?");
             } else {
-                 pst = conn.prepareStatement("SELECT ID_PRODUCT FROM \"PRODUCT\" WHERE PRICE <= ?");
+                pst = conn.prepareStatement("SELECT ID_PRODUCT FROM \"PRODUCT\" WHERE PRICE <= ?");
             }
             pst.setDouble(1, price);
             // rs = pst.executeQuery();
@@ -485,7 +503,7 @@ public class ProductBean implements EntityBean {
             if (!resultSet.next()) {
                 throw new ObjectNotFoundException("Запись не найдена");
             }
-            Long id = new Long(resultSet.getLong(2) );
+            Long id = new Long(resultSet.getLong(2));
             return id;
         } catch (NamingException ex) {
             throw new EJBException("Ошибка SELECT");
@@ -500,15 +518,15 @@ public class ProductBean implements EntityBean {
         }
     }
 
-     public Collection ejbFindBySubstrOfName(java.lang.String substrName) throws ObjectNotFoundException {
-         Connection conn = null;
+    public Collection ejbFindBySubstrOfName(java.lang.String substrName) throws ObjectNotFoundException {
+        Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
         try {
-            String str="*"+substrName+"*";
+            String str = "*" + substrName + "*";
             conn = EJBHelper.getConnection();
-            pst = conn.prepareStatement("SELECT ID_PRODUCT FROM PRODUCT WHERE REGEXP_LIKE(NAME,'"+str+"')");
-           // pst.setString(1, str);
+            pst = conn.prepareStatement("SELECT ID_PRODUCT FROM PRODUCT WHERE REGEXP_LIKE(NAME,'" + str + "')");
+            // pst.setString(1, str);
             //   pst.setLong(1, id_catalog.longValue());
             // rs = pst.executeQuery();
             rs = pst.executeQuery();
@@ -533,14 +551,15 @@ public class ProductBean implements EntityBean {
         }
     }
 
-    public void setParamMessage(long userId, long objId ){
-      this.userId = userId;
-      this.objId = objId;
+    public void setParamMessage(long userId, long objId) {
+        this.userId = userId;
+        this.objId = objId;
     }
 
-        public void setParamMessage(long userId ){
-      this.userId = userId;
+    public void setParamMessage(long userId) {
+        this.userId = userId;
     }
+
     public long getIdCatalog() {
         return id_catalog;
     }
@@ -599,15 +618,14 @@ public class ProductBean implements EntityBean {
         price = nprice.doubleValue();
     }
 
-    public void setAll(java.lang.String description, long id_catalog, java.lang.String name, double price) throws FinderException,SQLException,NamingException,RemoteException
-    {
+    public void setAll(java.lang.String description, long id_catalog, java.lang.String name, double price) throws FinderException, SQLException, NamingException, RemoteException {
         this.description = description;
         this.id_catalog = id_catalog;
         this.name = name;
         this.price = price;
     }
 
- public void sendMessage(Long id_user,  String nameTables, String message, Long id_obj, int prior) {
+    public void sendMessage(Long id_user, String nameTables, String message, Long id_obj, int prior) {
         try {
             EJBHelper.sendMessage(new HistoryMessage(id_user, nameTables, message, id_obj), prior);
         } catch (EJBException ex) {
@@ -616,7 +634,4 @@ public class ProductBean implements EntityBean {
             ex.printStackTrace();
         }
     }
-
-
-    
 }

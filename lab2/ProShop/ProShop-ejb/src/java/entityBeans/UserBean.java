@@ -442,11 +442,11 @@ public class UserBean implements EntityBean {
     }
 
     public java.lang.Long ejbCreate(String name, String surname, String otchestvo, String nik, String password, java.sql.Date born, String phone, String email, java.lang.Long id_role) throws CreateException {
-        try {
-            ejbFindByNik(nik);
-            throw new DuplicateKeyException("Пользователь с таким ником уже существует");
-        } catch (ObjectNotFoundException ex) {
-        }
+       // try {
+       //     ejbFindByNik(nik);
+         //   throw new DuplicateKeyException("Пользователь с таким ником уже существует");
+        //} catch (ObjectNotFoundException ex) {
+        //}
         this.name = name;
         this.surname = surname;
         this.otchestvo = otchestvo;
@@ -490,6 +490,16 @@ public class UserBean implements EntityBean {
         } catch (NamingException ex) {
             throw new EJBException("Произошла ошибка добавления");
         } catch (SQLException ex) {
+        //    ex.printStackTrace();
+            String str = ex.getMessage();
+          //  str=str.trim();
+            str=str.substring(0, 51);
+         //   String r = ex.getSQLState();
+          //  ex.
+            if("ORA-00001: unique constraint (JURA.NIK_USER_UNIQUE)".equals(str)){
+                throw new DuplicateKeyException("Пользователь с таким ником уже существует");
+            }
+         //   int g = ex.getErrorCode();
             throw new EJBException("Произошла ошибка добавления");
         } finally {
 
@@ -503,14 +513,14 @@ public class UserBean implements EntityBean {
     }
 
     public java.lang.Long ejbCreate(java.lang.Long id,String name, String surname, String otchestvo, String nik, String password, java.sql.Date born, String phone, String email, java.lang.Long id_role) throws CreateException {
-        try
-        {
-            ejbFindByNik(nik);
-            throw new DuplicateKeyException("Пользователь с таким ником уже существует");
-        } 
-        catch (ObjectNotFoundException ex)
-        {
-        }
+        //try
+       // {
+         //   ejbFindByNik(nik);
+          //  throw new DuplicateKeyException("Пользователь с таким ником уже существует");
+        //}
+        //catch (ObjectNotFoundException ex)
+        //{
+        //}
         this.id_user = id.longValue();
         this.name = name;
         this.surname = surname;
@@ -538,7 +548,7 @@ public class UserBean implements EntityBean {
             pst.setDate(7, born);
             pst.setString(8, phone);
             pst.setString(9, email);
-           pst.setDate(10, date);
+            pst.setDate(10, date);
             pst.setLong(11, id_role.longValue());
             rs = pst.executeQuery();
             if (!rs.next()) {
@@ -548,6 +558,14 @@ public class UserBean implements EntityBean {
         } catch (NamingException ex) {
             throw new EJBException("Произошла ошибка добавления");
         } catch (SQLException ex) {
+              String str = ex.getMessage();
+          //  str=str.trim();
+            str=str.substring(0, 51);
+         //   String r = ex.getSQLState();
+          //  ex.
+            if("ORA-00001: unique constraint (JURA.NIK_USER_UNIQUE)".equals(str)){
+                throw new DuplicateKeyException("Пользователь с таким ником уже существует");
+            }
             throw new EJBException("Произошла ошибка добавления");
         } finally {
 
