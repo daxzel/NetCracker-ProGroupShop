@@ -113,6 +113,7 @@
                             <%
                                                                     double priceProduct;
                                                                     int amount;
+                                                                    
                                                                     double sum = 0;
                                                                     for (int i = 0; i <= (list.size() - 1); i++) {
                                                                         ord = (OrderBeanRemote) list.get(i);
@@ -124,7 +125,8 @@
                             <tr align="center">
                                 <td><a href ="product?ID=<%=ord.getIdProduct().longValue()%>"><%= ord.getNameProduct()%></a></td>
                                 <td><%= priceProduct%></td>
-                                <td><input type="text" value="<%=  amount%>" name="amount" size="4"></td>
+
+                                <td> <%if (!ord.getStatus()) {%><input type="text" value="<%=  amount%>" name="amount" size="4"><%}else{%><%=amount%><%}%></td>
 
                                 <td><%= (priceProduct) * (amount)%></td>
                                 <%if (!ord.getStatus()) {%>

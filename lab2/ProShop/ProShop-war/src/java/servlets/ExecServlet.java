@@ -698,14 +698,24 @@ public class ExecServlet extends HttpServlet {
         RequestDispatcher rd;
         HttpSession session = request.getSession();
         UserBeanRemote usr = JSPHelper.getUser2(session);
+        ProductBeanRemote product = (ProductBeanRemote) session.getAttribute("product");
         try {
-            ProductBeanRemote product = (ProductBeanRemote) session.getAttribute("product");
+            //    ProductBeanRemote product = (ProductBeanRemote) session.getAttribute("product");
             String text = request.getParameter("COMMENT");
+
+            if ("".equals(text.trim()) || text == null||text.trim().isEmpty()) {
+                throw new MyException("Введите текст комментария.");
+            }
             OpinionBeanRemoteHome opinionHome = (OpinionBeanRemoteHome) EJBHelper.lookupHome("ejb/OpinionBean", OpinionBeanRemoteHome.class);
             OpinionBeanRemote obr = opinionHome.create(new Long(product.getId()), new Long(usr.getId()), text);
             obr.sendMessage(new Long(usr.getId()), "\"OPINION\"", "Добавлен коментарий о продукте " + product.getName() + " от пользователя: " + obr.getUserName(), new Long(obr.getIdOpinion()), 1);
             rd = request.getRequestDispatcher("getOpinion.jsp");
             request.setAttribute("result", product);
+            rd.forward(request, response);
+        } catch (MyException ex) {
+            rd = request.getRequestDispatcher("getOpinion.jsp");
+            request.setAttribute("result", product);
+            request.setAttribute("result2", "<div class=\"warning\"><p align=\"center\">" + ex.getMessage() + "</p></div>");
             rd.forward(request, response);
         } catch (CreateException ex) {
             ex.printStackTrace();
@@ -998,7 +1008,7 @@ public class ExecServlet extends HttpServlet {
             OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
             try {
                 orderHome.findByUserProductAndSatatus(new Long(usr.getId()), new Long(Long.parseLong(id_product)), false);
-                throw new MyException("ы уже добавили этот продукт в свою корзину.");
+                throw new MyException("Вы уже добавили этот продукт в свою корзину.");
             } catch (FinderException ex) {
                 OrderBeanRemote order = orderHome.create(new Long(usr.getId()), new Long(Long.parseLong(id_product)), new Boolean(false), new Integer(Integer.parseInt(kol_vo)));
                 order.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Добавлен заказ на товар: " + order.getNameProduct() + " пользователем: " + order.getNameUser(), new Long(order.getId()), 1);
@@ -1533,17 +1543,25 @@ public class ExecServlet extends HttpServlet {
             //     rd = request.getRequestDispatcher("getCatalog.jsp");
             //  }
             getOrders(request, response, false);
-            result = "<div class=\"success\"><p align=\"center\">Продукт добавлен в корзину</p></div>";
+            //result = "<div class=\"success\"><p align=\"center\">Продукт добавлен в корзину</p></div>";
         } catch (FinderException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
         } catch (NegativeNumberException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Введите положительное кол-во товара</p></div>";
+            request.setAttribute("result2", result);
+            getOrders(request, response, false);
         } catch (NumberFormatException ex) {
-            result = "<div class=\"warning\"><p align=\"center\">не правильный формат данных</p></div>";
+            result = "<div class=\"warning\"><p align=\"center\">Не правильный формат данных</p></div>";
+            request.setAttribute("result2", result);
+            getOrders(request, response, false);
         } catch (RemoteException ex) {
-            result = "<div class=\"warning\"><p align=\"center\">произошла ошибка при добавлении заказа</p></div>";
+            result = "<div class=\"warning\"><p align=\"center\">произошла ошибка</p></div>";
+            request.setAttribute("result2", result);
+            getOrders(request, response, false);
         } catch (NamingException ex) {
-            result = "<div class=\"warning\"><p align=\"center\">произошла ошибка при добавлении заказа</p></div>";
+            result = "<div class=\"warning\"><p align=\"center\">произошла ошибка</p></div>";
+            request.setAttribute("result2", result);
+            getOrders(request, response, false);
         } finally {
             //  request.setAttribute("kol_vo", kol_vo);
             //  request.setAttribute("result", result);

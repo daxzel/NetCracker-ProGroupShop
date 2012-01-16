@@ -105,7 +105,7 @@
                     </table><br>
                     <table align="center" border="0">
                         <% for (int n = 0; n <= (list1.size() - 1); n++) {
-                                                                                  img = (ImageBeanRemote) list1.get(n);%>
+                                                          img = (ImageBeanRemote) list1.get(n);%>
                         <td><img width="50%" height="50%" src="<%=request.getContextPath()%>/image?ID=<%= img.getId_img()%>"</td>
                             <%}%>
                     </table><br>
@@ -125,14 +125,14 @@
                         <%
                                                       for (int i = 0; i <= (list.size() - 1); i++) {
                                                           opn = (OpinionBeanRemote) list.get(i);%>
-                        <tr align="center">
-                            <td width ="10%" ><%= opn.getUserName()%></td>
+                        <tr>
+                            <td width ="10%" align="center"><%= opn.getUserName()%></td>
                             <td><%= opn.getText()%></td>
-                            <td><%if (usr != null) {
-                                                            if (opn.getIdUser() == usr.getId() || usr.getRoleId() <= 2) {%>
+                            <td align="center"><%if (usr != null) {
+                                                                                          if (opn.getIdUser() == usr.getId() || usr.getRoleId() <= 2) {%>
                                 <a href ="delComment?ID=<%=opn.getIdOpinion()%>">Удалить комментарий</a>
                                 <%}
-                                                            }%></td>
+                                                                                          }%></td>
                                 <%}%>
                         </tr>
                     </table>
@@ -154,8 +154,10 @@
                     </form>
 
                     <%}
-                                        }
-                                    }
+                          }if(request.getAttribute("result2") instanceof String){
+                    %>
+                    <%=request.getAttribute("result2")%>
+                    <%}}
                                 }
                                 /*}else{
                                 RequestDispatcher rd;
