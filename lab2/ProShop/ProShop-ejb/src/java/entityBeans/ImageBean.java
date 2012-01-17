@@ -416,7 +416,9 @@ public class ImageBean implements EntityBean {
     }
 */
      public java.lang.Long ejbCreate(long i_id_product,String i_name,  int i_width, int i_height)  throws CreateException {
-        this.id_product=i_id_product;
+
+
+         this.id_product=i_id_product;
         this.name = i_name;
         this.width = i_width;
         this.height= i_height;

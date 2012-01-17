@@ -35,9 +35,17 @@ import javax.sql.*;
 import javax.ejb.*;
 import helpers.EJBHelper;
 import java.io.*;
+import java.net.URISyntaxException;
+import java.net.URL;
 import javax.ejb.*;
+import javax.servlet.ServletContext;
 import menu.Menu;
 import moreTools.CatalogNode;
+import org.apache.commons.fileupload.*;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.*;
 
 /**
  *
@@ -1458,6 +1466,121 @@ public class ExecServlet extends HttpServlet {
 
     }
 
+        protected void addImage(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException, LoginException {
+        RequestDispatcher rd;
+
+        HttpSession session = request.getSession();
+        UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
+        if (usr.getRoleId() > 2) {
+            throw new LoginException("Вы не обладаете правами администратора");
+        }
+        String result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка при добавлении картинки</p></div>";
+
+       
+        String name = null;
+        int width = 0;
+        int height = 0;
+        String page = "add_image.jsp";
+        String nameProduct = null;
+
+        try {
+
+            
+
+        DiskFileItemFactory factory = new DiskFileItemFactory();
+        factory.setSizeThreshold(1024*1024);
+        File tempDir = (File)getServletContext().getAttribute("javax.servlet.context.tempdir");
+        factory.setRepository(tempDir);
+
+        ServletFileUpload upload = new ServletFileUpload(factory);
+
+        upload.setSizeMax(1024 * 1024 * 10);
+
+        moreTools.SerializbleImage im = null;
+
+
+            List items = upload.parseRequest(request);
+
+            Iterator iter = items.iterator();
+            while (iter.hasNext())
+            {
+                FileItem item = (FileItem) iter.next();
+                if (!item.isFormField())
+                {
+                    File uploadetFile = null;
+
+                  int sub1 = getServletContext().getRealPath("/").indexOf("Jurada");
+                   String path = getServletContext().getRealPath("/").substring(0,sub1)+ "Jurada/lab2/ProShop/ProShop-war/web/Image/" + item.getName();;
+
+
+                    uploadetFile = new File(path);
+
+                    uploadetFile.createNewFile();
+                     item.write(uploadetFile);
+
+                     im = new moreTools.SerializbleImage(item.getInputStream());
+                    
+                     width = im.getWidth();
+                      height = im.getHeight();
+                      name = item.getName();
+
+                }
+                else
+                {
+                    String fieldName = item.getFieldName();
+                    
+                        if (fieldName.equals("NAMEPRODUCT"))
+                        {
+                            nameProduct = item.getString("UTF-8");
+                        }
+
+                    
+                }
+            }
+
+            if ("".equals(nameProduct)) {
+                throw new ProductException("Введите название продукта");
+            }
+
+        ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
+        ProductBeanRemote pbr = productHome.findByName(nameProduct);
+
+            ImageBeanRemoteHome imageHome = (ImageBeanRemoteHome) EJBHelper.lookupHome("ejb/ImageBean", ImageBeanRemoteHome.class);
+            ImageBeanRemote imageBean=imageHome.create(pbr.getId(), name, width, height);
+
+
+            result = "<div class=\"success\"><p align=\"center\">Изображение добавлено</p></div>";
+            page = "add_image.jsp";
+
+         } catch (ProductException ex) {
+            result ="<div class=\"warning\"><p align=\"center\">Введите название продукта</p></div>";
+            
+         
+        } catch (FinderException ex) {
+            result ="<div class=\"warning\"><p align=\"center\">Продукт не найден</p></div>";
+            
+         
+        } catch (NamingException ex) {
+            result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка при добавлении картинки</p></div>";
+          
+        } catch (CreateException ex) {
+            result ="<div class=\"warning\"><p align=\"center\">Произошла ошибка при добавлении картинки</p></div>";
+            
+        } catch (NumberFormatException ex) {
+            result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка при добавлении картинки</p></div>";
+            
+        } catch (Throwable ex) {
+            result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
+        } finally {
+            request.setAttribute("result", result);
+            rd = request.getRequestDispatcher(page);
+            rd.forward(request, response);
+        }
+
+
+    }
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         RequestDispatcher rd;
@@ -1467,7 +1590,10 @@ public class ExecServlet extends HttpServlet {
         // response.setContentType("UTF-8");
         try {
 
-
+            if (request.getRequestURI().equals("/ProShop-war/addImage")) {
+                addImage(request, response);
+                return;
+            }
             if (request.getRequestURI().equals("/ProShop-war/image")) {
                 image(request, response);
                 return;
