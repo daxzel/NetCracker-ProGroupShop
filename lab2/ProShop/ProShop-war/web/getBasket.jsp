@@ -84,7 +84,7 @@
                         У вас нет продуктов в корзине
                     </div>
                     <%}
-                                                                if ("true".equals(status)) {%>
+                                                            if ("true".equals(status)) {%>
                     <div class="emptyBasket">
                         Ваша история заказов пуста
                     </div>
@@ -97,43 +97,50 @@
                                                         } else {
                                                             OrderBeanRemote ord = (OrderBeanRemote) list.get(0);
                     %>
-                    <table align="center"  border="1" width="100%">
-                        <tr align="center">
+                    <form action="changeAmount">
+                        <table align="center"  border="1" width="100%">
+                            <tr align="center">
 
-                            <td width="15%" align="center">Название продукта</td>
-                            <td width="25%" align="center">Цена, руб</td>
-                            <td width="25%" align="center">Колличество</td>
-                            <td width="20%" align="center">Цена заказа, руб</td>
-                            <%if (!ord.getStatus()) {%>
+                                <td width="15%" align="center">Название продукта</td>
+                                <td width="25%" align="center">Цена, руб</td>
+                                <td width="25%" align="center">Колличество</td>
+                                <td width="20%" align="center">Цена продуктов, руб</td>
+                                <%if (!ord.getStatus()) {%>
+                                <td width="10%" align="center">Изменить количество продуктов</td>
+                                <td width="10%" align="center">Удалить продукт</td>
+                                <%}%>
+                            </tr>
+                            <%
+                                                                    double priceProduct;
+                                                                    int amount;
+                                                                    
+                                                                    double sum = 0;
+                                                                    for (int i = 0; i <= (list.size() - 1); i++) {
+                                                                        ord = (OrderBeanRemote) list.get(i);
+                                                                        priceProduct = ord.getPriceProduct();
+                                                                        amount = ord.getAmount();
+                                                                        sum = sum + (priceProduct) * (amount);
+                            %>
 
-                            <td width="20%" align="center">Удалить заказ</td>
-                            <%}%>
-                        </tr>
-                        <%
-                                                                double priceProduct;
-                                                                int amount;
-                                                                double sum = 0;
-                                                                for (int i = 0; i <= (list.size() - 1); i++) {
-                                                                    ord = (OrderBeanRemote) list.get(i);
-                                                                    priceProduct = ord.getPriceProduct();
-                                                                    amount = ord.getAmount();
-                                                                    sum = sum + (priceProduct) * (amount);
-                        %>
-                        <tr align="center">
-                            <td><a href ="product?ID=<%=ord.getIdProduct().longValue()%>"><%= ord.getNameProduct()%></a></td>
-                            <td><%= priceProduct%></td>
-                            <td><%=  amount%></td>
-                            <td><%= (priceProduct) * (amount)%></td>
-                            <%if (!ord.getStatus()) {%>
+                            <tr align="center">
+                                <td><a href ="product?ID=<%=ord.getIdProduct().longValue()%>"><%= ord.getNameProduct()%></a></td>
+                                <td><%= priceProduct%></td>
 
-                            <td><a href ="deleteOrder?id_order=<%=ord.getId()%>">удалить продукт</a></td>
-                            <%}%>
-                        </tr>
+                                <td> <%if (!ord.getStatus()) {%><input type="text" value="<%=  amount%>" name="amount" size="4"><%}else{%><%=amount%><%}%></td>
 
-                        <%}%> </table>
-                        <br>
-                        <br>
-                        <p align="right"><font size="4"> Итого:</font> <%= sum %> руб.</p>
+                                <td><%= (priceProduct) * (amount)%></td>
+                                <%if (!ord.getStatus()) {%>
+                                <td width="10%"> <input type="submit" value="Изменить кол-во" class="Button" width="60px"/></td>
+                                <td width="10%"><a href ="deleteOrder?id_order=<%=ord.getId()%>">удалить продукт</a></td>
+                                <%}%>
+
+                            </tr>
+                            <input type="hidden" value="<%=  ord.getId()%>" name="ID_ORDER">
+                            <%}%> </table>
+                    </form>
+                    <br>
+                    <br>
+                    <p align="right"><font size="4"> Итого:</font> <%= sum%> руб.</p>
                     <%if (!ord.getStatus()) {%><br><br>
                     <form action="updateOrderStatus">
                         <input type="submit" value=" Оформить заказ " class="Button" />

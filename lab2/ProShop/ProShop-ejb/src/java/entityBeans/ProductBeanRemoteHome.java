@@ -31,5 +31,7 @@ public interface ProductBeanRemoteHome extends EJBHome {
 
     public java.util.List findAll() throws FinderException, RemoteException;
 
+    public java.util.List findBySubstrOfName(java.lang.String substrName) throws FinderException, RemoteException;
+
 
 }

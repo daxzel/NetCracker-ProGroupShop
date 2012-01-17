@@ -37,53 +37,52 @@ import org.jdom.output.XMLOutputter;
 public class XMLServlet extends HttpServlet {
 
     protected void importXML(HttpServletRequest request,
-            HttpServletResponse response) {
-        PrintWriter out = null;
+            HttpServletResponse response) throws LoginException {
         try {
-            out = response.getWriter();
-
-            java.io.InputStream xml = null;
-            java.io.InputStream xml2 = null;
-
-            org.apache.commons.fileupload.disk.DiskFileItemFactory factory = new org.apache.commons.fileupload.disk.DiskFileItemFactory();
-
-            //factory.setSizeThreshold(1024 * 1024);
-
-            File tempDir = (File) getServletContext().getAttribute("javax.servlet.context.tempdir");
-
-            factory.setRepository(tempDir);
-
-            org.apache.commons.fileupload.servlet.ServletFileUpload upload = new org.apache.commons.fileupload.servlet.ServletFileUpload(factory);
-
-            upload.setSizeMax(java.lang.Long.MAX_VALUE);
-
-            upload.setFileSizeMax(java.lang.Long.MAX_VALUE);
-
-            List items = upload.parseRequest(request);
-
-            Iterator iter = items.iterator();
-
-            while (iter.hasNext()) {
-                org.apache.commons.fileupload.FileItem item = (org.apache.commons.fileupload.FileItem) iter.next();
-                if (!item.isFormField()) {
-                    xml = item.getInputStream();
-                    xml2 = item.getInputStream();
+            UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
+            if (usr.getRoleId() >= 2) {
+                throw new LoginException("Вы не обладаете правами администратора");
+            }
+            PrintWriter out = null;
+            try {
+                out = response.getWriter();
+                java.io.InputStream xml = null;
+                java.io.InputStream xml2 = null;
+                org.apache.commons.fileupload.disk.DiskFileItemFactory factory = new org.apache.commons.fileupload.disk.DiskFileItemFactory();
+                //factory.setSizeThreshold(1024 * 1024);
+                File tempDir = (File) getServletContext().getAttribute("javax.servlet.context.tempdir");
+                factory.setRepository(tempDir);
+                org.apache.commons.fileupload.servlet.ServletFileUpload upload = new org.apache.commons.fileupload.servlet.ServletFileUpload(factory);
+                upload.setSizeMax(java.lang.Long.MAX_VALUE);
+                upload.setFileSizeMax(java.lang.Long.MAX_VALUE);
+                List items = upload.parseRequest(request);
+                Iterator iter = items.iterator();
+                while (iter.hasNext()) {
+                    org.apache.commons.fileupload.FileItem item = (org.apache.commons.fileupload.FileItem) iter.next();
+                    if (!item.isFormField()) {
+                        xml = item.getInputStream();
+                        xml2 = item.getInputStream();
+                    }
                 }
+                XMLHelper.CheckSchema(xml, StaticResourceHelper.getBASEXSD(request));
+                XMLHelper.importOfXML(xml2);
+                out.write("<div class=\"success\"><p align=\"center\">Импорт успешно завершён</p></div>");
+            } catch (Exception ex) {
+                out.write(ex.getMessage());
             }
 
-            XMLHelper.CheckSchema(xml, StaticResourceHelper.getBASEXSD(request));
-
-            XMLHelper.importOfXML(xml2);
-
-            out.write("<div class=\"success\"><p align=\"center\">Импорт успешно завершён</p></div>");
-
-        } catch (Exception ex) {
-            out.write(ex.getMessage());
+        } catch (RemoteException ex) {
+            ex.printStackTrace();
         }
 
     }
 
-    protected void history(HttpServletRequest request, HttpServletResponse response) throws ExportException, IOException, ServletException {
+    protected void history(HttpServletRequest request, HttpServletResponse response) throws ExportException, IOException, ServletException, LoginException {
+
+        UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
+        if (usr.getRoleId() >= 2) {
+            throw new LoginException("Вы не обладаете правами администратора");
+        }
         RequestDispatcher rd;
         ServletOutputStream out = null;
         String result, id_s, table = null;
@@ -147,77 +146,94 @@ public class XMLServlet extends HttpServlet {
     }
 
     protected void getProducts(HttpServletRequest request,
-            HttpServletResponse response) {
+            HttpServletResponse response) throws LoginException {
         try {
-            PrintWriter out = response.getWriter();
-            try {
-                XmlBeanRemoteHome xmlHome = (XmlBeanRemoteHome) EJBHelper.lookupHome("ejb/XmlBean", XmlBeanRemoteHome.class);
-                XmlBeanRemote xmlBean = xmlHome.create();
-                String xml = xmlBean.exportAllProducts();
-                response.setContentType("text/xml");
-                response.setCharacterEncoding("utf-8");
-                out.println(xml);
-            } catch (Exception ex) {
-                out.write(ex.getMessage());
+            UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
+            if (usr.getRoleId() >= 2) {
+                throw new LoginException("Вы не обладаете правами администратора");
             }
-            out.close();
-        } catch (IOException ex) {
+            try {
+                PrintWriter out = response.getWriter();
+                try {
+                    XmlBeanRemoteHome xmlHome = (XmlBeanRemoteHome) EJBHelper.lookupHome("ejb/XmlBean", XmlBeanRemoteHome.class);
+                    XmlBeanRemote xmlBean = xmlHome.create();
+                    String xml = xmlBean.exportAllProducts();
+                    response.setContentType("text/xml");
+                    response.setCharacterEncoding("utf-8");
+                    out.println(xml);
+                } catch (Exception ex) {
+                    out.write(ex.getMessage());
+                }
+                out.close();
+            } catch (IOException ex) {
+            }
+        } catch (RemoteException ex) {
+            ex.printStackTrace();
         }
     }
 
-    protected void exportUsers(HttpServletRequest request, HttpServletResponse response) throws ExportException {
+    protected void exportUsers(HttpServletRequest request, HttpServletResponse response) throws ExportException, LoginException {
         {
-            ServletOutputStream out = null;
             try {
-                boolean flag = true;
-                Enumeration enumer = request.getParameterNames();
-                ArrayList list = new ArrayList();
-                String[] del = request.getParameterValues("DEL");
-
-                for (int i = 0; i < del.length; i++) {
-                    // String str = enumer.nextElement().toString();
-                    try {
-                        Long id_user = new Long(del[i]);
-                        list.add(id_user);
-                    } catch (NumberFormatException ex) {
-                    }
-
+                UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
+                if (usr.getRoleId() >= 2) {
+                    throw new LoginException("Вы не обладаете правами администратора");
                 }
-                if (request.getParameter("input2") != null) {
-                    flag = false;
-                }
-                if (list.isEmpty()) {
-                    throw new ExportException("Не выбранны пользователи");
-                }
-                XmlBeanRemoteHome xmlHome = (XmlBeanRemoteHome) EJBHelper.lookupHome("ejb/XmlBean", XmlBeanRemoteHome.class);
-                XmlBeanRemote xmlBean = xmlHome.create();
-                String xml = xmlBean.exportToXMLUser(list, flag);
-                response.setContentType("text/xml");
-                response.setCharacterEncoding("utf-8");
-                out = response.getOutputStream();
-                out.println(xml);
-                out.flush();
-                // out.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            } catch (CreateException ex) {
-                ex.printStackTrace();
-            } catch (NamingException ex) {
-                ex.printStackTrace();
-            } finally {
+                ServletOutputStream out = null;
                 try {
-                    if (out != null) {
-                        out.close();
+                    boolean flag = true;
+                    Enumeration enumer = request.getParameterNames();
+                    ArrayList list = new ArrayList();
+                    String[] del = request.getParameterValues("DEL");
+                    for (int i = 0; i < del.length; i++) {
+                        // String str = enumer.nextElement().toString();
+                        try {
+                            Long id_user = new Long(del[i]);
+                            list.add(id_user);
+                        } catch (NumberFormatException ex) {
+                        }
                     }
+                    if (request.getParameter("input2") != null) {
+                        flag = false;
+                    }
+                    if (list.isEmpty()) {
+                        throw new ExportException("Не выбранны пользователи");
+                    }
+                    XmlBeanRemoteHome xmlHome = (XmlBeanRemoteHome) EJBHelper.lookupHome("ejb/XmlBean", XmlBeanRemoteHome.class);
+                    XmlBeanRemote xmlBean = xmlHome.create();
+                    String xml = xmlBean.exportToXMLUser(list, flag);
+                    response.setContentType("text/xml");
+                    response.setCharacterEncoding("utf-8");
+                    out = response.getOutputStream();
+                    out.println(xml);
+                    out.flush();
+                    // out.close();
                 } catch (IOException ex) {
                     ex.printStackTrace();
+                } catch (CreateException ex) {
+                    ex.printStackTrace();
+                } catch (NamingException ex) {
+                    ex.printStackTrace();
+                } finally {
+                    try {
+                        if (out != null) {
+                            out.close();
+                        }
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
                 }
-
+            } catch (RemoteException ex) {
+                ex.printStackTrace();
             }
         }
     }
 
-    protected void exportUsersP(HttpServletRequest request, HttpServletResponse response) throws ExportException, IOException, ServletException {
+    protected void exportUsersP(HttpServletRequest request, HttpServletResponse response) throws ExportException, IOException, ServletException, LoginException {
+        UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
+        if (usr.getRoleId() >= 2) {
+            throw new LoginException("Вы не обладаете правами администратора");
+        }
         RequestDispatcher rd;
         ServletOutputStream out = null;
         boolean flag1, flag2, usersFlag, rolesFlag, opinionsFlag, productsFlag, ordersFlag, catalogsFlag;
@@ -298,7 +314,11 @@ public class XMLServlet extends HttpServlet {
         }
     }
 
-    protected void exportProductByPrice(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    protected void exportProduct(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, LoginException {
+        UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
+        if (usr.getRoleId() >= 2) {
+            throw new LoginException("Вы не обладаете правами администратора");
+        }
         RequestDispatcher rd;
         ServletOutputStream out = null;
         response.setContentType("text/xml");
@@ -308,6 +328,8 @@ public class XMLServlet extends HttpServlet {
         flag = catalogFlag = orderFlag = commentFlag = allFlag = false;
         String result, price, name, more, less, exportCatalog, exportOrder, exportComment, exportAll;
         double priceDouble = 0;
+        String page = "exportProduct.jsp";
+        String searchType = "";
         result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
         name = null;
         try {
@@ -315,7 +337,7 @@ public class XMLServlet extends HttpServlet {
             ArrayList list = new ArrayList();
             price = request.getParameter("price");
             if (price == null) {
-
+                searchType = "byName";
                 name = request.getParameter("name");
                 if (name == null || "".equals(name)) {
 
@@ -323,8 +345,11 @@ public class XMLServlet extends HttpServlet {
 
                 }
             } else {
-
+                searchType = "byPrice";
                 priceDouble = Double.parseDouble(price);
+                if (priceDouble <= 0) {
+                    throw new ExportException("Введите положительную цену продукта");
+                }
 
             }
             if (request.getParameter("more") != null) {
@@ -369,29 +394,29 @@ public class XMLServlet extends HttpServlet {
             out.flush();
         } catch (FinderException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Не найдены записи</p></div>";
-            rd = request.getRequestDispatcher("exportProduct.jsp");
+            rd = request.getRequestDispatcher("exportProduct.jsp" + "?searchType=" + searchType);
             request.setAttribute("result", result);
             rd.forward(request, response);
         } catch (ExportException ex) {
-            result = "<div class=\"warning\"><p align=\"center\">Введите название продукта</p></div>";
-            rd = request.getRequestDispatcher("exportProduct.jsp");
+            result = "<div class=\"warning\"><p align=\"center\">"+ex.getMessage()+"</p></div>";
+            rd = request.getRequestDispatcher("exportProduct.jsp" + "?searchType=" + searchType);
             request.setAttribute("result", result);
             rd.forward(request, response);
         } catch (NumberFormatException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Не правильно ввдена цена продукта</p></div>";
-            rd = request.getRequestDispatcher("exportProduct.jsp");
+            rd = request.getRequestDispatcher("exportProduct.jsp" + "?searchType=" + searchType);
             request.setAttribute("result", result);
             rd.forward(request, response);
         } catch (IOException ex) {
-            rd = request.getRequestDispatcher("exportProduct.jsp");
+            rd = request.getRequestDispatcher("exportProduct.jsp" + "?searchType=" + searchType);
             request.setAttribute("result", result);
             rd.forward(request, response);
         } catch (CreateException ex) {
-            rd = request.getRequestDispatcher("exportProduct.jsp");
+            rd = request.getRequestDispatcher("exportProduct.jsp" + "?searchType=" + searchType);
             request.setAttribute("result", result);
             rd.forward(request, response);
         } catch (NamingException ex) {
-            rd = request.getRequestDispatcher("exportProduct.jsp");
+            rd = request.getRequestDispatcher("exportProduct.jsp" + "?searchType=" + searchType);
             request.setAttribute("result", result);
             rd.forward(request, response);
         } finally {
@@ -406,10 +431,14 @@ public class XMLServlet extends HttpServlet {
         }
     }
 
-    protected void getFile(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, ExportException {
+    protected void getFile(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, ExportException, LoginException {
+        UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
+        if (usr.getRoleId() >= 2) {
+            throw new LoginException("Вы не обладаете правами администратора");
+        }
         RequestDispatcher rd;
         ServletOutputStream out = null;
-        String result= "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
+        String result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
         Object obj = request.getSession().getAttribute("XMLDoc");
         try {
             if (obj instanceof String) {
@@ -428,10 +457,10 @@ public class XMLServlet extends HttpServlet {
             }
 
         } catch (ExportException ex) {
-              result = "<div class=\"warning\"><p align=\"center\">"+ex.getMessage()+"</p></div>";
-              request.setAttribute("result", result);
-              rd=request.getRequestDispatcher("exportProduct.jsp");
-              rd.forward(request, response);
+            result = "<div class=\"warning\"><p align=\"center\">" + ex.getMessage() + "</p></div>";
+            request.setAttribute("result", result);
+            rd = request.getRequestDispatcher("exportProduct.jsp");
+            rd.forward(request, response);
         } finally {
             try {
                 if (out != null) {
@@ -471,7 +500,7 @@ public class XMLServlet extends HttpServlet {
             }
 
             if (request.getRequestURI().equals(request.getContextPath() + "/XML/ExportProductByPrice")) {
-                exportProductByPrice(request, response);
+                exportProduct(request, response);
                 return;
             }
             if (request.getRequestURI().equals(request.getContextPath() + "/XML/getFile")) {
@@ -489,7 +518,7 @@ public class XMLServlet extends HttpServlet {
                 return;
             }
             if (request.getRequestURI().equals(request.getContextPath() + "/XML/ExportProductByName")) {
-                exportProductByPrice(request, response);
+                exportProduct(request, response);
                 return;
             }
             if (request.getRequestURI().equals(request.getContextPath() + "/XML/import")) {
@@ -497,8 +526,13 @@ public class XMLServlet extends HttpServlet {
                 return;
             }
         } catch (ExportException ex) {
-            rd = request.getRequestDispatcher(request.getContextPath() + "/errorPage.jsp");
+
+            rd = request.getRequestDispatcher("/errorPage.jsp");
             request.setAttribute("exception", ex);
+            rd.forward(request, response);
+        } catch (LoginException ex) {
+
+            rd = request.getRequestDispatcher("/login.jsp");
             rd.forward(request, response);
         }
     }

@@ -176,11 +176,12 @@ public class OrderBean implements EntityBean {
         PreparedStatement pst = null;
         try {
             conn = EJBHelper.getConnection();
-            pst = conn.prepareStatement("UPDATE \"ORDER\" SET STATUS = ?, ORDER_BY_DATE = ? WHERE ID_ORDER=?");
+            pst = conn.prepareStatement("UPDATE \"ORDER\" SET STATUS = ?, ORDER_BY_DATE = ?, KOL_VO=? WHERE ID_ORDER=?");
             pst.setBoolean(1, status);
            
             pst.setDate(2, orderByDate);
-             pst.setLong(3, id_order);
+            pst.setInt(3, amount);
+            pst.setLong(4, id_order);
             if (pst.executeUpdate() < 1) {
                 throw new NoSuchEntityException("Не найдена запись");
             }
@@ -404,6 +405,35 @@ public class OrderBean implements EntityBean {
         }
     }
 
+    public java.lang.Long  ejbFindByUserProductAndSatatus(java.lang.Long id_user,java.lang.Long id_product, boolean status)throws ObjectNotFoundException {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            conn = EJBHelper.getConnection();
+            pst = conn.prepareStatement("SELECT ID_ORDER FROM \"ORDER\" WHERE ID_USER = ? AND STATUS = ? AND ID_PRODUCT=?");
+            pst.setLong(1, id_user.longValue());
+            pst.setBoolean(2, status);
+            pst.setLong(3, id_product.longValue());
+            rs = pst.executeQuery();
+            ResultSet resultSet = pst.executeQuery();
+            if (!resultSet.next()) {
+                throw new ObjectNotFoundException("Запись не найдена");
+            }
+             return new Long(rs.getLong(1));
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
+        } catch (SQLException e) {
+            throw new EJBException("Ошибка SELECT");
+        } finally {
+            try {
+                EJBHelper.closeConnection(conn, pst, rs);
+            } catch (SQLException ex1) {
+                throw new EJBException("Ошибка закрытии соединия с базой");
+            }
+        }
+    }
+
     public void ejbPostCreate(java.lang.Long id_user, java.lang.Long id_product, java.lang.Boolean status, java.lang.Integer amount) throws CreateException {
     }
 
@@ -468,6 +498,10 @@ public class OrderBean implements EntityBean {
 
     public void setStatus(boolean status) {
         this.status = status;
+    }
+
+      public void setAmount(int amount) {
+        this.amount = amount;
     }
 
     public double getPrice() {

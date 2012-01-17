@@ -59,7 +59,7 @@
                 </div>
                 <div id="content">
                     <h1>Экспорт продуктов в XML</h1>
-                    <%String type = request.getParameter("poiskType");
+                    <%String type = request.getParameter("searchType");
 
                                 if ("byPrice".equals(type)) {%>
                     <form action="ExportProductByPrice">
@@ -91,8 +91,8 @@
                    
                     <%} else {
                     %><table id="regOrLog">
-                        <tr><td><a href="/ProShop-war/XML/exportProduct.jsp?poiskType=byPrice" class="first">Экспортировать продукты используя поиск по цене </a> </td></tr>
-                        <tr><td><a href="/ProShop-war/XML/exportProduct.jsp?poiskType=byName">Экспортировать продукты используя поиск по имени</a></td></tr> 
+                        <tr><td><a href="/ProShop-war/XML/exportProduct.jsp?searchType=byPrice" class="first">Экспортировать продукты используя поиск по цене </a> </td></tr>
+                        <tr><td><a href="/ProShop-war/XML/exportProduct.jsp?searchType=byName">Экспортировать продукты используя поиск по имени</a></td></tr>
                     </table>
                     <%   }}
                     %>

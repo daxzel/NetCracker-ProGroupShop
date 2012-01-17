@@ -229,11 +229,11 @@ public class CatalogBean implements EntityBean {
     }
 
     public java.lang.Long ejbCreate(String parent_name, String name) throws CreateException, JMSException {
-        try {
-            ejbFindByName(name);
-            throw new DuplicateKeyException("Каталог с таким названием уже существует");
-        } catch (ObjectNotFoundException ex) {
-        }
+        // try {
+        //     ejbFindByName(name);
+        //     throw new DuplicateKeyException("Каталог с таким названием уже существует");
+        // } catch (ObjectNotFoundException ex) {
+        // }
         try {
             this.id_parent = ejbFindByName(parent_name).longValue();
         } catch (ObjectNotFoundException ex) {
@@ -265,7 +265,13 @@ public class CatalogBean implements EntityBean {
         } catch (NamingException ex) {
             throw new EJBException("Произошла ошибка добавления");
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            String str = ex.getMessage();
+
+            str = str.substring(0, 55);
+            if ("ORA-00001: unique constraint (JURA.NAME_CATALOG_UNIQUE)".equals(str)) {
+                throw new DuplicateKeyException("Каталог с таким названием уже существует");
+            }
+            // ex.printStackTrace();
             throw new EJBException("Произошла ошибка добавления");
         } finally {
 
@@ -279,11 +285,11 @@ public class CatalogBean implements EntityBean {
     }
 
     public java.lang.Long ejbCreate(long userId, long id, String parent_name, String name) throws CreateException {
-        try {
-            ejbFindByName(name);
-            throw new DuplicateKeyException("Каталог с таким названием уже существует");
-        } catch (ObjectNotFoundException ex) {
-        }
+        //  try {
+        //    ejbFindByName(name);
+        //   throw new DuplicateKeyException("Каталог с таким названием уже существует");
+        //} catch (ObjectNotFoundException ex) {
+        //}
         try {
             this.id_parent = ejbFindByName(parent_name).longValue();
         } catch (ObjectNotFoundException ex) {
@@ -308,6 +314,12 @@ public class CatalogBean implements EntityBean {
         } catch (NamingException ex) {
             throw new EJBException("Произошла ошибка добавления");
         } catch (SQLException ex) {
+            String str = ex.getMessage();
+
+            str = str.substring(0, 55);
+            if ("ORA-00001: unique constraint (JURA.NAME_CATALOG_UNIQUE)".equals(str)) {
+                throw new DuplicateKeyException("Каталог с таким названием уже существует");
+            }
             throw new EJBException("Произошла ошибка добавления");
         } finally {
 
@@ -321,11 +333,11 @@ public class CatalogBean implements EntityBean {
     }
 
     public java.lang.Long ejbCreate(long id, long parent_id, String name) throws CreateException {
-        try {
-            ejbFindByName(name);
-            throw new DuplicateKeyException("Каталог с таким названием уже существует");
-        } catch (ObjectNotFoundException ex) {
-        }
+        //  try {
+        //     ejbFindByName(name);
+        //     throw new DuplicateKeyException("Каталог с таким названием уже существует");
+        // } catch (ObjectNotFoundException ex) {
+        // }
         this.id_parent = parent_id;
         this.id_catalog = id;
         this.name = name;
@@ -346,6 +358,12 @@ public class CatalogBean implements EntityBean {
         } catch (NamingException ex) {
             throw new EJBException("Произошла ошибка добавления");
         } catch (SQLException ex) {
+            String str = ex.getMessage();
+
+            str = str.substring(0, 55);
+            if ("ORA-00001: unique constraint (JURA.NAME_CATALOG_UNIQUE)".equals(str)) {
+                throw new DuplicateKeyException("Каталог с таким названием уже существует");
+            }
             throw new EJBException("Произошла ошибка добавления");
         } finally {
 

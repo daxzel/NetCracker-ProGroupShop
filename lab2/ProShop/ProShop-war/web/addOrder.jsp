@@ -22,11 +22,11 @@ nhfvdfq euyfkb njtcnm
         <link href="<%=request.getContextPath()%>/static/default.css" media="all" rel="stylesheet" type="text/css" />
         <link href="<%=request.getContextPath()%>/static/menu.css" media="all" rel="stylesheet" type="text/css" />
 
-        <title>Order</title>
+        <title>Заказпродукта</title>
     </head>
     <body><%
                 UserBeanRemote usr = JSPHelper.getUser2(session);
-
+                session.setAttribute("homepage", "addOrder.jsp");
                 ProductBeanRemote prd = null;
                 String kol_vo = "";
                 if (session.getAttribute("product") != null) {
@@ -72,7 +72,7 @@ nhfvdfq euyfkb njtcnm
                     <form name="myForm" action="order">
                         <table>
                             <tr><td>Название продукта:</td>
-                            <td><a href ="product?NAME=<%=prd.getName()%>"><%= prd.getName()%></a></td>
+                            <td><a href ="product?ID=<%=prd.getId()%>"><%= prd.getName()%></a></td>
                             <tr><td>Цена:</td>
                             <td><%=prd.getPrice()%></td></tr>
                             <tr><td>Количество:</td><td><input type="text" name="VOL" value="<%=kol_vo%>" size="25" /></td></tr>
@@ -81,7 +81,7 @@ nhfvdfq euyfkb njtcnm
                         </table>
                     </form>
                     <%}else{%>
-                    Продукт не выбран.
+                   <div class="warning"><p align="center">Продукт не выбран.</p></div>
                     <%}if (request.getAttribute("result") != null) {%>
                     <%=request.getAttribute("result")%>
                     <%}%>

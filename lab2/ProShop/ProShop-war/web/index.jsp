@@ -4,6 +4,8 @@
     Author     : daxzel
 --%>
 
+<%@page import="entityBeans.ProductBeanRemote"%>
+<%@page import="java.util.List"%>
 <%@page import="entityBeans.RoleBeanRemote"%>
 <%@page import="java.io.PrintWriter"%>
 <%@page import="menu.Menu"%>
@@ -65,9 +67,43 @@
                         <%}%>
                     </div>
                 </div>
+                <div id="find">
+                    <form action="<%=request.getContextPath()%>/find">
+                        <input type="text" name="sabstrName" value="" size="100" class="in"/>
+                        <input type="submit" value=" Найти " class="Button1" />
+                    </form>
+                </div>
                 <div id="content">
+                    <%
+                                            List products = (List) request.getAttribute("products");
+                                            String result = (String) request.getAttribute("result");
+                                            if (products == null) {
+                                                if (result != null) {%>
+                    <%=result%>
+                    <%} else {%>
                     Когда руки дойдут тут появятся новости<br><br><br>
                     <br><br><br> Когда руки дойдут тут появятся новости<br><br><br><br><br>
+                    <%}
+                                                                } else {
+                                                                    ProductBeanRemote prd;//= (ProductBeanRemote) products.get(0);
+                                                                    if (products.isEmpty()) {                                              //session.setAttribute("catalog", String.valueOf(prd.getIdCatalog()));
+                    %>
+                    По вашему запросу не найдено продуктов.
+                    <%} else {%>
+                    <table align="center"  width="70%">
+                        <tr>
+                            <td width="40%" align="center">Название</td><td width="15%">Цена</td><td width="15%"></td>
+                        </tr>
+                        <% for (int i = 0; i <= (products.size() - 1); i++) {
+                                                                                                    prd = (ProductBeanRemote) products.get(i);%>
+                        <tr>
+                            <td><a href ="product?ID=<%=prd.getId()%>"><%= prd.getName()%></a></td><td><%= prd.getPrice()%></td><td><a href ="order?VOL=1&ID_PRODUCT=<%=prd.getId()%>" class="Button">В корзину</a></td>
+                        </tr>
+                        <%}%>
+
+                    </table>
+                    <%}
+                                            }%>
                 </div>
             </div>
 
