@@ -1498,7 +1498,7 @@ public class ExecServlet extends HttpServlet {
         if (usr.getRoleId() > 2) {
             throw new LoginException("Вы не обладаете правами администратора");
         }
-        String result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка при добавлении картинки</p></div>";
+        String result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка при добавлении изображения</p></div>";
 
        
         String name = null;
@@ -1522,58 +1522,73 @@ public class ExecServlet extends HttpServlet {
 
         moreTools.SerializbleImage im = null;
 
+        int i = 0;
 
             List items = upload.parseRequest(request);
 
             Iterator iter = items.iterator();
-            while (iter.hasNext())
-            {
+            Iterator iter2 = items.iterator();
+            
+            while (iter.hasNext()) {
                 FileItem item = (FileItem) iter.next();
-                if (!item.isFormField())
-                {
+
+                if (item.isFormField()) {
+                    String fieldName = item.getFieldName();
+
+                    if (fieldName.equals("NAMEPRODUCT")) {
+                        nameProduct = item.getString("UTF-8");
+                    }
+                    if ("".equals(nameProduct)) {
+                        throw new ProductException("Введите название продукта");
+                    }
+
+
+                }
+            }
+
+            while (iter2.hasNext()) {
+                FileItem item = (FileItem) iter2.next();
+                if (!item.isFormField()) {
                     File uploadetFile = null;
 
-                  int sub1 = getServletContext().getRealPath("/").indexOf("Jurada");
-                   String path = getServletContext().getRealPath("/").substring(0,sub1)+ "Jurada/lab2/ProShop/ProShop-war/web/Image/" + item.getName();;
+                    int sub1 = getServletContext().getRealPath("/").indexOf("Jurada");
+                    String path = getServletContext().getRealPath("/").substring(0, sub1) + "Jurada/lab2/ProShop/ProShop-war/web/Image/" + item.getName();
+
 
 
                     uploadetFile = new File(path);
 
                     uploadetFile.createNewFile();
-                     item.write(uploadetFile);
+                    item.write(uploadetFile);
 
-                     im = new moreTools.SerializbleImage(item.getInputStream());
-                    
-                     width = im.getWidth();
-                      height = im.getHeight();
-                      name = item.getName();
+                    im = new moreTools.SerializbleImage(item.getInputStream());
 
+                    width = im.getWidth();
+                    height = im.getHeight();
+                    name = item.getName();
+
+                    i++;
+
+                    ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
+                    ProductBeanRemote pbr = productHome.findByName(nameProduct);
+
+                    ImageBeanRemoteHome imageHome = (ImageBeanRemoteHome) EJBHelper.lookupHome("ejb/ImageBean", ImageBeanRemoteHome.class);
+                    ImageBeanRemote imageBean = imageHome.create(pbr.getId(), name, width, height);
                 }
-                else
-                {
-                    String fieldName = item.getFieldName();
-                    
-                        if (fieldName.equals("NAMEPRODUCT"))
-                        {
-                            nameProduct = item.getString("UTF-8");
-                        }
 
-                    
-                }
             }
 
-            if ("".equals(nameProduct)) {
-                throw new ProductException("Введите название продукта");
-            }
-
-        ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
-        ProductBeanRemote pbr = productHome.findByName(nameProduct);
-
-            ImageBeanRemoteHome imageHome = (ImageBeanRemoteHome) EJBHelper.lookupHome("ejb/ImageBean", ImageBeanRemoteHome.class);
-            ImageBeanRemote imageBean=imageHome.create(pbr.getId(), name, width, height);
 
 
+
+
+
+            if (i>1){
+            result = "<div class=\"success\"><p align=\"center\">Изображения добавлены</p></div>";
+            } else {
             result = "<div class=\"success\"><p align=\"center\">Изображение добавлено</p></div>";
+            }
+
             page = "add_image.jsp";
 
          } catch (ProductException ex) {
@@ -1585,13 +1600,13 @@ public class ExecServlet extends HttpServlet {
             
          
         } catch (NamingException ex) {
-            result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка при добавлении картинки</p></div>";
+            result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка при добавлении изображения</p></div>";
           
         } catch (CreateException ex) {
-            result ="<div class=\"warning\"><p align=\"center\">Произошла ошибка при добавлении картинки</p></div>";
+            result ="<div class=\"warning\"><p align=\"center\">Произошла ошибка при добавлении изображения</p></div>";
             
         } catch (NumberFormatException ex) {
-            result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка при добавлении картинки</p></div>";
+            result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка при добавлении изображения</p></div>";
             
         } catch (Throwable ex) {
             result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";

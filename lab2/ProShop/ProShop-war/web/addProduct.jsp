@@ -66,7 +66,7 @@
                 </div>
                 <div id="content">
                     <h1>Добавление продукта</h1>
-                    <form name="addProductForm" action="addProduct">
+                    <form name="addProductForm" action="addProduct" method="post" enctype="multipart/form-data">
                         <table id="regOrLog">
                             <tr><td>Имя</td><td></td></tr>
                             <tr><td><input type="text" name="NAME" value="<%=name%>" size="60" /></td><td></td></tr>
@@ -76,7 +76,10 @@
                             <tr><td><input type="text" name="PRICE" value="<%=price%>" size="20" /></td><td></td></tr>
                             <tr><td>Название каталога</td><td></td></tr>
                             <tr><td><input type="text" name="NAME_CATALOG" value="<%=name_catalog%>" size="60" /></td><td></td></tr>
+                            <tr><td>Изображения</td><td></td></tr>
+                                 <tr><td><input type="file" name="IMAGE"  accept="image/jpeg" multiple  title="Выберите одну или несколько изображений"/></td><td></td></tr>
                             <tr><td><input type="submit" value=" Ввод " class="Button" /></td><td></td></tr>
+
                         </table>
 
                     </form>

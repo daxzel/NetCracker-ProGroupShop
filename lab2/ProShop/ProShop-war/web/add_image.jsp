@@ -22,7 +22,7 @@
         <link href="<%=request.getContextPath()%>/static/default.css" media="all" rel="stylesheet" type="text/css" />
         <link href="<%=request.getContextPath()%>/static/menu.css" media="all" rel="stylesheet" type="text/css" />
        
-        <title>Добавление изображения</title>
+        <title>Добавление изображений</title>
     </head>
     <body>
         <% UserBeanRemote usr = JSPHelper.getUser2(session);
@@ -59,8 +59,8 @@
                     </div>
                 </div>
                     <div id="content">
-                    <h1>Добавление изображения</h1>
-        <form name="add_image" method="post" action="http://localhost:33663/ProShop-war/addImage" enctype="multipart/form-data">
+                    <h1>Добавление изображений</h1>
+        <form name="add_image" method="post" action="addImage" enctype="multipart/form-data">
 
             <table border="0">
                 <tbody>
@@ -69,8 +69,8 @@
                         <td><input type="text" name="NAMEPRODUCT" value="" size="60"/></td>
                     </tr>
                     <tr>
-                        <td>Картинка</td>
-                        <td><input type="file" name="IMAGE" value="" /></td>
+                        <td>Изображения</td>
+                        <td><input type="file" name="IMAGE" accept="image/jpeg" multiple title="Выберите одно или несколько изображений" /></td>
                     </tr>
                 </tbody>
             </table>
