@@ -47,6 +47,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.*;
 
+import java.util.Random;
 /**
  *
  * @author Yra
@@ -220,6 +221,7 @@ public class ExecServlet extends HttpServlet {
         String result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка при добавлении продукта</p></div>";
         String page = "addProduct.jsp";
 
+        Random random = new Random();
         double price = 0;
         int id_catalog = 0;
         try {
@@ -296,11 +298,13 @@ Iterator iter2 = items.iterator();
                     File uploadetFile = null;
 
                     int sub1 = getServletContext().getRealPath("/").indexOf("Jurada");
-                    String path = getServletContext().getRealPath("/").substring(0, sub1) + "Jurada/lab2/ProShop/ProShop-war/web/Image/" + item.getName();
+                   // String path = getServletContext().getRealPath("/").substring(0, sub1) + "Jurada/lab2/ProShop/ProShop-war/web/Image/" + item.getName();
+int rnd = random.nextInt();
 
-
-
-                    uploadetFile = new File(path);
+                            do{
+    String path = getServletContext().getRealPath("/").substring(0, sub1) + "Jurada/lab2/ProShop/ProShop-war/web/Image/" +rnd + item.getName();
+            uploadetFile = new File(path);
+        }while(uploadetFile.exists());
 
                     uploadetFile.createNewFile();
                     item.write(uploadetFile);
@@ -309,7 +313,7 @@ Iterator iter2 = items.iterator();
 
                     width = im.getWidth();
                     height = im.getHeight();
-                    nameImage = item.getName();
+                    nameImage = new Integer(rnd).toString()+item.getName();
 
                     i++;
 
@@ -1612,6 +1616,7 @@ Iterator iter2 = items.iterator();
         String page = "add_image.jsp";
         String nameProduct = null;
 
+        Random random = new Random();
         try {
 
             
@@ -1657,20 +1662,28 @@ Iterator iter2 = items.iterator();
                     File uploadetFile = null;
 
                     int sub1 = getServletContext().getRealPath("/").indexOf("Jurada");
-                    String path = getServletContext().getRealPath("/").substring(0, sub1) + "Jurada/lab2/ProShop/ProShop-war/web/Image/" + item.getName();
+                   // String path = getServletContext().getRealPath("/").substring(0, sub1) + "Jurada/lab2/ProShop/ProShop-war/web/Image/" + item.getName();
 
 
+int rnd = random.nextInt();
+                   // uploadetFile = new File(path);
 
-                    uploadetFile = new File(path);
+                            do{
+    String path = getServletContext().getRealPath("/").substring(0, sub1) + "Jurada/lab2/ProShop/ProShop-war/web/Image/" + rnd + item.getName();
+            uploadetFile = new File(path);
+        }while(uploadetFile.exists());
+
+
 
                     uploadetFile.createNewFile();
+                   // uploadetFile.deleteOnExit();
                     item.write(uploadetFile);
 
                     im = new moreTools.SerializbleImage(item.getInputStream());
 
                     width = im.getWidth();
                     height = im.getHeight();
-                    name = item.getName();
+                    name = new Integer(rnd).toString()+item.getName();
 
                     i++;
 
@@ -1724,6 +1737,61 @@ Iterator iter2 = items.iterator();
             rd.forward(request, response);
         }
 
+
+    }
+            protected void delImage(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException, LoginException, RemoteException {
+        HttpSession session = request.getSession();
+        RequestDispatcher rd;
+        UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
+        String result = "<div class=\"warning\"><p align=\"center\">Изображение не удалено</p></div>";
+        if (usr.getRoleId() > 2) {
+            throw new LoginException("Вы не обладаете правами администратора");
+
+
+        }
+        try {
+
+            String value = request.getParameter("VALUE");
+            ImageBeanRemoteHome imageHome = (ImageBeanRemoteHome) EJBHelper.lookupHome("ejb/ImageBean", ImageBeanRemoteHome.class);
+           ImageBeanRemote imageBean = imageHome.findByName(value);
+
+           String name = imageBean.getName();
+
+           ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
+            ProductBeanRemote pr = productHome.findByPrimaryKey(new Long(imageBean.getId_product()));
+
+          //     pr.sendMessage(new Long(usr.getId()), "PRODUCT", "Изменен продукт: " + pr.getName() + ". Удалено изображение: " + name, new Long(pr.getId()), 2);
+           // imageBean.sendMessage(new Long(usr.getId()), "IMAGE", "Удалено изображение: " + name, null, 2);
+
+            
+            imageHome.remove(new Long(imageBean.getId_img()));
+
+           int sub1 = getServletContext().getRealPath("/").indexOf("Jurada");
+                    String path = getServletContext().getRealPath("/").substring(0, sub1) + "Jurada/lab2/ProShop/ProShop-war/web/Image/" + value;
+           File uploadetFile = new File (path);
+           uploadetFile.delete();
+
+
+            result = "<div class=\"success\"><p align=\"center\">Удаление завершено</p></div>";
+
+
+
+
+       
+        } catch (ObjectNotFoundException ex) {
+            result = "<div class=\"warning\"><p align=\"center\">Продукта не существует</p></div>";
+        } catch (RemoveException ex) {
+            result = "<div class=\"warning\"><p align=\"center\">Ошибка при удалении</p></div>";
+        } catch (FinderException ex) {
+            result = "<div class=\"warning\"><p align=\"center\">Ошибка при поиске</p></div>";
+        } catch (NamingException ex) {
+            result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
+        } finally {
+            request.setAttribute("result", result);
+            rd = request.getRequestDispatcher("del_image.jsp");
+            rd.forward(request, response);
+        }
 
     }
     protected void findProductsBySubstName(HttpServletRequest request,
@@ -1825,6 +1893,10 @@ Iterator iter2 = items.iterator();
         // response.setContentType("UTF-8");
         try {
 
+            if (request.getRequestURI().equals("/ProShop-war/delImage")) {
+                delImage(request, response);
+                return;
+            }
             if (request.getRequestURI().equals("/ProShop-war/addImage")) {
                 addImage(request, response);
                 return;

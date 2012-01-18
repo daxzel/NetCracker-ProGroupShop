@@ -212,6 +212,10 @@
         <servlet-name>ExecServlet</servlet-name>
         <url-pattern>/addImage</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ExecServlet</servlet-name>
+        <url-pattern>/delImage</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30

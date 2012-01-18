@@ -508,6 +508,32 @@ public class ImageBean implements EntityBean {
 
     public void ejbPostCreate(long id, long i_id_product,String i_name,  int i_width, int i_height)  throws CreateException {
     }
+
+     public java.lang.Long ejbFindByName(java.lang.String name) throws ObjectNotFoundException {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        try {
+            conn = EJBHelper.getConnection();
+            pst = conn.prepareStatement("SELECT * FROM IMAGE WHERE NAME = ?");
+            pst.setString(1, name);
+            ResultSet resultSet = pst.executeQuery();
+            if (!resultSet.next()) {
+                throw new ObjectNotFoundException("Запись не найдена");
+            }
+            Long id = new Long(resultSet.getLong(2));
+            return id;
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
+        } catch (SQLException e) {
+            throw new EJBException("Ошибка SELECT");
+        } finally {
+            try {
+                EJBHelper.closeConnection(conn, pst);
+            } catch (SQLException ex1) {
+                throw new EJBException("Ошибка закрытии соединия с базой");
+            }
+        }
+    }
     public long getId_product()
     {
         return id_product;

@@ -20,6 +20,8 @@ public interface ImageBeanRemoteHome extends EJBHome {
     
     entityBeans.ImageBeanRemote findByPrimaryKey(java.lang.Long key)  throws FinderException, RemoteException;
 
+    public entityBeans.ImageBeanRemote findByName(java.lang.String name) throws FinderException, RemoteException;
+
     public java.util.List findImageByProduct(java.lang.Long id_pr) throws FinderException, RemoteException;
 
     java.util.List findAll() throws FinderException, RemoteException;
