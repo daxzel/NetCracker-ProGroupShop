@@ -208,7 +208,7 @@ public class ExecServlet extends HttpServlet {
         int height = 0;
        // String nameProduct = null;
 
-               //String nameImage = null ;
+               String nameImage = null ;
         String description = null;
         String priceS = null;
         String name_catalog = null;
@@ -309,7 +309,7 @@ Iterator iter2 = items.iterator();
 
                     width = im.getWidth();
                     height = im.getHeight();
-                    name = item.getName();
+                    nameImage = item.getName();
 
                     i++;
 
@@ -317,7 +317,10 @@ Iterator iter2 = items.iterator();
                     //ProductBeanRemote pbr = productHome.findByName(nameProduct);
 
                     ImageBeanRemoteHome imageHome = (ImageBeanRemoteHome) EJBHelper.lookupHome("ejb/ImageBean", ImageBeanRemoteHome.class);
-                    ImageBeanRemote imageBean = imageHome.create(pbr.getId(), name, width, height);
+                    ImageBeanRemote imageBean = imageHome.create(pbr.getId(), nameImage, width, height);
+
+                   imageBean.sendMessage(new Long(usr.getId()), "IMAGE", "Добавлено изображение: "+ item.getName() + " к товару: " + pbr.getName() , new Long(imageBean.getId_img()), 2);
+                    pbr.sendMessage(new Long(usr.getId()), "PRODUCT", "Изменен продукт: "+ pbr.getName()  + ". Добавлено изображение: " + item.getName() , new Long(pbr.getId()), 2);
                 }
 
             }
@@ -1676,6 +1679,9 @@ Iterator iter2 = items.iterator();
 
                     ImageBeanRemoteHome imageHome = (ImageBeanRemoteHome) EJBHelper.lookupHome("ejb/ImageBean", ImageBeanRemoteHome.class);
                     ImageBeanRemote imageBean = imageHome.create(pbr.getId(), name, width, height);
+
+                    imageBean.sendMessage(new Long(usr.getId()), "IMAGE", "Добавлено изображение: "+ item.getName() + " к товару: " + pbr.getName() , new Long(imageBean.getId_img()), 2);
+                    pbr.sendMessage(new Long(usr.getId()), "PRODUCT", "Изменен продукт: "+ pbr.getName()  + ". Добавлено изображение: " + item.getName() , new Long(pbr.getId()), 2);
                 }
 
             }
