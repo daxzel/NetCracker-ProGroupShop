@@ -77,7 +77,7 @@
                             <tr><td>Название каталога</td><td></td></tr>
                             <tr><td><input type="text" name="NAME_CATALOG" value="<%=name_catalog%>" size="60" /></td><td></td></tr>
                             <tr><td>Изображения</td><td></td></tr>
-                                 <tr><td><input type="file" name="IMAGE"  accept="image/jpeg" multiple  title="Выберите одну или несколько изображений"/></td><td></td></tr>
+                                 <tr><td><input type="file" name="IMAGE"  accept="image/jpeg" multiple  title="Выберите одно или несколько изображений"/></td><td></td></tr>
                             <tr><td><input type="submit" value=" Ввод " class="Button" /></td><td></td></tr>
 
                         </table>

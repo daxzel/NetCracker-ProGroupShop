@@ -202,25 +202,79 @@ public class ExecServlet extends HttpServlet {
         if (usr.getRoleId() > 2) {
             throw new LoginException("Вы не обладаете правами администратора");
         }
-        String name = request.getParameter("NAME");
-        String description = request.getParameter("DESCRIPTION");
-        String priceS = request.getParameter("PRICE");
-        String name_catalog = request.getParameter("NAME_CATALOG");
+
+                String name = null;
+        int width = 0;
+        int height = 0;
+       // String nameProduct = null;
+
+               //String nameImage = null ;
+        String description = null;
+        String priceS = null;
+        String name_catalog = null;
+
+        //String name = request.getParameter("NAME");
+        //String description = request.getParameter("DESCRIPTION");
+        //String priceS = request.getParameter("PRICE");
+        //String name_catalog = request.getParameter("NAME_CATALOG");
         String result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка при добавлении продукта</p></div>";
         String page = "addProduct.jsp";
 
         double price = 0;
         int id_catalog = 0;
         try {
-            if ("".equals(name)) {
-                throw new ProductException("Название продукта не может быть пустым полем");
+
+
+            
+             DiskFileItemFactory factory = new DiskFileItemFactory();
+        factory.setSizeThreshold(1024*1024);
+        File tempDir = (File)getServletContext().getAttribute("javax.servlet.context.tempdir");
+        factory.setRepository(tempDir);
+
+        ServletFileUpload upload = new ServletFileUpload(factory);
+
+        upload.setSizeMax(1024 * 1024 * 10);
+
+        moreTools.SerializbleImage im = null;
+
+        int i = 0;
+
+            List items = upload.parseRequest(request);
+
+            Iterator iter = items.iterator();
+
+
+            while (iter.hasNext()) {
+                FileItem item = (FileItem) iter.next();
+
+                if (item.isFormField()) {
+                    String fieldName = item.getFieldName();
+
+                    if (fieldName.equals("NAME")) {
+                        name = item.getString("UTF-8");
+                        if ("".equals(name)) {
+                            throw new ProductException("Введите название продукта");
+                        }
+
+                    } else if (fieldName.equals("DESCRIPTION")) {
+                        description = item.getString("UTF-8");
+
+                    } else if (fieldName.equals("PRICE")) {
+                        priceS = item.getString("UTF-8");
+                        if ("".equals(priceS)) {
+                            throw new ProductException("Цена  продукта не может быть пустым полем");
+                        }
+                    } else if (fieldName.equals("NAME_CATALOG")) {
+                        name_catalog = item.getString("UTF-8");
+                        if ("".equals(name_catalog)) {
+                            throw new ProductException("Название каталога продукта не может быть пустым полем");
+                        }
+                    }
+
+
+                }
             }
-            if ("".equals(priceS)) {
-                throw new ProductException("Цена  продукта не может быть пустым полем");
-            }
-            if ("".equals(name_catalog)) {
-                throw new ProductException("Название каталога продукта не может быть пустым полем");
-            }
+
 
             price = Double.parseDouble(priceS);
             if (price <= 0) {
@@ -233,6 +287,40 @@ public class ExecServlet extends HttpServlet {
             ProductBeanRemote pbr = productHome.create(description, name_catalog, name, price);
             CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
             CatalogBeanRemote ctg = catalogHome.findByPrimaryKey(new Long(pbr.getIdCatalog()));
+
+Iterator iter2 = items.iterator();
+
+            while (iter2.hasNext()) {
+                FileItem item = (FileItem) iter2.next();
+                if (!item.isFormField()) {
+                    File uploadetFile = null;
+
+                    int sub1 = getServletContext().getRealPath("/").indexOf("Jurada");
+                    String path = getServletContext().getRealPath("/").substring(0, sub1) + "Jurada/lab2/ProShop/ProShop-war/web/Image/" + item.getName();
+
+
+
+                    uploadetFile = new File(path);
+
+                    uploadetFile.createNewFile();
+                    item.write(uploadetFile);
+
+                    im = new moreTools.SerializbleImage(item.getInputStream());
+
+                    width = im.getWidth();
+                    height = im.getHeight();
+                    name = item.getName();
+
+                    i++;
+
+                   // ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
+                    //ProductBeanRemote pbr = productHome.findByName(nameProduct);
+
+                    ImageBeanRemoteHome imageHome = (ImageBeanRemoteHome) EJBHelper.lookupHome("ejb/ImageBean", ImageBeanRemoteHome.class);
+                    ImageBeanRemote imageBean = imageHome.create(pbr.getId(), name, width, height);
+                }
+
+            }
 
             Long idu = new Long(usr.getId());
             // Long idu = new Long(usr.getId());
@@ -249,6 +337,13 @@ public class ExecServlet extends HttpServlet {
             request.setAttribute("NAME_CATALOG", name_catalog);
             page = "addProduct.jsp";
 
+            } catch (FileUploadException ex) {
+            result = "<div class=\"warning\"><p align=\"center\">Ошибка в загрузке изображения на сервер</p></div>";
+            request.setAttribute("NAME", name);
+            request.setAttribute("DESCRIPTION", description);
+            request.setAttribute("PRICE", priceS);
+            request.setAttribute("NAME_CATALOG", name_catalog);
+            page = "addProduct.jsp";
         } catch (NegativeNumberException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Введите положительную цену продукта</p></div>";
             request.setAttribute("NAME", name);
@@ -285,6 +380,13 @@ public class ExecServlet extends HttpServlet {
             request.setAttribute("PRICE", priceS);
             request.setAttribute("NAME_CATALOG", name_catalog);
             result = "<div class=\"warning\"><p align=\"center\">" + ex.getMessage() + "</p></div>";
+            page = "addProduct.jsp";
+            } catch (Exception ex) {
+            request.setAttribute("NAME", name);
+            request.setAttribute("DESCRIPTION", description);
+            request.setAttribute("PRICE", priceS);
+            request.setAttribute("NAME_CATALOG", name_catalog);
+            result = "<div class=\"warning\"><p align=\"center\"> Ошибка </p></div>";
             page = "addProduct.jsp";
         } finally {
             request.setAttribute("result", result);
