@@ -5,6 +5,7 @@
 package entityBeans;
 
 import helpers.EJBHelper;
+import java.rmi.RemoteException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,6 +16,7 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.Collection;
 import java.util.Vector;
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
@@ -191,6 +193,71 @@ public class HistoryEntityBean implements EntityBean {
             }
         }
     }
+
+        public Collection ejbFindAll() {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            conn = EJBHelper.getConnection();
+            pst = conn.prepareStatement("SELECT ID_HIS FROM HISTORY ORDER BY DATE_UPDATE DESC");
+            //   pst.setLong(1, id_catalog.longValue());
+            // rs = pst.executeQuery();
+            rs = pst.executeQuery();
+            Vector keys = new Vector();
+            while (rs.next()) {
+                long id_his = rs.getLong(1);
+                keys.addElement(new Long(id_his));
+            }
+            return keys;
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new EJBException("Ошибка SELECT");
+            // e.printStackTrace();
+        } finally {
+            try {
+                EJBHelper.closeConnection(conn, pst, rs);
+            } catch (SQLException ex1) {
+                ex1.printStackTrace();
+                throw new EJBException("Ошибка закрытии соединия с базой");
+               //  
+            }
+        }
+    }
+                public Collection ejbFindAllAWeek() {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            conn = EJBHelper.getConnection();
+            pst = conn.prepareStatement("SELECT ID_HIS FROM HISTORY WHERE  (DATE_UPDATE > CURRENT_DATE - INTERVAL '7' DAY) ORDER BY DATE_UPDATE DESC ");
+            //   pst.setLong(1, id_catalog.longValue());
+            // rs = pst.executeQuery();
+            rs = pst.executeQuery();
+            Vector keys = new Vector();
+            while (rs.next()) {
+                long id_his = rs.getLong(1);
+                keys.addElement(new Long(id_his));
+            }
+            return keys;
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new EJBException("Ошибка SELECT");
+            // e.printStackTrace();
+        } finally {
+            try {
+                EJBHelper.closeConnection(conn, pst, rs);
+            } catch (SQLException ex1) {
+                ex1.printStackTrace();
+                throw new EJBException("Ошибка закрытии соединия с базой");
+               //
+            }
+        }
+    }
     
     public java.util.Collection ejbFindByIdObjAndNameTableP(java.lang.Long id, String nameTable) throws FinderException {
         Connection conn = null;
@@ -248,6 +315,33 @@ public class HistoryEntityBean implements EntityBean {
         }
     }
 
+        public Collection ejbFindByNameTable(String nameTable) throws FinderException {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        try {
+            conn = EJBHelper.getConnection();
+            pst = conn.prepareStatement("SELECT ID_HIS FROM \"HISTORY\" WHERE NAME_TABLE = ? AND (DATE_UPDATE > CURRENT_DATE - INTERVAL '7' DAY)");
+            pst.setString(1, nameTable);
+            ResultSet resultSet = pst.executeQuery();
+            Vector keys = new Vector();
+            while (resultSet.next()) {
+                long id_his = resultSet.getLong(1);
+                keys.addElement(new Long(id_his));
+            }
+            return keys;
+
+        } catch (NamingException ex) {
+            throw new EJBException("Ошибка SELECT");
+        } catch (SQLException e) {
+            throw new EJBException("Ошибка SELECT");
+        } finally {
+            try {
+                EJBHelper.closeConnection(conn, pst);
+            } catch (SQLException ex1) {
+                throw new EJBException("Ошибка закрытии соединия с базой");
+            }
+        }
+    }
     public java.lang.Long ejbCreate(long id_user, String name_table, String status, long id_obj) throws CreateException {
 
 
@@ -423,6 +517,23 @@ public class HistoryEntityBean implements EntityBean {
     
     public String getNameTable() {
         return name_table;
+    }
+
+    public String getUserName() {
+        UserBeanRemote user = null;
+        String name = "";
+        try {
+            UserBeanRemoteHome userHome = (UserBeanRemoteHome) helpers.EJBHelper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
+            user = userHome.findByPrimaryKey(new Long(this.id_user));
+            name = user.getNik();
+        } catch (FinderException ex) {
+            //ex.printStackTrace();
+        } catch (RemoteException ex) {
+            // ex.printStackTrace();
+        } catch (NamingException ex) {
+            //ex.printStackTrace();
+        }
+        return name;
     }
 
     public String getTimestampSaved() {

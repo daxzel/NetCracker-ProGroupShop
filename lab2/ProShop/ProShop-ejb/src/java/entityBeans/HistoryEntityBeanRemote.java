@@ -15,6 +15,8 @@ public interface HistoryEntityBeanRemote extends EJBObject {
 
     public String getStatus() throws RemoteException;
 
+    String getUserName() throws RemoteException;
+
     public long getRecordId() throws RemoteException;
     
     public String getNameTable() throws RemoteException;

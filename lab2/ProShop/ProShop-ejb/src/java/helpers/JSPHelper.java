@@ -4,11 +4,23 @@
  */
 package helpers;
 
+import SessionBeans.HistoryBeanRemote;
+import entityBeans.HistoryEntityBean;
+import entityBeans.HistoryEntityBeanRemote;
+import entityBeans.HistoryEntityBeanRemoteHome;
+import entityBeans.ProductBeanRemote;
+import entityBeans.ProductBeanRemoteHome;
 import java.rmi.RemoteException;
+import javax.ejb.FinderException;
+import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import exceptions.*;
 import entityBeans.UserBeanRemote;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Vector;
 
 /**
  *
@@ -70,6 +82,69 @@ public class JSPHelper {
         }
 
     }
+
+     public static List getHistory() throws NamingException, FinderException, RemoteException {
+
+         HistoryEntityBeanRemoteHome historyHome = (HistoryEntityBeanRemoteHome) helpers.EJBHelper.lookupHome("ejb/HistoryEntityBean", HistoryEntityBeanRemoteHome.class);
+
+         return historyHome.findAllAWeek();
+
+     }
+
+          public static List getHistory(String nameTable) throws NamingException, FinderException, RemoteException {
+
+         HistoryEntityBeanRemoteHome historyHome = (HistoryEntityBeanRemoteHome) helpers.EJBHelper.lookupHome("ejb/HistoryEntityBean", HistoryEntityBeanRemoteHome.class);
+
+         return historyHome.findByNameTable(nameTable);
+
+     }
+
+
+            public static ProductBeanRemote getProduct(int i) throws NamingException, FinderException, RemoteException {
+
+                HistoryEntityBeanRemoteHome historyHome = (HistoryEntityBeanRemoteHome) helpers.EJBHelper.lookupHome("ejb/HistoryEntityBean", HistoryEntityBeanRemoteHome.class);
+                 ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) helpers.EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
+                 HistoryEntityBeanRemote  his;
+                 ProductBeanRemote pbr;
+                List historyByProduct = historyHome.findByNameTable("PRODUCT");
+              //  Vector keys = new Vector();
+         //for (int i=0; i <= (historyByProduct.size()-1); i++){
+                his = (HistoryEntityBeanRemote) historyByProduct.get(i);
+              //  if ((new Long(his.getObjId()))!=null){
+
+
+                pbr = productHome.findByPrimaryKey(new Long(his.getObjId()));
+        // keys.addElement(pbr);
+
+            // }
+              //  }
+
+                return pbr;
+
+     }
+                        public static List getProduct() throws NamingException, FinderException, RemoteException {
+
+                HistoryEntityBeanRemoteHome historyHome = (HistoryEntityBeanRemoteHome) helpers.EJBHelper.lookupHome("ejb/HistoryEntityBean", HistoryEntityBeanRemoteHome.class);
+                 ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) helpers.EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
+                 HistoryEntityBeanRemote  his;
+                 ProductBeanRemote pbr;
+                List historyByProduct = historyHome.findByNameTable("PRODUCT");
+                ArrayList keys = new ArrayList();
+         for (int i=0; i <= (historyByProduct.size()-1); i++){
+                his = (HistoryEntityBeanRemote) historyByProduct.get(i);
+                if (his.getObjId()>0){
+
+
+                pbr = productHome.findByPrimaryKey(new Long(his.getObjId()));
+         keys.add(pbr);
+
+             }
+                }
+
+                return keys;
+
+     }
+
 
    public static String MD5(String md5) {
         try {

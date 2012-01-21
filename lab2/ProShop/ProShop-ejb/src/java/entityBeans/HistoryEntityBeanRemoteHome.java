@@ -17,9 +17,15 @@ public interface HistoryEntityBeanRemoteHome extends EJBHome {
 
     entityBeans.HistoryEntityBeanRemote findByPrimaryKey(java.lang.Long key) throws FinderException, RemoteException;
 
+    public java.util.List findAll() throws FinderException, RemoteException;
+
+    public java.util.List findAllAWeek() throws FinderException, RemoteException;
+
     entityBeans.HistoryEntityBeanRemote findByIdObjAndNameTable(java.lang.Long id, String nameTable) throws FinderException, RemoteException;
 
     public java.util.Collection findByIdObjAndNameTableP(java.lang.Long id, String nameTable) throws FinderException, RemoteException;
+
+    public java.util.List findByNameTable(String nameTable) throws FinderException, RemoteException;
     
     public entityBeans.HistoryEntityBean create(long id_user, String name_table, String status, long id_obj) throws CreateException, RemoteException;
 

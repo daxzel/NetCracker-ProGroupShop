@@ -395,6 +395,7 @@ public class ProductBean implements EntityBean {
         }
     }
 
+
     public Collection ejbFindByCatalog(java.lang.Long id_catalog) {
         Connection conn = null;
         PreparedStatement pst = null;

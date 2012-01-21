@@ -4,6 +4,7 @@
     Author     : Pushok
 --%>
 
+<%@page import="entityBeans.ImageBeanRemote"%>
 <%@page import="menu.Menu"%>
 <%@page import="exceptions.LoginException"%>
 <%@page import="helpers.JSPHelper"%>
@@ -26,12 +27,14 @@
     </head>
     <body>
         <%
+        long r = 5;
 
                     //    PrintWriter pw = response.getWriter();
                     UserBeanRemote usr = null;
                     session.setAttribute("homepage", "getCatalog.jsp");
                     try {
                         usr = JSPHelper.getUser2(session);
+                         r = usr.getRoleId();
                     } catch (LoginException ex) {
                     } finally {%>
         <div id="container">
@@ -67,6 +70,7 @@
                     <%
                                             Object obj1 = request.getAttribute("result");
                                             Object obj2 = session.getAttribute("list");
+                                             ImageBeanRemote img;
                                             if (((obj1 != null)) || (obj2 != null)) {
                                                 List list1 = null;
                                                 String result = "";
@@ -101,14 +105,25 @@
                                                                             ProductBeanRemote prd = (ProductBeanRemote) list1.get(0);
                                                                             session.setAttribute("catalog", String.valueOf(prd.getIdCatalog()));
                     %>
-                    <table align="center"  width="70%">
-                        <tr>
-                            <td width="40%" align="center">Название</td><td width="15%">Цена</td><td width="15%"></td>
-                        </tr>
+                    <table align="center" rules="rows" frame="void" bordercolor="#c0c0c0" >
+
                         <% for (int i = 0; i <= (list1.size() - 1); i++) {
-                                                                                                        prd = (ProductBeanRemote) list1.get(i);%>
-                        <tr>
-                            <td><a href ="product?ID=<%=prd.getId()%>"><%= prd.getName()%></a></td><td><%= prd.getPrice()%></td><td><a href ="order?VOL=1&ID_PRODUCT=<%=prd.getId()%>" class="Button">В корзину</a></td>
+                                                                                                        prd = (ProductBeanRemote) list1.get(i);
+                                                                                    List list2 = prd.getImageList();
+                                                         img = (ImageBeanRemote) list2.get(0);
+                                                                                %>
+                        <tr align="justify">
+                            <td align="center" width="20%" >
+                        <a href ="product?ID=<%=prd.getId()%>"><img width="55%" align="center" alt="Картинка"   src="<%=request.getContextPath()%>/image?ID=<%= img.getId_img()%>"</a>
+                    </td>
+                    <td width="65%">
+                        <a href ="product?ID=<%=prd.getId()%>"><font size="5"><%= prd.getName()%></font></a><br><br>
+                        <%= prd.getDescription()%><br><br>
+                       <p align="right"> <font size="5"><%= prd.getPrice()%></font> руб.</p>
+                    </td>
+                                       <% if  (r<= 3){ %>
+                    <td  width="15%" align="center"><a href ="order?VOL=1&ID_PRODUCT=<%=prd.getId()%>" class="Button">В корзину</a></td>
+                     <% } %>
                         </tr>
                         <%}%>
 

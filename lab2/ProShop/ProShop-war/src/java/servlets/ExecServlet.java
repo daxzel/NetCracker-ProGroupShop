@@ -1581,13 +1581,30 @@ int rnd = random.nextInt();
             HttpServletResponse response) throws ServletException, ParseException, IOException, LoginException {
         RequestDispatcher rd;
         HttpSession session = request.getSession();
+        File img = null;
         // UserBeanRemote usr = JSPHelper.getUser2(session);
         try {
             long id = Long.parseLong(request.getParameter("ID"));
             ImageBeanRemoteHome imageHome = (ImageBeanRemoteHome) EJBHelper.lookupHome("ejb/ImageBean", ImageBeanRemoteHome.class);
             ImageBeanRemote ibr = imageHome.findByPrimaryKey(new Long(id));
+
+
+
+                    int sub1 = getServletContext().getRealPath("/").indexOf("Jurada");
+                    String path = getServletContext().getRealPath("/").substring(0, sub1) + "Jurada/lab2/ProShop/ProShop-war/web/Image/" + ibr.getName();
+
+                    img = new File(path);
+
+                    if (img.exists()){
+                      rd = request.getRequestDispatcher("Image/" + ibr.getName());
+                    } else{
+                        rd = request.getRequestDispatcher("Image/" + "noimg.jpg");
+                    }
+            //
+          
             //request.setAttribute("result", list);
-            rd = request.getRequestDispatcher("Image/" + ibr.getName());
+          //  rd = request.getRequestDispatcher("Image/" + ibr.getName());
+        
             rd.forward(request, response);
         } catch (FinderException ex) {
         } catch (RemoteException ex) {

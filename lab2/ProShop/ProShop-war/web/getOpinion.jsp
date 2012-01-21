@@ -30,8 +30,10 @@
     <body>
 
         <%  UserBeanRemote usr = null;
+         long r = 5;
                     try {
                         usr = JSPHelper.getUser2(session);
+                         r = usr.getRoleId();
                     } catch (LoginException ex) {
                     } finally {
 
@@ -83,38 +85,33 @@
                               session.setAttribute("product", prd);
 
                     %>
-                    <table align="center" border="1" width="100%">
-                        <tr align="center">
-                            <td>Наименование</td>
-                            <td>Описание</td>
-                            <td>Каталог</td>
-                            <td>Цена, р</td>
-                            <td rowspan="2"><a href ="addOrder.jsp" class="Button">В корзину</a></td>
-                        </tr>
-                        <tr align="center">
-                            <td><%= prd.getName()%></td>
-                            <%if (prd.getDescription() != null) {%>
+                    <h1><%= prd.getName()%></h1>
+                                        <table align="center" border="0">
+                        <% for (int n = 0; n <= (list1.size() - 1); n++) {
+                                                          img = (ImageBeanRemote) list1.get(n);%>
+                        <td><img width="50%"  src="<%=request.getContextPath()%>/image?ID=<%= img.getId_img()%>"</td>
+                            <%}%>
+                    </table><br>
+
+                    <%if (prd.getDescription() != null) {%>
+                    <h1>Описание</h1><br>
+
                             <td><%= prd.getDescription()%></td>
                             <%} else {%>
                             <td></td>
-                            <%}%>
-                            <td><%= prd.getNameCatalog()%></td>
-                            <td><%= prd.getPrice()%></td>
+<%}%>
+<br><br>
+ <h1 align="right">Цена</h1>
+  <p align="right"><font size="6"><%= prd.getPrice()%></font> </p><br>
+                <% if  (r<= 3){ %>
+                    <p align="right"><a href ="addOrder.jsp" class="Button">В корзину</a></p>
+                     <% } %>
+<br>
+<br>
+                    <br><br><br><br>
+<h1>Комментарии</h1>
+                    <table align="center" rules="rows" frame="below" bordercolor="#c0c0c0">
 
-                        </tr>
-                    </table><br>
-                    <table align="center" border="0">
-                        <% for (int n = 0; n <= (list1.size() - 1); n++) {
-                                                          img = (ImageBeanRemote) list1.get(n);%>
-                        <td><img width="50%" height="50%" src="<%=request.getContextPath()%>/image?ID=<%= img.getId_img()%>"</td>
-                            <%}%>
-                    </table><br>
-                    <br>
-                    <table align="center"  border="1" width="100%">
-                        <tr align="center">
-                            <td colspan="3">Комментарий к <%=prd.getName()%></td>
-
-                        </tr>
                         <tr align="center">
                             <td width ="10%" align="center">Никнейм</td>
                             <td align="center">Комментарий</td>
@@ -127,7 +124,7 @@
                                                           opn = (OpinionBeanRemote) list.get(i);%>
                         <tr>
                             <td width ="10%" align="center"><%= opn.getUserName()%></td>
-                            <td><%= opn.getText()%></td>
+                            <td align="center"><%= opn.getText()%></td>
                             <td align="center"><%if (usr != null) {
                                                                                           if (opn.getIdUser() == usr.getId() || usr.getRoleId() <= 2) {%>
                                 <a href ="delComment?ID=<%=opn.getIdOpinion()%>">Удалить комментарий</a>
