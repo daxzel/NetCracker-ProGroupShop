@@ -15,7 +15,10 @@ import javax.ejb.FinderException;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
+import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Vector;
 import javax.ejb.CreateException;
@@ -36,7 +39,7 @@ public class HistoryEntityBean implements EntityBean {
     private long id_user;
     private String name_table;
     private String status;
-    private Date date_update;
+    private Timestamp date_update;
     private long id_obj;
 
     // <editor-fold defaultstate="collapsed" desc="EJB infrastructure methods. Click the + sign on the left to edit the code.">
@@ -115,7 +118,7 @@ public class HistoryEntityBean implements EntityBean {
             id_user = rs.getLong(2);
             name_table = rs.getString(3);
             status = rs.getString(4);
-            date_update = rs.getDate(5);
+            date_update = rs.getTimestamp(5);
             id_obj = rs.getLong(6);
 
 
@@ -145,7 +148,7 @@ public class HistoryEntityBean implements EntityBean {
             pst.setLong(1, id_user);
             pst.setString(2, name_table);
             pst.setString(3, status);
-            pst.setDate(4, date_update);
+            pst.setTimestamp(4, date_update);
             pst.setLong(5, id_obj);
             pst.setLong(6, id_his);
 
@@ -320,8 +323,8 @@ public class HistoryEntityBean implements EntityBean {
         PreparedStatement pst = null;
         try {
             conn = EJBHelper.getConnection();
-            pst = conn.prepareStatement("SELECT ID_HIS FROM \"HISTORY\" WHERE NAME_TABLE = ? AND (DATE_UPDATE > CURRENT_DATE - INTERVAL '7' DAY)");
-            pst.setString(1, nameTable);
+            pst = conn.prepareStatement("SELECT  HS.ID_HIS FROM HISTORY HS WHERE HS.DATE_UPDATE = (SELECT MAX(H.DATE_UPDATE) FROM HISTORY H WHERE H.NAME_TABLE = '\"PRODUCT\"' AND H.ID_OBJ = HS.ID_OBJ ) AND (HS.DATE_UPDATE > CURRENT_DATE - INTERVAL '7' DAY) ORDER BY HS.DATE_UPDATE DESC");
+           //pst.setString(1, nameTable);
             ResultSet resultSet = pst.executeQuery();
             Vector keys = new Vector();
             while (resultSet.next()) {
@@ -359,9 +362,9 @@ public class HistoryEntityBean implements EntityBean {
             pst.setLong(1, id_user);
             pst.setString(2, name_table);
             pst.setString(3, status);
-            java.sql.Date f = new java.sql.Date((new java.util.Date()).getTime());
+            java.sql.Timestamp f = new java.sql.Timestamp((new java.util.Date()).getTime());
             this.date_update = f;
-            pst.setDate(4, f);
+            pst.setTimestamp(4,f);
             pst.setLong(5, id_obj);
             pst.registerOutParameter(6, Types.INTEGER);
             rs = pst.executeQuery();
@@ -412,9 +415,10 @@ public class HistoryEntityBean implements EntityBean {
             pst.setString(1, name_table);
             pst.setString(2, status);
             pst.setLong(3, id_obj);
-            java.sql.Date f = new java.sql.Date((new java.util.Date()).getTime());
+            java.sql.Timestamp f = new java.sql.Timestamp((new java.util.Date()).getTime());
+
             this.date_update = f;
-            pst.setDate(4, f);
+            pst.setTimestamp(4, f);
             pst.registerOutParameter(5, Types.INTEGER);
             rs = pst.executeQuery();
             if (!rs.next()) {
@@ -464,9 +468,14 @@ public class HistoryEntityBean implements EntityBean {
             pst.setLong(1, id_user);
             pst.setString(2, name_table);
             pst.setString(3, status);
-            java.sql.Date f = new java.sql.Date((new java.util.Date()).getTime());
+
+            //java.sql.Date f = new java.sql.Date((new java.util.Date()).getTime());
+            java.sql.Timestamp f = new java.sql.Timestamp((new java.util.Date()).getTime());
+
+
             this.date_update = f;
-            pst.setDate(4, f);
+
+            pst.setTimestamp(4,f);
             pst.registerOutParameter(5, Types.INTEGER);
             rs = pst.executeQuery();
             if (!rs.next()) {
@@ -537,7 +546,9 @@ public class HistoryEntityBean implements EntityBean {
     }
 
     public String getTimestampSaved() {
-        java.text.SimpleDateFormat formt = new java.text.SimpleDateFormat("dd.MM.yy");
+        
+        java.text.SimpleDateFormat formt = new java.text.SimpleDateFormat(DateFormat.getDateTimeInstance(
+            DateFormat.SHORT, DateFormat.MEDIUM).format(date_update));
         String date = formt.format(date_update);
         return date;
     }

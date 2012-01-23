@@ -196,7 +196,7 @@ public class ExecServlet extends HttpServlet {
         rd.forward(request, response);
     }
 
-    protected void addProduct(HttpServletRequest request,
+       protected void addProduct(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, ParseException, IOException, LoginException {
         RequestDispatcher rd;
         UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
@@ -227,7 +227,7 @@ public class ExecServlet extends HttpServlet {
         try {
 
 
-            
+
              DiskFileItemFactory factory = new DiskFileItemFactory();
         factory.setSizeThreshold(1024*1024);
         File tempDir = (File)getServletContext().getAttribute("javax.servlet.context.tempdir");
@@ -289,11 +289,12 @@ public class ExecServlet extends HttpServlet {
             ProductBeanRemote pbr = productHome.create(description, name_catalog, name, price);
             CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
             CatalogBeanRemote ctg = catalogHome.findByPrimaryKey(new Long(pbr.getIdCatalog()));
-
-Iterator iter2 = items.iterator();
+ List items2 = upload.parseRequest(request);
+Iterator iter2 = items2.iterator();
 
             while (iter2.hasNext()) {
                 FileItem item = (FileItem) iter2.next();
+
                 if (!item.isFormField()) {
                     File uploadetFile = null;
 
@@ -324,15 +325,15 @@ int rnd = random.nextInt();
                     ImageBeanRemote imageBean = imageHome.create(pbr.getId(), nameImage, width, height);
 
                    imageBean.sendMessage(new Long(usr.getId()), "IMAGE", "Добавлено изображение: "+ item.getName() + " к товару: " + pbr.getName() , new Long(imageBean.getId_img()), 2);
-                    pbr.sendMessage(new Long(usr.getId()), "PRODUCT", "Изменен продукт: "+ pbr.getName()  + ". Добавлено изображение: " + item.getName() , new Long(pbr.getId()), 2);
-                }
+                    pbr.sendMessage(new Long(usr.getId()), "\"PRODUCT\"", "Изменен продукт: "+ pbr.getName()  + ". Добавлено изображение: " + item.getName() , new Long(pbr.getId()), 2);
+                } else {}
 
             }
 
             Long idu = new Long(usr.getId());
             // Long idu = new Long(usr.getId());
             Long ido = new Long(pbr.getId());
-            pbr.sendMessage(idu, "PRODUCT", "Добавлен продукт: " + name + ", в каталог: " + pbr.getNameCatalog(), ido, 1);
+            pbr.sendMessage(idu, "\"PRODUCT\"", "Добавлен продукт: " + name + ", в каталог: " + pbr.getNameCatalog(), ido, 1);
             ctg.sendMessage(new Long(usr.getId()), "\"CATALOG\"", " Каталог: " + pbr.getNameCatalog() + " изменен. Добавлен продукт: " + pbr.getName(), new Long(pbr.getIdCatalog()), 2);
             ctg.sendMessage(new Long(usr.getId()), "\"CATALOG\"", " Каталог: " + ctg.getParentName() + " изменен. Изменен дочерний каталог: " + pbr.getNameCatalog() + ". Добавлен продукт: " + pbr.getName(), new Long(ctg.getParentId()), 2);
 

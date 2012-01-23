@@ -5,6 +5,7 @@
 --%>
 
 
+<%@page import="java.math.BigDecimal"%>
 <%@page import="entityBeans.ImageBeanRemote"%>
 <%@page import="menu.Menu"%>
 <%@page import="exceptions.LoginException"%>
@@ -100,11 +101,12 @@
                             <%} else {%>
                             <td></td>
 <%}%>
-<br><br>
+<br><br><br><br><br><br><br><br>
+<% BigDecimal priceProd = new BigDecimal(prd.getPrice()); %>
  <h1 align="right">Цена</h1>
-  <p align="right"><font size="6"><%= prd.getPrice()%></font> </p><br>
+  <p align="right"><font size="6"><%= priceProd.toBigInteger()%></font>руб. </p><br>
                 <% if  (r<= 3){ %>
-                    <p align="right"><a href ="addOrder.jsp" class="Button">В корзину</a></p>
+                    <p align="right"><a href ="addOrder.jsp"><img align="right" alt="В корзину"  width="12%" src="<%=request.getContextPath()%>/static/cart.jpg"></a></p>
                      <% } %>
 <br>
 <br>

@@ -4,6 +4,7 @@
     Author     : daxzel
 --%>
 
+<%@page import="java.math.BigDecimal"%>
 <%@page import="entityBeans.ImageBeanRemote"%>
 <%@page import="entityBeans.HistoryEntityBeanRemote"%>
 <%@page import="entityBeans.HistoryEntityBean"%>
@@ -97,6 +98,7 @@ long r = 5;
                     // usr = JSPHelper.getUser2(session);
 if (r<= 2){
 %>
+<% if (history.size()>0) {  %>
 <h1>История</h1>
 <table align="center" border="0">
                          <tr>
@@ -116,9 +118,10 @@ if (r<= 2){
                         <%}%>
                             
                     </table><br>
+   <% } else { %>  <h1>Изменений в базе за последню неделю не произошло</h1> <% } %>
 
                     <%
-} else {
+} else if (product.size()>0){
                     %>
                     
                     <table align="center" border="1" rules="rows" frame="void" bordercolor="#c0c0c0" cols="2">
@@ -130,6 +133,7 @@ if (r<= 2){
                                                           pbr = (ProductBeanRemote) product.get(n);
                                                          
                                                           List list1 = pbr.getImageList();
+                                                          if (list1.size() > 0) {
                                                          img = (ImageBeanRemote) list1.get(0);
                 %>
 
@@ -137,23 +141,44 @@ if (r<= 2){
                 <tr  align="justify">
 
                     <td width="20%">
-                        <a href ="product?ID=<%=pbr.getId()%>"><img width="55%" align="center" alt="Картинка"   src="<%=request.getContextPath()%>/image?ID=<%= img.getId_img()%>"</a>
+                        <a href ="product?ID=<%=pbr.getId()%>"><img width="55%" align="center" alt="Картинка" align="center"  src="<%=request.getContextPath()%>/image?ID=<%= img.getId_img()%>"</a>
                     </td>
                     <td width="65%">
                         <a href ="product?ID=<%=pbr.getId()%>"><font size="5"><%= pbr.getName()%></font></a><br><br>
-                        <%= pbr.getDescription()%><br><br>
-                       <p align="right"> <font size="5"><%= pbr.getPrice()%></font> руб.</p>
+                                                        <% if (pbr.getDescription() != null) {%>
+                                <%= pbr.getDescription()%><br><br>
+                                <%}%>
+                                <% BigDecimal priceProd = new BigDecimal(pbr.getPrice()); %>
+                       <p align="right"> <font size="5"><%= priceProd.toBigInteger()%></font> руб.</p>
                     </td>
                     <% if  (r<= 3){ %>
-                    <td  width="15%" align="center"><a href ="order?VOL=1&ID_PRODUCT=<%=pbr.getId()%>" class="Button">В корзину</a></td>
+                    <td  width="15%" align="center"><a href ="order?VOL=1&ID_PRODUCT=<%=pbr.getId()%>"</a> <img align="center" alt="В корзину"  width="60%" src="<%=request.getContextPath()%>/static/cart.jpg"></td>
                      <% } %>
                 </tr>
-                        <%}%>
-                        
+                        <%}else{%>
+
+                                       <tr  align="justify">
+
+                    <td width="20%">
+                        <a href ="product?ID=<%=pbr.getId()%>"</a><img width="55%" align="center" alt="Картинка"    src="<%=request.getContextPath()%>/Image/noimg.jpg"
+                    </td>
+                    <td width="65%">
+                        <a href ="product?ID=<%=pbr.getId()%>"><font size="5"><%= pbr.getName()%></font></a><br><br>
+                                                        <% if (pbr.getDescription() != null) {%>
+                                <%= pbr.getDescription()%><br><br>
+                                <%}%>
+                                <% BigDecimal priceProd = new BigDecimal(pbr.getPrice()); %>
+                       <p align="right"> <font size="5"><%= priceProd.toBigInteger()%></font> руб.</p>
+                    </td>
+                    <% if  (r<= 3){ %>
+                    <td  width="15%" align="center"><a href ="order?VOL=1&ID_PRODUCT=<%=pbr.getId()%>" </a> <img align="center" alt="В корзину"  width="60%" src="<%=request.getContextPath()%>/static/cart.jpg"></td>
+                     <% } %>
+                </tr>
+                        <% }} %>
                     </table><br>
                     <%
-}
-%>
+} else { %> <h1>Рады видеть вас в нашем интернет магазине </h1>   <% } %>
+
                     <%}
                                                                 } else {
                                                                     ProductBeanRemote prd;//= (ProductBeanRemote) products.get(0);
@@ -166,6 +191,7 @@ if (r<= 2){
                         <% for (int i = 0; i <= (products.size() - 1); i++) {
                                                                                                     prd = (ProductBeanRemote) products.get(i);
                                                                                                      List list1 = prd.getImageList();
+                                                                                                     if (list1.size() > 0) {
                                                          img = (ImageBeanRemote) list1.get(0);
 
                                                                             %>
@@ -175,26 +201,44 @@ if (r<= 2){
                     </td>
                     <td width="40%">
                         <a href ="product?ID=<%=prd.getId()%>"><font size="5"><%= prd.getName()%></font></a><br><br>
-                        <%= prd.getDescription()%><br><br>
-                       <p align="right"> <font size="5"><%= prd.getPrice()%></font> руб.</p>
+                                                        <% if (prd.getDescription() != null) {%>
+                                <%= prd.getDescription()%><br><br>
+                                <%}%>
+                                <% BigDecimal priceProd = new BigDecimal(prd.getPrice()); %>
+                       <p align="right"> <font size="5"><%=  priceProd.toBigInteger()%></font> руб.</p>
                     </td>
-                    <td  width="20%" align="center"><a href ="order?VOL=1&ID_PRODUCT=<%=prd.getId()%>" class="Button">В корзину</a></td>
+                    <td  width="20%" align="center"><a href ="order?VOL=1&ID_PRODUCT=<%=prd.getId()%>"</a> <img align="center" alt="В корзину"  width="60%" src="<%=request.getContextPath()%>/static/cart.jpg"></td>
                         </tr>
-                        <%}%>
+                        <%} else {%>
 
+  <tr align="justify">
+                            <td align="center" width="40%" >
+                        <a href ="product?ID=<%=prd.getId()%>"><img width="55%" align="center" alt="Картинка"    src="<%=request.getContextPath()%>/Image/noimg.jpg"</a>
+                    </td>
+                    <td width="40%">
+                        <a href ="product?ID=<%=prd.getId()%>"><font size="5"><%= prd.getName()%></font></a><br><br>
+                                                        <% if (prd.getDescription() != null) {%>
+                                <%= prd.getDescription()%><br><br>
+                                <%}%>
+                                <% BigDecimal priceProd = new BigDecimal(prd.getPrice()); %>
+                       <p align="right"> <font size="5"><%=  priceProd.toBigInteger()%></font> руб.</p>
+                    </td>
+                    <td  width="20%" align="center"><a href ="order?VOL=1&ID_PRODUCT=<%=prd.getId()%>"</a> <img align="center" alt="В корзину"  width="60%" src="<%=request.getContextPath()%>/static/cart.jpg"></td>
+                        </tr>
                     </table>
-                    <%}
+                    <%}}
+                                            }
                                             }%>
                 </div>
             </div>
 
-            <div class="team" align="center">
-                <a href="<%=request.getContextPath()%>/aboutTeam.jsp"><font size="2">Команда </font></a>
-            </div>
-        </div>
+ 
 
         <%}
         %>
-
+           <div class="team" align="center">
+                <a href="<%=request.getContextPath()%>/aboutTeam.jsp"><font size="2">Команда</font></a>
+            </div>
+        </div>
     </body>
 </html>

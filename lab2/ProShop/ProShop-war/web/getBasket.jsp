@@ -4,6 +4,7 @@
     Author     : Yra
 --%>
 
+<%@page import="java.math.BigDecimal"%>
 <%@page import="menu.Menu"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import = "entityBeans.UserBeanRemote,entityBeans.OrderBeanRemote, helpers.*,java.util.*"%>
@@ -98,16 +99,16 @@
                                                             OrderBeanRemote ord = (OrderBeanRemote) list.get(0);
                     %>
                     <form action="changeAmount">
-                        <table align="center"  border="1" width="100%">
+                        <table align="center"  frame="border" rules="all" width="100%" bordercolor="#c0c0c0">
                             <tr align="center">
 
-                                <td width="15%" align="center">Название продукта</td>
-                                <td width="25%" align="center">Цена, руб</td>
-                                <td width="25%" align="center">Колличество</td>
+                                <td width="30%" align="center">Название продукта</td>
+                                <td width="10%" align="center">Цена, руб</td>
+                                <td width="20%" align="center">Колличество</td>
                                 <td width="20%" align="center">Цена продуктов, руб</td>
                                 <%if (!ord.getStatus()) {%>
                                 <td width="10%" align="center">Изменить количество продуктов</td>
-                                <td width="10%" align="center">Удалить продукт</td>
+                                <td width="15%" align="center">Удалить продукт</td>
                                 <%}%>
                             </tr>
                             <%
@@ -118,19 +119,22 @@
                                                                     for (int i = 0; i <= (list.size() - 1); i++) {
                                                                         ord = (OrderBeanRemote) list.get(i);
                                                                         priceProduct = ord.getPriceProduct();
+                                                                        BigDecimal priceProd = new BigDecimal(priceProduct);
                                                                         amount = ord.getAmount();
                                                                         sum = sum + (priceProduct) * (amount);
+                                                                        BigDecimal pPa = new BigDecimal((priceProduct) * (amount));
+
                             %>
 
                             <tr align="center">
                                 <td><a href ="product?ID=<%=ord.getIdProduct().longValue()%>"><%= ord.getNameProduct()%></a></td>
-                                <td><%= priceProduct%></td>
+                                <td><%= priceProd.toBigInteger()%></td>
 
-                                <td> <%if (!ord.getStatus()) {%><input type="text" value="<%=  amount%>" name="amount" size="4"><%}else{%><%=amount%><%}%></td>
+                                <td> <%if (!ord.getStatus()) {%><input type="text" value="<%=  amount%>" name="amount" size="15"><%}else{%><%=amount%><%}%></td>
 
-                                <td><%= (priceProduct) * (amount)%></td>
+                                <td><%= pPa.toBigInteger()%></td>
                                 <%if (!ord.getStatus()) {%>
-                                <td width="10%"> <input type="submit" value="Изменить кол-во" class="Button" width="60px"/></td>
+                                <td width="10%"> <input type="submit" value="Изменить" class="Button" width="60px"/></td>
                                 <td width="10%"><a href ="deleteOrder?id_order=<%=ord.getId()%>">удалить продукт</a></td>
                                 <%}%>
 
@@ -140,7 +144,12 @@
                     </form>
                     <br>
                     <br>
-                    <p align="right"><font size="4"> Итого:</font> <%= sum%> руб.</p>
+                    <% BigDecimal summ = new BigDecimal(sum);
+
+
+
+%>
+                    <p align="right"><font size="4"> Итого:</font> <%= summ.toBigInteger()%> руб.</p>
                     <%if (!ord.getStatus()) {%><br><br>
                     <form action="updateOrderStatus">
                         <input type="submit" value=" Оформить заказ " class="Button" />

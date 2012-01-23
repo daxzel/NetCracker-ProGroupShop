@@ -106,7 +106,7 @@ public class JSPHelper {
                  ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) helpers.EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
                  HistoryEntityBeanRemote  his;
                  ProductBeanRemote pbr;
-                List historyByProduct = historyHome.findByNameTable("PRODUCT");
+                List historyByProduct = historyHome.findByNameTable("'\"PRODUCT\"'");
               //  Vector keys = new Vector();
          //for (int i=0; i <= (historyByProduct.size()-1); i++){
                 his = (HistoryEntityBeanRemote) historyByProduct.get(i);
