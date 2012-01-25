@@ -1,4 +1,4 @@
-/*
+ /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -126,7 +126,7 @@ public class ExecServlet extends HttpServlet {
             RoleBeanRemote rbr = roleHome.findByPrimaryKey(new Long(3));
 
             Long ido = new Long(usr.getId());
-            usr.sendMessage(new Long(usr.getId()), "\"USER\"", "Зарегестрирован пользователь: " + nik + ". Статус: " + rbr.getName() + ". Дата регистрации: " + usr.getRegistrationDate(), ido, 1);
+            usr.sendMessage(new Long(usr.getId()), "\"USER\"", "Зарегестрирован пользователь " + "\""+nik + "\""+ ". Статус " + "\""+ rbr.getName() + "\""+ ". Дата регистрации " + "\""+ usr.getRegistrationDate()+ "\""+ ". ", ido, 1);
 
 
             result = "<div class=\"success\"><p align=\"center\">Пользователь зарегестрирован</p></div>";
@@ -324,8 +324,8 @@ int rnd = random.nextInt();
                     ImageBeanRemoteHome imageHome = (ImageBeanRemoteHome) EJBHelper.lookupHome("ejb/ImageBean", ImageBeanRemoteHome.class);
                     ImageBeanRemote imageBean = imageHome.create(pbr.getId(), nameImage, width, height);
 
-                   imageBean.sendMessage(new Long(usr.getId()), "IMAGE", "Добавлено изображение: "+ item.getName() + " к товару: " + pbr.getName() , new Long(imageBean.getId_img()), 2);
-                    pbr.sendMessage(new Long(usr.getId()), "\"PRODUCT\"", "Изменен продукт: "+ pbr.getName()  + ". Добавлено изображение: " + item.getName() , new Long(pbr.getId()), 2);
+                   imageBean.sendMessage(new Long(usr.getId()), "\"IMAGE\"", "Добавлено изображение "+ "\""+ item.getName()+ "\""+ " к товару " + "\""+ pbr.getName()+ "\""+ ". " , new Long(imageBean.getId_img()), 2);
+                    pbr.sendMessage(new Long(usr.getId()), "\"PRODUCT\"", "Изменен продукт "+ "\""+ pbr.getName()  + "\""+ ". Добавлено изображение " + "\""+ item.getName()+ "\""+ ". " , new Long(pbr.getId()), 2);
                 } else {}
 
             }
@@ -333,9 +333,9 @@ int rnd = random.nextInt();
             Long idu = new Long(usr.getId());
             // Long idu = new Long(usr.getId());
             Long ido = new Long(pbr.getId());
-            pbr.sendMessage(idu, "\"PRODUCT\"", "Добавлен продукт: " + name + ", в каталог: " + pbr.getNameCatalog(), ido, 1);
-            ctg.sendMessage(new Long(usr.getId()), "\"CATALOG\"", " Каталог: " + pbr.getNameCatalog() + " изменен. Добавлен продукт: " + pbr.getName(), new Long(pbr.getIdCatalog()), 2);
-            ctg.sendMessage(new Long(usr.getId()), "\"CATALOG\"", " Каталог: " + ctg.getParentName() + " изменен. Изменен дочерний каталог: " + pbr.getNameCatalog() + ". Добавлен продукт: " + pbr.getName(), new Long(ctg.getParentId()), 2);
+            pbr.sendMessage(idu, "\"PRODUCT\"", "Добавлен продукт " + "\""+ name + "\""+ ", в каталог " + "\""+ pbr.getNameCatalog()+ "\".", ido, 1);
+            ctg.sendMessage(new Long(usr.getId()), "\"CATALOG\"", " Каталог " + "\""+ pbr.getNameCatalog() + "\""+ " изменен. Добавлен продукт " + "\""+ pbr.getName()+ "\""+ ". ", new Long(pbr.getIdCatalog()), 2);
+            ctg.sendMessage(new Long(usr.getId()), "\"CATALOG\"", " Каталог " + "\""+ ctg.getParentName() + "\""+ " изменен. Изменен дочерний каталог " + "\""+ pbr.getNameCatalog() + "\""+ ". Добавлен продукт " + "\""+ pbr.getName()+ "\""+ ". ", new Long(ctg.getParentId()), 2);
 
 
             result = "<div class=\"success\"><p align=\"center\">Продукт добавлен</p></div>";
@@ -426,9 +426,9 @@ int rnd = random.nextInt();
             CatalogBeanRemote ctg = catalogHome.findByPrimaryKey(new Long(pr.getIdCatalog()));
 
             result = "<div class=\"success\"><p align=\"center\">Удаление завершено</p></div>";
-            pr.sendMessage(new Long(usr.getId()), "PRODUCT", "Удален продукт: " + pr.getName() + " из каталога: " + pr.getNameCatalog(), null, 2);
-            ctg.sendMessage(new Long(usr.getId()), "\"CATALOG\"", " Каталог: " + pr.getNameCatalog() + " изменен. Удален продукт: " + pr.getName(), new Long(pr.getIdCatalog()), 2);
-            ctg.sendMessage(new Long(usr.getId()), "\"CATALOG\"", " Каталог: " + ctg.getParentName() + " изменен. Изменен дочерний каталог: " + pr.getNameCatalog() + ". Удален продукт: " + pr.getName(), new Long(ctg.getParentId()), 2);
+            pr.sendMessage(new Long(usr.getId()), "\"PRODUCT\"", "Удален продукт " + "\""+ pr.getName() + "\""+ " из каталога " + "\""+ pr.getNameCatalog()+ "\""+ ". ", null, 2);
+            ctg.sendMessage(new Long(usr.getId()), "\"CATALOG\"", " Каталог " + "\""+ pr.getNameCatalog() + "\""+ " изменен. Удален продукт " + "\""+ pr.getName()+ "\""+ ". ", new Long(pr.getIdCatalog()), 2);
+            ctg.sendMessage(new Long(usr.getId()), "\"CATALOG\"", " Каталог " + "\""+ ctg.getParentName() + "\""+ " изменен. Изменен дочерний каталог " + "\""+ pr.getNameCatalog() + "\""+ ". Удален продукт " + "\""+ pr.getName()+ "\""+ ". ", new Long(ctg.getParentId()), 2);
 
             productHome.remove(new Long(pr.getId()));
 
@@ -514,7 +514,7 @@ int rnd = random.nextInt();
                     password = JSPHelper.MD5(password);
                     usr.setPassword(password);
                 } else {
-                    msg = msg + "Пароль был изменен с " + usr.getPassword() + " на " + password + ". ";
+                    msg = msg + "Пароль был изменен. ";
                     password = JSPHelper.MD5(password);
                     usr.setPassword(password);
                 }
@@ -522,7 +522,7 @@ int rnd = random.nextInt();
             if ((usr.getName().equals(name))) {
                 usr.setName(name);
             } else {
-                msg = msg + "Имя пользователя было изменено с " + usr.getName() + " на " + name + ". ";
+                msg = msg + "Имя пользователя было изменено с " + "\""+ usr.getName() + "\""+ " на " + "\""+ name + "\""+ ". ";
                 usr.setName(name);
 
             }
@@ -530,7 +530,7 @@ int rnd = random.nextInt();
             if (usr.getSurname().equals(surname)) {
                 usr.setSurname(surname);
             } else {
-                msg = msg + "Фамилия пользователя была изменена с " + usr.getSurname() + " на " + surname + ". ";
+                msg = msg + "Фамилия пользователя была изменена с " + "\""+ usr.getSurname() + "\""+ " на " + "\""+ surname + "\""+ ". ";
                 usr.setSurname(surname);
 
             }
@@ -538,49 +538,51 @@ int rnd = random.nextInt();
             if (usr.getOtchestvo().equals(otchestvo)) {
                 usr.setOtchestvo(otchestvo);
             } else {
-                msg = msg + "Отчество пользователя было изменено с " + usr.getOtchestvo() + " на " + otchestvo + ". ";
+                msg = msg + "Отчество пользователя было изменено с " + "\""+ usr.getOtchestvo() + "\""+ " на " + "\""+ otchestvo + "\""+ ". ";
                 usr.setOtchestvo(otchestvo);
             }
 
             if (usr.getNik().equals(nik)) {
                 usr.setNik(nik);
             } else {
-                msg = msg + "Ник пользователя был изменен с " + usr.getNik() + " на " + nik + ". ";
+                msg = msg + "Ник пользователя был изменен с " + "\""+ usr.getNik() + "\""+ " на " + "\""+ nik + "\""+ ". ";
                 usr.setNik(nik);
             }
 
             if (usr.getBorn().equals(born)) {
                 usr.setBorn(new java.sql.Date(born.getTime()));
             } else {
-                msg = msg + "Дата рождения изменена с " + usr.getBorn() + " на " + brn + ". ";
+                msg = msg + "Дата рождения изменена с " + "\""+ usr.getBorn() + "\""+ " на " + "\""+ brn + "\""+ ". ";
                 usr.setBorn(new java.sql.Date(born.getTime()));
             }
 
             if ((usr.getPhone() != null) && (usr.getPhone().equals(phone))) {
                 usr.setPhone(phone);
             } else {
-                msg = msg + "Номер телефона был изменен с " + usr.getPhone() + " на " + phone + ". ";
+                msg = msg + "Номер телефона был изменен с " + "\""+ usr.getPhone() + "\""+ " на " + "\""+ phone + "\""+ ". ";
                 usr.setPhone(phone);
             }
 
             if ((usr.getEmail() != null) && (usr.getEmail().equals(email))) {
                 usr.setEmail(email);
             } else {
-                msg = msg + "Электронная почта была изменена с " + usr.getEmail() + " на " + email + ". ";
+                msg = msg + "Электронная почта была изменена с " + "\""+ usr.getEmail() + "\""+ " на " + "\""+ email + "\""+ ". ";
                 usr.setEmail(email);
             }
 
-            RoleBeanRemoteHome roleHome = (RoleBeanRemoteHome) EJBHelper.lookupHome("ejb/RoleBean", RoleBeanRemoteHome.class);
-            RoleBeanRemote rbr = roleHome.findByPrimaryKey(new Long(usr.getRoleId()));
+
 
             if (type.equals("updateUser")) {
+                            RoleBeanRemoteHome roleHome = (RoleBeanRemoteHome) EJBHelper.lookupHome("ejb/RoleBean", RoleBeanRemoteHome.class);
+            RoleBeanRemote rbr = roleHome.findByPrimaryKey(new Long(usr.getRoleId()));
                 long id_role = Long.parseLong(request.getParameter("ID_ROLE"));
                 if (usr.getRoleId() == id_role) {
                     usr.setRoleId(new Long(id_role));
                 } else {
                     String oldRole = rbr.getName();
                     usr.setRoleId(new Long(id_role));
-                    msg = msg + "Права доступа были изменены с " + oldRole + " на " + rbr.getName();
+                    rbr = roleHome.findByPrimaryKey(new Long(usr.getRoleId()));
+                    msg = msg + "Права доступа были изменены с " + "\""+ oldRole + "\""+ " на " + "\""+ rbr.getName()+ "\""+ ". ";
                 }
             }
 
@@ -588,15 +590,17 @@ int rnd = random.nextInt();
 
             if (type.equals("updateUser")) {
                 result = "<div class=\"success\"><p align=\"center\">пользователь отредактирован</p></div>";
+                usr.sendMessage(id, "\"USER\"", "Отредактирован пользователь " + "\""+ usr.getNik() + "\""+ msg, new Long(usr.getId()), 2);
 
                 session.removeAttribute("userOld");
             }
             if (type.equals("updateProfil")) {
                 result = "<div class=\"success\"><p align=\"center\">профиль отредактирован</p></div>";
+                usr.sendMessage(id, "\"USER\"", "Профиль отредактирован " + msg, new Long(usr.getId()), 2);
                 session.setAttribute("user", usr);
             }
             //  rd = request.getRequestDispatcher("updateUser.jsp?DO=" + type);
-            usr.sendMessage(id, "\"USER\"", "Отредактирован пользователь :" + usr.getNik() + msg, new Long(usr.getId()), 2);
+            
 
         } catch (UpdateException ex) {
             result = "<div class=\"warning\"><p align=\"center\">" + ex.getMessage() + "</p></div>";
@@ -608,7 +612,7 @@ int rnd = random.nextInt();
                 //  session.setAttribute("user",usr);
             }
         } catch (NamingException ex) {
-            result = "<div class=\"warning\"><p align=\"center\">неизвестная ошибка</p></div>";
+            result = "<div class=\"warning\"><p align=\"center\">Неизвестная ошибка</p></div>";
             if (type.equals("updateUser")) {
 
                 session.setAttribute("usrOld", usr);
@@ -626,7 +630,7 @@ int rnd = random.nextInt();
                 //  session.setAttribute("user",usr);
             }
         } catch (ParseException ex) {
-            result = "<div class=\"warning\"><p align=\"center\">ошибка ввода даты рождения</p></div>";
+            result = "<div class=\"warning\"><p align=\"center\">Ошибка ввода даты рождения</p></div>";
             if (type.equals("updateUser")) {
 
                 session.setAttribute("usrOld", usr);
@@ -635,7 +639,7 @@ int rnd = random.nextInt();
                 //  session.setAttribute("user",usr);
             }
         } catch (Exception ex) {
-            result = "<div class=\"warning\"><p align=\"center\">ошибка</p></div>";
+            result = "<div class=\"warning\"><p align=\"center\">Ошибка</p></div>";
             if (type.equals("updateUser")) {
 
                 session.setAttribute("usrOld", usr);
@@ -657,7 +661,7 @@ int rnd = random.nextInt();
         HttpSession session = request.getSession();
         UserBeanRemote usr = JSPHelper.getUser2(session);
         String rolename = request.getParameter("ROLE");
-        String result = "<div class=\"warning\"><p align=\"center\">Пользователи не найденны</p></div>";
+        String result = "<div class=\"warning\"><p align=\"center\">Пользователи не найдены</p></div>";
         try {
             long role_id = 0;
             if ("admin".equals(rolename)) {
@@ -705,7 +709,7 @@ int rnd = random.nextInt();
             Long id = new Long(user.getId());
             //userHome.remove(id);
             user.setRoleId(new Long(4));
-            usr.sendMessage(new Long(usr.getId()), "\"USER\"", "Пользователь заблокирован: " + nik, id, 2);
+            usr.sendMessage(new Long(usr.getId()), "\"USER\"", "Пользователь заблокирован " + "\""+ nik+ "\""+ ". ", id, 2);
 
             result = "<div class=\"success\"><p align=\"center\">Блокировка завершена</p></div>";
         } catch (ObjectNotFoundException ex) {
@@ -826,7 +830,7 @@ int rnd = random.nextInt();
             }
             OpinionBeanRemoteHome opinionHome = (OpinionBeanRemoteHome) EJBHelper.lookupHome("ejb/OpinionBean", OpinionBeanRemoteHome.class);
             OpinionBeanRemote obr = opinionHome.create(new Long(product.getId()), new Long(usr.getId()), text);
-            obr.sendMessage(new Long(usr.getId()), "\"OPINION\"", "Добавлен коментарий о продукте " + product.getName() + " от пользователя: " + obr.getUserName(), new Long(obr.getIdOpinion()), 1);
+            obr.sendMessage(new Long(usr.getId()), "\"OPINION\"", "Добавлен комментарий о продукте " + "\""+ product.getName()+ "\""+ ". ", new Long(obr.getIdOpinion()), 1);
             rd = request.getRequestDispatcher("getOpinion.jsp");
             request.setAttribute("result", product);
             rd.forward(request, response);
@@ -867,7 +871,7 @@ int rnd = random.nextInt();
             String usrName = obr.getUserName();
             opinionHome.remove(new Long(Long.parseLong(id_op)));
 
-            usr.sendMessage(new Long(usr.getId()), "\"OPINION\"", "Удален комментарий о продукте: " + product.getName() + " от пользователя: " + usrName + ". ", null, 2);
+            usr.sendMessage(new Long(usr.getId()), "\"OPINION\"", "Удален комментарий о продукте " + "\""+ product.getName()+ "\""+ ". ", null, 2);
 
             rd = request.getRequestDispatcher("getOpinion.jsp");
             request.setAttribute("result", product);
@@ -946,9 +950,9 @@ int rnd = random.nextInt();
 
             Long idu = new Long(usr.getId());
             Long ido = new Long(ctg.getId());
-            ctg.sendMessage(idu, "\"CATALOG\"", "Добавлен каталог: " + name, ido, 1);
+            ctg.sendMessage(idu, "\"CATALOG\"", "Добавлен каталог " + "\""+ name+ "\""+ ". ", ido, 1);
 
-            ctg.sendMessage(idu, "\"CATALOG\"", "В каталог: " + ctg.getParentName() + " добавлен дочерний каталог: " + name, new Long(ctg.getParentId()), 1);
+            ctg.sendMessage(idu, "\"CATALOG\"", "В каталог " + "\""+ ctg.getParentName() + "\""+ " добавлен дочерний каталог " + "\""+ name+ "\""+ ". ", new Long(ctg.getParentId()), 1);
 
 
             result = "<div class=\"success\"><p align=\"center\">Добавление каталога завершено</p></div>";
@@ -993,8 +997,8 @@ int rnd = random.nextInt();
             Long idu = new Long(usr.getId());
             CatalogBeanRemote parentCtg = catalogHome.findByPrimaryKey(idp);
 
-            parentCtg.sendMessage(idu, "\"CATALOG\"", "Из каталога: " + parentCtg.getName() + " удален дочерний каталог: " + name, idp, 2);
-            ctg.sendMessage(idu, "\"CATALOG\"", "Удален каталог: " + ctg.getName(), null, 2);
+            parentCtg.sendMessage(idu, "\"CATALOG\"", "Из каталога " + "\""+ parentCtg.getName() + "\""+ " удален дочерний каталог " + "\""+ name+ "\""+ ". ", idp, 2);
+            ctg.sendMessage(idu, "\"CATALOG\"", "Удален каталог " + "\""+ ctg.getName()+ "\""+ ". ", null, 2);
             ctg.remove();
             result = "<div class=\"success\"><p align=\"center\">Удаление завершено</p></div>";
         } catch (FinderException ex) {
@@ -1092,7 +1096,7 @@ int rnd = random.nextInt();
 
     protected void addOrder(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, ParseException, IOException, LoginException {
-        String result = "заказ не добавлен";
+        String result = "Заказ не добавлен";
         UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
         RequestDispatcher rd;
         String kol_vo = "";
@@ -1129,7 +1133,7 @@ int rnd = random.nextInt();
                 throw new MyException("Вы уже добавили этот продукт в свою корзину.");
             } catch (FinderException ex) {
                 OrderBeanRemote order = orderHome.create(new Long(usr.getId()), new Long(Long.parseLong(id_product)), new Boolean(false), new Integer(Integer.parseInt(kol_vo)));
-                order.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Добавлен заказ на товар: " + order.getNameProduct() + " пользователем: " + order.getNameUser(), new Long(order.getId()), 1);
+                order.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Добавлен заказ на товар " + "\""+ order.getNameProduct() + "\""+ ". ", new Long(order.getId()), 1);
                 //  if (session.getAttribute("homepage") = null) {
                 //     rd = request.getRequestDispatcher("getCatalog.jsp");
                 //  }
@@ -1142,13 +1146,13 @@ int rnd = random.nextInt();
         } catch (NegativeNumberException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Введите положительное кол-во товара</p></div>";
         } catch (NumberFormatException ex) {
-            result = "<div class=\"warning\"><p align=\"center\">не правильный формат данных</p></div>";
+            result = "<div class=\"warning\"><p align=\"center\">Не правильный формат данных</p></div>";
         } catch (CreateException ex) {
-            result = "<div class=\"warning\"><p align=\"center\">произошла ошибка при добавлении заказа</p></div>";
+            result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка при добавлении заказа</p></div>";
         } catch (RemoteException ex) {
-            result = "<div class=\"warning\"><p align=\"center\">произошла ошибка при добавлении заказа</p></div>";
+            result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка при добавлении заказа</p></div>";
         } catch (NamingException ex) {
-            result = "<div class=\"warning\"><p align=\"center\">произошла ошибка при добавлении заказа</p></div>";
+            result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка при добавлении заказа</p></div>";
         } finally {
             request.setAttribute("kol_vo", kol_vo);
             request.setAttribute("result", result);
@@ -1195,7 +1199,7 @@ int rnd = random.nextInt();
                 ord.setStatus(true);
                 java.sql.Date f = new java.sql.Date((new java.util.Date()).getTime());
                 ord.setOrderByDate(f);
-                ord.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Заказ " + ord.getId() + " пользователя : " + ord.getNameUser() + " на товар: " + ord.getNameProduct() + " оформлен. Дата оформления заказа: " + ord.getOrderByDate(), new Long(ord.getId()), 3);
+                ord.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Заказ " + "\""+ ord.getId()  + "\""+ " на товар " + "\""+ ord.getNameProduct() + "\""+ " оформлен. Дата оформления заказа " + "\""+ ord.getOrderByDate()+ "\""+ ". ", new Long(ord.getId()), 3);
             }
             result2 = "<div class=\"success\"><p align=\"center\">Заказ оформлен</p></div>";
             request.setAttribute("result", orderHome.findByUserAndStatus(new Long(usr.getId()), false));
@@ -1226,7 +1230,7 @@ int rnd = random.nextInt();
         String nameProduct = request.getParameter("nameProduct");
         try {
             if (nameProduct == null) {
-                result = "<div class=\"warning\"><p align=\"center\">введите название продукта</p></div>";
+                result = "<div class=\"warning\"><p align=\"center\">Введите название продукта</p></div>";
                 request.setAttribute("result", result);
             } else {
                 // String nameProduct = request.getParameter("nameProduct");
@@ -1234,7 +1238,7 @@ int rnd = random.nextInt();
                 ProductBeanRemote product = productHome.findByName(nameProduct);
                 //  order.setStatus(true);
                 request.getSession().setAttribute("product", product);
-                request.setAttribute("result", "<div class=\"success\"><p align=\"center\">поиск завершен успешно</p></div>");
+                request.setAttribute("result", "<div class=\"success\"><p align=\"center\">Поиск завершен успешно</p></div>");
                 rd = request.getRequestDispatcher("updateProduct.jsp?DO=update");
             }
         } catch (FinderException ex) {
@@ -1286,7 +1290,7 @@ int rnd = random.nextInt();
                             request.setAttribute("result", result);
                             throw new Exception();
                         } catch (FinderException ex) {
-                            String str = " Изменено название продукта с " + product.getName() + " на " + name;
+                            String str = " Изменено название продукта с " + "\""+ product.getName() + "\""+ " на " + "\""+ name+ "\""+". ";
                             product.setName(name);
                             message = message + str;
                         }
@@ -1296,7 +1300,7 @@ int rnd = random.nextInt();
                         description = "";
                     }
                     if (!description.equals(product.getDescription())) {
-                        String str = ". Изменено описание продукта";
+                        String str = "Изменено описание продукта. ";
                         product.setDescription(description);
                         message = message + str;
                     }
@@ -1306,7 +1310,7 @@ int rnd = random.nextInt();
                         throw new NegativeNumberException("Введите положительную цену продукта");
                     }
                     if (product.getPrice() != priceDouble) {
-                        String str = ". Изменена цена продукта с " + product.getPrice() + " на " + priceDouble;
+                        String str = "Изменена цена продукта с " + "\""+ product.getPrice() + "\""+ " на " + "\""+ priceDouble+ "\""+". ";
                         product.setPrice(new Double(priceDouble));
                         message = message + str;
                     }
@@ -1317,12 +1321,12 @@ int rnd = random.nextInt();
                     //   CatalogBeanRemote ctg1 = catalogHome.findByPrimaryKey(new Long(product.getIdCatalog()));
                     if (ctg.getId() != product.getIdCatalog()) {
                         CatalogBeanRemote ctg1 = catalogHome.findByPrimaryKey(new Long(product.getIdCatalog()));
-                        String str = ". Продукт перемещени из каталога " + ctg1.getName() + " в каталог " + ctg.getName();
+                        String str = "Продукт перемещени из каталога " + "\""+ ctg1.getName() + "\""+ " в каталог " + "\""+ ctg.getName()+ "\""+". ";
                         product.setIdCatalog(new Long(ctg.getId()));
                         message = message + str;
                     }
                     result = "<div class=\"success\"><p align=\"center\">Продукт обновлен</p></div>";
-                    product.sendMessage(new Long(usr.getId()), "\"PRODUCT\"", "Отредактирован продукт " + product.getName() + ". " + message, new Long(product.getId()), 2);
+                    product.sendMessage(new Long(usr.getId()), "\"PRODUCT\"", "Отредактирован продукт " + "\""+ product.getName() + "\""+ ". " + message, new Long(product.getId()), 2);
 
                     request.setAttribute("result", result);
                     rd = request.getRequestDispatcher("updateProduct.jsp?DO=select");
@@ -1376,7 +1380,7 @@ int rnd = random.nextInt();
         String nameCatalog = request.getParameter("nameCatalog");
         try {
             if (nameCatalog == null) {
-                result = "<div class=\"warning\"><p align=\"center\">введите название каталога</p></div>";
+                result = "<div class=\"warning\"><p align=\"center\">Введите название каталога</p></div>";
                 request.setAttribute("result", result);
 
             } else {
@@ -1386,7 +1390,7 @@ int rnd = random.nextInt();
                 CatalogBeanRemote catalog = catalogHome.findByName(nameCatalog);
                 //  order.setStatus(true);
                 request.getSession().setAttribute("catalog", catalog);
-                request.setAttribute("result", "<div class=\"success\"><p align=\"center\">поиск завершен успешно</p></div>");
+                request.setAttribute("result", "<div class=\"success\"><p align=\"center\">Поиск завершен успешно</p></div>");
                 rd = request.getRequestDispatcher("updateCatalog.jsp?DO=update");
             }
         } catch (FinderException ex) {
@@ -1440,9 +1444,9 @@ int rnd = random.nextInt();
                             request.setAttribute("result", result);
                             throw new Exception();
                         } catch (FinderException ex) {
-                            msg = msg + "Имя каталога было сменено с " + catalog.getName() + " на " + name + ". ";
+                            msg = msg + "Имя каталога было сменено с " + "\""+ catalog.getName() + "\""+ " на " + "\""+ name + "\""+ ". ";
                             catalog.setName(name);
-                            catalog.sendMessage(new Long(usr.getId()), "\"CATALOG\"", "Дочерний каталог: " + catalog.getName() + " каталога: " + catalog.getParentName() + " обновлен" + msg, new Long(catalog.getParentId()), 2);
+                            catalog.sendMessage(new Long(usr.getId()), "\"CATALOG\"", "Дочерний каталог " + "\""+ catalog.getName() + "\""+ " каталога " + "\""+ catalog.getParentName() + "\""+ " обновлен" +". "+ msg, new Long(catalog.getParentId()), 2);
 
                         }
                     }
@@ -1458,10 +1462,10 @@ int rnd = random.nextInt();
                             }
                             String oldParent = catalog.getParentName();
                             long oldPid = catalog.getParentId();
-                            msg = msg + "Родительский каталог был сменен с " + oldParent + " на " + nameParent + ". ";
+                            msg = msg + "Родительский каталог был сменен с " + "\""+ oldParent + "\""+ " на " + "\""+ nameParent + "\""+ ". ";
                             catalog.setParentId(parent.getId());
-                            catalog.sendMessage(new Long(usr.getId()), "\"CATALOG\"", "Дочерний каталог: " + catalog.getName() + " каталога: " + oldParent + " перенесен в каталог " + catalog.getParentName(), new Long(oldPid), 2);
-                            catalog.sendMessage(new Long(usr.getId()), "\"CATALOG\"", "Добавлен дочерний каталог: " + catalog.getName(), new Long(catalog.getParentId()), 2);
+                            catalog.sendMessage(new Long(usr.getId()), "\"CATALOG\"", "Дочерний каталог " + "\""+ catalog.getName() + "\""+ " каталога " + "\""+ oldParent + "\""+ " перенесен в каталог " + "\""+ catalog.getParentName()+ "\""+ ". ", new Long(oldPid), 2);
+                            catalog.sendMessage(new Long(usr.getId()), "\"CATALOG\"", "Добавлен дочерний каталог " + "\""+ catalog.getName()+ "\""+ ". ", new Long(catalog.getParentId()), 2);
 
                         }
                     } else {
@@ -1469,7 +1473,7 @@ int rnd = random.nextInt();
                     }
                     result = "<div class=\"success\"><p align=\"center\">Каталог обновлен</p></div>";
                     //  parent.sendMessage(new Long(usr.getId()), "CATALOG", "Дочерний каталог: " + catalog.getName() + " каталога: " + parent.getName() + " обновлен" + msg, new Long(catalog.getParentId()), 2);
-                    catalog.sendMessage(new Long(usr.getId()), "\"CATALOG\"", "Каталог: " + catalog.getName() + " обновлен" + msg, new Long(catalog.getId()), 2);
+                    catalog.sendMessage(new Long(usr.getId()), "\"CATALOG\"", "Каталог " + "\""+ catalog.getName() + "\""+ " обновлен." + msg, new Long(catalog.getId()), 2);
 
                     session.removeAttribute("catalog");
                     request.setAttribute("result", result);
@@ -1510,7 +1514,7 @@ int rnd = random.nextInt();
             OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
             OrderBeanRemote order = orderHome.findByPrimaryKey(new Long(Long.parseLong(id_order)));
 
-            order.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Удален заказ на товар: " + order.getNameProduct() + " пользователем: " + order.getNameUser(), new Long(order.getId()), 2);
+            order.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Удален заказ на товар " + "\""+ order.getNameProduct() + "\""+". ", new Long(order.getId()), 2);
 
 
             order.remove();
@@ -1551,7 +1555,8 @@ int rnd = random.nextInt();
                 user = userHome.findByPrimaryKey(new Long(id_users[i]));
                 user.setRoleId(new Long(4));
                 list.add(user);
-                //    user.sendMessage(new Long(usr.getId()), "\"\"", "Удален заказ", null, 2);
+                user.sendMessage(new Long(usr.getId()), "\"USER\"", "Пользователь заблокирован " + "\""+ user.getNik()+ "\""+ ". ", new Long(id_users[i]), 2);
+                   // user.sendMessage(new Long(usr.getId()), "\"\"", "Удален заказ", null, 2);
             }
 
             //   List list = (List) userHome.findByRole(new Long(4));
@@ -1711,8 +1716,8 @@ int rnd = random.nextInt();
                     ImageBeanRemoteHome imageHome = (ImageBeanRemoteHome) EJBHelper.lookupHome("ejb/ImageBean", ImageBeanRemoteHome.class);
                     ImageBeanRemote imageBean = imageHome.create(pbr.getId(), name, width, height);
 
-                    imageBean.sendMessage(new Long(usr.getId()), "IMAGE", "Добавлено изображение: "+ item.getName() + " к товару: " + pbr.getName() , new Long(imageBean.getId_img()), 2);
-                    pbr.sendMessage(new Long(usr.getId()), "PRODUCT", "Изменен продукт: "+ pbr.getName()  + ". Добавлено изображение: " + item.getName() , new Long(pbr.getId()), 2);
+                    imageBean.sendMessage(new Long(usr.getId()), "\"IMAGE\"", "Добавлено изображение "+ "\""+ item.getName() + "\""+ " к товару " + "\""+ pbr.getName()+ "\""+". " , new Long(imageBean.getId_img()), 2);
+                    pbr.sendMessage(new Long(usr.getId()), "\"PRODUCT\"", "Изменен продукт "+ "\""+ pbr.getName()  + "\""+ ". Добавлено изображение " + "\""+ item.getName()+ "\""+". " , new Long(pbr.getId()), 2);
                 }
 
             }
@@ -1779,8 +1784,8 @@ int rnd = random.nextInt();
            ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
             ProductBeanRemote pr = productHome.findByPrimaryKey(new Long(imageBean.getId_product()));
 
-          //     pr.sendMessage(new Long(usr.getId()), "PRODUCT", "Изменен продукт: " + pr.getName() + ". Удалено изображение: " + name, new Long(pr.getId()), 2);
-           // imageBean.sendMessage(new Long(usr.getId()), "IMAGE", "Удалено изображение: " + name, null, 2);
+            pr.sendMessage(new Long(usr.getId()), "\"PRODUCT\"", "Изменен продукт " + "\""+ pr.getName() + "\""+ ". Удалено изображение " + "\""+ name+ "\""+". ", new Long(pr.getId()), 2);
+            imageBean.sendMessage(new Long(usr.getId()), "\"IMAGE\"", "Удалено изображение " + "\""+ name+ "\""+". ", null, 2);
 
             
             imageHome.remove(new Long(imageBean.getId_img()));
@@ -1869,7 +1874,9 @@ int rnd = random.nextInt();
             long id_order = Long.parseLong(strId_product);
             OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
             OrderBeanRemote ord = orderHome.findByPrimaryKey(new Long(id_order));
+            int oldKol= ord.getAmount();
             ord.setAmount(int_amount);
+            ord.sendMessage(new Long(usr.getId()), "\"ORDER\"","Заказ "+ "\""+ord.getId()+ "\""+" изменен. Изменено кол-во товара с "+ "\""+oldKol+ "\""+" на "+ "\""+ord.getAmount()+ "\""+". ",new Long(ord.getId()), 2);
             //  if (session.getAttribute("homepage") = null) {
             //     rd = request.getRequestDispatcher("getCatalog.jsp");
             //  }
@@ -1886,11 +1893,11 @@ int rnd = random.nextInt();
             request.setAttribute("result2", result);
             getOrders(request, response, false);
         } catch (RemoteException ex) {
-            result = "<div class=\"warning\"><p align=\"center\">произошла ошибка</p></div>";
+            result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
             request.setAttribute("result2", result);
             getOrders(request, response, false);
         } catch (NamingException ex) {
-            result = "<div class=\"warning\"><p align=\"center\">произошла ошибка</p></div>";
+            result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
             request.setAttribute("result2", result);
             getOrders(request, response, false);
         } finally {

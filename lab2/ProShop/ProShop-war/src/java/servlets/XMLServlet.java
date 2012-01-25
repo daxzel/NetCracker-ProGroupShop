@@ -108,7 +108,7 @@ public class XMLServlet extends HttpServlet {
                 table = "\"ORDER\"";
             }
             if ("5".equals(t)) {
-                table = "PRODUCT";
+                table = "\"PRODUCT\"";
             }
             if ("6".equals(t)) {
                 table = "\"ROLE\"";

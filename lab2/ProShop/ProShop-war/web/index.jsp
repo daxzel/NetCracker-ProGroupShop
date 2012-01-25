@@ -102,9 +102,9 @@ if (r<= 2){
 <h1>История</h1>
 <table align="center" border="0">
                          <tr>
-                            <td>Автор изменения</td>
-                            <td align="center">Статус</td>
-                            <td>Дата изменения</td>
+                            <td>Автор события</td>
+                            <td align="center">Событие</td>
+                            <td>Дата события</td>
                          </tr>
                          
                          
