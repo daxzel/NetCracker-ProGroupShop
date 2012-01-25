@@ -448,6 +448,7 @@ public class ImageBean implements EntityBean {
         } catch (NamingException ex) {
             throw new EJBException("Произошла ошибка добавления");
         } catch (Exception ex) {
+            ex.printStackTrace();
             throw new EJBException("Произошла ошибка добавления");
         } finally {
 

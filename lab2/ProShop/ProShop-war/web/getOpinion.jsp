@@ -1,4 +1,4 @@
-<%-- 
+<%--
     Document   : getOpinion
     Created on : 16.10.2011, 18:20:15
     Author     : ололо
@@ -31,10 +31,10 @@
     <body>
 
         <%  UserBeanRemote usr = null;
-         long r = 5;
+                    long r = 5;
                     try {
                         usr = JSPHelper.getUser2(session);
-                         r = usr.getRoleId();
+                        r = usr.getRoleId();
                     } catch (LoginException ex) {
                     } finally {
 
@@ -87,32 +87,33 @@
 
                     %>
                     <h1><%= prd.getName()%></h1>
-                                        <table align="center" border="0">
+                    <table align="center" border="0">
                         <% for (int n = 0; n <= (list1.size() - 1); n++) {
                                                           img = (ImageBeanRemote) list1.get(n);%>
                         <td><img width="50%"  src="<%=request.getContextPath()%>/image?ID=<%= img.getId_img()%>"</td>
                             <%}%>
                     </table><br>
-
+                    <h1>Цена</h1>
+                    <% BigDecimal priceProd = new BigDecimal(prd.getPrice());%>
+                    <p><font size="6"><%= priceProd.toBigInteger()%></font>руб. </p><br>
                     <%if (prd.getDescription() != null) {%>
                     <h1>Описание</h1><br>
+                    <table><tr>
 
-                            <td><%= prd.getDescription()%></td>
+                            <td width="80%"><%= prd.getDescription()%></td>
                             <%} else {%>
                             <td></td>
-<%}%>
-<br><br><br><br><br><br><br><br>
-<% BigDecimal priceProd = new BigDecimal(prd.getPrice()); %>
- <h1 align="right">Цена</h1>
-  <p align="right"><font size="6"><%= priceProd.toBigInteger()%></font>руб. </p><br>
-                <% if  (r<= 3){ %>
-                    <p align="right"><a href ="addOrder.jsp"><img align="right" alt="В корзину"  width="12%" src="<%=request.getContextPath()%>/static/cart.jpg"></a></p>
-                     <% } %>
-<br>
-<br>
-                    <br><br><br><br>
-<h1>Комментарии</h1>
-                    <table align="center" rules="rows" frame="below" bordercolor="#c0c0c0">
+                            <%}%>
+                            <td width="20%"><a href ="addOrder.jsp"><img alt="В корзину"   src="<%=request.getContextPath()%>/static/cart.jpg"></a>
+                            </td>
+                        </tr>
+                    </table>
+                    <br><br>
+
+
+
+                    <h1>Комментарии</h1>
+                    <table align="center" rules="rows" frame="below" bordercolor="#c0c0c0" width="700px">
 
                         <tr align="center">
                             <td width ="10%" align="center">Никнейм</td>
@@ -132,20 +133,21 @@
                                 <a href ="delComment?ID=<%=opn.getIdOpinion()%>">Удалить комментарий</a>
                                 <%}
                                                                                           }%></td>
-                                <%}%>
+
                         </tr>
+                        <%}%>
                     </table>
                     <br>
                     <%if (usr != null) {%>
-                    <form action="addComment">
-                        <table align="center"  border="0" width="100%">
-                            <tr align="center">
+                    <form action="addComment" method="post">
+                        <table align=  border="0">
+                            <tr >
                                 <td colspan="2">Добавить комментарий к <%=prd.getName()%></td>
 
                             </tr>
                             <tr>
-                                <td align="center">
-                                    <textarea name="COMMENT" rows="4" cols="110">
+                                <td>
+                                    <textarea name="COMMENT" rows="4" cols="90">
                                     </textarea></td><td>
                                     <input type="submit" value=" Ввод " class="Button"/>
                                 </td></tr>
@@ -153,10 +155,12 @@
                     </form>
 
                     <%}
-                          }if(request.getAttribute("result2") instanceof String){
+                          }
+                          if (request.getAttribute("result2") instanceof String) {
                     %>
                     <%=request.getAttribute("result2")%>
-                    <%}}
+                    <%}
+                                    }
                                 }
                                 /*}else{
                                 RequestDispatcher rd;
