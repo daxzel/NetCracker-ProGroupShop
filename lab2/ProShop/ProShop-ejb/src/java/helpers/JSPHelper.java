@@ -133,10 +133,14 @@ public class JSPHelper {
             his = (HistoryEntityBeanRemote) historyByProduct.get(i);
             if (his.getObjId() > 0) {
 
-                try {                    pbr = productHome.findByPrimaryKey(new Long(his.getObjId()));                    products.add(pbr);                } catch (FinderException ex) {                }
-             }
+                try {
+                    pbr = productHome.findByPrimaryKey(new Long(his.getObjId()));
+                    products.add(pbr);
+                } catch (FinderException ex) {
+                }
             }
         }
+
 
         return products;
 

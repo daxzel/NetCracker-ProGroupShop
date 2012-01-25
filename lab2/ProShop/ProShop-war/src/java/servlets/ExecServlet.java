@@ -58,10 +58,8 @@ public class ExecServlet extends HttpServlet {
 
     protected void registration(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, ParseException, IOException {
-
         String result;
         RequestDispatcher rd;
-
         String name = request.getParameter("NAME");
         String surname = request.getParameter("SURNAME");
         String otchestvo = request.getParameter("OTCHESTVO");
@@ -71,8 +69,6 @@ public class ExecServlet extends HttpServlet {
         String born = request.getParameter("BORN");
         String phone = request.getParameter("PHONE");
         String email = request.getParameter("EMAIL");
-
-
         request.setAttribute("NAME", name);
         request.setAttribute("SURNAME", surname);
         request.setAttribute("OTCHESTVO", otchestvo);
@@ -82,9 +78,6 @@ public class ExecServlet extends HttpServlet {
         request.setAttribute("BORN", born);
         request.setAttribute("EMAIL", email);
         request.setAttribute("PHONE", phone);
-
-
-
         try {
             if (name.isEmpty()) {
                 throw new RegistrationException("Поле имя не заполнено");
@@ -115,8 +108,6 @@ public class ExecServlet extends HttpServlet {
             } catch (Exception ex) {
                 throw new RegistrationException("Неверный формат даты");
             }
-
-
             //DBManager.addUser(name, surname, otchestvo, nik, password, bornDate, phone, email, Integer.parseInt(role));
             UserBeanRemoteHome userHome = (UserBeanRemoteHome) EJBHelper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
             RoleBeanRemoteHome roleHome = (RoleBeanRemoteHome) EJBHelper.lookupHome("ejb/RoleBean", RoleBeanRemoteHome.class);
@@ -125,11 +116,8 @@ public class ExecServlet extends HttpServlet {
             password = JSPHelper.MD5(password);
             UserBeanRemote usr = userHome.create(name, surname, otchestvo, nik, password, sqlDate, phone, email, new Long(3));
             RoleBeanRemote rbr = roleHome.findByPrimaryKey(new Long(3));
-
             Long ido = new Long(usr.getId());
-            usr.sendMessage(new Long(usr.getId()), "\"USER\"", "Зарегестрирован пользователь " + "\""+nik + "\""+ ". Статус " + "\""+ rbr.getName() + "\""+ ". Дата регистрации " + "\""+ usr.getRegistrationDate()+ "\""+ ". ", ido, 1);
-
-
+            usr.sendMessage(new Long(usr.getId()), "\"USER\"", "Зарегестрирован пользователь " + "\"" + nik + "\"" + ". Статус " + "\"" + rbr.getName() + "\"" + ". Дата регистрации " + "\"" + usr.getRegistrationDate() + "\"" + ". ", ido, 1);
             result = "<div class=\"success\"><p align=\"center\">Пользователь зарегестрирован</p></div>";
         } catch (DuplicateKeyException ex) {
             result = "<div class=\"warning\"><p align=\"center\">" + ex.getMessage() + "</p></div>";
@@ -144,7 +132,6 @@ public class ExecServlet extends HttpServlet {
         } catch (Exception ex) {
             result = "<div class=\"warning\"><p align=\"center\">Неизвестная ошибка</p></div>";
         }
-
         request.setAttribute("result", result);
         rd = request.getRequestDispatcher("registration.jsp");
         rd.forward(request, response);
@@ -190,9 +177,7 @@ public class ExecServlet extends HttpServlet {
                 session.removeAttribute("homepage");
             }
             session.removeAttribute("user");
-
         }
-
         RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
         rd.forward(request, response);
     }
@@ -226,9 +211,6 @@ public class ExecServlet extends HttpServlet {
         double price = 0;
         int id_catalog = 0;
         try {
-
-
-
             DiskFileItemFactory factory = new DiskFileItemFactory();
             factory.setSizeThreshold(1024 * 1024);
             File tempDir = (File) getServletContext().getAttribute("javax.servlet.context.tempdir");
@@ -239,70 +221,30 @@ public class ExecServlet extends HttpServlet {
             upload.setSizeMax(1024 * 1024 * 10);
 
             moreTools.SerializbleImage im = null;
-
             int i = 0;
-
             List items = upload.parseRequest(request);
             List items2 = items;
             Iterator iter = items.iterator();
-
-
             while (iter.hasNext()) {
                 FileItem item = (FileItem) iter.next();
-
                 if (item.isFormField()) {
                     String fieldName = item.getFieldName();
-
                     if (fieldName.equals("NAME")) {
                         name = item.getString("UTF-8");
-                        if ("".equals(name)) {
-                            throw new ProductException("Введите название продукта");
-                        }
 
                     } else if (fieldName.equals("DESCRIPTION")) {
                         description = item.getString("UTF-8");
-
                     } else if (fieldName.equals("PRICE")) {
                         priceS = item.getString("UTF-8");
-                        if ("".equals(priceS)) {
-                            throw new ProductException("Цена  продукта не может быть пустым полем");
-                        }
+
                     } else if (fieldName.equals("NAME_CATALOG")) {
                         name_catalog = item.getString("UTF-8");
-                        if ("".equals(name_catalog)) {
-                            throw new ProductException("Название каталога продукта не может быть пустым полем");
-                        }
                     }
-
-
-                }
-            }
-
-
-            price = Double.parseDouble(priceS);
-            if (price <= 0) {
-                throw new NegativeNumberException("Введите положительную цену продукта");
-            }
-            ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
-
-            // productHome.setParamMessage(usr.getId());
-            // productHome.setParamMessage(usr.getId());
-            ProductBeanRemote pbr = productHome.create(description, name_catalog, name, price);
-            CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
-            CatalogBeanRemote ctg = catalogHome.findByPrimaryKey(new Long(pbr.getIdCatalog()));
-
-            Iterator iter2 = items2.iterator();
-
-            while (iter2.hasNext()) {
-                FileItem item = (FileItem) iter2.next();
-
-                if (!item.isFormField()) {
+                } else {
                     File uploadetFile = null;
-
                     int sub1 = getServletContext().getRealPath("/").indexOf("Jurada");
                     // String path = getServletContext().getRealPath("/").substring(0, sub1) + "Jurada/lab2/ProShop/ProShop-war/web/Image/" + item.getName();
                     int rnd = random.nextInt();
-
                     do {
                         String path = getServletContext().getRealPath("/").substring(0, sub1) + "Jurada/lab2/ProShop/ProShop-war/web/Image/" + rnd + item.getName();
                         uploadetFile = new File(path);
@@ -310,39 +252,47 @@ public class ExecServlet extends HttpServlet {
 
                     uploadetFile.createNewFile();
                     item.write(uploadetFile);
-
                     im = new moreTools.SerializbleImage(item.getInputStream());
-
                     width = im.getWidth();
                     height = im.getHeight();
                     nameImage = new Integer(rnd).toString() + item.getName();
-
                     i++;
-
                     // ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
                     //ProductBeanRemote pbr = productHome.findByName(nameProduct);
-
-                    ImageBeanRemoteHome imageHome = (ImageBeanRemoteHome) EJBHelper.lookupHome("ejb/ImageBean", ImageBeanRemoteHome.class);
-                    ImageBeanRemote imageBean = imageHome.create(pbr.getId(), nameImage, width, height);
-
-                   imageBean.sendMessage(new Long(usr.getId()), "\"IMAGE\"", "Добавлено изображение "+ "\""+ item.getName()+ "\""+ " к товару " + "\""+ pbr.getName()+ "\""+ ". " , new Long(imageBean.getId_img()), 2);                    pbr.sendMessage(new Long(usr.getId()), "\"PRODUCT\"", "Изменен продукт "+ "\""+ pbr.getName()  + "\""+ ". Добавлено изображение " + "\""+ item.getName()+ "\""+ ". " , new Long(pbr.getId()), 2);                } else {}
+                }
             }
-
+            if ("".equals(name)||name.trim().isEmpty()) {
+                throw new ProductException("Введите название продукта");
+            }
+            if ("".equals(priceS) || priceS == null) {
+                throw new ProductException("Цена  продукта не может быть пустым полем");
+            }
+            price = Double.parseDouble(priceS);
+            if (price <= 0) {
+                throw new NegativeNumberException("Введите положительную цену продукта");
+            }
+            ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
+            // productHome.setParamMessage(usr.getId());
+            // productHome.setParamMessage(usr.getId());
+            ProductBeanRemote pbr = productHome.create(description, name_catalog, name, price);
+            CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
+            CatalogBeanRemote ctg = catalogHome.findByPrimaryKey(new Long(pbr.getIdCatalog()));
+            ImageBeanRemoteHome imageHome = (ImageBeanRemoteHome) EJBHelper.lookupHome("ejb/ImageBean", ImageBeanRemoteHome.class);
+            ImageBeanRemote imageBean = imageHome.create(pbr.getId(), nameImage, width, height);
+            imageBean.sendMessage(new Long(usr.getId()), "\"IMAGE\"", "Добавлено изображение " + "\"" + nameImage + "\"" + " к товару " + "\"" + pbr.getName() + "\"" + ". ", new Long(imageBean.getId_img()), 2);
+            pbr.sendMessage(new Long(usr.getId()), "\"PRODUCT\"", "Изменен продукт " + "\"" + pbr.getName() + "\"" + ". Добавлено изображение " + "\"" + nameImage + "\"" + ". ", new Long(pbr.getId()), 2);
             Long idu = new Long(usr.getId());
             // Long idu = new Long(usr.getId());
             Long ido = new Long(pbr.getId());
-            pbr.sendMessage(idu, "\"PRODUCT\"", "Добавлен продукт " + "\""+ name + "\""+ ", в каталог " + "\""+ pbr.getNameCatalog()+ "\".", ido, 1);
-            ctg.sendMessage(new Long(usr.getId()), "\"CATALOG\"", " Каталог " + "\""+ pbr.getNameCatalog() + "\""+ " изменен. Добавлен продукт " + "\""+ pbr.getName()+ "\""+ ". ", new Long(pbr.getIdCatalog()), 2);
-            ctg.sendMessage(new Long(usr.getId()), "\"CATALOG\"", " Каталог " + "\""+ ctg.getParentName() + "\""+ " изменен. Изменен дочерний каталог " + "\""+ pbr.getNameCatalog() + "\""+ ". Добавлен продукт " + "\""+ pbr.getName()+ "\""+ ". ", new Long(ctg.getParentId()), 2);
-
-
+            pbr.sendMessage(idu, "\"PRODUCT\"", "Добавлен продукт " + "\"" + name + "\"" + ", в каталог " + "\"" + pbr.getNameCatalog() + "\".", ido, 1);
+            ctg.sendMessage(new Long(usr.getId()), "\"CATALOG\"", " Каталог " + "\"" + pbr.getNameCatalog() + "\"" + " изменен. Добавлен продукт " + "\"" + pbr.getName() + "\"" + ". ", new Long(pbr.getIdCatalog()), 2);
+            ctg.sendMessage(new Long(usr.getId()), "\"CATALOG\"", " Каталог " + "\"" + ctg.getParentName() + "\"" + " изменен. Изменен дочерний каталог " + "\"" + pbr.getNameCatalog() + "\"" + ". Добавлен продукт " + "\"" + pbr.getName() + "\"" + ". ", new Long(ctg.getParentId()), 2);
             result = "<div class=\"success\"><p align=\"center\">Продукт добавлен</p></div>";
             request.setAttribute("NAME", name);
             request.setAttribute("DESCRIPTION", description);
             request.setAttribute("PRICE", priceS);
             request.setAttribute("NAME_CATALOG", name_catalog);
             page = "addProduct.jsp";
-
         } catch (FileUploadException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Ошибка в загрузке изображения на сервер</p></div>";
             request.setAttribute("NAME", name);
@@ -400,9 +350,6 @@ public class ExecServlet extends HttpServlet {
             rd = request.getRequestDispatcher(page);
             rd.forward(request, response);
         }
-
-
-
     }
 
     protected void delProduct(HttpServletRequest request,
@@ -413,27 +360,18 @@ public class ExecServlet extends HttpServlet {
         String result = "<div class=\"warning\"><p align=\"center\">Продукт не удален</p></div>";
         if (usr.getRoleId() > 2) {
             throw new LoginException("Вы не обладаете правами администратора");
-
-
         }
         try {
-
             String value = request.getParameter("VALUE");
             ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
             ProductBeanRemote pr = productHome.findByName(value);
             CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
             CatalogBeanRemote ctg = catalogHome.findByPrimaryKey(new Long(pr.getIdCatalog()));
-
             result = "<div class=\"success\"><p align=\"center\">Удаление завершено</p></div>";
-            pr.sendMessage(new Long(usr.getId()), "\"PRODUCT\"", "Удален продукт " + "\""+ pr.getName() + "\""+ " из каталога " + "\""+ pr.getNameCatalog()+ "\""+ ". ", null, 2);
-            ctg.sendMessage(new Long(usr.getId()), "\"CATALOG\"", " Каталог " + "\""+ pr.getNameCatalog() + "\""+ " изменен. Удален продукт " + "\""+ pr.getName()+ "\""+ ". ", new Long(pr.getIdCatalog()), 2);
-            ctg.sendMessage(new Long(usr.getId()), "\"CATALOG\"", " Каталог " + "\""+ ctg.getParentName() + "\""+ " изменен. Изменен дочерний каталог " + "\""+ pr.getNameCatalog() + "\""+ ". Удален продукт " + "\""+ pr.getName()+ "\""+ ". ", new Long(ctg.getParentId()), 2);
-
+            pr.sendMessage(new Long(usr.getId()), "\"PRODUCT\"", "Удален продукт " + "\"" + pr.getName() + "\"" + " из каталога " + "\"" + pr.getNameCatalog() + "\"" + ". ", null, 2);
+            ctg.sendMessage(new Long(usr.getId()), "\"CATALOG\"", " Каталог " + "\"" + pr.getNameCatalog() + "\"" + " изменен. Удален продукт " + "\"" + pr.getName() + "\"" + ". ", new Long(pr.getIdCatalog()), 2);
+            ctg.sendMessage(new Long(usr.getId()), "\"CATALOG\"", " Каталог " + "\"" + ctg.getParentName() + "\"" + " изменен. Изменен дочерний каталог " + "\"" + pr.getNameCatalog() + "\"" + ". Удален продукт " + "\"" + pr.getName() + "\"" + ". ", new Long(ctg.getParentId()), 2);
             productHome.remove(new Long(pr.getId()));
-
-
-
-
         } catch (ObjectNotFoundException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Продукта не существует</p></div>";
         } catch (RemoveException ex) {
@@ -447,7 +385,6 @@ public class ExecServlet extends HttpServlet {
             rd = request.getRequestDispatcher("delProduct.jsp");
             rd.forward(request, response);
         }
-
     }
 
     protected void updateUser(HttpServletRequest request,
@@ -458,7 +395,6 @@ public class ExecServlet extends HttpServlet {
         UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
         Long id = null;
         String msg = ". ";
-
         if (type.equals("updateUser")) {
             if (usr.getRoleId() >= 2) {
                 throw new LoginException("Вы не обладаете правами администратора");
@@ -477,12 +413,10 @@ public class ExecServlet extends HttpServlet {
             if ("".equals(name)) {
                 throw new UpdateException("Имя введено не верно");
             }
-
             String surname = request.getParameter("SURNAME");
             if ("".equals(surname)) {
                 throw new UpdateException("Фамилия ввдена не верно");
             }
-
             String otchestvo = request.getParameter("OTCHESTVO");
             if ("".equals(otchestvo)) {
                 throw new UpdateException("Отчество введено не верно");
@@ -506,6 +440,8 @@ public class ExecServlet extends HttpServlet {
             }
             if ("".equals(password) || password == null) {
             } else {
+
+
                 if (!password.equals(password2)) {
                     throw new PasswordException();
                 }
@@ -521,59 +457,51 @@ public class ExecServlet extends HttpServlet {
             if ((usr.getName().equals(name))) {
                 usr.setName(name);
             } else {
-                msg = msg + "Имя пользователя было изменено с " + "\""+ usr.getName() + "\""+ " на " + "\""+ name + "\""+ ". ";
+                msg = msg + "Имя пользователя было изменено с " + "\"" + usr.getName() + "\"" + " на " + "\"" + name + "\"" + ". ";
                 usr.setName(name);
 
             }
-
             if (usr.getSurname().equals(surname)) {
                 usr.setSurname(surname);
             } else {
-                msg = msg + "Фамилия пользователя была изменена с " + "\""+ usr.getSurname() + "\""+ " на " + "\""+ surname + "\""+ ". ";
+                msg = msg + "Фамилия пользователя была изменена с " + "\"" + usr.getSurname() + "\"" + " на " + "\"" + surname + "\"" + ". ";
                 usr.setSurname(surname);
 
             }
-
             if (usr.getOtchestvo().equals(otchestvo)) {
                 usr.setOtchestvo(otchestvo);
             } else {
-                msg = msg + "Отчество пользователя было изменено с " + "\""+ usr.getOtchestvo() + "\""+ " на " + "\""+ otchestvo + "\""+ ". ";
+                msg = msg + "Отчество пользователя было изменено с " + "\"" + usr.getOtchestvo() + "\"" + " на " + "\"" + otchestvo + "\"" + ". ";
                 usr.setOtchestvo(otchestvo);
             }
-
             if (usr.getNik().equals(nik)) {
                 usr.setNik(nik);
             } else {
-                msg = msg + "Ник пользователя был изменен с " + "\""+ usr.getNik() + "\""+ " на " + "\""+ nik + "\""+ ". ";
+                msg = msg + "Ник пользователя был изменен с " + "\"" + usr.getNik() + "\"" + " на " + "\"" + nik + "\"" + ". ";
                 usr.setNik(nik);
             }
-
             if (usr.getBorn().equals(born)) {
                 usr.setBorn(new java.sql.Date(born.getTime()));
             } else {
-                msg = msg + "Дата рождения изменена с " + "\""+ usr.getBorn() + "\""+ " на " + "\""+ brn + "\""+ ". ";
+                msg = msg + "Дата рождения изменена с " + "\"" + usr.getBorn() + "\"" + " на " + "\"" + brn + "\"" + ". ";
                 usr.setBorn(new java.sql.Date(born.getTime()));
             }
-
             if ((usr.getPhone() != null) && (usr.getPhone().equals(phone))) {
                 usr.setPhone(phone);
             } else {
-                msg = msg + "Номер телефона был изменен с " + "\""+ usr.getPhone() + "\""+ " на " + "\""+ phone + "\""+ ". ";
+                msg = msg + "Номер телефона был изменен с " + "\"" + usr.getPhone() + "\"" + " на " + "\"" + phone + "\"" + ". ";
                 usr.setPhone(phone);
             }
-
             if ((usr.getEmail() != null) && (usr.getEmail().equals(email))) {
                 usr.setEmail(email);
             } else {
-                msg = msg + "Электронная почта была изменена с " + "\""+ usr.getEmail() + "\""+ " на " + "\""+ email + "\""+ ". ";
+                msg = msg + "Электронная почта была изменена с " + "\"" + usr.getEmail() + "\"" + " на " + "\"" + email + "\"" + ". ";
                 usr.setEmail(email);
             }
-
-
-
-            if (type.equals("updateUser")) {
-                            RoleBeanRemoteHome roleHome = (RoleBeanRemoteHome) EJBHelper.lookupHome("ejb/RoleBean", RoleBeanRemoteHome.class);
-            RoleBeanRemote rbr = roleHome.findByPrimaryKey(new Long(usr.getRoleId()));
+            if (type.equals(
+                    "updateUser")) {
+                RoleBeanRemoteHome roleHome = (RoleBeanRemoteHome) EJBHelper.lookupHome("ejb/RoleBean", RoleBeanRemoteHome.class);
+                RoleBeanRemote rbr = roleHome.findByPrimaryKey(new Long(usr.getRoleId()));
                 long id_role = Long.parseLong(request.getParameter("ID_ROLE"));
                 if (usr.getRoleId() == id_role) {
                     usr.setRoleId(new Long(id_role));
@@ -581,30 +509,26 @@ public class ExecServlet extends HttpServlet {
                     String oldRole = rbr.getName();
                     usr.setRoleId(new Long(id_role));
                     rbr = roleHome.findByPrimaryKey(new Long(usr.getRoleId()));
-                    msg = msg + "Права доступа были изменены с " + "\""+ oldRole + "\""+ " на " + "\""+ rbr.getName()+ "\""+ ". ";
+                    msg = msg + "Права доступа были изменены с " + "\"" + oldRole + "\"" + " на " + "\"" + rbr.getName() + "\"" + ". ";
                 }
             }
-
-
-
-            if (type.equals("updateUser")) {
+            if (type.equals(
+                    "updateUser")) {
                 result = "<div class=\"success\"><p align=\"center\">пользователь отредактирован</p></div>";
-                usr.sendMessage(id, "\"USER\"", "Отредактирован пользователь " + "\""+ usr.getNik() + "\""+ msg, new Long(usr.getId()), 2);
+                usr.sendMessage(id, "\"USER\"", "Отредактирован пользователь " + "\"" + usr.getNik() + "\"" + msg, new Long(usr.getId()), 2);
 
                 session.removeAttribute("userOld");
             }
-            if (type.equals("updateProfil")) {
+            if (type.equals(
+                    "updateProfil")) {
                 result = "<div class=\"success\"><p align=\"center\">профиль отредактирован</p></div>";
                 usr.sendMessage(id, "\"USER\"", "Профиль отредактирован " + msg, new Long(usr.getId()), 2);
                 session.setAttribute("user", usr);
             }
             //  rd = request.getRequestDispatcher("updateUser.jsp?DO=" + type);
-            
-
         } catch (UpdateException ex) {
             result = "<div class=\"warning\"><p align=\"center\">" + ex.getMessage() + "</p></div>";
             if (type.equals("updateUser")) {
-
                 session.setAttribute("usrOld", usr);
             }
             if (type.equals("updateProfil")) {
@@ -613,7 +537,6 @@ public class ExecServlet extends HttpServlet {
         } catch (NamingException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Неизвестная ошибка</p></div>";
             if (type.equals("updateUser")) {
-
                 session.setAttribute("usrOld", usr);
             }
             if (type.equals("updateProfil")) {
@@ -622,7 +545,6 @@ public class ExecServlet extends HttpServlet {
         } catch (PasswordException ex) {
             result = "<div class=\"warning\"><p align=\"center\">" + ex.getMessage() + "</p></div>";
             if (type.equals("updateUser")) {
-
                 session.setAttribute("usrOld", usr);
             }
             if (type.equals("updateProfil")) {
@@ -631,7 +553,6 @@ public class ExecServlet extends HttpServlet {
         } catch (ParseException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Ошибка ввода даты рождения</p></div>";
             if (type.equals("updateUser")) {
-
                 session.setAttribute("usrOld", usr);
             }
             if (type.equals("updateProfil")) {
@@ -679,7 +600,6 @@ public class ExecServlet extends HttpServlet {
             }
             UserBeanRemoteHome userHome = (UserBeanRemoteHome) EJBHelper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
             Collection list = userHome.findByRole(new Long(role_id));
-
             request.setAttribute("result", list);
         } catch (FinderException ex) {
             request.setAttribute("result", "<div class=\"warning\"><p align=\"center\">Ошибка поиска</p></div>");
@@ -689,7 +609,6 @@ public class ExecServlet extends HttpServlet {
             rd = request.getRequestDispatcher("getUsersByRole.jsp");
             rd.forward(request, response);
         }
-
     }
 
     protected void deleteUser(HttpServletRequest request,
@@ -703,12 +622,15 @@ public class ExecServlet extends HttpServlet {
         }
         try {
             String nik = request.getParameter("NIK");
-            UserBeanRemoteHome userHome = (UserBeanRemoteHome) EJBHelper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
+            UserBeanRemoteHome userHome = (UserBeanRemoteHome) EJBHelper.lookupHome(
+                    "ejb/UserBean", UserBeanRemoteHome.class);
             UserBeanRemote user = userHome.findByNik(nik);
             Long id = new Long(user.getId());
             //userHome.remove(id);
-            user.setRoleId(new Long(4));
-            usr.sendMessage(new Long(usr.getId()), "\"USER\"", "Пользователь заблокирован " + "\""+ nik+ "\""+ ". ", id, 2);
+            user.setRoleId(
+                    new Long(4));
+            usr.sendMessage(
+                    new Long(usr.getId()), "\"USER\"", "Пользователь заблокирован " + "\"" + nik + "\"" + ". ", id, 2);
 
             result = "<div class=\"success\"><p align=\"center\">Блокировка завершена</p></div>";
         } catch (ObjectNotFoundException ex) {
@@ -726,7 +648,6 @@ public class ExecServlet extends HttpServlet {
             rd = request.getRequestDispatcher("deleteUser.jsp");
             rd.forward(request, response);
         }
-
     }
 
     protected void getFullList(HttpServletRequest request,
@@ -741,7 +662,6 @@ public class ExecServlet extends HttpServlet {
                 list = productHome.findAll();
             } else {
                 UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
-
                 if ("USER".equals(table)) {
                     UserBeanRemoteHome userHome = (UserBeanRemoteHome) EJBHelper.lookupHome("ejb/UserBean", UserBeanRemoteHome.class);
                     list = userHome.findAll();
@@ -774,7 +694,6 @@ public class ExecServlet extends HttpServlet {
         HttpSession session = request.getSession();
         String result;
         try {
-
             String nik = request.getParameter("NIK");
             String password = request.getParameter("PASSWORD");
             if ("".equals(nik) || "".equals(password)) {
@@ -788,8 +707,8 @@ public class ExecServlet extends HttpServlet {
                 throw new LoginException("Ваш профиль заблокирован");
             }
             session.setAttribute("user", usr);
-
-            if (session.getAttribute("homepage") != null) {
+            if (session.getAttribute(
+                    "homepage") != null) {
                 String homepage = session.getAttribute("homepage").toString();
                 rd = request.getRequestDispatcher(homepage);
                 rd.forward(request, response);
@@ -802,15 +721,20 @@ public class ExecServlet extends HttpServlet {
             request.setAttribute("result", result);
             rd = request.getRequestDispatcher("login.jsp");
             rd.forward(request, response);
+
+
         } catch (FinderException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Не правильно указанно имя пользователя или пароль</p></div>";
             request.setAttribute("result", result);
             rd = request.getRequestDispatcher("login.jsp");
             rd.forward(request, response);
+
+
         } catch (NamingException ex) {
             request.setAttribute("result", "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>");
             rd = request.getRequestDispatcher("login.jsp");
             rd.forward(request, response);
+
         }
     }
 
@@ -820,28 +744,38 @@ public class ExecServlet extends HttpServlet {
         HttpSession session = request.getSession();
         UserBeanRemote usr = JSPHelper.getUser2(session);
         ProductBeanRemote product = (ProductBeanRemote) session.getAttribute("product");
+
+
         try {
             //    ProductBeanRemote product = (ProductBeanRemote) session.getAttribute("product");
             String text = request.getParameter("COMMENT");
-
             if ("".equals(text.trim()) || text == null || text.trim().isEmpty()) {
                 throw new MyException("Введите текст комментария.");
             }
             OpinionBeanRemoteHome opinionHome = (OpinionBeanRemoteHome) EJBHelper.lookupHome("ejb/OpinionBean", OpinionBeanRemoteHome.class);
             OpinionBeanRemote obr = opinionHome.create(new Long(product.getId()), new Long(usr.getId()), text);
-            obr.sendMessage(new Long(usr.getId()), "\"OPINION\"", "Добавлен комментарий о продукте " + "\""+ product.getName()+ "\""+ ". ", new Long(obr.getIdOpinion()), 1);
+            obr.sendMessage(
+                    new Long(usr.getId()), "\"OPINION\"", "Добавлен комментарий о продукте " + "\"" + product.getName() + "\"" + ". ", new Long(obr.getIdOpinion()), 1);
             rd = request.getRequestDispatcher("getOpinion.jsp");
+
             request.setAttribute("result", product);
+
+
             rd.forward(request, response);
         } catch (MyException ex) {
             rd = request.getRequestDispatcher("getOpinion.jsp");
             request.setAttribute("result", product);
             request.setAttribute("result2", "<div class=\"warning\"><p align=\"center\">" + ex.getMessage() + "</p></div>");
             rd.forward(request, response);
+
+
         } catch (CreateException ex) {
             ex.printStackTrace();
+
+
         } catch (RemoteException ex) {
             ex.printStackTrace();
+
         } catch (ServletException ex) {
             Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NamingException ex) {
@@ -851,7 +785,6 @@ public class ExecServlet extends HttpServlet {
         } catch (IOException ex) {
             Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
-
 
     }
 
@@ -861,26 +794,41 @@ public class ExecServlet extends HttpServlet {
         RequestDispatcher rd;
         HttpSession session = request.getSession();
         UserBeanRemote usr = JSPHelper.getUser2(session);
+
+
         try {
             ProductBeanRemote product = (ProductBeanRemote) session.getAttribute("product");
             String id_op = request.getParameter("ID");
-            OpinionBeanRemoteHome opinionHome = (OpinionBeanRemoteHome) EJBHelper.lookupHome("ejb/OpinionBean", OpinionBeanRemoteHome.class);
+            OpinionBeanRemoteHome opinionHome = (OpinionBeanRemoteHome) EJBHelper.lookupHome(
+                    "ejb/OpinionBean", OpinionBeanRemoteHome.class);
 
             OpinionBeanRemote obr = opinionHome.findByPrimaryKey(new Long(Long.parseLong(id_op)));
             String usrName = obr.getUserName();
-            opinionHome.remove(new Long(Long.parseLong(id_op)));
+            opinionHome.remove(
+                    new Long(Long.parseLong(id_op)));
 
-            usr.sendMessage(new Long(usr.getId()), "\"OPINION\"", "Удален комментарий о продукте " + "\""+ product.getName()+ "\""+ ". ", null, 2);
+            usr.sendMessage(
+                    new Long(usr.getId()), "\"OPINION\"", "Удален комментарий о продукте " + "\"" + product.getName() + "\"" + ". ", null, 2);
 
             rd = request.getRequestDispatcher("getOpinion.jsp");
+
             request.setAttribute("result", product);
+
+
             rd.forward(request, response);
         } catch (FinderException ex) {
             ex.printStackTrace();
+
+
         } catch (RemoteException ex) {
             ex.printStackTrace();
+
+
         } catch (RemoveException ex) {
             ex.printStackTrace();
+
+
+
         } catch (ServletException ex) {
             Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NamingException ex) {
@@ -890,6 +838,8 @@ public class ExecServlet extends HttpServlet {
         } catch (IOException ex) {
             Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+
 
     }
 
@@ -899,22 +849,33 @@ public class ExecServlet extends HttpServlet {
         RequestDispatcher rd;
         HttpSession session = request.getSession();
         String result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка перейдите на стартовую страницу</p></div>";
+
+
         try {
             String id_pr = request.getParameter("ID");
             Long id_product = new Long(Long.parseLong(id_pr));
             ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
             ProductBeanRemote prd = productHome.findByPrimaryKey(id_product);
 
-            request.setAttribute("result", prd);
+            request.setAttribute(
+                    "result", prd);
             rd = request.getRequestDispatcher("getOpinion.jsp");
+
             rd.forward(request, response);
         } catch (FinderException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Продукт не найден</p></div>";
+
+
         } catch (RemoteException ex) {
             ex.printStackTrace();
+
+
         } catch (NumberFormatException ex) {
             rd = request.getRequestDispatcher("index.jsp");
             rd.forward(request, response);
+
+
+
         } catch (ServletException ex) {
             Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NamingException ex) {
@@ -924,8 +885,6 @@ public class ExecServlet extends HttpServlet {
         } catch (IOException ex) {
             Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-
     }
 
     protected void addCatalog(HttpServletRequest request,
@@ -933,15 +892,24 @@ public class ExecServlet extends HttpServlet {
         RequestDispatcher rd;
         HttpSession session = request.getSession();
         UserBeanRemote usr = JSPHelper.getUser2(session);
+
+
         if (usr.getRoleId() > 2) {
             throw new LoginException("Вы не обладаете правами администратора");
+
+
         }
         String result = "<div class=\"warning\"><p align=\"center\">Добавление каталога прошло не успешно</p></div>";
+
+
         try {
             String nameParent = request.getParameter("PARENTNAME");
             String name = request.getParameter("NAME");
+
+
             if ("".equals(name)) {
                 throw new CatalogException("Название каталога не может быть пустым");
+
             }
             CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
             CatalogBeanRemote ctg = catalogHome.create(nameParent, name);
@@ -949,29 +917,37 @@ public class ExecServlet extends HttpServlet {
 
             Long idu = new Long(usr.getId());
             Long ido = new Long(ctg.getId());
-            ctg.sendMessage(idu, "\"CATALOG\"", "Добавлен каталог " + "\""+ name+ "\""+ ". ", ido, 1);
+            ctg.sendMessage(idu,
+                    "\"CATALOG\"", "Добавлен каталог " + "\"" + name + "\"" + ". ", ido, 1);
 
-            ctg.sendMessage(idu, "\"CATALOG\"", "В каталог " + "\""+ ctg.getParentName() + "\""+ " добавлен дочерний каталог " + "\""+ name+ "\""+ ". ", new Long(ctg.getParentId()), 1);
+            ctg.sendMessage(idu,
+                    "\"CATALOG\"", "В каталог " + "\"" + ctg.getParentName() + "\"" + " добавлен дочерний каталог " + "\"" + name + "\"" + ". ", new Long(ctg.getParentId()), 1);
 
 
             result = "<div class=\"success\"><p align=\"center\">Добавление каталога завершено</p></div>";
-
-
-
-
         } catch (CreateException ex) {
             result = "<div class=\"warning\"><p align=\"center\">" + ex.getMessage() + "</p></div>";
+
+
         } catch (RemoteException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка при добавлении каталога</p></div>";
+
+
         } catch (NamingException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка при добавлении каталога</p></div>";
+
+
         } catch (CatalogException ex) {
             result = "<div class=\"warning\"><p align=\"center\">" + ex.getMessage() + "</p></div>";
             //Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
+
+
         } finally {
             request.setAttribute("result", result);
             rd = request.getRequestDispatcher("add_catalog.jsp");
             rd.forward(request, response);
+
+
         }
 
     }
@@ -996,25 +972,39 @@ public class ExecServlet extends HttpServlet {
             Long idu = new Long(usr.getId());
             CatalogBeanRemote parentCtg = catalogHome.findByPrimaryKey(idp);
 
-            parentCtg.sendMessage(idu, "\"CATALOG\"", "Из каталога " + "\""+ parentCtg.getName() + "\""+ " удален дочерний каталог " + "\""+ name+ "\""+ ". ", idp, 2);
-            ctg.sendMessage(idu, "\"CATALOG\"", "Удален каталог " + "\""+ ctg.getName()+ "\""+ ". ", null, 2);
+            parentCtg.sendMessage(idu,
+                    "\"CATALOG\"", "Из каталога " + "\"" + parentCtg.getName() + "\"" + " удален дочерний каталог " + "\"" + name + "\"" + ". ", idp, 2);
+            ctg.sendMessage(idu,
+                    "\"CATALOG\"", "Удален каталог " + "\"" + ctg.getName() + "\"" + ". ", null, 2);
             ctg.remove();
             result = "<div class=\"success\"><p align=\"center\">Удаление завершено</p></div>";
         } catch (FinderException ex) {
             result = "<div class=\"warning\"><p align=\"center\">" + ex.getMessage() + "</p></div>";
+
+
         } catch (RemoteException ex) {
             ex.printStackTrace();
             result = "<div class=\"warning\"><p align=\"center\">Ошибка при удалении</p></div>";
+
+
         } catch (RemoveException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Ошибка при удалении</p></div>";
+
+
         } catch (CatalogException ex) {
             result = "<div class=\"warning\"><p align=\"center\">" + ex.getMessage() + "</p></div>";
+
+
         } catch (NamingException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Ошибка при удалении попробуйте еще раз</p></div>";
+
+
         } finally {
             request.setAttribute("result", result);
             rd = request.getRequestDispatcher("del_catalog.jsp");
             rd.forward(request, response);
+
+
         }
     }
 
@@ -1029,16 +1019,25 @@ public class ExecServlet extends HttpServlet {
             ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
             List list = productHome.findByCatalog(new Long(i));
 
-            request.setAttribute("result", list);
+            request.setAttribute(
+                    "result", list);
             rd = request.getRequestDispatcher("getCatalog.jsp");
+
             rd.forward(request, response);
         } catch (FinderException ex) {
             ex.printStackTrace();
+
+
         } catch (RemoteException ex) {
             ex.printStackTrace();
+
+
+
         } catch (NamingException ex) {
             Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+
     }
 
     protected void getFullCtgNew(HttpServletRequest request,
@@ -1051,14 +1050,17 @@ public class ExecServlet extends HttpServlet {
                 CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
                 List list = catalogHome.findAll();
                 HashMap map = new HashMap();
-
-                for (int j = 0; j < list.size(); j++) {
+                for (int j = 0;
+                        j < list.size();
+                        j++) {
                     CatalogNode catalog = new CatalogNode((CatalogBeanRemote) list.get(j));
                     catalog.accept(map);
                 }
                 CatalogNode ctg = (CatalogNode) map.get(new Long(1));
                 String html = "<li id=\"initialCatalog\">" + ctg.ctg.getName() + "</li>" + "\r\n";
-                for (int j = 0; j < ctg.children.size(); j++) {
+                for (int j = 0;
+                        j < ctg.children.size();
+                        j++) {
                     CatalogNode ctg1 = (CatalogNode) ctg.children.get(j);
                     //     html = html+"<li><a href=\""+ "getProductsByCatalog?ID="+ctg1.ctg.getId() +"\">"+ctg1.ctg.getName()+"</a>"+"\r\n";
                     html = html + ctg1.getHtml();
@@ -1066,8 +1068,6 @@ public class ExecServlet extends HttpServlet {
                 }
                 map = null;
                 ctg = null;
-
-
                 htmlOut = "<ul id=\"nav\"  class=\"dropdown dropdown-vertical\">\r\n"
                         + html
                         + "</ul>\r\n";
@@ -1078,12 +1078,10 @@ public class ExecServlet extends HttpServlet {
             response.setContentType("text/html; charset=utf-8");
             PrintWriter out = response.getWriter();
             try {
-
                 out.print(htmlOut);
             } finally {
                 out.close();
             }
-
         } catch (FinderException ex) {
             ex.printStackTrace();
         } catch (RemoteException ex) {
@@ -1102,13 +1100,13 @@ public class ExecServlet extends HttpServlet {
         //   rd = request.getRequestDispatcher("addOrder.jsp");
         HttpSession session = request.getSession();
         String homepage = (String) session.getAttribute("homepage");
+
+
         if (homepage == null) {
             homepage = "index.jsp";
         }
         rd = request.getRequestDispatcher(homepage);
         try {
-
-
             kol_vo = request.getParameter("VOL");
             if (Integer.parseInt(kol_vo) <= 0) {
                 throw new NegativeNumberException("Введите положительное кол-во товара");
@@ -1125,14 +1123,13 @@ public class ExecServlet extends HttpServlet {
                     throw new FinderException();
                 }
             }
-
             OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
             try {
                 orderHome.findByUserProductAndSatatus(new Long(usr.getId()), new Long(Long.parseLong(id_product)), false);
                 throw new MyException("Вы уже добавили этот продукт в свою корзину.");
             } catch (FinderException ex) {
                 OrderBeanRemote order = orderHome.create(new Long(usr.getId()), new Long(Long.parseLong(id_product)), new Boolean(false), new Integer(Integer.parseInt(kol_vo)));
-                order.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Добавлен заказ на товар " + "\""+ order.getNameProduct() + "\""+ ". ", new Long(order.getId()), 1);
+                order.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Добавлен заказ на товар " + "\"" + order.getNameProduct() + "\"" + ". ", new Long(order.getId()), 1);
                 //  if (session.getAttribute("homepage") = null) {
                 //     rd = request.getRequestDispatcher("getCatalog.jsp");
                 //  }
@@ -1140,23 +1137,39 @@ public class ExecServlet extends HttpServlet {
             result = "<div class=\"success\"><p align=\"center\">Продукт добавлен в корзину</p></div>";
         } catch (MyException ex) {
             result = "<div class=\"warning\"><p align=\"center\">" + ex.getMessage() + "</p></div>";
+
+
         } catch (FinderException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
+
+
         } catch (NegativeNumberException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Введите положительное кол-во товара</p></div>";
+
+
         } catch (NumberFormatException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Не правильный формат данных</p></div>";
+
+
         } catch (CreateException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка при добавлении заказа</p></div>";
+
+
         } catch (RemoteException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка при добавлении заказа</p></div>";
+
+
         } catch (NamingException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка при добавлении заказа</p></div>";
+
+
         } finally {
             request.setAttribute("kol_vo", kol_vo);
             request.setAttribute("result", result);
 
             rd.forward(request, response);
+
+
         }
 
     }
@@ -1169,16 +1182,20 @@ public class ExecServlet extends HttpServlet {
         try {
             OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
             List list = orderHome.findByUserAndStatus(new Long(usr.getId()), status);
-            request.setAttribute("result", list);
+            request.setAttribute(
+                    "result", list);
             rd = request.getRequestDispatcher("getBasket.jsp?status=" + status);
+
             rd.forward(request, response);
         } catch (FinderException ex) {
         } catch (RemoteException ex) {
             ex.printStackTrace();
+
+
+
         } catch (NamingException ex) {
             Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
     protected void updateStatusOrders(HttpServletRequest request,
@@ -1198,7 +1215,7 @@ public class ExecServlet extends HttpServlet {
                 ord.setStatus(true);
                 java.sql.Date f = new java.sql.Date((new java.util.Date()).getTime());
                 ord.setOrderByDate(f);
-                ord.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Заказ " + "\""+ ord.getId()  + "\""+ " на товар " + "\""+ ord.getNameProduct() + "\""+ " оформлен. Дата оформления заказа " + "\""+ ord.getOrderByDate()+ "\""+ ". ", new Long(ord.getId()), 3);
+                ord.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Заказ " + "\"" + ord.getId() + "\"" + " на товар " + "\"" + ord.getNameProduct() + "\"" + " оформлен. Дата оформления заказа " + "\"" + ord.getOrderByDate() + "\"" + ". ", new Long(ord.getId()), 3);
             }
             result2 = "<div class=\"success\"><p align=\"center\">Заказ оформлен</p></div>";
             request.setAttribute("result", orderHome.findByUserAndStatus(new Long(usr.getId()), false));
@@ -1213,7 +1230,6 @@ public class ExecServlet extends HttpServlet {
             rd = request.getRequestDispatcher("getBasket.jsp?status=false");
             rd.forward(request, response);
         }
-
     }
 
     protected void selectProduct(HttpServletRequest request,
@@ -1225,7 +1241,6 @@ public class ExecServlet extends HttpServlet {
         String result = "<div class=\"warning\"><p align=\"center\">Продукт не найден</p></div>";
         String homepage;
         RequestDispatcher rd = request.getRequestDispatcher("updateProduct.jsp?DO=select");
-
         String nameProduct = request.getParameter("nameProduct");
         try {
             if (nameProduct == null) {
@@ -1237,9 +1252,11 @@ public class ExecServlet extends HttpServlet {
                 ProductBeanRemote product = productHome.findByName(nameProduct);
                 //  order.setStatus(true);
                 request.getSession().setAttribute("product", product);
-                request.setAttribute("result", "<div class=\"success\"><p align=\"center\">Поиск завершен успешно</p></div>");
+                request.setAttribute(
+                        "result", "<div class=\"success\"><p align=\"center\">Поиск завершен успешно</p></div>");
                 rd = request.getRequestDispatcher("updateProduct.jsp?DO=update");
             }
+
         } catch (FinderException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Продукт не найден</p></div>";
             request.setAttribute("result", result);
@@ -1250,16 +1267,13 @@ public class ExecServlet extends HttpServlet {
             result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
             request.setAttribute("result", result);
         } finally {
-
             rd.forward(request, response);
         }
-
     }
 
     protected void updateProduct(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, ParseException, IOException, LoginException {
         RequestDispatcher rd = request.getRequestDispatcher("updateProduct.jsp?DO=update");
-
         HttpSession session = request.getSession();
         UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
         if (usr.getRoleId() > 2) {
@@ -1271,11 +1285,9 @@ public class ExecServlet extends HttpServlet {
             ProductBeanRemote product = (ProductBeanRemote) request.getSession().getAttribute("product");
             //   String g1 = product.getName();
             if (product == null) {
-
                 request.setAttribute("result", result);
             } else {
                 String name = request.getParameter("NAME");
-
                 if (name == null || "".equals(name)) {
                     result = "<div class=\"warning\"><p align=\"center\">Название продукта введено не верно</p></div>";
                     request.setAttribute("result", result);
@@ -1289,7 +1301,7 @@ public class ExecServlet extends HttpServlet {
                             request.setAttribute("result", result);
                             throw new Exception();
                         } catch (FinderException ex) {
-                            String str = " Изменено название продукта с " + "\""+ product.getName() + "\""+ " на " + "\""+ name+ "\""+". ";
+                            String str = " Изменено название продукта с " + "\"" + product.getName() + "\"" + " на " + "\"" + name + "\"" + ". ";
                             product.setName(name);
                             message = message + str;
                         }
@@ -1309,61 +1321,54 @@ public class ExecServlet extends HttpServlet {
                         throw new NegativeNumberException("Введите положительную цену продукта");
                     }
                     if (product.getPrice() != priceDouble) {
-                        String str = "Изменена цена продукта с " + "\""+ product.getPrice() + "\""+ " на " + "\""+ priceDouble+ "\""+". ";
+                        String str = "Изменена цена продукта с " + "\"" + product.getPrice() + "\"" + " на " + "\"" + priceDouble + "\"" + ". ";
                         product.setPrice(new Double(priceDouble));
                         message = message + str;
                     }
                     String nameCatalog = request.getParameter("NAME_CATALOG");
-
                     CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
                     CatalogBeanRemote ctg = catalogHome.findByName(nameCatalog);
                     //   CatalogBeanRemote ctg1 = catalogHome.findByPrimaryKey(new Long(product.getIdCatalog()));
-                    if (ctg.getId() != product.getIdCatalog()) {
+                    if (ctg.getId()
+                            != product.getIdCatalog()) {
                         CatalogBeanRemote ctg1 = catalogHome.findByPrimaryKey(new Long(product.getIdCatalog()));
-                        String str = "Продукт перемещени из каталога " + "\""+ ctg1.getName() + "\""+ " в каталог " + "\""+ ctg.getName()+ "\""+". ";
+                        String str = "Продукт перемещени из каталога " + "\"" + ctg1.getName() + "\"" + " в каталог " + "\"" + ctg.getName() + "\"" + ". ";
                         product.setIdCatalog(new Long(ctg.getId()));
                         message = message + str;
                     }
                     result = "<div class=\"success\"><p align=\"center\">Продукт обновлен</p></div>";
-                    product.sendMessage(new Long(usr.getId()), "\"PRODUCT\"", "Отредактирован продукт " + "\""+ product.getName() + "\""+ ". " + message, new Long(product.getId()), 2);
 
-                    request.setAttribute("result", result);
+                    product.sendMessage(new Long(usr.getId()), "\"PRODUCT\"", "Отредактирован продукт " + "\"" + product.getName() + "\"" + ". " + message, new Long(product.getId()), 2);
+
+                    request.setAttribute(
+                            "result", result);
                     rd = request.getRequestDispatcher("updateProduct.jsp?DO=select");
+
                     session.removeAttribute("product");
                 }
 
-
             }
-
         } catch (NumberFormatException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Не верно введена цена</p></div>";
             request.setAttribute("result", result);
-
-
         } catch (NegativeNumberException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Введите положительную цену продукта</p></div>";
             request.setAttribute("result", result);
-
         } catch (FinderException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Не найден каталог</p></div>";
             request.setAttribute("result", result);
         } catch (RemoteException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
             request.setAttribute("result", result);
-
         } catch (NamingException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
             request.setAttribute("result", result);
-
         } catch (Exception ex) {
             result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
             request.setAttribute("result", result);
-
         } finally {
-
             rd.forward(request, response);
         }
-
     }
 
     protected void selectCatalog(HttpServletRequest request,
@@ -1381,7 +1386,6 @@ public class ExecServlet extends HttpServlet {
             if (nameCatalog == null) {
                 result = "<div class=\"warning\"><p align=\"center\">Введите название каталога</p></div>";
                 request.setAttribute("result", result);
-
             } else {
 
                 // String nameProduct = request.getParameter("nameProduct");
@@ -1389,13 +1393,16 @@ public class ExecServlet extends HttpServlet {
                 CatalogBeanRemote catalog = catalogHome.findByName(nameCatalog);
                 //  order.setStatus(true);
                 request.getSession().setAttribute("catalog", catalog);
-                request.setAttribute("result", "<div class=\"success\"><p align=\"center\">Поиск завершен успешно</p></div>");
+                request.setAttribute(
+                        "result", "<div class=\"success\"><p align=\"center\">Поиск завершен успешно</p></div>");
                 rd = request.getRequestDispatcher("updateCatalog.jsp?DO=update");
             }
         } catch (FinderException ex) {
 
             request.setAttribute("result", result);
             //rd = request.getRequestDispatcher("updateCatalog.jsp?DO=select");
+
+
         } catch (RemoteException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
             request.setAttribute("result", result);
@@ -1426,7 +1433,6 @@ public class ExecServlet extends HttpServlet {
             CatalogBeanRemote catalog = (CatalogBeanRemote) request.getSession().getAttribute("catalog");
             //   String g1 = product.getName();
             if (catalog == null) {
-
                 request.setAttribute("result", result);
             } else {
                 String name = request.getParameter("NAME");
@@ -1441,12 +1447,11 @@ public class ExecServlet extends HttpServlet {
                             catalogHome.findByName(name);
                             result = "<div class=\"warning\"><p align=\"center\">Такое имя уже используется</p></div>";
                             request.setAttribute("result", result);
-                            throw new Exception();
+                            throw new MyException("");
                         } catch (FinderException ex) {
-                            msg = msg + "Имя каталога было сменено с " + "\""+ catalog.getName() + "\""+ " на " + "\""+ name + "\""+ ". ";
+                            msg = msg + "Имя каталога было сменено с " + catalog.getName() + " на " + name + ". ";
                             catalog.setName(name);
-                            catalog.sendMessage(new Long(usr.getId()), "\"CATALOG\"", "Дочерний каталог " + "\""+ catalog.getName() + "\""+ " каталога " + "\""+ catalog.getParentName() + "\""+ " обновлен" +". "+ msg, new Long(catalog.getParentId()), 2);
-
+                            catalog.sendMessage(new Long(usr.getId()), "\"CATALOG\"", "Дочерний каталог: " + catalog.getName() + " каталога: " + catalog.getParentName() + " обновлен" + msg, new Long(catalog.getParentId()), 2);
                         }
                     }
                     String nameParent = request.getParameter("PARENT");
@@ -1461,10 +1466,10 @@ public class ExecServlet extends HttpServlet {
                             }
                             String oldParent = catalog.getParentName();
                             long oldPid = catalog.getParentId();
-                            msg = msg + "Родительский каталог был сменен с " + "\""+ oldParent + "\""+ " на " + "\""+ nameParent + "\""+ ". ";
+                            msg = msg + "Родительский каталог был сменен с " + oldParent + " на " + nameParent + ". ";
                             catalog.setParentId(parent.getId());
-                            catalog.sendMessage(new Long(usr.getId()), "\"CATALOG\"", "Дочерний каталог " + "\""+ catalog.getName() + "\""+ " каталога " + "\""+ oldParent + "\""+ " перенесен в каталог " + "\""+ catalog.getParentName()+ "\""+ ". ", new Long(oldPid), 2);
-                            catalog.sendMessage(new Long(usr.getId()), "\"CATALOG\"", "Добавлен дочерний каталог " + "\""+ catalog.getName()+ "\""+ ". ", new Long(catalog.getParentId()), 2);
+                            catalog.sendMessage(new Long(usr.getId()), "\"CATALOG\"", "Дочерний каталог: " + catalog.getName() + " каталога: " + oldParent + " перенесен в каталог " + catalog.getParentName(), new Long(oldPid), 2);
+                            catalog.sendMessage(new Long(usr.getId()), "\"CATALOG\"", "Добавлен дочерний каталог: " + catalog.getName(), new Long(catalog.getParentId()), 2);
 
                         }
                     } else {
@@ -1472,8 +1477,7 @@ public class ExecServlet extends HttpServlet {
                     }
                     result = "<div class=\"success\"><p align=\"center\">Каталог обновлен</p></div>";
                     //  parent.sendMessage(new Long(usr.getId()), "CATALOG", "Дочерний каталог: " + catalog.getName() + " каталога: " + parent.getName() + " обновлен" + msg, new Long(catalog.getParentId()), 2);
-                    catalog.sendMessage(new Long(usr.getId()), "\"CATALOG\"", "Каталог " + "\""+ catalog.getName() + "\""+ " обновлен." + msg, new Long(catalog.getId()), 2);
-
+                    catalog.sendMessage(new Long(usr.getId()), "\"CATALOG\"", "Каталог: " + catalog.getName() + " обновлен" + msg, new Long(catalog.getId()), 2);
                     session.removeAttribute("catalog");
                     request.setAttribute("result", result);
                     rd = request.getRequestDispatcher("updateCatalog.jsp?DO=select");
@@ -1481,25 +1485,20 @@ public class ExecServlet extends HttpServlet {
             }
         } catch (UpdateException ex) {
             request.setAttribute("result", "<div class=\"warning\"><p align=\"center\">" + ex.getMessage() + "</p></div>");
-        } catch (FinderException ex) {
-            result = "<div class=\"warning\"><p align=\"center\">Не найден каталог</p></div>";
-            request.setAttribute("result", result);
         } catch (RemoteException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
             request.setAttribute("result", result);
         } catch (NamingException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
             request.setAttribute("result", result);
+        } catch (MyException ex) {
         } catch (Exception ex) {
             result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
             request.setAttribute("result", result);
             ex.printStackTrace();
         } finally {
-
-
             rd.forward(request, response);
         }
-
     }
 
     protected void deleteOrder(HttpServletRequest request,
@@ -1512,14 +1511,11 @@ public class ExecServlet extends HttpServlet {
             String id_order = request.getParameter("id_order");
             OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
             OrderBeanRemote order = orderHome.findByPrimaryKey(new Long(Long.parseLong(id_order)));
-
-            order.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Удален заказ на товар " + "\""+ order.getNameProduct() + "\""+". ", new Long(order.getId()), 2);
-
-
+            order.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Удален заказ на товар " + "\"" + order.getNameProduct() + "\"" + ". ", new Long(order.getId()), 2);
             order.remove();
-            request.setAttribute("result", orderHome.findByUserAndStatus(new Long(usr.getId()), false));
+            request.setAttribute(
+                    "result", orderHome.findByUserAndStatus(new Long(usr.getId()), false));
             result2 = "<div class=\"success\"><p align=\"center\">Продукт удален из корзины</p></div>";
-
         } catch (RemoveException ex) {
             result2 = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
         } catch (FinderException ex) {
@@ -1533,7 +1529,6 @@ public class ExecServlet extends HttpServlet {
             rd = request.getRequestDispatcher("getBasket.jsp");
             rd.forward(request, response);
         }
-
     }
 
     protected void blockUsers(HttpServletRequest request,
@@ -1554,10 +1549,9 @@ public class ExecServlet extends HttpServlet {
                 user = userHome.findByPrimaryKey(new Long(id_users[i]));
                 user.setRoleId(new Long(4));
                 list.add(user);
-                user.sendMessage(new Long(usr.getId()), "\"USER\"", "Пользователь заблокирован " + "\""+ user.getNik()+ "\""+ ". ", new Long(id_users[i]), 2);
-                   // user.sendMessage(new Long(usr.getId()), "\"\"", "Удален заказ", null, 2);
+                user.sendMessage(new Long(usr.getId()), "\"USER\"", "Пользователь заблокирован " + "\"" + user.getNik() + "\"" + ". ", new Long(id_users[i]), 2);
+                // user.sendMessage(new Long(usr.getId()), "\"\"", "Удален заказ", null, 2);
             }
-
             //   List list = (List) userHome.findByRole(new Long(4));
             //  String id_order = request.getParameter("id_order");
             //     OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
@@ -1578,8 +1572,6 @@ public class ExecServlet extends HttpServlet {
             rd = request.getRequestDispatcher("getUsersByRole.jsp");
             rd.forward(request, response);
         }
-
-
     }
 
     protected void image(HttpServletRequest request,
@@ -1592,24 +1584,17 @@ public class ExecServlet extends HttpServlet {
             long id = Long.parseLong(request.getParameter("ID"));
             ImageBeanRemoteHome imageHome = (ImageBeanRemoteHome) EJBHelper.lookupHome("ejb/ImageBean", ImageBeanRemoteHome.class);
             ImageBeanRemote ibr = imageHome.findByPrimaryKey(new Long(id));
-
-
-
             int sub1 = getServletContext().getRealPath("/").indexOf("Jurada");
             String path = getServletContext().getRealPath("/").substring(0, sub1) + "Jurada/lab2/ProShop/ProShop-war/web/Image/" + ibr.getName();
-
             img = new File(path);
-
             if (img.exists()) {
                 rd = request.getRequestDispatcher("Image/" + ibr.getName());
             } else {
                 rd = request.getRequestDispatcher("Image/" + "noimg.jpg");
             }
             //
-
             //request.setAttribute("result", list);
             //  rd = request.getRequestDispatcher("Image/" + ibr.getName());
-
             rd.forward(request, response);
         } catch (FinderException ex) {
         } catch (RemoteException ex) {
@@ -1617,137 +1602,91 @@ public class ExecServlet extends HttpServlet {
         } catch (NamingException ex) {
             Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
     protected void addImage(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException, LoginException {
         RequestDispatcher rd;
-
         HttpSession session = request.getSession();
         UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
         if (usr.getRoleId() > 2) {
             throw new LoginException("Вы не обладаете правами администратора");
         }
         String result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка при добавлении изображения</p></div>";
-
-
         String name = null;
         int width = 0;
         int height = 0;
         String page = "add_image.jsp";
         String nameProduct = null;
-
         Random random = new Random();
         try {
-
-
-
             DiskFileItemFactory factory = new DiskFileItemFactory();
             factory.setSizeThreshold(1024 * 1024);
             File tempDir = (File) getServletContext().getAttribute("javax.servlet.context.tempdir");
             factory.setRepository(tempDir);
-
             ServletFileUpload upload = new ServletFileUpload(factory);
-
             upload.setSizeMax(1024 * 1024 * 10);
-
             moreTools.SerializbleImage im = null;
-
             int i = 0;
-
             List items = upload.parseRequest(request);
-
             Iterator iter = items.iterator();
             Iterator iter2 = items.iterator();
-
             while (iter.hasNext()) {
                 FileItem item = (FileItem) iter.next();
-
                 if (item.isFormField()) {
                     String fieldName = item.getFieldName();
-
                     if (fieldName.equals("NAMEPRODUCT")) {
                         nameProduct = item.getString("UTF-8");
                     }
                     if ("".equals(nameProduct)) {
                         throw new ProductException("Введите название продукта");
                     }
-
-
                 }
             }
-
             while (iter2.hasNext()) {
                 FileItem item = (FileItem) iter2.next();
                 if (!item.isFormField()) {
                     File uploadetFile = null;
-
                     int sub1 = getServletContext().getRealPath("/").indexOf("Jurada");
                     // String path = getServletContext().getRealPath("/").substring(0, sub1) + "Jurada/lab2/ProShop/ProShop-war/web/Image/" + item.getName();
-
-
                     int rnd = random.nextInt();
                     // uploadetFile = new File(path);
-
                     do {
                         String path = getServletContext().getRealPath("/").substring(0, sub1) + "Jurada/lab2/ProShop/ProShop-war/web/Image/" + rnd + item.getName();
                         uploadetFile = new File(path);
                     } while (uploadetFile.exists());
-
-
-
                     uploadetFile.createNewFile();
                     // uploadetFile.deleteOnExit();
                     item.write(uploadetFile);
-
                     im = new moreTools.SerializbleImage(item.getInputStream());
-
                     width = im.getWidth();
                     height = im.getHeight();
                     name = new Integer(rnd).toString() + item.getName();
-
                     i++;
-
                     ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
                     ProductBeanRemote pbr = productHome.findByName(nameProduct);
-
                     ImageBeanRemoteHome imageHome = (ImageBeanRemoteHome) EJBHelper.lookupHome("ejb/ImageBean", ImageBeanRemoteHome.class);
                     ImageBeanRemote imageBean = imageHome.create(pbr.getId(), name, width, height);
-
-      imageBean.sendMessage(new Long(usr.getId()), "\"IMAGE\"", "Добавлено изображение "+ "\""+ item.getName() + "\""+ " к товару " + "\""+ pbr.getName()+ "\""+". " , new Long(imageBean.getId_img()), 2);                    pbr.sendMessage(new Long(usr.getId()), "\"PRODUCT\"", "Изменен продукт "+ "\""+ pbr.getName()  + "\""+ ". Добавлено изображение " + "\""+ item.getName()+ "\""+". " , new Long(pbr.getId()), 2);                }               }
+                    imageBean.sendMessage(new Long(usr.getId()), "\"IMAGE\"", "Добавлено изображение " + "\"" + item.getName() + "\"" + " к товару " + "\"" + pbr.getName() + "\"" + ". ", new Long(imageBean.getId_img()), 2);
+                    pbr.sendMessage(new Long(usr.getId()), "\"PRODUCT\"", "Изменен продукт " + "\"" + pbr.getName() + "\"" + ". Добавлено изображение " + "\"" + item.getName() + "\"" + ". ", new Long(pbr.getId()), 2);
+                }
             }
-
-
-
-
-
-
             if (i > 1) {
                 result = "<div class=\"success\"><p align=\"center\">Изображения добавлены</p></div>";
             } else {
                 result = "<div class=\"success\"><p align=\"center\">Изображение добавлено</p></div>";
             }
-
             page = "add_image.jsp";
-
         } catch (ProductException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Введите название продукта</p></div>";
-
-
         } catch (FinderException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Продукт не найден</p></div>";
-
-
         } catch (NamingException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка при добавлении изображения</p></div>";
-
         } catch (CreateException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка при добавлении изображения</p></div>";
-
         } catch (NumberFormatException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка при добавлении изображения</p></div>";
-
         } catch (Throwable ex) {
             result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
         } finally {
@@ -1755,8 +1694,6 @@ public class ExecServlet extends HttpServlet {
             rd = request.getRequestDispatcher(page);
             rd.forward(request, response);
         }
-
-
     }
 
     protected void delImage(HttpServletRequest request,
@@ -1767,35 +1704,22 @@ public class ExecServlet extends HttpServlet {
         String result = "<div class=\"warning\"><p align=\"center\">Изображение не удалено</p></div>";
         if (usr.getRoleId() > 2) {
             throw new LoginException("Вы не обладаете правами администратора");
-
-
         }
         try {
-
             String value = request.getParameter("VALUE");
             ImageBeanRemoteHome imageHome = (ImageBeanRemoteHome) EJBHelper.lookupHome("ejb/ImageBean", ImageBeanRemoteHome.class);
             ImageBeanRemote imageBean = imageHome.findByName(value);
-
             String name = imageBean.getName();
-
             ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
             ProductBeanRemote pr = productHome.findByPrimaryKey(new Long(imageBean.getId_product()));
-
-            pr.sendMessage(new Long(usr.getId()), "\"PRODUCT\"", "Изменен продукт " + "\""+ pr.getName() + "\""+ ". Удалено изображение " + "\""+ name+ "\""+". ", new Long(pr.getId()), 2);            imageBean.sendMessage(new Long(usr.getId()), "\"IMAGE\"", "Удалено изображение " + "\""+ name+ "\""+". ", null, 2);
+            pr.sendMessage(new Long(usr.getId()), "\"PRODUCT\"", "Изменен продукт " + "\"" + pr.getName() + "\"" + ". Удалено изображение " + "\"" + name + "\"" + ". ", new Long(pr.getId()), 2);
+            imageBean.sendMessage(new Long(usr.getId()), "\"IMAGE\"", "Удалено изображение " + "\"" + name + "\"" + ". ", null, 2);
             imageHome.remove(new Long(imageBean.getId_img()));
-
             int sub1 = getServletContext().getRealPath("/").indexOf("Jurada");
             String path = getServletContext().getRealPath("/").substring(0, sub1) + "Jurada/lab2/ProShop/ProShop-war/web/Image/" + value;
             File uploadetFile = new File(path);
             uploadetFile.delete();
-
-
             result = "<div class=\"success\"><p align=\"center\">Удаление завершено</p></div>";
-
-
-
-
-
         } catch (ObjectNotFoundException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Продукта не существует</p></div>";
         } catch (RemoveException ex) {
@@ -1809,7 +1733,6 @@ public class ExecServlet extends HttpServlet {
             rd = request.getRequestDispatcher("del_image.jsp");
             rd.forward(request, response);
         }
-
     }
 
     protected void findProductsBySubstName(HttpServletRequest request,
@@ -1844,8 +1767,6 @@ public class ExecServlet extends HttpServlet {
         } finally {
             rd.forward(request, response);
         }
-
-
     }
 
     protected void changeAmount(HttpServletRequest request,
@@ -1867,11 +1788,12 @@ public class ExecServlet extends HttpServlet {
             }
             // Object obj = session.getAttribute("ID_PRODUCT");
             long id_order = Long.parseLong(strId_product);
-            OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
+            OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome(
+                    "ejb/OrderBean", OrderBeanRemoteHome.class);
             OrderBeanRemote ord = orderHome.findByPrimaryKey(new Long(id_order));
-            int oldKol= ord.getAmount();
+            int oldKol = ord.getAmount();
             ord.setAmount(int_amount);
-            ord.sendMessage(new Long(usr.getId()), "\"ORDER\"","Заказ "+ "\""+ord.getId()+ "\""+" изменен. Изменено кол-во товара с "+ "\""+oldKol+ "\""+" на "+ "\""+ord.getAmount()+ "\""+". ",new Long(ord.getId()), 2);
+            ord.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Заказ " + "\"" + ord.getId() + "\"" + " изменен. Изменено кол-во товара с " + "\"" + oldKol + "\"" + " на " + "\"" + ord.getAmount() + "\"" + ". ", new Long(ord.getId()), 2);
             //  if (session.getAttribute("homepage") = null) {
             //     rd = request.getRequestDispatcher("getCatalog.jsp");
             //  }
@@ -1883,14 +1805,20 @@ public class ExecServlet extends HttpServlet {
             result = "<div class=\"warning\"><p align=\"center\">Введите положительное кол-во товара</p></div>";
             request.setAttribute("result2", result);
             getOrders(request, response, false);
+
+
         } catch (NumberFormatException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Не правильный формат данных</p></div>";
             request.setAttribute("result2", result);
             getOrders(request, response, false);
+
+
         } catch (RemoteException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
             request.setAttribute("result2", result);
             getOrders(request, response, false);
+
+
         } catch (NamingException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
             request.setAttribute("result2", result);
@@ -1911,7 +1839,6 @@ public class ExecServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         // response.setContentType("UTF-8");
         try {
-
             if (request.getRequestURI().equals("/ProShop-war/delImage")) {
                 delImage(request, response);
                 return;
@@ -1928,17 +1855,14 @@ public class ExecServlet extends HttpServlet {
                 login(request, response);
                 return;
             }
-
             if (request.getRequestURI().equals("/ProShop-war/registration")) {
                 registration(request, response);
                 return;
             }
-
             if (request.getRequestURI().equals("/ProShop-war/selectByNik")) {
                 selectByNik(request, response);
                 return;
             }
-
             if (request.getRequestURI().equals("/ProShop-war/addProduct")) {
                 addProduct(request, response);
                 return;
@@ -2032,8 +1956,6 @@ public class ExecServlet extends HttpServlet {
                 updateStatusOrders(request, response);
                 return;
             }
-
-
             if (request.getRequestURI().equals("/ProShop-war/updateOrderStatus")) {
                 updateStatusOrders(request, response);
                 return;
@@ -2074,15 +1996,12 @@ public class ExecServlet extends HttpServlet {
                 findProductsBySubstName(request, response);
                 return;
             }
-
-
         } catch (ParseException ex) {
             Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
         } catch (LoginException ex) {
             rd = request.getRequestDispatcher("login.jsp");
             rd.forward(request, response);
         }
-
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -2098,9 +2017,11 @@ public class ExecServlet extends HttpServlet {
             throws ServletException, IOException {
 
         processRequest(request, response);
+
+
     }
 
-    /** 
+    /**
      * Handles the HTTP <code>POST</code> method.
      * @param request servlet request
      * @param response servlet response
@@ -2113,6 +2034,8 @@ public class ExecServlet extends HttpServlet {
 
 
         processRequest(request, response);
+
+
     }
 
     /** 
@@ -2122,5 +2045,6 @@ public class ExecServlet extends HttpServlet {
     //@Override
     public String getServletInfo() {
         return "Short description";
+
     }// </editor-fold>
 }
