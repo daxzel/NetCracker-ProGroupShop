@@ -79,23 +79,23 @@ public class ExecServlet extends HttpServlet {
         request.setAttribute("EMAIL", email);
         request.setAttribute("PHONE", phone);
         try {
-            if (name.isEmpty()) {
+            if (name == null || name.trim().isEmpty()) {
                 throw new RegistrationException("Поле имя не заполнено");
             }
 
-            if (surname.isEmpty()) {
+            if (surname == null || surname.trim().isEmpty()) {
                 throw new RegistrationException("Поле фамилия не заполнено");
             }
 
-            if (otchestvo.isEmpty()) {
+            if (otchestvo == null || otchestvo.trim().isEmpty()) {
                 throw new RegistrationException("Поле отчество не заполнено");
             }
 
-            if (nik.isEmpty()) {
+            if (nik == null || nik.trim().isEmpty()) {
                 throw new RegistrationException("Поле ник не заполнено");
             }
 
-            if ((password.isEmpty()) || (!password.equals(password2))) {
+            if ((password == null) || (password.trim().isEmpty()) || (!password.equals(password2))) {
                 throw new PasswordException();
             }
 
@@ -261,10 +261,10 @@ public class ExecServlet extends HttpServlet {
                     //ProductBeanRemote pbr = productHome.findByName(nameProduct);
                 }
             }
-            if ("".equals(name)||name.trim().isEmpty()) {
+            if (name == null || name.trim().isEmpty()) {
                 throw new ProductException("Введите название продукта");
             }
-            if ("".equals(priceS) || priceS == null) {
+            if (priceS == null || priceS.trim().isEmpty()) {
                 throw new ProductException("Цена  продукта не может быть пустым полем");
             }
             price = Double.parseDouble(priceS);
@@ -896,32 +896,20 @@ public class ExecServlet extends HttpServlet {
 
         if (usr.getRoleId() > 2) {
             throw new LoginException("Вы не обладаете правами администратора");
-
-
         }
         String result = "<div class=\"warning\"><p align=\"center\">Добавление каталога прошло не успешно</p></div>";
-
-
         try {
             String nameParent = request.getParameter("PARENTNAME");
             String name = request.getParameter("NAME");
-
-
-            if ("".equals(name)) {
+            if ("".equals(name) || name == null || name.trim().isEmpty()) {
                 throw new CatalogException("Название каталога не может быть пустым");
-
             }
             CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
             CatalogBeanRemote ctg = catalogHome.create(nameParent, name);
-
-
             Long idu = new Long(usr.getId());
             Long ido = new Long(ctg.getId());
-            ctg.sendMessage(idu,
-                    "\"CATALOG\"", "Добавлен каталог " + "\"" + name + "\"" + ". ", ido, 1);
-
-            ctg.sendMessage(idu,
-                    "\"CATALOG\"", "В каталог " + "\"" + ctg.getParentName() + "\"" + " добавлен дочерний каталог " + "\"" + name + "\"" + ". ", new Long(ctg.getParentId()), 1);
+            ctg.sendMessage(idu, "\"CATALOG\"", "Добавлен каталог " + "\"" + name + "\"" + ". ", ido, 1);
+            ctg.sendMessage(idu, "\"CATALOG\"", "В каталог " + "\"" + ctg.getParentName() + "\"" + " добавлен дочерний каталог " + "\"" + name + "\"" + ". ", new Long(ctg.getParentId()), 1);
 
 
             result = "<div class=\"success\"><p align=\"center\">Добавление каталога завершено</p></div>";
@@ -1288,7 +1276,7 @@ public class ExecServlet extends HttpServlet {
                 request.setAttribute("result", result);
             } else {
                 String name = request.getParameter("NAME");
-                if (name == null || "".equals(name)) {
+                if (name == null || "".equals(name) || name.trim().isEmpty()) {
                     result = "<div class=\"warning\"><p align=\"center\">Название продукта введено не верно</p></div>";
                     request.setAttribute("result", result);
                 } else {
@@ -1436,7 +1424,7 @@ public class ExecServlet extends HttpServlet {
                 request.setAttribute("result", result);
             } else {
                 String name = request.getParameter("NAME");
-                if (name == null || "".equals(name)) {
+                if (name == null || "".equals(name) || name.trim().isEmpty()) {
                     result = "<div class=\"warning\"><p align=\"center\">Название каталога введено не верно</p></div>";
                     request.setAttribute("result", result);
                 } else {
@@ -1831,6 +1819,22 @@ public class ExecServlet extends HttpServlet {
 
     }
 
+    protected void reloadCatalog(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, ParseException, IOException, LoginException {
+        RequestDispatcher rd;
+        HttpSession session = request.getSession();
+        UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
+        // String result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
+
+        if (usr.getRoleId() > 2) {
+            throw new LoginException("Вы не обладаете правами администратора");
+        }
+        Menu.MenuHtml = null;
+        rd = request.getRequestDispatcher("index.jsp");
+        rd.forward(request, response);
+
+    }
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         RequestDispatcher rd;
@@ -1990,6 +1994,10 @@ public class ExecServlet extends HttpServlet {
             }
             if (request.getRequestURI().equals("/ProShop-war/updateCatalog")) {
                 updateCatalog(request, response);
+                return;
+            }
+            if (request.getRequestURI().equals("/ProShop-war/reloadCatalog")) {
+                reloadCatalog(request, response);
                 return;
             }
             if (request.getRequestURI().equals("/ProShop-war/find")) {
