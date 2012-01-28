@@ -80,21 +80,21 @@
                     <form name="myForm" action="registration" method="post">
                         <table id="regOrLog">
                             <tr><td>Имя</td><td></td></tr>
-                            <tr><td><input type="text" name="NAME" value="<%=name%>" size="25" /></td><td></td></tr>
+                            <tr><td><input type="text" name="NAME" value="<%=name%>" size="25" title=" обязательно для заполнения "/></td><td></td></tr>
                             <tr><td>Фамилия</td><td></td></tr>
-                            <tr><td><input type="text" name="SURNAME" value="<%=surname%>" size="25" /></td><td></td></tr>
+                            <tr><td><input type="text" name="SURNAME" value="<%=surname%>" size="25" title=" обязательно для заполнения "/></td><td></td></tr>
                             <tr><td>Отчество</td><td></td></tr>
-                            <tr><td><input type="text" name="OTCHESTVO" value="<%=otchestvo%>" size="25" /></td><td></td></tr>
+                            <tr><td><input type="text" name="OTCHESTVO" value="<%=otchestvo%>" size="25" title=" обязательно для заполнения "/></td><td></td></tr>
                             <tr><td>Ник</td><td></td></tr>
-                            <tr><td><input type="text" name="NIK" value="<%=nik%>" size="25" /></td><td></td></tr>
+                            <tr><td><input type="text" name="NIK" value="<%=nik%>" size="25" title=" обязательно для заполнения "/></td><td></td></tr>
                             <tr><td>Пароль</td><td> Пароль(Подтверждение)</td></tr>
-                            <tr><td><input type="password" name="PASSWORD" value="<%=password%>" size="25" /></td><td>  <input type="password" name="PASSWORD2" value="<%=password2%>" size="25" /></td></tr>
-                            <tr><td>Дата рождения</td><td></td></tr>
+                            <tr><td><input type="password" name="PASSWORD" value="<%=password%>" size="25" title=" обязательно для заполнения "/></td><td>  <input type="password" name="PASSWORD2" value="<%=password2%>" size="25" title=" обязательно для заполнения "/></td></tr>
+                            <tr><td>Дата рождения (ГГГГ-ММ-ДД)</td><td></td></tr>
                             <tr><td><input type="date" name="BORN" value="<%=born%>" size="25" title="гггг-мм-дд" /></td><td></td></tr>
                             <tr><td>Телефон</td><td></td></tr>
-                            <tr><td><input type="text" name="PHONE" value="<%=phone%>" size="25" /></td><td></td></tr>
+                            <tr><td><input type="text" name="PHONE" value="<%=phone%>" size="25" title=" не обязательно "/></td><td></td></tr>
                             <tr><td>Электронная почта</td><td></td></tr>
-                            <tr><td><input type="text" name="EMAIL" value="<%=email%>" size="25" /></td><td></td></tr>
+                            <tr><td><input type="text" name="EMAIL" value="<%=email%>" size="25" title=" не обязательно " /></td><td></td></tr>
 
                             <tr><td><input type="submit" value=" Ввод " class="Button"/></td><td></td></tr>
                         </table>

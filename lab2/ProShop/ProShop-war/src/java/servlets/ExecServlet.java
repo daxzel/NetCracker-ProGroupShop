@@ -707,8 +707,7 @@ public class ExecServlet extends HttpServlet {
                 throw new LoginException("Ваш профиль заблокирован");
             }
             session.setAttribute("user", usr);
-            if (session.getAttribute(
-                    "homepage") != null) {
+            if (session.getAttribute("homepage") != null) {
                 String homepage = session.getAttribute("homepage").toString();
                 rd = request.getRequestDispatcher(homepage);
                 rd.forward(request, response);
@@ -1170,17 +1169,12 @@ public class ExecServlet extends HttpServlet {
         try {
             OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
             List list = orderHome.findByUserAndStatus(new Long(usr.getId()), status);
-            request.setAttribute(
-                    "result", list);
+            request.setAttribute("result", list);
             rd = request.getRequestDispatcher("getBasket.jsp?status=" + status);
-
             rd.forward(request, response);
         } catch (FinderException ex) {
         } catch (RemoteException ex) {
             ex.printStackTrace();
-
-
-
         } catch (NamingException ex) {
             Logger.getLogger(ExecServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
