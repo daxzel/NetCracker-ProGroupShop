@@ -20,13 +20,8 @@
 
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/main.css">
-        <link href="<%=request.getContextPath()%>/static/dropdown.css" media="all" rel="stylesheet" type="text/css" />
-        <link href="<%=request.getContextPath()%>/static/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
-        <link href="<%=request.getContextPath()%>/static/default.css" media="all" rel="stylesheet" type="text/css" />
-        <link href="<%=request.getContextPath()%>/static/menu.css" media="all" rel="stylesheet" type="text/css" />
-        <title>Продукт</title>
+        <%@include file='head.jsp'%>
+        <title>Интернет-магазин</title>
     </head>
     <body>
 
@@ -90,12 +85,12 @@
                     <table align="center" border="0">
                         <% for (int n = 0; n <= (list1.size() - 1); n++) {
                                                           img = (ImageBeanRemote) list1.get(n);%>
-                        <td><img width="50%"  src="<%=request.getContextPath()%>/image?ID=<%= img.getId_img()%>"</td>
+                        <td><a href="<%=request.getContextPath()%>/image.jpg?ID=<%= img.getId_img()%>" title="" class="thickbox" > <img width="50%"  src="<%=request.getContextPath()%>/image?ID=<%= img.getId_img()%>"/></a></td>
                             <%}%>
                     </table><br>
                     <h1>Цена</h1>
                     <% BigDecimal priceProd = new BigDecimal(prd.getPrice());%>
-                    <p><font size="6"><%= priceProd.toBigInteger()%></font>руб. </p><br>
+                    <p><font sizel="6"><%= priceProd.toBigInteger()%></font>руб. </p><br>
                     <%if (prd.getDescription() != null) {%>
                     <h1>Описание</h1><br>
                     <table><tr>

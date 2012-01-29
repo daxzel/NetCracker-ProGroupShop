@@ -179,6 +179,7 @@ public class ImageServlet extends HttpServlet {
         javax.servlet.ServletOutputStream out =  response.getOutputStream();
         try
         {
+            
             long id = Long.parseLong(request.getParameter("ID"));
             ImageBeanRemoteHome imageHome = (ImageBeanRemoteHome) EJBHelper.lookupHome("ejb/ImageBean", ImageBeanRemoteHome.class);
             ImageBeanRemote imageBean=imageHome.findByPrimaryKey(new Long(id));
@@ -187,7 +188,6 @@ public class ImageServlet extends HttpServlet {
             //response.setContentType("image/jpeg");
             com.sun.image.codec.jpeg.JPEGImageEncoder jie = com.sun.image.codec.jpeg.JPEGCodec.createJPEGEncoder(out);
         //    jie.encode(image.getImage());
-
         }
         catch(Exception ex)
         {

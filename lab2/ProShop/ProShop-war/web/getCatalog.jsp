@@ -17,14 +17,8 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/main.css">
-        <link href="<%=request.getContextPath()%>/static/dropdown.css" media="all" rel="stylesheet" type="text/css" />
-        <link href="<%=request.getContextPath()%>/static/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
-        <link href="<%=request.getContextPath()%>/static/default.css" media="all" rel="stylesheet" type="text/css" />
-        <link href="<%=request.getContextPath()%>/static/menu.css" media="all" rel="stylesheet" type="text/css" />
-
-        <title>Каталог</title>
+        <%@include file='head.jsp'%>
+        <title>Интернет-магазин</title>
     </head>
     <body>
         <%
@@ -128,7 +122,7 @@
                                 <p align="right"> <font size="5"><%= priceProd.toBigInteger()%></font> руб.</p>
                             </td>
                             <% if (r <= 3) {%>
-                            <td  width="15%" align="center"><a href ="order?VOL=1&ID_PRODUCT=<%=prd.getId()%>"</a> <img align="center" alt="В корзину"  width="60%" src="<%=request.getContextPath()%>/static/cart.jpg"></td>
+                            <td  width="15%" align="center"><a href ="order?VOL=1&ID_PRODUCT=<%=prd.getId()%>"</a><img align="center" alt="В корзину"  width="60%" src="<%=request.getContextPath()%>/static/cart.jpg"></td>
                                 <% }%>
                         </tr>
                         <%} else {%>

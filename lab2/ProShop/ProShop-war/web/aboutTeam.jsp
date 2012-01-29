@@ -14,13 +14,8 @@
 
 <html>
     <head>
- <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/main.css">
-        <link href="<%=request.getContextPath()%>/static/dropdown.css" media="all" rel="stylesheet" type="text/css" />
-        <link href="<%=request.getContextPath()%>/static/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
-        <link href="<%=request.getContextPath()%>/static/default.css" media="all" rel="stylesheet" type="text/css" />
-        <link href="<%=request.getContextPath()%>/static/menu.css" media="all" rel="stylesheet" type="text/css" />
-        <title>Интернет-магазин</title>
+       <%@include file='head.jsp'%>
+       <title>Интернет-магазин</title>
     </head>
     <body>
         <%
@@ -89,8 +84,8 @@ long r = 5;
                             </tr>
                                                         <tr align="center">
 
-                                <td width="30%" align="center">Пока нет)))</td>
-                                <td width="70%" align="center">Царевский Андрей<br>Ник: Daxzel<br>СГАУ, Специалист 5 курс, АСУ</td>
+                                <td width="30%" align="center"><img align="right" alt="Андрей"  width="50%" src="<%=request.getContextPath()%>/Team/daxzel.jpg"></td>
+                                <td width="70%" align="center">Царевский Андрей<br>Ник: Daxzel<br>СГАУ, Специалист 5 курс, АСОИУ</td>
 
 
                             </table>

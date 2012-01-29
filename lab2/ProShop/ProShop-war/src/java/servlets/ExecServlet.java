@@ -1847,7 +1847,8 @@ public class ExecServlet extends HttpServlet {
                 addImage(request, response);
                 return;
             }
-            if (request.getRequestURI().equals("/ProShop-war/image")) {
+            if (request.getRequestURI().equals("/ProShop-war/image")||
+                    request.getRequestURI().equals("/ProShop-war/image.jpg")) {
                 image(request, response);
                 return;
             }
