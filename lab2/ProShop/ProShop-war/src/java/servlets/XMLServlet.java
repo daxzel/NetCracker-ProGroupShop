@@ -36,7 +36,7 @@ import org.jdom.output.XMLOutputter;
  */
 public class XMLServlet extends HttpServlet {
 
-    protected void importXML(HttpServletRequest request,
+    protected void importXML1(HttpServletRequest request,
             HttpServletResponse response) throws LoginException {
         try {
             UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
@@ -65,8 +65,88 @@ public class XMLServlet extends HttpServlet {
                     }
                 }
                 XMLHelper.CheckSchema(xml, StaticResourceHelper.getBASEXSD(request));
-                XMLHelper.importOfXML(xml2);
+               // XMLHelper.importOfXML(xml2);
                 out.write("<div class=\"success\"><p align=\"center\">Импорт успешно завершён</p></div>");
+            } catch (Exception ex) {
+                out.write(ex.getMessage());
+            }
+
+        } catch (RemoteException ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
+    protected void importXML(HttpServletRequest request,
+            HttpServletResponse response) throws LoginException {
+        try {
+            UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
+            if (usr.getRoleId() >= 2) {
+                throw new LoginException("Вы не обладаете правами администратора");
+            }
+            PrintWriter out = null;
+            try {
+                out = response.getWriter();
+                java.io.InputStream xml = null;
+                java.io.InputStream xml2 = null;
+                java.io.InputStream savingXml = null;
+                org.apache.commons.fileupload.disk.DiskFileItemFactory factory = new org.apache.commons.fileupload.disk.DiskFileItemFactory();
+                //factory.setSizeThreshold(1024 * 1024);
+                File tempDir = (File) getServletContext().getAttribute("javax.servlet.context.tempdir");
+                factory.setRepository(tempDir);
+                org.apache.commons.fileupload.servlet.ServletFileUpload upload = new org.apache.commons.fileupload.servlet.ServletFileUpload(factory);
+                upload.setSizeMax(java.lang.Long.MAX_VALUE);
+                upload.setFileSizeMax(java.lang.Long.MAX_VALUE);
+                List items = upload.parseRequest(request);
+                Iterator iter = items.iterator();
+                while (iter.hasNext()) {
+                    org.apache.commons.fileupload.FileItem item = (org.apache.commons.fileupload.FileItem) iter.next();
+                    if (!item.isFormField()) {
+                        xml = item.getInputStream();
+                        xml2 = item.getInputStream();
+                        savingXml = item.getInputStream();
+                    }
+                }
+                XMLHelper.CheckSchema(xml, StaticResourceHelper.getBASEXSD(request));
+                AdderAndUpdater adder =  XMLHelper.ManagedImportOfXML(xml2);
+
+                String uuid = StoreHelper.saveToTempFile(savingXml);
+                request.setAttribute("UUIDOfTempFile", uuid);
+                request.setAttribute("importObjects", adder);
+                RequestDispatcher rd = request.getRequestDispatcher("/controlImport.jsp");
+                rd.forward(request, response);
+            } catch (Exception ex) {
+                out.write(ex.getMessage());
+            }
+
+        } catch (RemoteException ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
+      protected void managedImport(HttpServletRequest request,
+            HttpServletResponse response) throws LoginException {
+        try {
+            UserBeanRemote usr = JSPHelper.getUser2(request.getSession());
+            if (usr.getRoleId() >= 2) {
+                throw new LoginException("Вы не обладаете правами администратора");
+            }
+            PrintWriter out = null;
+            try {
+                 out = response.getWriter();
+
+                String id_users[] = request.getParameterValues("id_user");
+
+                String uuid = request.getParameter("uuid");
+
+                java.io.InputStream in = StoreHelper.getTempFile(uuid);
+
+                XMLHelper.importOfXML(in, id_users);
+
+                RequestDispatcher rd = request.getRequestDispatcher("/index.jsp");
+                rd.forward(request, response);
+
             } catch (Exception ex) {
                 out.write(ex.getMessage());
             }
@@ -525,6 +605,13 @@ public class XMLServlet extends HttpServlet {
                 importXML(request, response);
                 return;
             }
+
+            if (request.getRequestURI().equals(request.getContextPath() + "/XML/managedImport"))
+            {
+                managedImport(request, response);
+                return;
+            }
+
         } catch (ExportException ex) {
 
             rd = request.getRequestDispatcher("/errorPage.jsp");

@@ -12,6 +12,11 @@
 <link href="<%=request.getContextPath()%>/static/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
 <link href="<%=request.getContextPath()%>/static/default.css" media="all" rel="stylesheet" type="text/css" />
 <link href="<%=request.getContextPath()%>/static/menu.css" media="all" rel="stylesheet" type="text/css" />
-<link href="<%=request.getContextPath()%>/static/thickbox.css" media="screen" rel="stylesheet" type="text/css" />
-<script src="http://code.jquery.com/jquery-1.7.1.min.js" type="text/javascript"></script>
-<script src="<%=request.getContextPath()%>/static/thickbox.js" type="text/javascript"></script>
+<link href="<%=request.getContextPath()%>/static/jquery.fancybox.css" rel="stylesheet" type="text/css"  media="screen" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js" type="text/javascript"></script>
+<script src="<%=request.getContextPath()%>/static/jquery.fancybox.js" type="text/javascript" ></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+            $('.fancybox').fancybox();
+    });
+</script>

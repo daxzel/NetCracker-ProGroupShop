@@ -12,7 +12,6 @@
         <servlet-name>XMLServlet</servlet-name>
         <servlet-class>servlets.XMLServlet</servlet-class>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>ExecServlet</servlet-name>
         <url-pattern>/reloadCatalog</url-pattern>
@@ -224,6 +223,10 @@
     <servlet-mapping>
         <servlet-name>ExecServlet</servlet-name>
         <url-pattern>/image.jpg</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>XMLServlet</servlet-name>
+        <url-pattern>/XML/managedImport</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

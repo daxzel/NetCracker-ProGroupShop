@@ -85,7 +85,7 @@
                     <table align="center" border="0">
                         <% for (int n = 0; n <= (list1.size() - 1); n++) {
                                                           img = (ImageBeanRemote) list1.get(n);%>
-                        <td><a href="<%=request.getContextPath()%>/image.jpg?ID=<%= img.getId_img()%>" title="" class="thickbox" > <img width="50%"  src="<%=request.getContextPath()%>/image?ID=<%= img.getId_img()%>"/></a></td>
+                        <td><a href="<%=request.getContextPath()%>/image.jpg?ID=<%= img.getId_img()%>" title="" data-fancybox-group="gallery" class="fancybox" > <img width="50%"  src="<%=request.getContextPath()%>/image?ID=<%= img.getId_img()%>"/></a></td>
                             <%}%>
                     </table><br>
                     <h1>Цена</h1>

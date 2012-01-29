@@ -318,3 +318,5 @@ public static void sendMessage(Object msgContent, int prior) throws EJBException
     }
 
 }
+
+

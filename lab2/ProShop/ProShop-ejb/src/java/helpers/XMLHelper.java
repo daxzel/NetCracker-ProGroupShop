@@ -579,13 +579,25 @@ public static void ImageToXml(java.util.Collection images, PrintWriter result) t
         }
     }
 
-    public static void importOfXML(InputStream xml) throws Exception
+    public static void importOfXML(InputStream xml, String[] idUsers) throws Exception
     {
         SAXParserFactory factory = SAXParserFactory.newInstance();
 	SAXParser saxParser = factory.newSAXParser();
 
-	ImportSAXHandler handler = new ImportSAXHandler();
+	ImportSAXHandler handler = new ImportSAXHandler(idUsers);
 
         saxParser.parse(xml, handler);
+    }
+
+    public static AdderAndUpdater ManagedImportOfXML(InputStream xml) throws Exception
+    {
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+	SAXParser saxParser = factory.newSAXParser();
+
+	ManagedImportSAXHandler handler = new ManagedImportSAXHandler();
+
+        saxParser.parse(xml, handler);
+
+        return handler.getAdder();
     }
 }

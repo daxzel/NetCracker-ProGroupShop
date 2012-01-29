@@ -3,8 +3,8 @@
  * and open the template in the editor.
  */
 
-
 package helpers;
+
 import org.xml.sax.*;
 import org.xml.sax.helpers.*;
 import javax.xml.parsers.*;
@@ -13,9 +13,9 @@ import javax.xml.parsers.*;
  *
  * @author Admin
  */
-public class ImportSAXHandler extends DefaultHandler
+public class ManagedImportSAXHandler extends DefaultHandler
 {
-    Long id=null;
+     Long id=null;
 
     boolean image = false;
     boolean imageIdProductBool = false;
@@ -89,23 +89,11 @@ public class ImportSAXHandler extends DefaultHandler
     Long opinionIdProduct = null;
     String opinionText = null;
 
-    String[] idUsers;
+    private AdderAndUpdater adder = new AdderAndUpdater();
 
-    public ImportSAXHandler(String[] idImportedUsers)
+    public AdderAndUpdater getAdder()
     {
-        idUsers = idImportedUsers;
-    }
-
-    private boolean AddUser(String chekedId)
-    {
-        for(int i=0; i<idUsers.length; i++)
-        {
-            if (idUsers[i].equals(chekedId))
-            {
-                return true;
-            }
-        }
-        return false;
+        return adder;
     }
 
     public void startElement(String uri, String localName,String qName,
@@ -505,7 +493,7 @@ public class ImportSAXHandler extends DefaultHandler
             {
                     try
                     {
-                        EJBHelper.AddOrUpdate.Image(id.longValue(),imageIdProduct.longValue(), imageName, imageWidth, imageHeight);
+                        adder.Image(id.longValue(),imageIdProduct.longValue(), imageName, imageWidth, imageHeight);
                     }
                     catch(Exception ex)
                     {
@@ -524,7 +512,7 @@ public class ImportSAXHandler extends DefaultHandler
             {
                     try
                     {
-                        EJBHelper.AddOrUpdate.Product(id.longValue(), productDescription,
+                        adder.Product(id.longValue(), productDescription,
                                 productIdCatalog.longValue(), productName, productPrice);
                     }
                     catch(Exception ex)
@@ -542,12 +530,8 @@ public class ImportSAXHandler extends DefaultHandler
             {
                     try
                     {
-                        if (AddUser(id.toString()))
-                        {
-                             EJBHelper.AddOrUpdate.User(id.longValue(), userName, userSurname, userOtchestvo,
+                        adder.User(id.longValue(), userName, userSurname, userOtchestvo,
                                 userNik, userPassword, userBorn, userPhone, userEmail, userIdRole);
-                        }
-
                     }
                     catch(Exception ex)
                     {
@@ -570,7 +554,7 @@ public class ImportSAXHandler extends DefaultHandler
             {
                     try
                     {
-                        EJBHelper.AddOrUpdate.Role(id.longValue(), roleName);
+                        adder.Role(id.longValue(), roleName);
                     }
                     catch(Exception ex)
                     {
@@ -585,7 +569,7 @@ public class ImportSAXHandler extends DefaultHandler
             {
                     try
                     {
-                        EJBHelper.AddOrUpdate.Order(id.longValue(),orderIdUser.longValue(), orderIdProduct.longValue(), orderStatus, orderCount.intValue());
+                        adder.Order(id.longValue(),orderIdUser.longValue(), orderIdProduct.longValue(), orderStatus, orderCount.intValue());
                     }
                     catch(Exception ex)
                     {
@@ -604,7 +588,7 @@ public class ImportSAXHandler extends DefaultHandler
             {
                     try
                     {
-                        EJBHelper.AddOrUpdate.Catalog(id.longValue(),catalogIdParent.longValue(),catalogName);
+                        adder.Catalog(id.longValue(),catalogIdParent.longValue(),catalogName);
                     }
                     catch(Exception ex)
                     {
@@ -620,7 +604,7 @@ public class ImportSAXHandler extends DefaultHandler
             {
                     try
                     {
-                        EJBHelper.AddOrUpdate.Opinion(id.longValue(),opinionIdProduct.longValue(), opinionIdUser.longValue(), opinionText);
+                        adder.Opinion(id.longValue(),opinionIdProduct.longValue(), opinionIdUser.longValue(), opinionText);
                     }
                     catch(Exception ex)
                     {
@@ -827,4 +811,3 @@ public class ImportSAXHandler extends DefaultHandler
         }
     }
 }
-
