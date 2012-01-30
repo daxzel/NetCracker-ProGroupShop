@@ -25,14 +25,11 @@ public class StoreHelper
         int countBuffer = 30000;
         byte[] buffer  = new byte[countBuffer];
 
-        int index = 0;
         int readedBytes = 0;
 
-        while (in.available()>0)
+        while ((readedBytes = in.read(buffer)) >= 0)
         {
-            readedBytes = in.read(buffer, index,countBuffer);
-            outFile.write(buffer, index,readedBytes);
-            index+=readedBytes;
+            outFile.write(buffer, 0,readedBytes);
         }
 
         outFile.flush();

@@ -90,17 +90,130 @@ public class ImportSAXHandler extends DefaultHandler
     String opinionText = null;
 
     String[] idUsers;
+    String[] idProducts;
+    String[] idOrders;
+    String[] idOpinions;
+    String[] idImages;
+    String[] idRoles;
+    String[] idCatalogs;
 
-    public ImportSAXHandler(String[] idImportedUsers)
+    public ImportSAXHandler(String[] idProducts,
+            String[] idUsers, String[] idOrders, String[] idOpinions, String[] idImages, String[] idRoles, String[] idCatalogs)
     {
-        idUsers = idImportedUsers;
+        this.idUsers=idUsers;
+        this.idProducts=idProducts;
+        this.idOrders=idOrders;
+        this.idOpinions=idOpinions;
+        this.idImages=idImages;
+        this.idRoles=idRoles;
+        this.idCatalogs = idCatalogs;
     }
 
     private boolean AddUser(String chekedId)
     {
+        if (idUsers==null)
+        {
+            return false;
+        }
         for(int i=0; i<idUsers.length; i++)
         {
             if (idUsers[i].equals(chekedId))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+     private boolean AddProduct(String chekedId)
+    {
+        if (idProducts==null)
+        {
+            return false;
+        }
+        for(int i=0; i<idProducts.length; i++)
+        {
+            if (idProducts[i].equals(chekedId))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean AddOrder(String chekedId)
+    {
+        if (idOrders==null)
+        {
+            return false;
+        }
+        for(int i=0; i<idOrders.length; i++)
+        {
+            if (idOrders[i].equals(chekedId))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean AddOpinion(String chekedId)
+    {
+        if (idOpinions==null)
+        {
+            return false;
+        }
+        for(int i=0; i<idOpinions.length; i++)
+        {
+            if (idOpinions[i].equals(chekedId))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean AddImage(String chekedId)
+    {
+        if (idImages==null)
+        {
+            return false;
+        }
+        for(int i=0; i<idImages.length; i++)
+        {
+            if (idImages[i].equals(chekedId))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean AddRole(String chekedId)
+    {
+        if (idRoles==null)
+        {
+            return false;
+        }
+        for(int i=0; i<idRoles.length; i++)
+        {
+            if (idRoles[i].equals(chekedId))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean AddCatalog(String chekedId)
+    {
+        if (idCatalogs==null)
+        {
+            return false;
+        }
+        for(int i=0; i<idCatalogs.length; i++)
+        {
+            if (idCatalogs[i].equals(chekedId))
             {
                 return true;
             }
@@ -505,7 +618,10 @@ public class ImportSAXHandler extends DefaultHandler
             {
                     try
                     {
-                        EJBHelper.AddOrUpdate.Image(id.longValue(),imageIdProduct.longValue(), imageName, imageWidth, imageHeight);
+                        if (this.AddImage(id.toString()))
+                        {
+                            EJBHelper.AddOrUpdate.Image(id.longValue(),imageIdProduct.longValue(), imageName, imageWidth, imageHeight);
+                        }
                     }
                     catch(Exception ex)
                     {
@@ -524,8 +640,11 @@ public class ImportSAXHandler extends DefaultHandler
             {
                     try
                     {
-                        EJBHelper.AddOrUpdate.Product(id.longValue(), productDescription,
-                                productIdCatalog.longValue(), productName, productPrice);
+                        if (this.AddProduct(id.toString()))
+                        {
+                            EJBHelper.AddOrUpdate.Product(id.longValue(), productDescription,
+                                    productIdCatalog.longValue(), productName, productPrice);
+                        }
                     }
                     catch(Exception ex)
                     {
@@ -570,7 +689,10 @@ public class ImportSAXHandler extends DefaultHandler
             {
                     try
                     {
-                        EJBHelper.AddOrUpdate.Role(id.longValue(), roleName);
+                        if (this.AddRole(id.toString()))
+                        {
+                            EJBHelper.AddOrUpdate.Role(id.longValue(), roleName);
+                        }
                     }
                     catch(Exception ex)
                     {
@@ -585,7 +707,11 @@ public class ImportSAXHandler extends DefaultHandler
             {
                     try
                     {
-                        EJBHelper.AddOrUpdate.Order(id.longValue(),orderIdUser.longValue(), orderIdProduct.longValue(), orderStatus, orderCount.intValue());
+                        if (this.AddOrder(id.toString()))
+                        {
+                            EJBHelper.AddOrUpdate.Order(id.longValue(),orderIdUser.longValue(),
+                                    orderIdProduct.longValue(), orderStatus, orderCount.intValue());
+                        }
                     }
                     catch(Exception ex)
                     {
@@ -604,7 +730,10 @@ public class ImportSAXHandler extends DefaultHandler
             {
                     try
                     {
-                        EJBHelper.AddOrUpdate.Catalog(id.longValue(),catalogIdParent.longValue(),catalogName);
+                        if (this.AddCatalog(id.toString()))
+                        {
+                            EJBHelper.AddOrUpdate.Catalog(id.longValue(),catalogIdParent.longValue(),catalogName);
+                        }
                     }
                     catch(Exception ex)
                     {
@@ -620,7 +749,11 @@ public class ImportSAXHandler extends DefaultHandler
             {
                     try
                     {
-                        EJBHelper.AddOrUpdate.Opinion(id.longValue(),opinionIdProduct.longValue(), opinionIdUser.longValue(), opinionText);
+                        if (this.AddOpinion(id.toString()))
+                        {
+                            EJBHelper.AddOrUpdate.Opinion(id.longValue(),opinionIdProduct.longValue(),
+                                    opinionIdUser.longValue(), opinionText);
+                        }
                     }
                     catch(Exception ex)
                     {

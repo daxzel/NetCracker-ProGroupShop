@@ -138,11 +138,24 @@ public class XMLServlet extends HttpServlet {
 
                 String id_users[] = request.getParameterValues("id_user");
 
+                String id_catalogs[] = request.getParameterValues("id_catalog");
+
+                String id_opinions[] = request.getParameterValues("id_opinion");
+
+                String id_orders[] = request.getParameterValues("id_order");
+
+                String id_roles[] = request.getParameterValues("id_role");
+
+                String id_images[] = request.getParameterValues("id_image");
+
+                String id_products[] = request.getParameterValues("id_product");
+
                 String uuid = request.getParameter("uuid");
 
                 java.io.InputStream in = StoreHelper.getTempFile(uuid);
 
-                XMLHelper.importOfXML(in, id_users);
+                XMLHelper.importOfXML(in, id_products, id_users, id_orders, id_opinions,
+                        id_images, id_roles, id_catalogs);
 
                 RequestDispatcher rd = request.getRequestDispatcher("/index.jsp");
                 rd.forward(request, response);
