@@ -15,13 +15,7 @@
 
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/main.css">
-        <link href="<%=request.getContextPath()%>/static/dropdown.css" media="all" rel="stylesheet" type="text/css" />
-        <link href="<%=request.getContextPath()%>/static/dropdown.vertical.css" media="all" rel="stylesheet" type="text/css" />
-        <link href="<%=request.getContextPath()%>/static/default.css" media="all" rel="stylesheet" type="text/css" />
-        <link href="<%=request.getContextPath()%>/static/menu.css" media="all" rel="stylesheet" type="text/css" />
-
+        <%@include file='head.jsp'%>
         <title>Экспорт продуктов в XML</title>
     </head>
     <body>
@@ -31,19 +25,7 @@
                     }
         %>
         <div id="container">
-            <div id="header">
-                <table class="top_nav">
-                    <tbody>
-                        <tr>
-                            <td class="logo">
-                                <img src="<%=request.getContextPath()%>/static/logo.jpg">
-                            </td>
-                           <td  class="current_user" align="right"><%if (usr == null) {%><a> </a><%} else {%>Текущий пользователь:<a href="<%=request.getContextPath()%>/updateUser.jsp?DO=updateProfil"> <%=usr.getNik()%></a>   Статус: <%=usr.getRoleName()%> <%}%></td>
-                            <td class="user_nav" align="right"><%if (usr == null) {%><a href="<%=request.getContextPath()%>/login.jsp">Вход</a>   <a href="<%=request.getContextPath()%>/registration.jsp">Регистрация</a><%} else {%><a href="<%=request.getContextPath()%>/logout">Выход</a><%}%></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <%@include file='header.jspf'%>
             <div id="cols">
                 <div id="menu">
                     <div class="catalog">
@@ -57,6 +39,7 @@
                         <%}%>
                     </div>
                 </div>
+                <%@include file='searchBlock.jspf'%>
                 <div id="content">
                     <h1>Экспорт продуктов в XML</h1>
                     <%String type = request.getParameter("searchType");

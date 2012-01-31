@@ -31,23 +31,7 @@ long r = 5;
                     } finally {%>
 
         <div id="container">
-            <div id="header">
-                <table class="top_nav">
-                    <tbody>
-
-
-                        <tr>
-                            <td class="logo" align="left">
-                                <img src="<%=request.getContextPath()%>/static/logo.jpg"
-                            </td>
-                            <td  class="current_user" align="right"><%if (usr == null) {%><a> </a><%} else {%>Текущий пользователь:<a href="<%=request.getContextPath()%>/updateUser.jsp?DO=updateProfil"> <%=usr.getNik()%></a>   Статус: <%=usr.getRoleName()%> <%}%></td>
-                            <td class="user_nav" align="right"><%if (usr == null) {%><a href="<%=request.getContextPath()%>/login.jsp">Вход</a>   <a href="<%=request.getContextPath()%>/registration.jsp">Регистрация</a><%} else {%><a href="<%=request.getContextPath()%>/logout">Выход</a><%}%></td>
-
-                        </tr>
-
-                    </tbody>
-                </table>
-            </div>
+            <%@include file='header.jspf'%>
             <div id="cols">
                 <div id="menu">
                     <div class="catalog">
@@ -61,6 +45,7 @@ long r = 5;
                         <%}%>
                     </div>
                 </div>
+                    <%@include file='searchBlock.jspf'%>
                     <div id="content">
 <h1>ProGroupTeam</h1>
                     <table align="center"  frame="border" rules="all" width="100%" bordercolor="#c0c0c0">
