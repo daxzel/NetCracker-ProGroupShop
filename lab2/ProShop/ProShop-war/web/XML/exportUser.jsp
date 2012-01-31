@@ -76,6 +76,10 @@
                             <tr><td>Показать записи</td><td><input type="submit" value=" Ввод " class="Button"/></td></tr>
                         </table>
                     </form>
+                    <%Object obj = request.getAttribute("result");
+                        if (obj != null) {%>
+                    <%=obj.toString()%>
+                    <%}%>
                 </div>
             </div>
                     <div class="team" align="center">

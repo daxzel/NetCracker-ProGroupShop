@@ -333,7 +333,7 @@ public class XMLServlet extends HttpServlet {
         flag1 = flag2 = rolesFlag = opinionsFlag = productsFlag = ordersFlag = catalogsFlag = false;
         int id_role = 0;
         String result, name, role, exportRoles, searchByName, searchByRole, exportOpinions, exportProducts, exportOrders, exportCatalogs;
-        result = "Произошла ошибка";
+        result = "<div class=\"warning\"><p align=\"center\">Произошла ошибка</p></div>";
         try {
             ArrayList list = new ArrayList();
             name = request.getParameter("NAME").toString();
@@ -351,7 +351,10 @@ public class XMLServlet extends HttpServlet {
             }
             searchByName = request.getParameter("USERSBYNAME");
             searchByRole = request.getParameter("USERSBYROLE");
-            if (request.getParameter("USERSBYNAME") != null) {
+            if (request.getParameter("USERSBYNAME") != null) {   
+                if (name == null || "".equals(name)) {
+                    throw new ExportException("Введите имя пользователя");
+                }
                 flag1 = true;
             }
             if (request.getParameter("USERSBYROLE") != null) {
@@ -377,6 +380,9 @@ public class XMLServlet extends HttpServlet {
             if ("ON".equals(exportOrders)) {
                 ordersFlag = true;
             }
+            if (flag1 == false && flag2 == false) {
+                throw new ExportException("Задайте данные для поиска и экспорта пользователей");                
+            }
             ////////////////////////////////
             XmlBeanRemoteHome xmlHome = (XmlBeanRemoteHome) EJBHelper.lookupHome("ejb/XmlBean", XmlBeanRemoteHome.class);
             XmlBeanRemote xmlBean = xmlHome.create();
@@ -393,7 +399,13 @@ public class XMLServlet extends HttpServlet {
             ex.printStackTrace();
         } catch (CreateException ex) {
             ex.printStackTrace();
-        } catch (NamingException ex) {
+        } catch (ExportException ex) {
+            result = "<div class=\"warning\"><p align=\"center\">"+ex.getMessage()+"</p></div>";
+            rd = request.getRequestDispatcher("exportUser.jsp");
+            request.setAttribute("result", result);
+            rd.forward(request, response);
+        }
+        catch (NamingException ex) {
             ex.printStackTrace();
         } finally {
             try {
