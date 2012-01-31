@@ -1,0 +1,41 @@
+<%-- any content can be specified here e.g.: --%>
+<%@ page pageEncoding="UTF-8" %>
+<%@page import="java.sql.*,javax.sql.*,javax.naming.*,javax.sql.DataSource,entityBeans.UserBeanRemoteHome,entityBeans.UserBeanRemote, helpers.*,exceptions.LoginException"%>
+
+ <%
+            //    PrintWriter pw = response.getWriter();
+    UserBeanRemote usrForHeader = null;
+    try {
+        usrForHeader = JSPHelper.getUser2(session);
+    } catch (LoginException ex) {
+    }
+%>
+
+<div id="header">
+    <table class="top_nav">
+        <tbody>
+            <tr>
+                <td class="logo" align="left">
+                    <a href="<%=request.getContextPath()%>">
+                        <img src="<%=request.getContextPath()%>/static/logo.jpg"/>
+                    </a>
+                </td>
+                <td align="left">
+                    <div id="featured">
+                        <a href="http://www.netcracker.com/rus/">
+                            <img src="<%=request.getContextPath()%>/static/NetCrackerLogo.jpg"  alt="Техника"
+                                 data-caption="#htmlCaption" data-thumb="captions-thumb.jpg" style="width: 800px; height: 120px;" />
+                        </a>
+                        <a href="http://www.ssau.ru/">
+                            <img src="<%=request.getContextPath()%>/static/SSAULogo.png" alt="Техника" style="width: 800px; height: 120px;" />
+                        </a>
+                        <img src="<%=request.getContextPath()%>/static/technique.png" alt="Техника" style="width: 800px; height: 120px;" />
+                    </div>
+                </td>
+                <td  class="current_user" align="right">
+                    <%if (usrForHeader == null) {%><a> </a><%} else {%>Текущий пользователь:<a href="<%=request.getContextPath()%>/updateUser.jsp?DO=updateProfil"> <%=usrForHeader.getNik()%></a>   Статус: <%=usrForHeader.getRoleName()%> <%}%></td>
+                <td class="user_nav" align="right"><%if (usrForHeader == null) {%><a href="<%=request.getContextPath()%>/login.jsp">Вход</a>   <a href="<%=request.getContextPath()%>/registration.jsp">Регистрация</a><%} else {%><a href="<%=request.getContextPath()%>/logout">Выход</a><%}%></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
