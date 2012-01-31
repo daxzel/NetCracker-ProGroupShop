@@ -15,7 +15,7 @@
 
 <html>
     <head>
-       <%@include file='head.jsp'%>
+       <%@include file='/head.jsp'%>
        <title>Импорт из XML</title>
     </head>
     <body>
@@ -25,7 +25,7 @@
                     }
         %>
         <div id="container">
-            <%@include file='header.jspf'%>
+            <%@include file='/header.jspf'%>
             <div id="cols">
                 <div id="menu">
                     <div class="catalog">
@@ -39,7 +39,7 @@
                         <%}%>
                     </div>
                 </div>
-                <%@include file='searchBlock.jspf'%>
+                <%@include file='/searchBlock.jspf'%>
                 <div id="content">
                     <form name="import" method="post" action="import" enctype="multipart/form-data">
 
