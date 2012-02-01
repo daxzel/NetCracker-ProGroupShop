@@ -197,6 +197,9 @@ public class ExecServlet extends HttpServlet {
 
         String nameImage = null;
         String description = null;
+        String nameImages[] = new String[10];
+        int widths[] = new int[10];
+        int heights[] = new int[10];
         String priceS = null;
         String name_catalog = null;
 
@@ -225,41 +228,50 @@ public class ExecServlet extends HttpServlet {
             List items = upload.parseRequest(request);
             List items2 = items;
             Iterator iter = items.iterator();
-            while (iter.hasNext()) {
-                FileItem item = (FileItem) iter.next();
-                if (item.isFormField()) {
-                    String fieldName = item.getFieldName();
-                    if (fieldName.equals("NAME")) {
-                        name = item.getString("UTF-8");
+            try {
+                while (iter.hasNext()) {
+                    FileItem item = (FileItem) iter.next();
+                    if (item.isFormField()) {
+                        String fieldName = item.getFieldName();
+                        if (fieldName.equals("NAME")) {
+                            name = item.getString("UTF-8");
 
-                    } else if (fieldName.equals("DESCRIPTION")) {
-                        description = item.getString("UTF-8");
-                    } else if (fieldName.equals("PRICE")) {
-                        priceS = item.getString("UTF-8");
+                        } else if (fieldName.equals("DESCRIPTION")) {
+                            description = item.getString("UTF-8");
+                        } else if (fieldName.equals("PRICE")) {
+                            priceS = item.getString("UTF-8");
 
-                    } else if (fieldName.equals("NAME_CATALOG")) {
-                        name_catalog = item.getString("UTF-8");
+                        } else if (fieldName.equals("NAME_CATALOG")) {
+                            name_catalog = item.getString("UTF-8");
+                        }
+                    } else {
+                        File uploadetFile = null;
+                        int sub1 = getServletContext().getRealPath("/").indexOf("Jurada");
+                        // String path = getServletContext().getRealPath("/").substring(0, sub1) + "Jurada/lab2/ProShop/ProShop-war/web/Image/" + item.getName();
+                        int rnd = random.nextInt();
+                        do {
+                            String path = getServletContext().getRealPath("/").substring(0, sub1) + "Jurada/lab2/ProShop/ProShop-war/web/Image/" + rnd + item.getName();
+                            uploadetFile = new File(path);
+                        } while (uploadetFile.exists());
+
+                        uploadetFile.createNewFile();
+                        item.write(uploadetFile);
+                        im = new moreTools.SerializbleImage(item.getInputStream());
+                        try {
+                            widths[i] = im.getWidth();
+                            heights[i] = im.getHeight();
+                            nameImages[i] = new Integer(rnd).toString() + item.getName();
+                            i++;
+                        } catch (ArrayIndexOutOfBoundsException ex) {
+                            throw new ProductException("Колличество картинок должно быть меньше 10");
+                            //пойматть тут или переделать на аррайлист или чот такое
+
+                        }
+                        // ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
+                        //ProductBeanRemote pbr = productHome.findByName(nameProduct);
                     }
-                } else {
-                    File uploadetFile = null;
-                    int sub1 = getServletContext().getRealPath("/").indexOf("Jurada");
-                    // String path = getServletContext().getRealPath("/").substring(0, sub1) + "Jurada/lab2/ProShop/ProShop-war/web/Image/" + item.getName();
-                    int rnd = random.nextInt();
-                    do {
-                        String path = getServletContext().getRealPath("/").substring(0, sub1) + "Jurada/lab2/ProShop/ProShop-war/web/Image/" + rnd + item.getName();
-                        uploadetFile = new File(path);
-                    } while (uploadetFile.exists());
-
-                    uploadetFile.createNewFile();
-                    item.write(uploadetFile);
-                    im = new moreTools.SerializbleImage(item.getInputStream());
-                    width = im.getWidth();
-                    height = im.getHeight();
-                    nameImage = new Integer(rnd).toString() + item.getName();
-                    i++;
-                    // ProductBeanRemoteHome productHome = (ProductBeanRemoteHome) EJBHelper.lookupHome("ejb/ProductBean", ProductBeanRemoteHome.class);
-                    //ProductBeanRemote pbr = productHome.findByName(nameProduct);
                 }
+            } catch (NullPointerException ex) {
             }
             if (name == null || name.trim().isEmpty()) {
                 throw new ProductException("Введите название продукта");
@@ -277,10 +289,19 @@ public class ExecServlet extends HttpServlet {
             ProductBeanRemote pbr = productHome.create(description, name_catalog, name, price);
             CatalogBeanRemoteHome catalogHome = (CatalogBeanRemoteHome) EJBHelper.lookupHome("ejb/CatalogBean", CatalogBeanRemoteHome.class);
             CatalogBeanRemote ctg = catalogHome.findByPrimaryKey(new Long(pbr.getIdCatalog()));
+
             ImageBeanRemoteHome imageHome = (ImageBeanRemoteHome) EJBHelper.lookupHome("ejb/ImageBean", ImageBeanRemoteHome.class);
-            ImageBeanRemote imageBean = imageHome.create(pbr.getId(), nameImage, width, height);
+            if (i > 0) {
+                for (int j = 0; j < i; j++) {
+                    ImageBeanRemote imageBean = imageHome.create(pbr.getId(), nameImages[i], widths[i], heights[i]);
+                    imageBean.sendMessage(new Long(usr.getId()), "\"IMAGE\"", "Добавлено изображение " + "\"" + nameImage + "\"" + " к товару " + "\"" + pbr.getName() + "\"" + ". ", new Long(imageBean.getId_img()), 2);
+                    pbr.sendMessage(new Long(usr.getId()), "\"PRODUCT\"", "Изменен продукт " + "\"" + pbr.getName() + "\"" + ". Добавлено изображение " + "\"" + nameImage + "\"" + ". ", new Long(pbr.getId()), 2);
+                }
+            }
+            /*ImageBeanRemote imageBean = imageHome.create(pbr.getId(), nameImage, width, height);
             imageBean.sendMessage(new Long(usr.getId()), "\"IMAGE\"", "Добавлено изображение " + "\"" + nameImage + "\"" + " к товару " + "\"" + pbr.getName() + "\"" + ". ", new Long(imageBean.getId_img()), 2);
             pbr.sendMessage(new Long(usr.getId()), "\"PRODUCT\"", "Изменен продукт " + "\"" + pbr.getName() + "\"" + ". Добавлено изображение " + "\"" + nameImage + "\"" + ". ", new Long(pbr.getId()), 2);
+             */
             Long idu = new Long(usr.getId());
             // Long idu = new Long(usr.getId());
             Long ido = new Long(pbr.getId());
@@ -1845,8 +1866,8 @@ public class ExecServlet extends HttpServlet {
                 addImage(request, response);
                 return;
             }
-            if (request.getRequestURI().equals("/ProShop-war/image")||
-                    request.getRequestURI().equals("/ProShop-war/image.jpg")) {
+            if (request.getRequestURI().equals("/ProShop-war/image")
+                    || request.getRequestURI().equals("/ProShop-war/image.jpg")) {
                 image(request, response);
                 return;
             }
