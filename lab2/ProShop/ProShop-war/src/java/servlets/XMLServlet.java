@@ -346,6 +346,10 @@ public class XMLServlet extends HttpServlet {
                 } else {
                     if ("user".equals(role)) {
                         id_role = 3;
+                    } else {
+                        if ("block".equals(role)) {
+                            id_role = 4;
+                        }
                     }
                 }
             }

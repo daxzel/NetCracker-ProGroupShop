@@ -114,9 +114,14 @@
                                 <td><%= user.getRegistrationDate()%></td>
                                 <td><%if (user.getRoleId() == 1) {%>
                                     admin
-                                    <%} else {%>
+                                    <%} if (user.getRoleId() == 2) {%>
+                                    manager
+                                    <%} if (user.getRoleId() == 4) {%>
+                                    block
+                                    <%} if (user.getRoleId() == 3) {%>
                                     user
-                                    <%}%></td>
+                                    <%}%>
+                                </td>
                                     <%if (usr.getRoleId() == 1) {%>
                                 <td><input type="checkbox" name="<%=user.getId()%>" value="ON" /></td>
                                     <%}%>
