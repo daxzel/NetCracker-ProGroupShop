@@ -62,6 +62,7 @@
                             if (request.getAttribute("result") instanceof Collection) {
                                 Collection list = (Collection) request.getAttribute("result");
                                 SimpleDateFormat formt = new SimpleDateFormat("yyyy-MM-dd");
+                                long role = 4;                                
                     %>
 
                     <form action="blockUsers">
@@ -84,9 +85,10 @@
                                 <%}%>
                             </tr>
                             <%
-                                                            Iterator iter = list.iterator();
-                                                            while (iter.hasNext()) {
-                                                                user = (UserBeanRemote) iter.next();%>
+                                Iterator iter = list.iterator();
+                                    while (iter.hasNext()) {
+                                        user = (UserBeanRemote) iter.next();
+                                        role = user.getRoleId();%>
                             <tr align="center">
                                 <%if (usr.getRoleId() == 1) {%>
                                 <td><%= user.getId()%></td>
@@ -111,17 +113,20 @@
                                 <%
 
                                                                                                 if ((usr.getRoleId() == 1)) {
+                                                                                                    if ((role < 4)) {
                                 %>
                                 <td  align="center"><input type="checkbox" name="id_user" value=<%=user.getId()%> /></td>
-                                    <%}%>
-
+                                    <%} else {%>
+                                <td>Уже заблокирован</td>
+                                <%}
+                                    }%>
                             </tr>
                             <%      }%>
                         </table>
                         <br>
-                        <%if ((usr.getRoleId() == 1)) {%>
+                        <%if ((usr.getRoleId() == 1)) { if ((role < 4)) {%>
                         <input type="submit" value=" Заблокировать выбранных пользователей " class="Button"/>
-                        <%}%>
+                        <%}}%>
                     </form>
 
                     <%  }
