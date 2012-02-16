@@ -1781,22 +1781,28 @@ public class ExecServlet extends HttpServlet {
         //   rd = request.getRequestDispatcher("addOrder.jsp");
         HttpSession session = request.getSession();
         rd = request.getRequestDispatcher("getBasket.jsp");
-        String strId_product;
+        String strId_product[];
+       // int int_amount[] = null;
         try {
-            amount = request.getParameter("amount");
-            strId_product = request.getParameter("ID_ORDER");
-            int int_amount = Integer.parseInt(amount);
-            if (Integer.parseInt(amount) <= 0) {
-                throw new NegativeNumberException("Введите положительное кол-во товара");
+            String array[] = request.getParameterValues("amount");
+            int int_amount;//[] = new int[array.length];
+            // amount = request.getParameter("amount");
+            strId_product = request.getParameterValues("ID_ORDER");
+            OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome("ejb/OrderBean", OrderBeanRemoteHome.class);
+
+            for (int i = 0; i < strId_product.length; i++) {
+                int_amount = Integer.parseInt(array[i]);
+                if (int_amount <= 0) {
+                    throw new NegativeNumberException("Введите положительное кол-во товара");
+                }
+
+                // Object obj = session.getAttribute("ID_PRODUCT");
+                long id_order = Long.parseLong(strId_product[i]);
+                OrderBeanRemote ord = orderHome.findByPrimaryKey(new Long(id_order));
+                int oldKol = ord.getAmount();
+                ord.setAmount(int_amount);
+                ord.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Заказ " + "\"" + ord.getId() + "\"" + " изменен. Изменено кол-во товара с " + "\"" + oldKol + "\"" + " на " + "\"" + ord.getAmount() + "\"" + ". ", new Long(ord.getId()), 2);
             }
-            // Object obj = session.getAttribute("ID_PRODUCT");
-            long id_order = Long.parseLong(strId_product);
-            OrderBeanRemoteHome orderHome = (OrderBeanRemoteHome) EJBHelper.lookupHome(
-                    "ejb/OrderBean", OrderBeanRemoteHome.class);
-            OrderBeanRemote ord = orderHome.findByPrimaryKey(new Long(id_order));
-            int oldKol = ord.getAmount();
-            ord.setAmount(int_amount);
-            ord.sendMessage(new Long(usr.getId()), "\"ORDER\"", "Заказ " + "\"" + ord.getId() + "\"" + " изменен. Изменено кол-во товара с " + "\"" + oldKol + "\"" + " на " + "\"" + ord.getAmount() + "\"" + ". ", new Long(ord.getId()), 2);
             //  if (session.getAttribute("homepage") = null) {
             //     rd = request.getRequestDispatcher("getCatalog.jsp");
             //  }
