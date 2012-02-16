@@ -47,6 +47,7 @@
                                         <option value="admin" selected>Админ</option>
                                         <option value="manager" selected>Менеджер</option>
                                         <option value="user" selected>Пользователь</option>
+                                        <option value="block" selected>Заблокированный</option>
                                     </select></td><td></td></tr>
                             <tr><td>Выбор пользователей по имени</td><td><input type="checkbox" name="USERSBYNAME" value="ON" /> </td></tr>
                             <tr><td>Выбор пользователей по роли</td><td><input type="checkbox" name="USERSBYROLE" value="ON" /> </td></tr>

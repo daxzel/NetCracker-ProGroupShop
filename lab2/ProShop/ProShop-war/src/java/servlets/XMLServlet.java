@@ -187,7 +187,13 @@ public class XMLServlet extends HttpServlet {
             ArrayList list = new ArrayList();
             t = request.getParameter("TABLE").toString();
             id_s = request.getParameter("ID").toString();
+            if (id_s == null || "".equals(id_s)) {
+                throw new ExportException("Введите ID объекта");
+            }
             id = Long.parseLong(id_s);
+            if (id <= 0) {
+                    throw new ExportException("Введите положительный ID объекта");
+                }
             if ("1".equals(t)) {
                 table = "\"CATALOG\"";
             }
@@ -219,13 +225,27 @@ public class XMLServlet extends HttpServlet {
             out.flush();
 
         } catch (NumberFormatException ex) {
-            ex.printStackTrace();
+            result = "<div class=\"warning\"><p align=\"center\">Не правильно введен ID объекта</p></div>";
+            rd = request.getRequestDispatcher("history.jsp");
+            request.setAttribute("result", result);
+            rd.forward(request, response);
         } catch (IOException ex) {
-            ex.printStackTrace();
+            rd = request.getRequestDispatcher("history.jsp");
+            request.setAttribute("result", result);
+            rd.forward(request, response);
         } catch (CreateException ex) {
-            ex.printStackTrace();
+            rd = request.getRequestDispatcher("history.jsp");
+            request.setAttribute("result", result);
+            rd.forward(request, response);
+        } catch (ExportException ex) {
+            result = "<div class=\"warning\"><p align=\"center\">"+ex.getMessage()+"</p></div>";
+            rd = request.getRequestDispatcher("history.jsp");
+            request.setAttribute("result", result);
+            rd.forward(request, response);
         } catch (NamingException ex) {
-            ex.printStackTrace();
+            rd = request.getRequestDispatcher("history.jsp");
+            request.setAttribute("result", result);
+            rd.forward(request, response);
         } finally {
             try {
                 if (out != null) {
@@ -346,6 +366,10 @@ public class XMLServlet extends HttpServlet {
                 } else {
                     if ("user".equals(role)) {
                         id_role = 3;
+                    } else {
+                        if ("block".equals(role)) {
+                            id_role = 4;
+                        }
                     }
                 }
             }

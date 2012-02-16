@@ -646,14 +646,19 @@ public class ExecServlet extends HttpServlet {
             UserBeanRemoteHome userHome = (UserBeanRemoteHome) EJBHelper.lookupHome(
                     "ejb/UserBean", UserBeanRemoteHome.class);
             UserBeanRemote user = userHome.findByNik(nik);
-            Long id = new Long(user.getId());
-            //userHome.remove(id);
-            user.setRoleId(
-                    new Long(4));
-            usr.sendMessage(
-                    new Long(usr.getId()), "\"USER\"", "Пользователь заблокирован " + "\"" + nik + "\"" + ". ", id, 2);
+            long role = user.getRoleId();
+            if (role < 4) {
+                Long id = new Long(user.getId());
+                //userHome.remove(id);
+                user.setRoleId(
+                        new Long(4));
+                usr.sendMessage(
+                        new Long(usr.getId()), "\"USER\"", "Пользователь заблокирован " + "\"" + nik + "\"" + ". ", id, 2);
 
-            result = "<div class=\"success\"><p align=\"center\">Блокировка завершена</p></div>";
+                result = "<div class=\"success\"><p align=\"center\">Блокировка завершена</p></div>";
+            } else {
+                result = "<div class=\"warning\"><p align=\"center\">Пользователь с таким ником уже заблокирован</p></div>";
+            }
         } catch (ObjectNotFoundException ex) {
             result = "<div class=\"warning\"><p align=\"center\">Пользователя с таким ником не существует</p></div>";
         } catch (RemoteException ex) {

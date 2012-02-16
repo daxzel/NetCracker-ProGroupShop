@@ -82,10 +82,7 @@
                                 <td width="30%" align="center">Телефон</td>
                                 <td width="30%" align="center">Email</td>
                                 <td width="20%" align="center">Дата регистрации</td>
-                                <td width="7%" align="center">Статус</td>
-                                <%if (usr.getRoleId() == 1) {%>
-                                <td width="30%" align="center">Экспорт</td>
-                                <%}%>
+                                <td width="7%" align="center">Статус</td>                                
                             </tr>
                             <% for (int i = 0; i <= (list1.size() - 1); i++) {
                                                                                                     user = (UserBeanRemote) list1.get(i);
@@ -114,17 +111,16 @@
                                 <td><%= user.getRegistrationDate()%></td>
                                 <td><%if (user.getRoleId() == 1) {%>
                                     admin
-                                    <%} else {%>
+                                    <%} if (user.getRoleId() == 2) {%>
+                                    manager
+                                    <%} if (user.getRoleId() == 4) {%>
+                                    block
+                                    <%} if (user.getRoleId() == 3) {%>
                                     user
-                                    <%}%></td>
-                                    <%if (usr.getRoleId() == 1) {%>
-                                <td><input type="checkbox" name="<%=user.getId()%>" value="ON" /></td>
                                     <%}%>
+                                </td>                                    
                             </tr>
-                            <%}%>
-                            <%if (usr.getRoleId() == 1) {%>
-                            <tr><td colspan="5"><input type="submit" value="Экспортировать пользователей и роли связанные с ними" name="input" /></td><td colspan="4"><input type="submit" value="Экспортировать только пользователей" name="input2" /></td></tr>
-                                    <%}%>
+                            <%}%>                            
                         </table>
                     </form>
 

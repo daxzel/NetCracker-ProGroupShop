@@ -6,7 +6,7 @@
         <html xmlns="http://www.w3.org/1999/xhtml">
         <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-        <title>Вывод истории</title>
+        <title>Вывод истории изменений</title>
         </head>
         
         <body style="background-color:#999">
@@ -18,7 +18,7 @@
 		<xsl:template match="HISTORIES">
     	<div style=" padding-left:100px; width:1000px; border-color:#666">
 			
-			<p><strong>История</strong></p>
+			<p><strong>История изменений</strong></p>
 			<xsl:apply-templates select="HISTORY"/>
 						
         </div>     
